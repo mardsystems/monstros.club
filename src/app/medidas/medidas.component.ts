@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Medida } from './medida.model';
+import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
 import { MedidasService } from './medidas.service';
 import { MatTableDataSource } from '@angular/material';

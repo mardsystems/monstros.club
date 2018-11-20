@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Medida } from './medida.model';
+import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
