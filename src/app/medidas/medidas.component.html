@@ -1,0 +1,72 @@
+<mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="loading"></mat-spinner>
+
+<!-- <div class="example-container mat-elevation-z8"> -->
+<table mat-table [dataSource]="medidas$" matSort class="mat-elevation-z8">
+  <ng-container matColumnDef="data">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
+    <td mat-cell *matCellDef="let medida"> {{medida.data.toDate() | date:'dd/MM/yyyy'}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="peso">
+    <th mat-header-cell *matHeaderCellDef> Peso </th>
+    <td mat-cell *matCellDef="let medida"> {{medida.peso}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="gordura">
+    <th mat-header-cell *matHeaderCellDef> Gordura </th>
+    <td mat-cell *matCellDef="let medida"> {{medida.gordura}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="gorduraVisceral">
+    <th mat-header-cell *matHeaderCellDef> Gordura Visceral </th>
+    <td mat-cell *matCellDef="let medida"> {{medida.gorduraVisceral}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="musculo">
+    <th mat-header-cell *matHeaderCellDef> Músculos </th>
+    <td mat-cell *matCellDef="let medida"> {{medida.musculo}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="idadeCorporal">
+    <th mat-header-cell *matHeaderCellDef> Idade Corporal </th>
+    <td mat-cell *matCellDef="let medida"> {{medida.idadeCorporal}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="metabolismoBasal">
+    <th mat-header-cell *matHeaderCellDef> Metabolismo Basal </th>
+    <td mat-cell *matCellDef="let medida"> {{medida.metabolismoBasal}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="indiceDeMassaCorporal">
+    <th mat-header-cell *matHeaderCellDef> IMC </th>
+    <td mat-cell *matCellDef="let medida"> {{medida.indiceDeMassaCorporal}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<!-- </div> -->
+
+<!--
+<mat-nav-list>
+  <mat-list-item *ngFor="let medida of medidas$ | async">
+    {{medida.key}}, {{medida.peso}}
+  </mat-list-item>
+</mat-nav-list>
+
+<mat-menu #taskMenu="matMenu" overlapTrigger="false">
+  <ng-template matMenuContent let-medida="medida">
+    <button mat-menu-item (click)="showDialog(medida)">
+      <mat-icon>edit</mat-icon>
+      <span>Update</span>
+    </button>
+    <button mat-menu-item (click)="onDelete(medida)">
+      <mat-icon>delete</mat-icon>
+      <span>Remove</span>
+    </button>
+  </ng-template>
+</mat-menu> -->
+
+<button mat-fab class="fab-bottom-right" (click)="showDialog()">
+  <mat-icon>add</mat-icon>
+</button>
