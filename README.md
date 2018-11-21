@@ -1,6 +1,16 @@
 # Monstros.Club
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.6.
+Este projeto foi gerado com [Angular CLI](https://github.com/angular/angular-cli) version 7.0.6.
+
+# Casos de uso
+![monstros.club-casos-de-uso](doc/monstros.club-casos-de-uso.png)
+
+# Modelos de domínio
+## Primeira versão
+![monstros.club-domínio-1](doc/monstros.club-domínio-1.png)
+
+## Terceira versão
+![monstros.club-domínio-3](doc/monstros.club-domínio-3.png)
 
 ## Development server
 

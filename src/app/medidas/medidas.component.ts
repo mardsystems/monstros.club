@@ -33,7 +33,7 @@ import { MatTableDataSource } from '@angular/material';
 export class MedidasComponent implements OnInit {
   medidas$: Observable<Medida[]>;
   loading = true;
-  displayedColumns: string[] = ['data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal'];
+  displayedColumns: string[] = ['data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
   dataSource: any;
 
   constructor(
@@ -51,14 +51,30 @@ export class MedidasComponent implements OnInit {
       .subscribe(() => this.loading = false);
   }
 
-  onPerformTask(medida: Medida): void {
+  novaMedida(): void {
+    const medida = new Medida();
+
+    medida.monstroId = 'monstros/vQeCUnaAWmzr2YxP5wB1';
+    medida.data = new Date();
+    medida.peso = 0;
+    medida.gordura = 0;
+    medida.gorduraVisceral = 0;
+    medida.musculo = 0;
+    medida.idadeCorporal = 0;
+    medida.metabolistmoBasal = 0;
+    medida.indiceDeMassaCorporal = 0;
+
+    this.medidasService.cadastraMedida(medida);
+  }
+
+  atualizaMedida(medida: Medida): void {
     // task.done = !task.done;
     this.medidasService.atualizaMedida(medida);
   }
 
   showDialog(medida?: Medida): void {
     // const config: MatDialogConfig<any> = (medida) ? { data: { medida } } : null;
-    // this.dialog.open(TaskDialogComponent, config);
+    // this.dialog.open(TaskDialogComponent; config);
   }
 
   onDelete(medida: Medida): void {

@@ -1,6 +1,6 @@
 <mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="loading"></mat-spinner>
 
-<!-- <div class="example-container mat-elevation-z8"> -->
+<!-- <div class="app-container mat-elevation-z8"> -->
 <table mat-table [dataSource]="medidas$" matSort class="mat-elevation-z8">
   <ng-container matColumnDef="data">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
@@ -42,31 +42,20 @@
     <td mat-cell *matCellDef="let medida"> {{medida.indiceDeMassaCorporal}} </td>
   </ng-container>
 
+  <ng-container matColumnDef="menu">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let medida">
+      <button mat-icon-button (click)="onDelete(medida)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <!-- </div> -->
 
-<!--
-<mat-nav-list>
-  <mat-list-item *ngFor="let medida of medidas$ | async">
-    {{medida.key}}, {{medida.peso}}
-  </mat-list-item>
-</mat-nav-list>
-
-<mat-menu #taskMenu="matMenu" overlapTrigger="false">
-  <ng-template matMenuContent let-medida="medida">
-    <button mat-menu-item (click)="showDialog(medida)">
-      <mat-icon>edit</mat-icon>
-      <span>Update</span>
-    </button>
-    <button mat-menu-item (click)="onDelete(medida)">
-      <mat-icon>delete</mat-icon>
-      <span>Remove</span>
-    </button>
-  </ng-template>
-</mat-menu> -->
-
-<button mat-fab class="fab-bottom-right" (click)="showDialog()">
+<button mat-fab class="fab-bottom-right" (click)="novaMedida()">
   <mat-icon>add</mat-icon>
 </button>

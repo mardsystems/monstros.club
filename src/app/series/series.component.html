@@ -1,0 +1,20 @@
+<mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="loading"></mat-spinner>
+
+<mat-nav-list>
+  <mat-list-item *ngFor="let serie of series$ | async">
+    {{serie.id}}, {{serie.data}}
+  </mat-list-item>
+</mat-nav-list>
+
+<!-- <mat-menu #taskMenu="matMenu" overlapTrigger="false">
+  <ng-template matMenuContent let-medida="medida">
+    <button mat-menu-item (click)="showDialog(medida)">
+      <mat-icon>edit</mat-icon>
+      <span>Update</span>
+    </button>
+    <button mat-menu-item (click)="onDelete(medida)">
+      <mat-icon>delete</mat-icon>
+      <span>Remove</span>
+    </button>
+  </ng-template>
+</mat-menu> -->

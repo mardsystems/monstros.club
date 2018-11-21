@@ -1,7 +1,7 @@
-export class Medida {
+export class Serie {
   id: string;
   monstroId: string;
-  data: Date;
+  data: number;
   peso: number;
   gordura: number;
   gorduraVisceral: number;

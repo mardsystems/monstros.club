@@ -24,13 +24,24 @@ export class MedidasService {
 
     const document = this.medidas.doc<Medida>(id);
 
-    const result = document.set(medida);
+    const result = document.set({
+      id,
+      monstroId: medida.monstroId,
+      data: medida.data,
+      peso: medida.peso,
+      gordura: medida.gordura,
+      gorduraVisceral: medida.gorduraVisceral,
+      musculo: medida.musculo,
+      idadeCorporal: medida.idadeCorporal,
+      metabolistmoBasal: medida.metabolistmoBasal,
+      indiceDeMassaCorporal: medida.indiceDeMassaCorporal
+    });
 
     return result;
   }
 
   atualizaMedida(medida: Medida): Promise<void> {
-    const document = this.medidas.doc<Medida>(medida.key);
+    const document = this.medidas.doc<Medida>(medida.id);
 
     const result = document.update(medida);
 
@@ -38,7 +49,7 @@ export class MedidasService {
   }
 
   excluiMedida(medida: Medida): Promise<void> {
-    const document = this.medidas.doc<Medida>(medida.key);
+    const document = this.medidas.doc<Medida>(medida.id);
 
     const result = document.delete();
 

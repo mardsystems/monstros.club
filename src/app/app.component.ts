@@ -7,7 +7,7 @@ import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnDestroy {
-  title = 'monstros-club';
+  title = 'Marcelo Dias';
 
   mobileQuery: MediaQueryList;
 
