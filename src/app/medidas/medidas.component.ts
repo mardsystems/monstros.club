@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { MedidasService } from './medidas.service';
 import { MatTableDataSource } from '@angular/material';
 // import { take } from 'rxjs/operators/take';
@@ -47,7 +48,7 @@ export class MedidasComponent implements OnInit {
     // this.dataSource = new MatTableDataSource(this.medidas$);
 
     this.medidas$
-      // .pipe(take(1))
+      .pipe(take(1))
       .subscribe(() => this.loading = false);
   }
 
