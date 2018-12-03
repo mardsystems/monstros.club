@@ -17,6 +17,7 @@ import { SeriesComponent } from './series/series.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MonstrosComponent } from './monstros/monstros.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { DoacaoComponent } from './doacao/doacao.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     MedidasComponent,
     SeriesComponent,
     PageNotFoundComponent,
-    MonstrosComponent
+    MonstrosComponent,
+    DoacaoComponent
   ],
   imports: [
     BrowserAnimationsModule,

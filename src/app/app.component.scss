@@ -48,3 +48,11 @@ h1.app-name {
      Every toolbar row uses a flexbox row layout. */
   flex: 1 1 auto;
 }
+
+.red-icon {
+  color: red;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.red-icon svg {
+  fill: red;
+}
