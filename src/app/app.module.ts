@@ -16,6 +16,7 @@ import { MedidasService } from './medidas/medidas.service';
 import { SeriesComponent } from './series/series.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MonstrosComponent } from './monstros/monstros.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { MonstrosComponent } from './monstros/monstros.component';
     AngularFirestoreModule.enablePersistence(),
     FormsModule,
     AppMaterialModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     // { provide: LOCALE_ID, useValue: 'pt' },
