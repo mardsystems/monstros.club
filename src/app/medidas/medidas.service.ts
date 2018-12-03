@@ -26,14 +26,14 @@ export class MedidasService {
 
     const result = document.set({
       id,
-      monstroId: medida.monstroId,
+      monstroId: 'monstros/vQeCUnaAWmzr2YxP5wB1',
       data: medida.data,
       peso: medida.peso,
       gordura: medida.gordura,
       gorduraVisceral: medida.gorduraVisceral,
       musculo: medida.musculo,
       idadeCorporal: medida.idadeCorporal,
-      metabolistmoBasal: medida.metabolistmoBasal,
+      metabolismoBasal: medida.metabolismoBasal,
       indiceDeMassaCorporal: medida.indiceDeMassaCorporal
     });
 

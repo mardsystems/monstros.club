@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { MedidasService } from './medidas.service';
-import { MatTableDataSource } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatTableDataSource } from '@angular/material';
+import { MedidaComponent } from './medida.component';
+import { MediaMatcher } from '@angular/cdk/layout';
 // import { take } from 'rxjs/operators/take';
 
 // export interface PeriodicElement {
@@ -33,13 +35,37 @@ import { MatTableDataSource } from '@angular/material';
 })
 export class MedidasComponent implements OnInit {
   medidas$: Observable<Medida[]>;
+  // medidaSelecionada: Medida;
   loading = true;
-  displayedColumns: string[] = ['data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
+  fullDisplayedColumns: string[] = ['data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
+  'idadeCorporal', 'metabolismoBasal', 'indiceDeMassaCorporal', 'menu'];
+  minimalDisplayedColumns: string[] = ['data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
+  displayedColumns: string[]  = ['data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
   dataSource: any;
 
+  mobileQuery: MediaQueryList;
+
   constructor(
-    private medidasService: MedidasService
+    private dialog: MatDialog,
+    private medidasService: MedidasService,
+    changeDetectorRef: ChangeDetectorRef,
+    media: MediaMatcher
   ) {
+    this.mobileQuery = media.matchMedia('(max-width: 600px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
+  }
+
+  private _mobileQueryListener(ev: MediaQueryListEvent) {
+    // if (ev.matches) {
+    //   this.fullDisplayedColumns.forEach(element => {
+    //     this.displayedColumns.push(element);
+    //   });
+    // } else {
+    //   this.minimalDisplayedColumns.forEach(element => {
+    //     this.displayedColumns.push(element);
+    //   });
+    // }
   }
 
   ngOnInit() {
@@ -52,21 +78,23 @@ export class MedidasComponent implements OnInit {
       .subscribe(() => this.loading = false);
   }
 
-  novaMedida(): void {
-    const medida = new Medida();
+  // novaMedida(): void {
+  //   const medida: Medida = {
 
-    medida.monstroId = 'monstros/vQeCUnaAWmzr2YxP5wB1';
-    medida.data = new Date();
-    medida.peso = 0;
-    medida.gordura = 0;
-    medida.gorduraVisceral = 0;
-    medida.musculo = 0;
-    medida.idadeCorporal = 0;
-    medida.metabolistmoBasal = 0;
-    medida.indiceDeMassaCorporal = 0;
+  //   };
 
-    this.medidasService.cadastraMedida(medida);
-  }
+  //   medida.monstroId = 'monstros/vQeCUnaAWmzr2YxP5wB1';
+  //   medida.data = new Date();
+  //   medida.peso = 0;
+  //   medida.gordura = 0;
+  //   medida.gorduraVisceral = 0;
+  //   medida.musculo = 0;
+  //   medida.idadeCorporal = 0;
+  //   medida.metabolismoBasal = 0;
+  //   medida.indiceDeMassaCorporal = 0;
+
+  //   this.medidasService.cadastraMedida(medida);
+  // }
 
   atualizaMedida(medida: Medida): void {
     // task.done = !task.done;
@@ -74,8 +102,8 @@ export class MedidasComponent implements OnInit {
   }
 
   showDialog(medida?: Medida): void {
-    // const config: MatDialogConfig<any> = (medida) ? { data: { medida } } : null;
-    // this.dialog.open(TaskDialogComponent; config);
+    const config: MatDialogConfig<any> = (medida) ? { data: { medida } } : null;
+    this.dialog.open(MedidaComponent, config);
   }
 
   onDelete(medida: Medida): void {

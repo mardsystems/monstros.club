@@ -18,6 +18,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { MonstrosComponent } from './monstros/monstros.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DoacaoComponent } from './doacao/doacao.component';
+import { MedidaComponent } from './medidas/medida.component';
+import { MAT_DATE_LOCALE } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,11 @@ import { DoacaoComponent } from './doacao/doacao.component';
     SeriesComponent,
     PageNotFoundComponent,
     MonstrosComponent,
-    DoacaoComponent
+    DoacaoComponent,
+    MedidaComponent
+  ],
+  entryComponents: [
+    MedidaComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -38,6 +44,7 @@ import { DoacaoComponent } from './doacao/doacao.component';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'pt' },
     // { provide: LOCALE_ID, useValue: 'pt' },
     MedidasService
   ],

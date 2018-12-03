@@ -13,23 +13,27 @@ import {
   MatInputModule,
   MatFormFieldModule,
   MatMenuModule,
+  MatNativeDateModule,
   MatProgressSpinnerModule
 } from '@angular/material';
 
-import {MatTableModule} from '@angular/material/table';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     MatButtonModule,
-    MatDialogModule,
+    MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatLineModule,
     MatListModule,
     MatMenuModule,
+    MatNativeDateModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
     MatSlideToggleModule,
@@ -38,6 +42,7 @@ import {MatTableModule} from '@angular/material/table';
   ],
   exports: [
     MatButtonModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
@@ -45,6 +50,7 @@ import {MatTableModule} from '@angular/material/table';
     MatLineModule,
     MatListModule,
     MatMenuModule,
+    MatNativeDateModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
     MatSlideToggleModule,
