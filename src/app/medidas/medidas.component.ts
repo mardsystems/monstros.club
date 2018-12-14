@@ -1,11 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { MedidasService } from './medidas.service';
-import { MatDialog, MatDialogConfig, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { MedidaComponent } from './medida.component';
 import { MediaMatcher } from '@angular/cdk/layout';
+
 // import { take } from 'rxjs/operators/take';
 
 // export interface PeriodicElement {
@@ -28,6 +29,11 @@ import { MediaMatcher } from '@angular/cdk/layout';
 //   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
 // ];
 
+const columnDefinitions = [
+  { def: 'col1', showMobile: true },
+  { def: 'col2', showMobile: false },
+];
+
 @Component({
   selector: 'app-medidas',
   templateUrl: './medidas.component.html',
@@ -37,11 +43,13 @@ export class MedidasComponent implements OnInit {
   medidas$: Observable<Medida[]>;
   // medidaSelecionada: Medida;
   loading = true;
-  fullDisplayedColumns: string[] = ['data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
-  'idadeCorporal', 'metabolismoBasal', 'indiceDeMassaCorporal', 'menu'];
-  minimalDisplayedColumns: string[] = ['data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
-  displayedColumns: string[]  = ['data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
+  fullDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
+    'idadeCorporal', 'metabolismoBasal', 'indiceDeMassaCorporal', 'menu'];
+  minimalDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
+  displayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
   dataSource: any;
+
+  @ViewChild(MatSort) sort: MatSort;
 
   mobileQuery: MediaQueryList;
 
@@ -73,11 +81,34 @@ export class MedidasComponent implements OnInit {
 
     // this.dataSource = new MatTableDataSource(this.medidas$);
 
+    // this.dataSource.sort = this.sort;
+
     this.medidas$
       .pipe(take(1))
       .subscribe(() => this.loading = false);
   }
 
+  getFoto(monstroId: string): string {
+    return monstroId.replace('monstros/', '');
+  }
+
+  getDisplayedColumns(): string[] {
+    const isMobile = this.isMobile();
+
+    if (isMobile) {
+      return this.minimalDisplayedColumns;
+    } else {
+      return this.fullDisplayedColumns;
+    }
+
+    // return this.columnDefinitions
+    //   .filter(cd => !isMobile || cd.showMobile)
+    //   .map(cd => cd.def);
+  }
+
+  isMobile(): boolean {
+    return this.mobileQuery.matches;
+  }
   // novaMedida(): void {
   //   const medida: Medida = {
 

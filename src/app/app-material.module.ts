@@ -19,6 +19,8 @@ import {
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
+import { MatSortModule } from '@angular/material/sort';
+
 import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
@@ -35,6 +37,7 @@ import { MatTableModule } from '@angular/material/table';
     MatMenuModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
+    MatSortModule,
     MatSidenavModule,
     MatSlideToggleModule,
     MatToolbarModule,
@@ -52,6 +55,7 @@ import { MatTableModule } from '@angular/material/table';
     MatMenuModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
+    MatSortModule,
     MatSidenavModule,
     MatSlideToggleModule,
     MatToolbarModule,

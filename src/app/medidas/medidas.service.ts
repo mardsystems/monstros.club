@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, CollectionReference } from '@angular/fire/firestore';
 import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
 
@@ -12,7 +12,8 @@ export class MedidasService {
   constructor(
     private db: AngularFirestore
   ) {
-    this.medidas = db.collection<Medida>('/medidas');
+    this.medidas = db.collection<Medida>('/medidas',
+      (ref: CollectionReference) => ref.orderBy('data', 'desc'));
   }
 
   obtemMedidas(): Observable<Medida[]> {
