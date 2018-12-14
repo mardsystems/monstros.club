@@ -92,6 +92,52 @@ export class MedidasComponent implements OnInit {
     return monstroId.replace('monstros/', '');
   }
 
+  getGorduraVisceral2(gorduraVisceral: number): string {
+    let gorduraVisceral2: number;
+
+    if (gorduraVisceral > 14) {
+      gorduraVisceral2 = +2;
+    } else if (gorduraVisceral < 10) {
+      gorduraVisceral2 = 0;
+    } else {
+      gorduraVisceral2 = +1;
+    }
+
+    switch (gorduraVisceral2) {
+      case 0:
+        return '<span class="hint normal">&#10003;</span>';
+      case +1:
+        return '<span class="hint bad">&#43;</span>';
+      case +2:
+        return '<span class="hint bad">&#43;&#43;</span>';
+    }
+  }
+
+  getIMC2(imc: number): string {
+    let imc2: number;
+
+    if (imc < 18.5) {
+      imc2 = -1;
+    } else if (imc >= 30) {
+      imc2 = +2;
+    } else if (imc >= 25) {
+      imc2 = +1;
+    } else {
+      imc2 = 0;
+    }
+
+    switch (imc2) {
+      case -1:
+        return '<span class="hint good">&#8722;</span>';
+      case 0:
+        return '<span class="hint normal">&#10003;</span>';
+      case +1:
+        return '<span class="hint bad">&#43;</span>';
+      case +2:
+        return '<span class="hint bad">&#43;&#43;</span>';
+    }
+  }
+
   getDisplayedColumns(): string[] {
     const isMobile = this.isMobile();
 
