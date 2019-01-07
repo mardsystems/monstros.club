@@ -1,6 +1,23 @@
 # Monstros.Club
 
-Este projeto foi gerado com [Angular CLI](https://github.com/angular/angular-cli) version 7.0.6.
+Monstros.Club é uma aplicação que permite os monstros cadastrarem suas medidas (para monitoramento da saúde) e executar suas séries (previamente cadastradas).
+
+# Funcionalidades
+
+## Problemas
+
+Sem um ... é difícil saber ...
+Numa academia ou ... é difícil saber o que ...
+
+## Objetivos
+
+[Permitir o] Monitoramento da saúde.
+[Permitir a] Execução de séries.
+
+## Motivação
+
+O monitoramento de saúde é compartilhado.
+A execução de série é a melhor.
 
 # Casos de uso
 ![monstros.club-casos-de-uso](doc/monstros.club-casos-de-uso.png)
@@ -35,3 +52,5 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+Este projeto foi gerado com [Angular CLI](https://github.com/angular/angular-cli) version 7.0.6.

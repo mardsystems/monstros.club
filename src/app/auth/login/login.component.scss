@@ -1,0 +1,21 @@
+.center{
+  width: 75%;
+  margin: 10px auto;
+}
+
+.container{
+  height: 19vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.example-card {
+  max-width: 400px;
+}
+
+@media (max-width: 750px) {
+  .container{
+    height: 45vh;
+  }
+}

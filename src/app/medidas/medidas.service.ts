@@ -16,7 +16,7 @@ export class MedidasService {
       (ref: CollectionReference) => ref.orderBy('data', 'desc'));
   }
 
-  obtemMedidas(): Observable<Medida[]> {
+  obtemMedidas(monstro: string): Observable<Medida[]> {
     return this.medidas.valueChanges();
   }
 

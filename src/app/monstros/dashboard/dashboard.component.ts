@@ -3,15 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { tap, delay } from 'rxjs/operators';
 
-import { Serie } from './series.model';
-
 @Component({
-  selector: 'app-series',
-  templateUrl: './series.component.html',
-  styleUrls: ['./series.component.scss']
+  selector: 'monstros-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
-export class SeriesComponent implements OnInit {
-  series$: Observable<Serie[]>;
+export class DashboardComponent implements OnInit {
   loading = true;
 
   constructor() { }

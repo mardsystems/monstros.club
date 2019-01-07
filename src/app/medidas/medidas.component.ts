@@ -1,11 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { MedidasService } from './medidas.service';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { MedidaComponent } from './medida.component';
 import { MediaMatcher } from '@angular/cdk/layout';
+
+import { SelectivePreloadingStrategyService } from '../selective-preloading-strategy.service';
 
 // import { take } from 'rxjs/operators/take';
 
@@ -49,12 +52,19 @@ export class MedidasComponent implements OnInit {
   displayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
   dataSource: any;
 
+  sessionId: Observable<string>;
+  token: Observable<string>;
+  modules: string[];
+
   @ViewChild(MatSort) sort: MatSort;
 
   mobileQuery: MediaQueryList;
 
   constructor(
     private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private preloadStrategy: SelectivePreloadingStrategyService,
+    private router: Router,
     private medidasService: MedidasService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
@@ -62,6 +72,8 @@ export class MedidasComponent implements OnInit {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
+
+    this.modules = preloadStrategy.preloadedModules;
   }
 
   private _mobileQueryListener(ev: MediaQueryListEvent) {
@@ -77,7 +89,12 @@ export class MedidasComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.medidas$ = this.medidasService.obtemMedidas();
+    this.medidas$ = this.route.paramMap.pipe(
+      switchMap((params: ParamMap) =>
+        this.medidasService.obtemMedidas(params.get('monstro')))
+    );
+
+    // this.medidas$ = this.medidasService.obtemMedidas();
 
     // this.dataSource = new MatTableDataSource(this.medidas$);
 
@@ -86,6 +103,16 @@ export class MedidasComponent implements OnInit {
     this.medidas$
       .pipe(take(1))
       .subscribe(() => this.loading = false);
+
+    // Capture the session ID if available
+    this.sessionId = this.route
+      .queryParamMap
+      .pipe(map(params => params.get('session_id') || 'None'));
+
+    // Capture the fragment if available
+    this.token = this.route
+      .fragment
+      .pipe(map(fragment => fragment || 'None'));
   }
 
   getFoto(monstroId: string): string {

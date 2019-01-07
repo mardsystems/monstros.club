@@ -1,0 +1,26 @@
+.center{
+  width: 75%;
+  margin: 10px auto;
+}
+
+.container{
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.example-card {
+  max-width: 400px;
+}
+
+.example-header-image {
+  background-image: url('../../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg');
+  background-size: cover;
+}
+
+@media (max-width: 750px) {
+  .container{
+    height: 70vh;
+  }
+}

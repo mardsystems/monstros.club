@@ -1,1 +1,70 @@
-<mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="loading"></mat-spinner>
+<div class="mat-app-background basic-container">
+  <div class="app-container" [class.app-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="app-toolbar">
+      <button mat-icon-button (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <a mat-button class="example-icon" routerLink="./" routerLinkActive="active">
+        <h1 class="app-name">Monstros Club</h1>
+      </a>
+      <!-- <span>{{title}}</span> -->
+      <span class="app-fill-remaining-space"></span>
+      <!-- <span>Right</span> -->
+      <a mat-icon-button href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A3URPDNKV85C4&item_name=Monstros.Club&currency_code=BRL&source=url">
+        <mat-icon class="red-icon">favorite</mat-icon>
+      </a>
+      <button mat-icon-button [matMenuTriggerFor]="appMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="app-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+      <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+        fixedTopGap="56">
+        <mat-nav-list>
+          <!-- <h3 mat-subheader>Monstro</h3> -->
+          <!-- <mat-list-item>
+            <button mat-icon-button>
+              <mat-icon>info</mat-icon>
+            </button>
+            <a matLine href=".">Home</a>
+          </mat-list-item> -->
+          <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <img matListAvatar src="../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg" alt="Foto do Monstro">
+            <!-- <mat-icon matListIcon>person</mat-icon> -->
+            <h3 matLine>Marcelo Dias</h3>
+            <button mat-icon-button (click)="logout()">
+              <mat-icon>exit_to_app</mat-icon>
+            </button>
+            <!-- <p matLine>
+              <span> Este é o início </span>
+              <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
+            </p> -->
+          </a>
+          <mat-divider></mat-divider>
+          <a mat-list-item routerLink="./series" routerLinkActive="active">
+            <mat-icon matListIcon>fitness_center</mat-icon>
+            <h3 matLine>Séries</h3>
+          </a>
+          <a mat-list-item routerLink="./medidas" routerLinkActive="active">
+            <mat-icon matListIcon>near_me</mat-icon>
+            <h3 matLine>Medidas</h3>
+          </a>
+          <!-- <a mat-list-item routerLink="." *ngFor="let nav of fillerNav">{{nav}}</a> -->
+        </mat-nav-list>
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <!-- <app-medidas></app-medidas> -->
+        <router-outlet></router-outlet>
+        <!-- <app-doacao></app-doacao> -->
+        <!-- <p *ngFor="let content of fillerContent">{{content}}</p> -->
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
+
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item>Configurações</button>
+    <button mat-menu-item>Ajuda</button>
+  </mat-menu>
+</div>
