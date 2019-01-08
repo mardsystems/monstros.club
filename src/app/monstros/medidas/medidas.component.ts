@@ -8,7 +8,7 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { MedidaComponent } from './medida.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 
-import { SelectivePreloadingStrategyService } from '../selective-preloading-strategy.service';
+import { SelectivePreloadingStrategyService } from '../../selective-preloading-strategy.service';
 
 // import { take } from 'rxjs/operators/take';
 
