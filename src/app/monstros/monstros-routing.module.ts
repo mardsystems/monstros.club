@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { MonstrosComponent } from './monstros.component';
 import { HomeComponent } from './home/home.component';
-import { SeriesComponent } from '../series/series.component';
-import { MedidasComponent } from '../medidas/medidas.component';
+import { SeriesComponent } from './series/series.component';
+import { MedidasComponent } from './medidas/medidas.component';
 import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-nao-encontrado.component';
 
 import { AuthGuard } from '../auth/auth.guard';

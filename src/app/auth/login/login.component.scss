@@ -4,7 +4,7 @@
 }
 
 .container{
-  height: 19vh;
+  height: 18vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,8 +14,8 @@
   max-width: 400px;
 }
 
-@media (max-width: 750px) {
+@media only screen and  (max-width: 750px) {
   .container{
-    height: 45vh;
+    height: 50vh;
   }
 }
