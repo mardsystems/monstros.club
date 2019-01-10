@@ -15,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 // import { MonstrosModule } from './monstros/monstros.module';
 import { DoacaoComponent } from './doacao/doacao.component';
 import { AuthModule } from './auth/auth.module';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { environment } from '../environments/environment';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -42,6 +43,7 @@ import { AdminComponent } from './admin/admin.component';
     AppMaterialModule,
     // MonstrosModule,
     AuthModule,
+    AngularFireAuthModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],

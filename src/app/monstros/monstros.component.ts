@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-monstros',
@@ -15,6 +16,7 @@ export class MonstrosComponent implements OnDestroy {
   private _mobileQueryListener: () => void;
 
   constructor(
+    public authService: AuthService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private router: Router) {

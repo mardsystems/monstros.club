@@ -91,8 +91,8 @@ export class MedidasComponent implements OnInit {
   ngOnInit() {
     this.medidas$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
-        this.medidasService.obtemMedidas(params.get('monstro')))
-    );
+        this.medidasService.obtemMedidas(params.get('monstro'))
+      ));
 
     // this.medidas$ = this.medidasService.obtemMedidas();
 

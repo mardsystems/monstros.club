@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
-    path: 'marcelo',
+    path: 'monstro',
     loadChildren: './monstros/monstros.module#MonstrosModule',
     canLoad: [AuthGuard]
   },

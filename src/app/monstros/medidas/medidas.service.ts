@@ -1,19 +1,33 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Query } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, CollectionReference } from '@angular/fire/firestore';
 import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
+import { delay, switchMap, tap } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MedidasService {
   medidas: AngularFirestoreCollection<Medida>;
+  monstroId: string;
 
   constructor(
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    private authService: AuthService
   ) {
+    if (true) {
+      this.monstroId = `monstros/vQeCUnaAWmzr2YxP5wB1`;
+    }
+
     this.medidas = db.collection<Medida>('/medidas',
-      (ref: CollectionReference) => ref.orderBy('data', 'desc'));
+      (ref: CollectionReference) => ref.orderBy('data', 'desc').where('monstroId', '==', this.monstroId));
+
+    this.authService.user.subscribe((user) => {
+      this.monstroId = `monstros/${user.id}`;
+
+      this.medidas.valueChanges();
+    });
   }
 
   obtemMedidas(monstro: string): Observable<Medida[]> {
@@ -27,7 +41,7 @@ export class MedidasService {
 
     const result = document.set({
       id,
-      monstroId: 'monstros/vQeCUnaAWmzr2YxP5wB1',
+      monstroId: this.monstroId,
       data: medida.data,
       peso: medida.peso,
       gordura: medida.gordura,

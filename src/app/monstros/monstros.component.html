@@ -29,10 +29,10 @@
             </button>
             <a matLine href=".">Home</a>
           </mat-list-item> -->
-          <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="authService.user | async as user">
             <img matListAvatar src="../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg" alt="Foto do Monstro">
             <!-- <mat-icon matListIcon>person</mat-icon> -->
-            <h3 matLine>Marcelo Dias</h3>
+            <h3 matLine>{{ user.email }}</h3>
             <button mat-icon-button (click)="logout()">
               <mat-icon>exit_to_app</mat-icon>
             </button>
