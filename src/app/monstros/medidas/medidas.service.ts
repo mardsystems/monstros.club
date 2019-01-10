@@ -24,9 +24,9 @@ export class MedidasService {
       (ref: CollectionReference) => ref.orderBy('data', 'desc').where('monstroId', '==', this.monstroId));
 
     this.authService.user.subscribe((user) => {
-      this.monstroId = `monstros/${user.id}`;
+      // this.monstroId = `monstros/${user.id}`;
 
-      this.medidas.valueChanges();
+      // this.medidas.valueChanges();
     });
   }
 
