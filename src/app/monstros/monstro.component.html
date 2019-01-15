@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+
+<mat-dialog-content class="form-container ">
+
+  <mat-form-field>
+    <input matInput [(ngModel)]="monstro.data" [matDatepicker]="data" placeholder="Data" #dataInput>
+    <mat-datepicker-toggle matSuffix [for]="data"></mat-datepicker-toggle>
+    <mat-datepicker touchUi #data></mat-datepicker>
+  </mat-form-field>
+
+  <!-- <mat-form-field>
+    <input type="text" placeholder="Data" matInput [(ngModel)]="monstro.data" required #data="ngModel">
+  </mat-form-field> -->
+
+  <mat-form-field>
+    <input type="number" placeholder="Peso" matInput [(ngModel)]="monstro.peso" required #peso="ngModel">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="number" placeholder="Gordura" matInput [(ngModel)]="monstro.gordura" required #gordura="ngModel">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="number" placeholder="Gordura Visceral" matInput [(ngModel)]="monstro.gorduraVisceral" required
+      #gorduraVisceral="ngModel">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="number" placeholder="Músculo" matInput [(ngModel)]="monstro.musculo" required #musculo="ngModel">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="number" placeholder="Idade Corporal" matInput [(ngModel)]="monstro.idadeCorporal" required
+      #idadeCorporal="ngModel">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="number" placeholder="Metabolismo Basal" matInput [(ngModel)]="monstro.metabolismoBasal" required
+      #metabolismoBasal="ngModel">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="number" placeholder="IMC" matInput [(ngModel)]="monstro.indiceDeMassaCorporal" required
+      #indiceDeMassaCorporal="ngModel">
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button [disabled]="dataInput.invalid || peso.invalid || gordura.invalid || gorduraVisceral.invalid || musculo.invalid || idadeCorporal.invalid || metabolismoBasal.invalid || indiceDeMassaCorporal.invalid" (click)="onSave()">Salvar</button>
+</mat-dialog-actions>

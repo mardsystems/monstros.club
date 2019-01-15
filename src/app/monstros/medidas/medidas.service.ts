@@ -1,47 +1,97 @@
-import { Injectable, Query } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, CollectionReference } from '@angular/fire/firestore';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Monstro } from '../monstros.model';
+import { MonstrosService } from '../monstros.service';
 import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
-import { delay, switchMap, tap } from 'rxjs/operators';
-import { AuthService } from 'src/app/auth/auth.service';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MedidasService {
-  medidas: AngularFirestoreCollection<Medida>;
-  monstroId: string;
+  PATH = '/medidas';
 
   constructor(
-    private db: AngularFirestore,
-    private authService: AuthService
-  ) {
-    if (true) {
-      this.monstroId = `monstros/vQeCUnaAWmzr2YxP5wB1`;
-    }
+    private monstrosService: MonstrosService,
+    private db: AngularFirestore
+  ) { }
 
-    this.medidas = db.collection<Medida>('/medidas',
-      (ref: CollectionReference) => ref.orderBy('data', 'desc').where('monstroId', '==', this.monstroId));
+  obtemMedidasObservaveisParaRanking(): Observable<Medida[]> {
+    const collection = this.db.collection<IMedida>(this.PATH, reference => {
+      return reference
+        .orderBy('data', 'desc');
+    });
 
-    this.authService.user.subscribe((user) => {
-      // this.monstroId = `monstros/${user.id}`;
+    return collection.valueChanges().pipe(
+      map(values => this.mapMedidas(values))
+    );
+  }
 
-      // this.medidas.valueChanges();
+  obtemMedidasObservaveisParaExibicao(monstroId: string): Observable<Medida[]> {
+    const collection = this.db.collection<IMedida>(this.PATH, reference => {
+      return reference
+        .where('monstroId', '==', `monstros/${monstroId}`)
+        .orderBy('data', 'desc');
+    });
+
+    return collection.valueChanges().pipe(
+      map(values => {
+        return values.map((value, index) => {
+          return this.mapMedida(value, null);
+        });
+      })
+    );
+  }
+
+  // return this.monstrosService.obtemMonstroObservavel(value.monstroId).pipe(
+  //   switchMap(monstro => {
+  //     return this.mapMedida(value, monstro)
+  //   })
+  // );
+
+  private mapMedidas(values: IMedida[]): Medida[] {
+    return values.map((value, index) => {
+      return new Medida(
+        value.id,
+        null,
+        value.data,
+        value.peso,
+        value.gordura,
+        value.gorduraVisceral,
+        value.musculo,
+        value.idadeCorporal,
+        value.metabolismoBasal,
+        value.indiceDeMassaCorporal
+      );
     });
   }
 
-  obtemMedidas(monstro: string): Observable<Medida[]> {
-    return this.medidas.valueChanges();
+  private mapMedida(value: IMedida, monstro: Monstro): Medida {
+    return new Medida(
+      value.id,
+      monstro,
+      value.data,
+      value.peso,
+      value.gordura,
+      value.gorduraVisceral,
+      value.musculo,
+      value.idadeCorporal,
+      value.metabolismoBasal,
+      value.indiceDeMassaCorporal
+    );
   }
 
   cadastraMedida(medida: Medida): Promise<void> {
+    const collection = this.db.collection<IMedida>(this.PATH);
+
     const id = this.db.createId();
 
-    const document = this.medidas.doc<Medida>(id);
+    const document = collection.doc<IMedida>(id);
 
     const result = document.set({
       id,
-      monstroId: this.monstroId,
+      monstroId: `monstros/${medida.monstro.id}`,
       data: medida.data,
       peso: medida.peso,
       gordura: medida.gordura,
@@ -56,7 +106,9 @@ export class MedidasService {
   }
 
   atualizaMedida(medida: Medida): Promise<void> {
-    const document = this.medidas.doc<Medida>(medida.id);
+    const collection = this.db.collection<IMedida>(this.PATH);
+
+    const document = collection.doc<IMedida>(medida.id);
 
     const result = document.update(medida);
 
@@ -64,10 +116,26 @@ export class MedidasService {
   }
 
   excluiMedida(medida: Medida): Promise<void> {
-    const document = this.medidas.doc<Medida>(medida.id);
+    const collection = this.db.collection<IMedida>(this.PATH);
+
+    const document = collection.doc<IMedida>(medida.id);
 
     const result = document.delete();
 
     return result;
   }
+}
+
+// tslint:disable-next-line:class-name
+interface IMedida {
+  id: string;
+  monstroId: string;
+  data: Date;
+  peso: number;
+  gordura: number;
+  gorduraVisceral: number;
+  musculo: number;
+  idadeCorporal: number;
+  metabolismoBasal: number;
+  indiceDeMassaCorporal: number;
 }
