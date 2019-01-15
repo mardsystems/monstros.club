@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, CollectionReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
-import { Medida } from 'src/model/monstros/medidas/medida';
-import { RepositorioDeMedidas } from 'src/model/monstros/medidas/repositorioDeMedidas';
+import { Medida } from 'src/domain/monstros/medidas/medida';
+import { RepositorioDeMedidas } from 'src/domain/monstros/medidas/repositorioDeMedidas';
 
 @Injectable({
   providedIn: 'root'
