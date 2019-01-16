@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { MonstroComponent } from './monstro.component';
 import { MonstrosComponent } from './monstros.component';
 import { MedidaComponent } from './medidas/medida.component';
 import { MedidasComponent } from './medidas/medidas.component';
@@ -17,7 +16,6 @@ import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-
 
 @NgModule({
   declarations: [
-    MonstroComponent,
     MonstrosComponent,
     MedidaComponent,
     MedidasComponent,

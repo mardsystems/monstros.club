@@ -25,7 +25,6 @@ import { HomeComponent } from './home/home.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { AdminComponent } from './admin/admin.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,

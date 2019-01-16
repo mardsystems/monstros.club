@@ -13,7 +13,7 @@ import { MedidasService } from './medidas.service';
 export class MedidaComponent implements OnInit {
 
   dialogTitle = 'Nova Medida';
-  medida: Medida;
+  medida: Medida = {};
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: any,

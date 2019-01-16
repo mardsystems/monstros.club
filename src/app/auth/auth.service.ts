@@ -33,14 +33,14 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
-    private db: AngularFirestore,
+    private afs: AngularFirestore,
     private router: Router
   ) {
     //// Get auth data, then get firestore user document || null
     this.user = this.afAuth.authState.pipe(
       switchMap(monstro => {
         if (monstro) {
-          return this.db.doc<User>(`monstros/${monstro.uid}`).valueChanges();
+          return this.afs.doc<User>(`monstros/${monstro.uid}`).valueChanges();
         } else {
           return of(null);
         }
@@ -63,18 +63,11 @@ export class AuthService {
       });
   }
 
-  // public get foto(): string {
-  //   if (true) {
-  //     return `../assets/foto-${this.monstroId.replace('monstros/', '')}.jpg`;
-  //   } else {
-
-  //   }
-  // }
 
   private updateUserData(user) {
     // Sets user data to firestore on login
 
-    const userRef: AngularFirestoreDocument<any> = this.db.doc(`monstros/${user.uid}`);
+    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`monstros/${user.uid}`);
 
     const data: User = {
       // uid: user.uid,
@@ -85,7 +78,7 @@ export class AuthService {
       // dataDeNascimento: user.dataDeNascimento,
       email: user.email,
       // displayName: user.displayName,
-      photoURL: user.photoURL
+      // photoURL: user.photoURL
     };
 
     return userRef.set(data, { merge: true });

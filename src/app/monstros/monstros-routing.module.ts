@@ -22,7 +22,7 @@ const monstrosRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
           { path: 'series', component: SeriesComponent },
-          { path: 'medidas/:monstroId', component: MedidasComponent },
+          { path: 'medidas', component: MedidasComponent },
           { path: '', component: HomeComponent }
         ]
       }
