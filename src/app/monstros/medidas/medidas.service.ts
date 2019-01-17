@@ -3,45 +3,38 @@ import { AngularFirestore, AngularFirestoreCollection, CollectionReference } fro
 import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
 import { delay, switchMap, tap } from 'rxjs/operators';
-import { AuthService } from 'src/app/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MedidasService {
-  medidas: AngularFirestoreCollection<Medida>;
-  monstroId: string;
+  PATH = '/medidas';
 
   constructor(
-    private db: AngularFirestore,
-    private authService: AuthService
+    private db: AngularFirestore
   ) {
-    if (true) {
-      this.monstroId = `monstros/vQeCUnaAWmzr2YxP5wB1`;
-    }
-
-    this.medidas = db.collection<Medida>('/medidas',
-      (ref: CollectionReference) => ref.orderBy('data', 'desc').where('monstroId', '==', this.monstroId));
-
-    this.authService.user.subscribe((user) => {
-      // this.monstroId = `monstros/${user.id}`;
-
-      // this.medidas.valueChanges();
-    });
   }
 
-  obtemMedidas(monstro: string): Observable<Medida[]> {
-    return this.medidas.valueChanges();
+  obtemMedidasObservaveisParaExibicao(monstroId: string): Observable<Medida[]> {
+    const collection = this.db.collection<Medida>(this.PATH, reference =>
+      reference
+        .where('monstroId', '==', `monstros/${monstroId}`)
+        .orderBy('data', 'desc')
+    );
+
+    return collection.valueChanges();
   }
 
   cadastraMedida(medida: Medida): Promise<void> {
+    const collection = this.db.collection<Medida>(this.PATH);
+
     const id = this.db.createId();
 
-    const document = this.medidas.doc<Medida>(id);
+    const document = collection.doc<Medida>(id);
 
     const result = document.set({
       id,
-      monstroId: this.monstroId,
+      monstroId: medida.monstroId,
       data: medida.data,
       peso: medida.peso,
       gordura: medida.gordura,
@@ -56,7 +49,9 @@ export class MedidasService {
   }
 
   atualizaMedida(medida: Medida): Promise<void> {
-    const document = this.medidas.doc<Medida>(medida.id);
+    const collection = this.db.collection<Medida>(this.PATH);
+
+    const document = collection.doc<Medida>(medida.id);
 
     const result = document.update(medida);
 
@@ -64,7 +59,9 @@ export class MedidasService {
   }
 
   excluiMedida(medida: Medida): Promise<void> {
-    const document = this.medidas.doc<Medida>(medida.id);
+    const collection = this.db.collection<Medida>(this.PATH);
+
+    const document = collection.doc<Medida>(medida.id);
 
     const result = document.delete();
 

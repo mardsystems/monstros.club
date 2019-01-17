@@ -4,33 +4,12 @@ import { Medida } from './medidas.model';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { MedidasService } from './medidas.service';
+import { AuthService } from 'src/app/auth/auth.service';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { MedidaComponent } from './medida.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 
 import { SelectivePreloadingStrategyService } from '../../selective-preloading-strategy.service';
-
-// import { take } from 'rxjs/operators/take';
-
-// export interface PeriodicElement {
-//   name: string;
-//   position: number;
-//   weight: number;
-//   symbol: string;
-// }
-
-// const ELEMENT_DATA: PeriodicElement[] = [
-//   {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-//   {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-//   {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-//   {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-//   {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-//   {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-//   {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-//   {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-//   {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-//   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-// ];
 
 const columnDefinitions = [
   { def: 'col1', showMobile: true },
@@ -66,6 +45,7 @@ export class MedidasComponent implements OnInit {
     private preloadStrategy: SelectivePreloadingStrategyService,
     private router: Router,
     private medidasService: MedidasService,
+    private authService: AuthService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
@@ -74,6 +54,12 @@ export class MedidasComponent implements OnInit {
     this.mobileQuery.addListener(this._mobileQueryListener);
 
     this.modules = preloadStrategy.preloadedModules;
+
+    this.authService.user.subscribe((user) => {
+      // this.monstroId = `monstros/${user.id}`;
+
+      // this.medidas.valueChanges();
+    });
   }
 
   private _mobileQueryListener(ev: MediaQueryListEvent) {
@@ -91,7 +77,7 @@ export class MedidasComponent implements OnInit {
   ngOnInit() {
     this.medidas$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
-        this.medidasService.obtemMedidas(params.get('monstro'))
+        this.medidasService.obtemMedidasObservaveisParaExibicao(params.get('monstroId'))
       ));
 
     // this.medidas$ = this.medidasService.obtemMedidas();
