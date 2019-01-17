@@ -1,8 +1,7 @@
-import { Injectable, Query } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, CollectionReference } from '@angular/fire/firestore';
-import { Medida } from './medidas.model';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { delay, switchMap, tap } from 'rxjs/operators';
+import { Medida } from './medidas.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +11,15 @@ export class MedidasService {
 
   constructor(
     private db: AngularFirestore
-  ) {
+  ) { }
+
+  obtemMedidasObservaveisParaRanking(): Observable<Medida[]> {
+    const collection = this.db.collection<Medida>(this.PATH, reference =>
+      reference
+        .orderBy('data', 'desc')
+    );
+
+    return collection.valueChanges();
   }
 
   obtemMedidasObservaveisParaExibicao(monstroId: string): Observable<Medida[]> {

@@ -29,10 +29,10 @@
             </button>
             <a matLine href=".">Home</a>
           </mat-list-item> -->
-          <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="authService.user | async as user">
+          <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroLogado$ | async as monstroLogado">
             <img matListAvatar src="../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg" alt="Foto do Monstro">
             <!-- <mat-icon matListIcon>person</mat-icon> -->
-            <h3 matLine>{{ user.email }}</h3>
+            <h3 matLine>{{ monstroLogado.email }}</h3>
             <button mat-icon-button (click)="logout()">
               <mat-icon>exit_to_app</mat-icon>
             </button>
@@ -46,13 +46,9 @@
             <mat-icon matListIcon>fitness_center</mat-icon>
             <h3 matLine>Séries</h3>
           </a>
-          <a mat-list-item routerLink="./medidas/vQeCUnaAWmzr2YxP5wB1" routerLinkActive="active">
+          <a mat-list-item routerLink="./medidas" routerLinkActive="active">
             <mat-icon matListIcon>near_me</mat-icon>
-            <h3 matLine>Medidas (Local)</h3>
-          </a>
-          <a mat-list-item routerLink="./medidas/pnYbAnxEyOctBJldlABrtz0l6Jc2" routerLinkActive="active">
-            <mat-icon matListIcon>near_me</mat-icon>
-            <h3 matLine>Medidas (Google)</h3>
+            <h3 matLine>Medidas</h3>
           </a>
           <!-- <a mat-list-item routerLink="." *ngFor="let nav of fillerNav">{{nav}}</a> -->
         </mat-nav-list>

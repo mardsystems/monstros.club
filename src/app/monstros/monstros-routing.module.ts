@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-import { MonstrosComponent } from './monstros.component';
+import { AuthGuard } from '../auth/auth.guard';
 import { HomeComponent } from './home/home.component';
-import { SeriesComponent } from './series/series.component';
 import { MedidasComponent } from './medidas/medidas.component';
 import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-nao-encontrado.component';
-
-import { AuthGuard } from '../auth/auth.guard';
+import { MonstrosComponent } from './monstros.component';
+import { SeriesComponent } from './series/series.component';
 
 const monstrosRoutes: Routes = [
   // { path: 'heroes', redirectTo: '/superheroes' },
@@ -22,7 +20,7 @@ const monstrosRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
           { path: 'series', component: SeriesComponent },
-          { path: 'medidas/:monstroId', component: MedidasComponent },
+          { path: 'medidas', component: MedidasComponent },
           { path: '', component: HomeComponent }
         ]
       }

@@ -2,6 +2,9 @@ import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { MonstrosService } from './monstros.service';
+import { Monstro } from './monstros.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-monstros',
@@ -9,7 +12,7 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./monstros.component.scss']
 })
 export class MonstrosComponent implements OnDestroy {
-  title = 'Marcelo Dias';
+  monstroLogado$: Observable<Monstro>;
 
   mobileQuery: MediaQueryList;
 
@@ -17,12 +20,15 @@ export class MonstrosComponent implements OnDestroy {
 
   constructor(
     public authService: AuthService,
-    changeDetectorRef: ChangeDetectorRef,
-    media: MediaMatcher,
-    private router: Router) {
+    private monstrosService: MonstrosService,
+    private media: MediaMatcher,
+    private changeDetectorRef: ChangeDetectorRef,
+  ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
+
+    this.monstroLogado$ = this.monstrosService.monstroLogado$;
   }
 
   ngOnDestroy(): void {
@@ -30,6 +36,8 @@ export class MonstrosComponent implements OnDestroy {
   }
 
   public logout() {
-    this.router.navigate(['/login']);
+    this.authService.logout();
+
+    // this.router.navigate(['/login']);
   }
 }

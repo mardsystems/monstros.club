@@ -1,15 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Medida } from './medidas.model';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig, MatSort } from '@angular/material';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
-import { MedidasService } from './medidas.service';
 import { AuthService } from 'src/app/auth/auth.service';
-import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
-import { MedidaComponent } from './medida.component';
-import { MediaMatcher } from '@angular/cdk/layout';
-
 import { SelectivePreloadingStrategyService } from '../../selective-preloading-strategy.service';
+import { MedidaComponent } from './medida.component';
+import { Medida } from './medidas.model';
+import { MedidasService } from './medidas.service';
 
 const columnDefinitions = [
   { def: 'col1', showMobile: true },
@@ -55,11 +54,11 @@ export class MedidasComponent implements OnInit {
 
     this.modules = preloadStrategy.preloadedModules;
 
-    this.authService.user.subscribe((user) => {
-      // this.monstroId = `monstros/${user.id}`;
+    // this.authService.user.subscribe((user) => {
+    //   // this.monstroId = `monstros/${user.id}`;
 
-      // this.medidas.valueChanges();
-    });
+    //   // this.medidas.valueChanges();
+    // });
   }
 
   private _mobileQueryListener(ev: MediaQueryListEvent) {
