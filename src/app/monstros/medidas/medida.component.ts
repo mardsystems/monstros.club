@@ -22,15 +22,18 @@ export class MedidaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.data) {
+    if (this.data.isNew) {
+      this.medida.monstroId = this.data.monstroId;
+    } else {
       this.dialogTitle = 'Atualiza Medida';
+
       this.medida = this.data.medida;
     }
   }
 
   onSave(): void {
     const operation: Promise<void> =
-      (!this.data)
+      (this.data.isNew)
         ? this.medidasService.cadastraMedida(this.medida)
         : this.medidasService.atualizaMedida(this.medida);
 

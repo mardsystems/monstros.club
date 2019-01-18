@@ -16,13 +16,23 @@ export class MonstrosService {
     public authService: AuthService,
     private db: AngularFirestore
   ) {
-    this.monstroLogado$ = this.authService.userInfo$.pipe(
+    this.monstroLogado$ = this.authService.user$.pipe(
       switchMap(user => {
         if (user) {
+          const photoURLdoMarcelo = '../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg';
+
+          let photoURL;
+
+          if (user.uid === 'vQeCUnaAWmzr2YxP5wB1') {
+            photoURL = photoURLdoMarcelo;
+          } else {
+            photoURL = user.photoURL;
+          }
+
           const informacoesDoMonstroMescladas: Monstro = {
             displayName: user.displayName,
             email: user.email,
-            photoURL: user.photoURL,
+            photoURL: photoURL,
             id: user.uid,
             // nome: user.email,
             // altura: user.altura,

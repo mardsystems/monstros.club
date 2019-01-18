@@ -6,13 +6,13 @@
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let medida">
       <!-- <mat-icon matListIcon>person</mat-icon> -->
-      <img class="foto" src="../assets/foto-{{this.getFoto(medida.monstroId)}}.jpg" alt="{{medida.monstroId}}">
+      <img class="foto" src="{{this.getFoto(medida.monstroId)}}" alt="{{medida.monstroId}}">
     </td>
   </ng-container>
 
   <ng-container matColumnDef="data">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="data"> Data </th>
-    <td mat-cell *matCellDef="let medida"> {{medida.data.toDate() | date:'dd/MMM' | uppercase}} </td>
+    <td mat-cell *matCellDef="let medida"> {{this.getData(medida.data) | date:'dd/MMM' | uppercase}} </td>
   </ng-container>
 
   <ng-container matColumnDef="peso">
@@ -69,7 +69,7 @@
 
 <mat-menu #medidaMenu="matMenu" overlapTrigger="false">
   <ng-template matMenuContent let-medida="medidaAtualizadaOuExcluida">
-    <button mat-menu-item (click)="showDialog(medida)">
+    <button mat-menu-item (click)="showMedida(medida)">
       <mat-icon>edit</mat-icon>
       <span>Editar</span>
     </button>
@@ -80,6 +80,6 @@
   </ng-template>
 </mat-menu>
 
-<button mat-fab class="fab-bottom-right" (click)="showDialog()">
+<button mat-fab class="fab-bottom-right" (click)="showMedida()">
   <mat-icon>add</mat-icon>
 </button>

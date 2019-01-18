@@ -6,9 +6,12 @@ import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SelectivePreloadingStrategyService } from '../../selective-preloading-strategy.service';
+import { MonstrosService } from '../monstros.service';
 import { MedidaComponent } from './medida.component';
 import { Medida } from './medidas.model';
 import { MedidasService } from './medidas.service';
+import { Monstro } from '../monstros.model';
+import { Timestamp } from 'rxjs/internal/operators/timestamp';
 
 const columnDefinitions = [
   { def: 'col1', showMobile: true },
@@ -34,6 +37,9 @@ export class MedidasComponent implements OnInit {
   token: Observable<string>;
   modules: string[];
 
+  monstroId: string;
+  monstroLogado: Monstro;
+
   @ViewChild(MatSort) sort: MatSort;
 
   mobileQuery: MediaQueryList;
@@ -43,8 +49,9 @@ export class MedidasComponent implements OnInit {
     private route: ActivatedRoute,
     private preloadStrategy: SelectivePreloadingStrategyService,
     private router: Router,
-    private medidasService: MedidasService,
     private authService: AuthService,
+    private monstrosService: MonstrosService,
+    private medidasService: MedidasService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
@@ -54,11 +61,15 @@ export class MedidasComponent implements OnInit {
 
     this.modules = preloadStrategy.preloadedModules;
 
-    // this.authService.user.subscribe((user) => {
-    //   // this.monstroId = `monstros/${user.id}`;
+    // this.authService.user$.subscribe((user) => {
+    //   this.monstroId = `monstros/${user.id}`;
 
     //   // this.medidas.valueChanges();
     // });
+
+    this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
+      this.monstroLogado = monstroLogado;
+    });
   }
 
   private _mobileQueryListener(ev: MediaQueryListEvent) {
@@ -75,9 +86,11 @@ export class MedidasComponent implements OnInit {
 
   ngOnInit() {
     this.medidas$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) =>
-        this.medidasService.obtemMedidasObservaveisParaExibicao(params.get('monstroId'))
-      ));
+      switchMap((params: ParamMap) => {
+        this.monstroId = params.get('monstroId');
+
+        return this.medidasService.obtemMedidasObservaveisParaExibicao(this.monstroId);
+      }));
 
     // this.medidas$ = this.medidasService.obtemMedidas();
 
@@ -85,23 +98,38 @@ export class MedidasComponent implements OnInit {
 
     // this.dataSource.sort = this.sort;
 
-    this.medidas$
-      .pipe(take(1))
-      .subscribe(() => this.loading = false);
+    this.medidas$.pipe(
+      take(1)
+    ).subscribe(() => this.loading = false);
 
     // Capture the session ID if available
-    this.sessionId = this.route
-      .queryParamMap
-      .pipe(map(params => params.get('session_id') || 'None'));
+    this.sessionId = this.route.queryParamMap.pipe(
+      map(params => params.get('session_id') || 'None')
+    );
 
     // Capture the fragment if available
-    this.token = this.route
-      .fragment
-      .pipe(map(fragment => fragment || 'None'));
+    this.token = this.route.fragment.pipe(
+      map(fragment => fragment || 'None')
+    );
   }
 
   getFoto(monstroId: string): string {
-    return monstroId.replace('monstros/', '');
+    if (monstroId === 'monstros/vQeCUnaAWmzr2YxP5wB1') {
+      return '../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg';
+    } else {
+      return this.monstroLogado.photoURL;
+      // return monstroId.replace('monstros/', '');
+    }
+  }
+
+  getData(data: any): any {
+    // console.log(data);
+
+    if (data.seconds) {
+      return data.toDate();
+    } else {
+      return data;
+    }
   }
 
   getGorduraVisceral2(gorduraVisceral: number): string {
@@ -185,13 +213,16 @@ export class MedidasComponent implements OnInit {
   //   this.medidasService.cadastraMedida(medida);
   // }
 
-  atualizaMedida(medida: Medida): void {
-    // task.done = !task.done;
-    this.medidasService.atualizaMedida(medida);
-  }
+  // atualizaMedida(medida: Medida): void {
+  //   // task.done = !task.done;
+  //   this.medidasService.atualizaMedida(medida);
+  // }
 
-  showDialog(medida?: Medida): void {
-    const config: MatDialogConfig<any> = (medida) ? { data: { medida } } : null;
+  showMedida(medida?: Medida): void {
+    const monstroId = `monstros/${this.monstroId}`;
+
+    const config: MatDialogConfig<any> = (medida) ? { data: { isNew: false, medida } } : { data: { isNew: true, monstroId } };
+
     this.dialog.open(MedidaComponent, config);
   }
 

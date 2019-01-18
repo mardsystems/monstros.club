@@ -10,7 +10,6 @@ export class LoginComponent {
   message: string;
   username: string;
   password: string;
-  isGoogle: boolean;
 
   constructor(
     public authService: AuthService
@@ -19,18 +18,14 @@ export class LoginComponent {
   }
 
   googleLogin() {
-    this.isGoogle = true;
-
     this.message = 'Trying to log in Google ...';
 
-    this.authService.signInWithGoogle().then(() =>
+    this.authService.googleLogin().then(() =>
       this.setMessage()
     );
   }
 
   login() {
-    this.isGoogle = false;
-
     this.message = 'Trying to log in ...';
 
     this.authService.login(this.username, this.password).subscribe(() =>
@@ -39,17 +34,13 @@ export class LoginComponent {
   }
 
   logout() {
-    if (this.isGoogle) {
-      this.authService.signOut();
-    } else {
-      this.authService.logout();
-    }
+    this.authService.logout();
 
     this.setMessage();
   }
 
   private setMessage() {
-    this.message = 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out');
+    this.message = 'Logged ' + (this.authService.authenticated ? 'in' : 'out');
   }
 }
 

@@ -3,8 +3,8 @@
     <mat-card-header>
       <mat-card-title>Login</mat-card-title>
     </mat-card-header>
-    <mat-card-content *ngIf="authService.userInfo$ | async as userInfo">
-      <form class="example-form" *ngIf="!authService.isLoggedIn">
+    <mat-card-content>
+      <form class="example-form" *ngIf="!authService.authenticated">
         <table class="example-full-width" cellspacing="0">
           <tr>
             <td>
@@ -22,14 +22,13 @@
           </tr>
         </table>
       </form>
-      <p>ID: {{ userInfo.uid }}</p>
       <p>{{message}}</p>
       <!-- <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner> -->
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button (click)="login()" color="primary" *ngIf="!authService.isLoggedIn">Login</button>
-      <button mat-button (click)="googleLogin()" *ngIf="!authService.isLoggedIn">Login with Google</button>
-      <button mat-button (click)="logout()" *ngIf="authService.isLoggedIn">Logout</button>
+      <button mat-raised-button (click)="login()" color="primary" *ngIf="!authService.authenticated">Login</button>
+      <button mat-button (click)="googleLogin()" *ngIf="!authService.authenticated">Login with Google</button>
+      <button mat-button (click)="logout()" *ngIf="authService.authenticated">Logout</button>
     </mat-card-actions>
   </mat-card>
 </div>
