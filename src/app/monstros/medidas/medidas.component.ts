@@ -218,6 +218,10 @@ export class MedidasComponent implements OnInit {
   //   this.medidasService.atualizaMedida(medida);
   // }
 
+  importaMedidas() {
+    this.medidasService.importaMedidas();
+  }
+
   showMedida(medida?: Medida): void {
     const monstroId = `monstros/${this.monstroId}`;
 

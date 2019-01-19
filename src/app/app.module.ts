@@ -1,10 +1,10 @@
-// import { LOCALE_ID } from '@angular/core';
-import { NgModule } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
-import { MAT_DATE_LOCALE } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavigationExtras, Router } from '@angular/router';
@@ -22,6 +22,8 @@ import { Monstro } from './monstros/monstros.model';
 import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { RankingComponent } from './ranking/ranking.component';
+
+registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
@@ -45,8 +47,7 @@ import { RankingComponent } from './ranking/ranking.component';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'pt' },
-    // { provide: LOCALE_ID, useValue: 'pt' },
+    { provide: LOCALE_ID, useValue: 'pt' },
   ],
   bootstrap: [AppComponent]
 })

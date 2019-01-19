@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Medida } from './medidas.model';
 import { MedidasService } from './medidas.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-medida',
@@ -29,6 +30,14 @@ export class MedidaComponent implements OnInit {
 
       this.medida = this.data.medida;
     }
+  }
+
+  onDataChange(newdate) {
+    console.log(newdate);
+    const _ = moment();
+    const date = moment(newdate).add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
+    // this.medida.data = date.toDate();
+    console.log({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
   }
 
   onSave(): void {

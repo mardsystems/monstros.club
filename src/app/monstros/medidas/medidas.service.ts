@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Medida } from './medidas.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,35 @@ export class MedidasService {
         .orderBy('data', 'desc')
     );
 
-    return collection.valueChanges();
+    const medidas$ = collection.valueChanges().pipe(
+      map(medidas => {
+        return medidas.map(medida => {
+          return Object.assign(medida, { data: medida.data });
+        });
+      })
+    );
+
+    return medidas$;
+  }
+
+  importaMedidas() {
+    const id = 'pnYbAnxEyOctBJldlABrtz0l6Jc2';
+
+    const collection = this.db.collection<Medida>(this.PATH, reference =>
+      reference
+        .where('monstroId', '==', `monstro/${id}`)
+        .orderBy('data', 'desc')
+    );
+
+    collection.valueChanges().subscribe(medidas => {
+      medidas.forEach(medida => {
+        medida.monstroId = 'monstros/pnYbAnxEyOctBJldlABrtz0l6Jc2';
+
+        const document = collection.doc<Medida>(medida.id);
+
+        document.update(medida);
+      });
+    });
   }
 
   cadastraMedida(medida: Medida): Promise<void> {

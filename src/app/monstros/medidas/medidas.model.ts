@@ -1,7 +1,7 @@
 export interface Medida {
   id?: string;
   monstroId?: string;
-  data?: Date;
+  data?: firebase.firestore.Timestamp;
   peso?: number;
   gordura?: number;
   gorduraVisceral?: number;
