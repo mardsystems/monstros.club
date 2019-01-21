@@ -9,7 +9,8 @@
   </mat-form-field> -->
 
   <mat-form-field>
-    <input type="text" placeholder="Data" matInput [(ngModel)]="medida.data" required #data="ngModel">
+    <input type="text" placeholder="Data" matInput [ngModel]="medida.data | date:'dd/MM/yyyy'" (ngModelChange)="onDataChange($event)"
+      required #data="ngModel">
   </mat-form-field>
 
   <mat-form-field>

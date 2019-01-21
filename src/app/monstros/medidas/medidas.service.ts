@@ -33,7 +33,11 @@ export class MedidasService {
     const medidas$ = collection.valueChanges().pipe(
       map(medidas => {
         return medidas.map(medida => {
-          return Object.assign(medida, { data: medida.data });
+          if (medida.data.seconds) {
+            return Object.assign(medida, { data: medida.data.toDate() });
+          } else {
+            return Object.assign(medida, { data: medida.data });
+          }
         });
       })
     );

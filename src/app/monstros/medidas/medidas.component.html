@@ -12,7 +12,8 @@
 
   <ng-container matColumnDef="data">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="data"> Data </th>
-    <td mat-cell *matCellDef="let medida"> {{this.getData(medida.data) | date:'dd/MMM' | uppercase}} </td>
+    <td mat-cell *matCellDef="let medida"> {{medida.data | date:'dd/MMM' | uppercase}}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="peso">

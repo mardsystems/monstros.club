@@ -35,9 +35,12 @@ export class MedidaComponent implements OnInit {
   onDataChange(newdate) {
     console.log(newdate);
     const _ = moment();
-    const date = moment(newdate).add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
-    // this.medida.data = date.toDate();
-    console.log({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
+    _.locale('pt-BR');
+    // const date = new Date(newdate);
+    const date = moment(newdate, 'DD/MM/YYYY'); //.add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
+    console.log(date);
+    this.medida.data = date.toDate();
+    console.log(this.medida.data);
   }
 
   onSave(): void {
