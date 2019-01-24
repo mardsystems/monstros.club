@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import * as firebase from 'firebase';
 import { Observable } from 'rxjs';
-import { Medida } from './medidas.model';
 import { map } from 'rxjs/operators';
+import { Monstro } from '../monstros.model';
+import { MonstrosService } from '../monstros.service';
+import { Medida, SolicitacaoDeCadastroDeMedida } from './medidas.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,46 +14,103 @@ export class MedidasService {
   PATH = '/medidas';
 
   constructor(
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    private monstrosService: MonstrosService
   ) { }
 
   obtemMedidasObservaveisParaRanking(): Observable<Medida[]> {
-    const collection = this.db.collection<Medida>(this.PATH, reference =>
-      reference
-        .orderBy('data', 'desc')
-    );
-
-    return collection.valueChanges();
-  }
-
-  obtemMedidasObservaveisParaExibicao(monstroId: string): Observable<Medida[]> {
-    const collection = this.db.collection<Medida>(this.PATH, reference =>
-      reference
-        .where('monstroId', '==', `monstros/${monstroId}`)
-        .orderBy('data', 'desc')
-    );
+    const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      return reference
+        .orderBy('data', 'desc');
+    });
 
     const medidas$ = collection.valueChanges().pipe(
-      map(medidas => {
-        return medidas.map(medida => {
-          if (medida.data.seconds) {
-            return Object.assign(medida, { data: medida.data.toDate() });
-          } else {
-            return Object.assign(medida, { data: medida.data });
-          }
-        });
-      })
+      map(values => this.mapMedidas(values))
     );
 
     return medidas$;
   }
 
-  importaMedidas() {
-    const id = 'pnYbAnxEyOctBJldlABrtz0l6Jc2';
+  obtemMedidasObservaveisParaExibicao(monstroId: string): Observable<Medida[]> {
+    const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      return reference
+        .where('monstroId', '==', `monstros/${monstroId}`)
+        .orderBy('data', 'desc');
+    });
 
-    const collection = this.db.collection<Medida>(this.PATH, reference =>
+    const medidas$ = collection.valueChanges().pipe(
+      map(values => {
+        return values.map((value, index) => {
+          const monstro = null;
+
+          return this.mapMedida(value, monstro);
+        });
+      })
+    );
+
+    // return this.monstrosService.obtemMonstroObservavel(value.monstroId).pipe(
+    //   switchMap(monstro => {
+    //     return this.mapMedida(value, monstro)
+    //   })
+    // );
+
+    return medidas$;
+  }
+
+  obtemMedidaObservavel(id: string): Observable<Medida> {
+    const collection = this.db.collection<MedidaDocument>(this.PATH);
+
+    const document = collection.doc<MedidaDocument>(id);
+
+    const medida$ = document.valueChanges().pipe(
+      map(value => {
+        const monstro = null;
+
+        return this.mapMedida(value, monstro);
+      })
+    );
+
+    return medida$;
+  }
+
+  private mapMedidas(values: MedidaDocument[]): Medida[] {
+    return values.map((value, index) => {
+      return new Medida(
+        value.id,
+        null,
+        value.data.toDate(),
+        value.peso,
+        value.gordura,
+        value.gorduraVisceral,
+        value.musculo,
+        value.idadeCorporal,
+        value.metabolismoBasal,
+        value.indiceDeMassaCorporal
+      );
+    });
+  }
+
+  private mapMedida(value: MedidaDocument, monstro: Monstro): Medida {
+    return new Medida(
+      value.id,
+      monstro,
+      value.data.toDate(),
+      value.peso,
+      value.gordura,
+      value.gorduraVisceral,
+      value.musculo,
+      value.idadeCorporal,
+      value.metabolismoBasal,
+      value.indiceDeMassaCorporal
+    );
+  }
+
+  importaMedidas() {
+    const idDoMarcelo = 'pnYbAnxEyOctBJldlABrtz0l6Jc2';
+
+    const collection = this.db.collection<MedidaDocument>(this.PATH, reference =>
       reference
-        .where('monstroId', '==', `monstro/${id}`)
+        .where('monstroId', '==', `monstros/${idDoMarcelo}`)
         .orderBy('data', 'desc')
     );
 
@@ -58,24 +118,81 @@ export class MedidasService {
       medidas.forEach(medida => {
         medida.monstroId = 'monstros/pnYbAnxEyOctBJldlABrtz0l6Jc2';
 
-        const document = collection.doc<Medida>(medida.id);
+        const document = collection.doc<MedidaDocument>(medida.id);
 
         document.update(medida);
       });
     });
   }
 
-  cadastraMedida(medida: Medida): Promise<void> {
-    const collection = this.db.collection<Medida>(this.PATH);
+  cadastraMedida(solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.monstrosService.obtemMonstroObservavel(solicitacao.monstroId).subscribe(monstro => {
+        const medidaId = this.db.createId();
 
-    const id = this.db.createId();
+        const medida = new Medida(
+          medidaId,
+          monstro,
+          solicitacao.data,
+          solicitacao.peso,
+          solicitacao.gordura,
+          solicitacao.gorduraVisceral,
+          solicitacao.musculo,
+          solicitacao.idadeCorporal,
+          solicitacao.metabolismoBasal,
+          solicitacao.indiceDeMassaCorporal
+        );
 
-    const document = collection.doc<Medida>(id);
+        const result = this.add(medida);
 
-    const result = document.set({
-      id,
-      monstroId: medida.monstroId,
-      data: medida.data,
+        resolve(result);
+      });
+    });
+  }
+
+  private add(medida: Medida): Promise<void> {
+    const collection = this.db.collection<MedidaDocument>(this.PATH);
+
+    const document = collection.doc<MedidaDocument>(medida.id);
+
+    const newDocument = this.mapTo(medida);
+
+    const result = document.set(newDocument);
+
+    return result;
+  }
+
+  atualizaMedida(medidaId: string, solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.obtemMedidaObservavel(medidaId).subscribe(medida => {
+        medida.defineData(solicitacao.data);
+
+        medida.definePeso(solicitacao.peso);
+
+        const result = this.update(medida);
+
+        resolve(result);
+      });
+    });
+  }
+
+  private update(medida: Medida): Promise<void> {
+    const collection = this.db.collection<MedidaDocument>(this.PATH);
+
+    const document = collection.doc<MedidaDocument>(medida.id);
+
+    const newDocument = this.mapTo(medida);
+
+    const result = document.update(newDocument);
+
+    return result;
+  }
+
+  private mapTo(medida: Medida): MedidaDocument {
+    const newDocument: MedidaDocument = {
+      id: medida.id,
+      monstroId: `monstros/${medida.monstro.id}`,
+      data: firebase.firestore.Timestamp.fromDate(medida.data),
       peso: medida.peso,
       gordura: medida.gordura,
       gorduraVisceral: medida.gorduraVisceral,
@@ -83,28 +200,31 @@ export class MedidasService {
       idadeCorporal: medida.idadeCorporal,
       metabolismoBasal: medida.metabolismoBasal,
       indiceDeMassaCorporal: medida.indiceDeMassaCorporal
-    });
+    };
 
-    return result;
+    return newDocument;
   }
 
-  atualizaMedida(medida: Medida): Promise<void> {
-    const collection = this.db.collection<Medida>(this.PATH);
+  excluiMedida(medidaId: string): Promise<void> {
+    const collection = this.db.collection<MedidaDocument>(this.PATH);
 
-    const document = collection.doc<Medida>(medida.id);
-
-    const result = document.update(medida);
-
-    return result;
-  }
-
-  excluiMedida(medida: Medida): Promise<void> {
-    const collection = this.db.collection<Medida>(this.PATH);
-
-    const document = collection.doc<Medida>(medida.id);
+    const document = collection.doc<MedidaDocument>(medidaId);
 
     const result = document.delete();
 
     return result;
   }
+}
+
+interface MedidaDocument {
+  id: string;
+  monstroId: string;
+  data: firebase.firestore.Timestamp;
+  peso: number;
+  gordura: number;
+  gorduraVisceral: number;
+  musculo: number;
+  idadeCorporal: number;
+  metabolismoBasal: number;
+  indiceDeMassaCorporal: number;
 }

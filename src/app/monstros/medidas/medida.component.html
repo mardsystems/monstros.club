@@ -3,45 +3,45 @@
 <mat-dialog-content class="form-container">
   <!--
   <mat-form-field>
-    <input matInput [(ngModel)]="medida.data" [matDatepicker]="data" placeholder="Data" #dataInput>
+    <input matInput [(ngModel)]="model.data" [matDatepicker]="data" placeholder="Data" #dataInput>
     <mat-datepicker-toggle matSuffix [for]="data"></mat-datepicker-toggle>
     <mat-datepicker touchUi #data></mat-datepicker>
   </mat-form-field> -->
 
   <mat-form-field>
-    <input type="text" placeholder="Data" matInput [ngModel]="medida.data | date:'dd/MM/yyyy'" (ngModelChange)="onDataChange($event)"
+    <input type="text" placeholder="Data" matInput [ngModel]="model.data | date:'dd/MM/yyyy'" (ngModelChange)="onDataChange($event)"
       required #data="ngModel">
   </mat-form-field>
 
   <mat-form-field>
-    <input type="number" placeholder="Peso" matInput [(ngModel)]="medida.peso" required #peso="ngModel">
+    <input type="number" placeholder="Peso" matInput [(ngModel)]="model.peso" required #peso="ngModel">
   </mat-form-field>
 
   <mat-form-field>
-    <input type="number" placeholder="Gordura" matInput [(ngModel)]="medida.gordura" required #gordura="ngModel">
+    <input type="number" placeholder="Gordura" matInput [(ngModel)]="model.gordura" required #gordura="ngModel">
   </mat-form-field>
 
   <mat-form-field>
-    <input type="number" placeholder="Gordura Visceral" matInput [(ngModel)]="medida.gorduraVisceral" required
+    <input type="number" placeholder="Gordura Visceral" matInput [(ngModel)]="model.gorduraVisceral" required
       #gorduraVisceral="ngModel">
   </mat-form-field>
 
   <mat-form-field>
-    <input type="number" placeholder="Músculo" matInput [(ngModel)]="medida.musculo" required #musculo="ngModel">
+    <input type="number" placeholder="Músculo" matInput [(ngModel)]="model.musculo" required #musculo="ngModel">
   </mat-form-field>
 
   <mat-form-field>
-    <input type="number" placeholder="Idade Corporal" matInput [(ngModel)]="medida.idadeCorporal" required
+    <input type="number" placeholder="Idade Corporal" matInput [(ngModel)]="model.idadeCorporal" required
       #idadeCorporal="ngModel">
   </mat-form-field>
 
   <mat-form-field>
-    <input type="number" placeholder="Metabolismo Basal" matInput [(ngModel)]="medida.metabolismoBasal" required
+    <input type="number" placeholder="Metabolismo Basal" matInput [(ngModel)]="model.metabolismoBasal" required
       #metabolismoBasal="ngModel">
   </mat-form-field>
 
   <mat-form-field>
-    <input type="number" placeholder="IMC" matInput [(ngModel)]="medida.indiceDeMassaCorporal" required
+    <input type="number" placeholder="IMC" matInput [(ngModel)]="model.indiceDeMassaCorporal" required
       #indiceDeMassaCorporal="ngModel">
   </mat-form-field>
 

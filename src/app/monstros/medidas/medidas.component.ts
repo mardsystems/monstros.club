@@ -6,12 +6,11 @@ import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SelectivePreloadingStrategyService } from '../../selective-preloading-strategy.service';
+import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
 import { MedidaComponent } from './medida.component';
-import { Medida } from './medidas.model';
+import { Medida, SolicitacaoDeCadastroDeMedida } from './medidas.model';
 import { MedidasService } from './medidas.service';
-import { Monstro } from '../monstros.model';
-import { Timestamp } from 'rxjs/internal/operators/timestamp';
 
 const columnDefinitions = [
   { def: 'col1', showMobile: true },
@@ -113,71 +112,6 @@ export class MedidasComponent implements OnInit {
     );
   }
 
-  getFoto(monstroId: string): string {
-    if (monstroId === 'monstros/vQeCUnaAWmzr2YxP5wB1') {
-      return '../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg';
-    } else {
-      return this.monstroLogado.photoURL;
-      // return monstroId.replace('monstros/', '');
-    }
-  }
-
-  getData(data: any): any {
-    // console.log(data);
-
-    if (data.seconds) {
-      return data.toDate();
-    } else {
-      return data;
-    }
-  }
-
-  getGorduraVisceral2(gorduraVisceral: number): string {
-    let gorduraVisceral2: number;
-
-    if (gorduraVisceral > 14) {
-      gorduraVisceral2 = +2;
-    } else if (gorduraVisceral < 10) {
-      gorduraVisceral2 = 0;
-    } else {
-      gorduraVisceral2 = +1;
-    }
-
-    switch (gorduraVisceral2) {
-      case 0:
-        return '<span class="hint normal">&#10003;</span>';
-      case +1:
-        return '<span class="hint bad">&#43;</span>';
-      case +2:
-        return '<span class="hint bad">&#43;&#43;</span>';
-    }
-  }
-
-  getIMC2(imc: number): string {
-    let imc2: number;
-
-    if (imc < 18.5) {
-      imc2 = -1;
-    } else if (imc >= 30) {
-      imc2 = +2;
-    } else if (imc >= 25) {
-      imc2 = +1;
-    } else {
-      imc2 = 0;
-    }
-
-    switch (imc2) {
-      case -1:
-        return '<span class="hint good">&#8722;</span>';
-      case 0:
-        return '<span class="hint normal">&#10003;</span>';
-      case +1:
-        return '<span class="hint bad">&#43;</span>';
-      case +2:
-        return '<span class="hint bad">&#43;&#43;</span>';
-    }
-  }
-
   getDisplayedColumns(): string[] {
     const isMobile = this.isMobile();
 
@@ -195,6 +129,7 @@ export class MedidasComponent implements OnInit {
   isMobile(): boolean {
     return this.mobileQuery.matches;
   }
+
   // novaMedida(): void {
   //   const medida: Medida = {
 
@@ -222,15 +157,23 @@ export class MedidasComponent implements OnInit {
     this.medidasService.importaMedidas();
   }
 
-  showMedida(medida?: Medida): void {
-    const monstroId = `monstros/${this.monstroId}`;
+  onAdd(): void {
+    const model = SolicitacaoDeCadastroDeMedida.toAdd(this.monstroId);
 
-    const config: MatDialogConfig<any> = (medida) ? { data: { isNew: false, medida } } : { data: { isNew: true, monstroId } };
+    const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
+
+    this.dialog.open(MedidaComponent, config);
+  }
+
+  onEdit(medida: Medida): void {
+    const model = SolicitacaoDeCadastroDeMedida.toEdit(medida);
+
+    const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
 
     this.dialog.open(MedidaComponent, config);
   }
 
   onDelete(medida: Medida): void {
-    this.medidasService.excluiMedida(medida);
+    this.medidasService.excluiMedida(medida.id);
   }
 }

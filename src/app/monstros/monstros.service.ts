@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import * as firebase from 'firebase';
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-import { Monstro } from './monstros.model';
+import { Monstro, SolicitacaoDeCadastroDeMonstro } from './monstros.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,38 +14,28 @@ export class MonstrosService {
   PATH = '/monstros';
 
   constructor(
-    public authService: AuthService,
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    private authService: AuthService
   ) {
     this.monstroLogado$ = this.authService.user$.pipe(
       switchMap(user => {
         if (user) {
-          const photoURLdoMarcelo = '../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg';
-
-          let photoURL;
-
-          if (user.uid === 'vQeCUnaAWmzr2YxP5wB1') {
-            photoURL = photoURLdoMarcelo;
-          } else {
-            photoURL = user.photoURL;
-          }
-
-          const informacoesDoMonstroMescladas: Monstro = {
+          const newDocument: MonstroDocument = {
             displayName: user.displayName,
             email: user.email,
-            photoURL: photoURL,
-            id: user.uid,
-            // nome: user.email,
-            // altura: user.altura,
-            // genero: user.genero,
-            // dataDeNascimento: user.dataDeNascimento,
+            photoURL: user.photoURL,
+            id: user.uid
           };
 
-          const document = this.db.doc<Monstro>(`${this.PATH}/${user.uid}`);
+          const document = this.db.doc<MonstroDocument>(`${this.PATH}/${user.uid}`);
 
-          document.set(informacoesDoMonstroMescladas, { merge: true });
+          document.set(newDocument, { merge: true });
 
-          return document.valueChanges();
+          const monstro$ = document.valueChanges().pipe(
+            map(value => this.mapMonstro(value))
+          );
+
+          return monstro$;
         } else {
           return of(null);
         }
@@ -52,62 +43,123 @@ export class MonstrosService {
     );
   }
 
-  // public get foto(): string {
-  //   if (true) {
-  //     return `../assets/foto-${this.monstroId.replace('monstros/', '')}.jpg`;
-  //   } else {
+  obtemMonstroObservavel(id: string): Observable<Monstro> {
+    const collection = this.db.collection<MonstroDocument>(this.PATH);
 
-  //   }
-  // }
+    const document = collection.doc<MonstroDocument>(id);
 
-  obtemMonstrosObservaveisParaExibicao(monstroId: string): Observable<Monstro[]> {
-    const collection = this.db.collection<Monstro>(this.PATH, reference =>
-      reference
-        .where('monstroId', '==', `monstros/${monstroId}`)
-        .orderBy('data', 'desc')
+    const monstro$ = document.valueChanges().pipe(
+      map(value => this.mapMonstro(value))
     );
 
-    return collection.valueChanges();
+    return monstro$;
   }
 
-  cadastraMonstro(monstro: Monstro): Promise<void> {
-    const collection = this.db.collection<Monstro>(this.PATH);
+  private mapMonstro(value: MonstroDocument): Monstro {
+    return new Monstro(
+      value.displayName,
+      value.email,
+      value.photoURL,
+      value.id,
+      value.nome,
+      value.usuario,
+      value.genero,
+      value.altura,
+      (value.dataDeNascimento ? value.dataDeNascimento.toDate() : null)
+    );
+  }
 
-    const id = this.db.createId();
+  cadastraMonstro(solicitacao: SolicitacaoDeCadastroDeMonstro): Promise<void> {
+    const monstroId = this.db.createId();
 
-    const document = collection.doc<Monstro>(id);
+    const monstro = new Monstro(
+      solicitacao.displayName,
+      solicitacao.email,
+      solicitacao.photoURL,
+      monstroId,
+      solicitacao.nome,
+      solicitacao.usuario,
+      solicitacao.genero,
+      solicitacao.altura,
+      solicitacao.dataDeNascimento
+    );
 
-    const result = document.set({
+    const result = this.add(monstro);
+
+    return result;
+  }
+
+  private add(monstro: Monstro): Promise<void> {
+    const collection = this.db.collection<MonstroDocument>(this.PATH);
+
+    const document = collection.doc<MonstroDocument>(monstro.id);
+
+    const newDocument = this.mapTo(monstro);
+
+    const result = document.set(newDocument);
+
+    return result;
+  }
+
+  atualizaMonstro(monstroId: string, solicitacao: SolicitacaoDeCadastroDeMonstro): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.obtemMonstroObservavel(monstroId).subscribe(monstro => {
+        monstro.defineNome(solicitacao.nome);
+
+        const result = this.update(monstro);
+
+        resolve(result);
+      });
+    });
+  }
+
+  private update(monstro: Monstro): Promise<void> {
+    const collection = this.db.collection<MonstroDocument>(this.PATH);
+
+    const document = collection.doc<MonstroDocument>(monstro.id);
+
+    const newDocument = this.mapTo(monstro);
+
+    const result = document.update(newDocument);
+
+    return result;
+  }
+
+  private mapTo(monstro: Monstro): MonstroDocument {
+    const newDocument: MonstroDocument = {
       displayName: monstro.displayName,
       email: monstro.email,
       photoURL: monstro.photoURL,
       id: monstro.id,
-      nome: monstro.email,
-      altura: monstro.altura,
+      nome: monstro.nome,
+      usuario: monstro.usuario,
       genero: monstro.genero,
-      dataDeNascimento: monstro.dataDeNascimento,
-    });
+      altura: monstro.altura,
+      dataDeNascimento: firebase.firestore.Timestamp.fromDate(monstro.dataDeNascimento),
+    };
 
-    return result;
+    return newDocument;
   }
 
-  atualizaMonstro(monstro: Monstro): Promise<void> {
-    const collection = this.db.collection<Monstro>(this.PATH);
+  excluiMonstro(monstroId: string): Promise<void> {
+    const collection = this.db.collection<MonstroDocument>(this.PATH);
 
-    const document = collection.doc<Monstro>(monstro.id);
-
-    const result = document.update(monstro);
-
-    return result;
-  }
-
-  excluiMonstro(monstro: Monstro): Promise<void> {
-    const collection = this.db.collection<Monstro>(this.PATH);
-
-    const document = collection.doc<Monstro>(monstro.id);
+    const document = collection.doc<MonstroDocument>(monstroId);
 
     const result = document.delete();
 
     return result;
   }
+}
+
+interface MonstroDocument {
+  displayName?: string;
+  email?: string;
+  photoURL?: string;
+  id: string;
+  nome?: string;
+  usuario?: string;
+  genero?: string;
+  altura?: number;
+  dataDeNascimento?: firebase.firestore.Timestamp;
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { Medida } from './medidas.model';
+import { Medida, SolicitacaoDeCadastroDeMedida } from './medidas.model';
 import { MedidasService } from './medidas.service';
 import * as moment from 'moment';
 
@@ -12,23 +12,17 @@ import * as moment from 'moment';
   styleUrls: ['./medida.component.scss']
 })
 export class MedidaComponent implements OnInit {
-
   dialogTitle = 'Nova Medida';
-  medida: Medida = {};
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: any,
+    @Inject(MAT_DIALOG_DATA) private model: SolicitacaoDeCadastroDeMedida,
     private dialogRef: MatDialogRef<MedidaComponent>,
     private medidasService: MedidasService
   ) { }
 
   ngOnInit(): void {
-    if (this.data.isNew) {
-      this.medida.monstroId = this.data.monstroId;
-    } else {
+    if (this.model.isEdit) {
       this.dialogTitle = 'Atualiza Medida';
-
-      this.medida = this.data.medida;
     }
   }
 
@@ -37,17 +31,17 @@ export class MedidaComponent implements OnInit {
     const _ = moment();
     _.locale('pt-BR');
     // const date = new Date(newdate);
-    const date = moment(newdate, 'DD/MM/YYYY'); //.add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
+    const date = moment(newdate, 'DD/MM/YYYY'); // .add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
     console.log(date);
-    this.medida.data = date.toDate();
-    console.log(this.medida.data);
+    this.model.data = date.toDate();
+    console.log(this.model.data);
   }
 
   onSave(): void {
     const operation: Promise<void> =
-      (this.data.isNew)
-        ? this.medidasService.cadastraMedida(this.medida)
-        : this.medidasService.atualizaMedida(this.medida);
+      (this.model.isEdit)
+        ? this.medidasService.atualizaMedida(this.model.id, this.model)
+        : this.medidasService.cadastraMedida(this.model);
 
     operation
       .then(() => {
