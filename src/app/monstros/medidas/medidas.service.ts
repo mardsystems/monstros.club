@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
+import * as moment from 'moment';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, first } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
 import { Medida, SolicitacaoDeCadastroDeMedida } from './medidas.model';
@@ -78,6 +79,7 @@ export class MedidasService {
       return new Medida(
         value.id,
         null,
+        value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length),
         value.data.toDate(),
         value.peso,
         value.gordura,
@@ -94,6 +96,7 @@ export class MedidasService {
     return new Medida(
       value.id,
       monstro,
+      value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length),
       value.data.toDate(),
       value.peso,
       value.gordura,
@@ -125,15 +128,28 @@ export class MedidasService {
     });
   }
 
+  parseDate(value): Date {
+    const _ = moment();
+
+    _.locale('pt-BR');
+
+    const date = moment(value, 'DD/MM/YYYY'); // .add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
+
+    const result = date.toDate();
+
+    return result;
+  }
+
   cadastraMedida(solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.monstrosService.obtemMonstroObservavel(solicitacao.monstroId).subscribe(monstro => {
+      this.monstrosService.obtemMonstroObservavel(solicitacao.monstroId).pipe(first()).subscribe(monstro => {
         const medidaId = this.db.createId();
 
         const medida = new Medida(
           medidaId,
           monstro,
-          solicitacao.data,
+          solicitacao.monstroId,
+          solicitacao.data.toDate(),
           solicitacao.peso,
           solicitacao.gordura,
           solicitacao.gorduraVisceral,
@@ -164,10 +180,22 @@ export class MedidasService {
 
   atualizaMedida(medidaId: string, solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.obtemMedidaObservavel(medidaId).subscribe(medida => {
-        medida.defineData(solicitacao.data);
+      this.obtemMedidaObservavel(medidaId).pipe(first()).subscribe(medida => {
+        medida.defineData(solicitacao.data.toDate());
 
         medida.definePeso(solicitacao.peso);
+
+        medida.defineGordura(solicitacao.gordura);
+
+        medida.defineGorduraVisceral(solicitacao.gorduraVisceral);
+
+        medida.defineMusculo(solicitacao.musculo);
+
+        medida.defineIdadeCorporal(solicitacao.idadeCorporal);
+
+        medida.defineMetabolismoBasal(solicitacao.metabolismoBasal);
+
+        medida.defineIndiceDeMassaCorporal(solicitacao.indiceDeMassaCorporal);
 
         const result = this.update(medida);
 
@@ -191,7 +219,8 @@ export class MedidasService {
   private mapTo(medida: Medida): MedidaDocument {
     const newDocument: MedidaDocument = {
       id: medida.id,
-      monstroId: `monstros/${medida.monstro.id}`,
+      // monstroId: `monstros/${medida.monstro.id}`,
+      monstroId: `monstros/${medida.monstroId}`,
       data: firebase.firestore.Timestamp.fromDate(medida.data),
       peso: medida.peso,
       gordura: medida.gordura,

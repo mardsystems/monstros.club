@@ -1,9 +1,11 @@
 import { Monstro } from '../monstros.model';
+import * as moment from 'moment';
 
 export class Medida {
   public constructor(
     public _id: string,
     public _monstro: Monstro,
+    public _monstroId: string,
     public _data: Date,
     public _peso: number,
     public _gordura: number,
@@ -19,6 +21,8 @@ export class Medida {
   public get id() { return this._id; }
 
   public get monstro() { return this._monstro; }
+
+  public get monstroId() { return this._monstroId; }
 
   public get data() { return this._data; }
 
@@ -89,6 +93,30 @@ export class Medida {
   definePeso(peso: number) {
     this._peso = peso;
   }
+
+  defineGordura(gordura: number) {
+    this._gordura = gordura;
+  }
+
+  defineGorduraVisceral(gorduraVisceral: number) {
+    this._gorduraVisceral = gorduraVisceral;
+  }
+
+  defineMusculo(musculo: number) {
+    this._musculo = musculo;
+  }
+
+  defineIdadeCorporal(idadeCorporal: number) {
+    this._idadeCorporal = idadeCorporal;
+  }
+
+  defineMetabolismoBasal(metabolismoBasal: number) {
+    this._metabolismoBasal = metabolismoBasal;
+  }
+
+  defineIndiceDeMassaCorporal(indiceDeMassaCorporal: number) {
+    this._indiceDeMassaCorporal = indiceDeMassaCorporal;
+  }
 }
 
 export class SolicitacaoDeCadastroDeMedida {
@@ -96,7 +124,7 @@ export class SolicitacaoDeCadastroDeMedida {
   // Usado apenas na edição.
   id?: string;
   monstroId?: string;
-  data?: Date;
+  data?: moment.Moment;
   peso?: number;
   gordura?: number;
   gorduraVisceral?: number;
@@ -110,7 +138,7 @@ export class SolicitacaoDeCadastroDeMedida {
       isEdit: false,
       // id: medida.id,
       monstroId: monstroId,
-      // data: medida.data,
+      data: moment(new Date(Date.now())),
       // peso: medida.peso,
       // gordura: medida.gordura,
       // gorduraVisceral: medida.gorduraVisceral,
@@ -125,8 +153,9 @@ export class SolicitacaoDeCadastroDeMedida {
     return {
       isEdit: true,
       id: medida.id,
-      monstroId: medida.monstro.id,
-      data: medida.data,
+      // monstroId: medida.monstro.id,
+      monstroId: medida.monstroId,
+      data: moment(medida.data),
       peso: medida.peso,
       gordura: medida.gordura,
       gorduraVisceral: medida.gorduraVisceral,

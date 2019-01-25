@@ -1,16 +1,11 @@
 <h1 mat-dialog-title>{{ dialogTitle }}</h1>
 
 <mat-dialog-content class="form-container">
-  <!--
-  <mat-form-field>
-    <input matInput [(ngModel)]="model.data" [matDatepicker]="data" placeholder="Data" #dataInput>
-    <mat-datepicker-toggle matSuffix [for]="data"></mat-datepicker-toggle>
-    <mat-datepicker touchUi #data></mat-datepicker>
-  </mat-form-field> -->
 
   <mat-form-field>
-    <input type="text" placeholder="Data" matInput [ngModel]="model.data | date:'dd/MM/yyyy'" (ngModelChange)="onDataChange($event)"
-      required #data="ngModel">
+    <input type="text" placeholder="Data" matInput [(ngModel)]="model.data" required [matDatepicker]="dataPicker" #data="ngModel">
+    <mat-datepicker-toggle matSuffix [for]="dataPicker"></mat-datepicker-toggle>
+    <mat-datepicker #dataPicker></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field>
