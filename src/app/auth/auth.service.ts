@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { UserInfo, auth } from 'firebase/app';
+import { auth, UserInfo } from 'firebase/app';
 import { merge, Observable, of, Subject } from 'rxjs';
-import { tap, delay } from 'rxjs/operators';
+import { delay, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',

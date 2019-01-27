@@ -49,7 +49,13 @@ export class MonstrosService {
     const document = collection.doc<MonstroDocument>(id);
 
     const monstro$ = document.valueChanges().pipe(
-      map(value => this.mapMonstro(value))
+      map(value => {
+        if (!value) {
+          console.log(id);
+        }
+
+        return this.mapMonstro(value);
+      })
     );
 
     return monstro$;
@@ -152,7 +158,7 @@ export class MonstrosService {
   }
 }
 
-interface MonstroDocument {
+export interface MonstroDocument {
   displayName?: string;
   email?: string;
   photoURL?: string;
