@@ -1,13 +1,13 @@
-.center{
-  width: 75%;
-  margin: 10px auto;
-}
-
 .container{
   height: 60vh;
   // display: flex;
   // justify-content: center;
   // align-items: center;
+}
+
+.center{
+  width: 75%;
+  margin: 10px auto;
 }
 
 .example-card {
@@ -22,6 +22,11 @@
 @media only screen and (max-width: 750px) {
   .container{
     height: 84vh;
+  }
+
+  .center{
+    width: 100%;
+    margin: 10px auto;
   }
 }
 
