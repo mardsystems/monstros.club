@@ -16,12 +16,12 @@ import { AppMaterialModule } from './app-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
-import { DoacaoComponent } from './doacao/doacao.component';
 import { HomeComponent } from './home/home.component';
 import { Monstro } from './monstros/monstros.model';
 import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { RankingComponent } from './ranking/ranking.component';
+import { SobreComponent } from './sobre/sobre.component';
 
 registerLocaleData(localePt);
 
@@ -29,10 +29,10 @@ registerLocaleData(localePt);
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-    DoacaoComponent,
     HomeComponent,
     RankingComponent,
-    AdminComponent
+    AdminComponent,
+    SobreComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +45,9 @@ registerLocaleData(localePt);
     AngularFireAuthModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+  ],
+  entryComponents: [
+    SobreComponent
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },
