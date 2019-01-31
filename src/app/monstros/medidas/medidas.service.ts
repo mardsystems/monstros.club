@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import * as moment from 'moment';
 import { Observable, combineLatest } from 'rxjs';
-import { first, map, mergeMap, merge } from 'rxjs/operators';
+import { first, map, mergeMap, merge, switchMap } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
 import { MonstrosService, MonstroDocument } from '../monstros.service';
 import { Medida, SolicitacaoDeCadastroDeMedida } from './medidas.model';
@@ -26,37 +26,14 @@ export class MedidasService {
         .orderBy('data', 'desc');
     });
 
-    // const medidas$ = collection.valueChanges().pipe(
-    //   map(values => this.mapMedidas(values))
-    // );
-
     const medidas$ = collection.valueChanges().pipe(
       mergeMap(values => {
-        // const arrayDeMonstrosObservaveis = _(values)
-        //   .groupBy(value => value.monstroId)
-        //   .map((values, monstroId) => {
-        //     const monstro$ = this.monstrosService.obtemMonstroObservavel(monstroId).pipe(
-        //       first(),
-        //       map(monstro => monstro)
-        //       // concatAll(),
-        //       // map(monstro => this.mapMedida(value, monstro))
-        //     );
-
-        //     return monstro$;
-        //   })
-        //   .value();
-
-        //         return arrayDeMonstrosObservaveis;
-        //       });
-        // |
         const arrayDeMedidasObservaveis = values
           .filter(value => value.monstroId !== 'monstros/OJUFB66yLBwIOE2hk8hs')
           .map((value) => {
             const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
 
             const medidaComMonstro$ = this.monstrosService.obtemMonstroObservavel(monstroId).pipe(
-              first(),
-              // concatAll(),
               map(monstro => this.mapMedida(value, monstro))
             );
 
@@ -72,72 +49,28 @@ export class MedidasService {
     return medidas$;
   }
 
-  // const x = array.map(value => value.pipe(
-  //   combineLatest()
-  // ));
-
-  // const x = merge(arrayParaObservarUmMonstroParaMedida);
-  // const x = arrayParaObservarUmMonstroParaMedida.map(values => mergeMap())
-
-  // const monstros2 = values.reduce((previousValue, currentValue) => {
-  //   return currentValue.id;
-  // });
-
-  // const x = values.forEach((value, index, items) => {
-  //   const medidaComMonstro$ = this.monstrosService.obtemMonstroObservavel(value.monstroId).pipe(
-  //     first(),
-  //     // concatAll(),
-  //     map(monstro => this.mapMedida(value, monstro))
-  //   );
-
-  //   // medidaComMonstro$.subscribe(med => items.push(med));
-
-  //   return this.mapMedida(value, monstro);
-  // });
-  // mergeMap(obs => {
-  //   const m = _(obs)
-  //     .groupBy(ob => ob.)
-  // })
-  // map(values => values.map((value, index, items) => {
-  //   const medidaComMonstro$ = this.monstrosService.obtemMonstroObservavel(value.monstroId).pipe(
-  //     first(),
-  //     concatAll(),
-  //     map(monstro => this.mapMedida(value, monstro))
-  //   );
-
-  //   medidaComMonstro$.subscribe(med => items.push(med));
-
-  //   return this.mapMedida(value, monstro);
-  // }))
-  // }));
-
-  // return x;
-  // }
-
   obtemMedidasObservaveisParaExibicao(monstroId: string): Observable<Medida[]> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
-      return reference
-        .where('monstroId', '==', `monstros/${monstroId}`)
-        .orderBy('data', 'desc');
-    });
-
-    const medidas$ = collection.valueChanges().pipe(
-      map(values => {
-        return values.map((value, index) => {
-          const monstro = null;
-
-          return this.mapMedida(value, monstro);
+    const medidaComMonstro$ = this.monstrosService.obtemMonstroObservavel(monstroId).pipe(
+      mergeMap(monstro => {
+        const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
+          return reference
+            .where('monstroId', '==', `monstros/${monstroId}`)
+            .orderBy('data', 'desc');
         });
+
+        const medidas$ = collection.valueChanges().pipe(
+          map(values => {
+            return values.map((value, index) => {
+              return this.mapMedida(value, monstro);
+            });
+          })
+        );
+
+        return medidas$;
       })
     );
 
-    // return this.monstrosService.obtemMonstroObservavel(value.monstroId).pipe(
-    //   switchMap(monstro => {
-    //     return this.mapMedida(value, monstro)
-    //   })
-    // );
-
-    return medidas$;
+    return medidaComMonstro$;
   }
 
   obtemMedidaObservavel(id: string): Observable<Medida> {
@@ -213,18 +146,6 @@ export class MedidasService {
       });
     });
   }
-
-  // parseDate(value): Date {
-  //   const _ = moment();
-
-  //   _.locale('pt-BR');
-
-  //   const date = moment(value, 'DD/MM/YYYY'); // .add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
-
-  //   const result = date.toDate();
-
-  //   return result;
-  // }
 
   cadastraMedida(solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
     return new Promise<void>((resolve, reject) => {

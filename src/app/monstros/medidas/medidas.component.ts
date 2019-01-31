@@ -99,7 +99,9 @@ export class MedidasComponent implements OnInit {
 
     this.medidas$.pipe(
       take(1)
-    ).subscribe(() => this.loading = false);
+    ).subscribe((value) => {
+      this.loading = false;
+    });
 
     // Capture the session ID if available
     this.sessionId = this.route.queryParamMap.pipe(

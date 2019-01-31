@@ -20,7 +20,7 @@ export class AuthService {
   ) {
     this.localUser$ = new Subject<UserInfo>();
 
-    this.user$ = merge(this.angularFireAuth.authState, this.localUser$);
+    this.user$ = this.angularFireAuth.authState; // merge(this.angularFireAuth.authState, this.localUser$);
 
     this.user$.subscribe((user) => {
       console.log('user: "' + (user !== null ? user.uid : 'nulo') + '"');

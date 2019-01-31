@@ -24,7 +24,12 @@ export class MonstrosService {
             displayName: user.displayName,
             email: user.email,
             photoURL: user.photoURL,
-            id: user.uid
+            id: user.uid,
+            nome: user.displayName,
+            usuario: user.uid,
+            genero: 'Masculino',
+            altura: 1.72,
+            dataDeNascimento: firebase.firestore.Timestamp.fromDate(new Date(1982, 4, 8))
           };
 
           const document = this.db.doc<MonstroDocument>(`${this.PATH}/${user.uid}`);
@@ -49,13 +54,7 @@ export class MonstrosService {
     const document = collection.doc<MonstroDocument>(id);
 
     const monstro$ = document.valueChanges().pipe(
-      map(value => {
-        if (!value) {
-          console.log(id);
-        }
-
-        return this.mapMonstro(value);
-      })
+      map(value => this.mapMonstro(value))
     );
 
     return monstro$;

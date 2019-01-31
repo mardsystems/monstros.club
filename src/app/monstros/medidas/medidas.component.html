@@ -23,7 +23,7 @@
 
   <ng-container matColumnDef="gordura">
     <th mat-header-cell *matHeaderCellDef> Gordura </th>
-    <td mat-cell *matCellDef="let medida"> {{medida.gordura}} </td>
+    <td mat-cell *matCellDef="let medida"> {{medida.gordura}}<span innerHTML="{{medida.gordura2}}"></span></td>
   </ng-container>
 
   <ng-container matColumnDef="gorduraVisceral">
@@ -81,9 +81,9 @@
   </ng-template>
 </mat-menu>
 
-<button mat-fab class="fab-bottom-right-2" (click)="importaMedidas()">
+<!-- <button mat-fab class="fab-bottom-right-2" (click)="importaMedidas()">
   <mat-icon>playlist_add</mat-icon>
-</button>
+</button> -->
 
 <button mat-fab class="fab-bottom-right" (click)="onAdd()">
   <mat-icon>add</mat-icon>

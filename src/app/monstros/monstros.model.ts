@@ -31,8 +31,40 @@ export class Monstro {
 
   public get dataDeNascimento() { return this._dataDeNascimento; }
 
+  defineDisplayName(displayName: string) {
+    this._displayName = displayName;
+  }
+
+  defineEmail(email: string) {
+    this._email = email;
+  }
+
+  definePhotoURL(photoURL: string) {
+    this._photoURL = photoURL;
+  }
+
   defineNome(nome: string) {
     this._nome = nome;
+  }
+
+  defineUsuario(usuario: string) {
+    this._usuario = usuario;
+  }
+
+  defineGenero(genero: string) {
+    this._genero = genero;
+  }
+
+  defineAltura(altura: number) {
+    this._altura = altura;
+  }
+
+  defineDataDeNascimento(dataDeNascimento: Date) {
+    this._dataDeNascimento = dataDeNascimento;
+  }
+
+  public get idade(): Number {
+    return 36;
   }
 }
 

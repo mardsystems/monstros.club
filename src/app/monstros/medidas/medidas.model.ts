@@ -40,6 +40,58 @@ export class Medida {
 
   public get indiceDeMassaCorporal() { return this._indiceDeMassaCorporal; }
 
+  public get gordura2(): string {
+    let indice: number;
+
+    switch (this._monstro.genero) {
+      case 'Masculino':
+        if (this._monstro.idade < 40) {
+          if (this._gordura < 8.0) {
+            indice = -1;
+          } else if (this._gordura >= 25.0) {
+            indice = +2;
+          } else if (this._gordura < 20.0) {
+            indice = 0;
+          } else {
+            indice = +1;
+          }
+        } else if (this._monstro.idade < 60) {
+          if (this._gordura < 11.0) {
+            indice = -1;
+          } else if (this._gordura >= 28.0) {
+            indice = +2;
+          } else if (this._gordura < 22.0) {
+            indice = 0;
+          } else {
+            indice = +1;
+          }
+        } else {
+          if (this._gordura < 13.0) {
+            indice = -1;
+          } else if (this._gordura >= 30.0) {
+            indice = +2;
+          } else if (this._gordura < 25.0) {
+            indice = 0;
+          } else {
+            indice = +1;
+          }
+        }
+
+        break;
+    }
+
+    switch (indice) {
+      case -1:
+        return '<span class="hint good">&#10003;</span>';
+        case 0:
+        return '<span class="hint normal">&#10003;</span>';
+      case +1:
+        return '<span class="hint bad">&#43;</span>';
+      case +2:
+        return '<span class="hint bad">&#43;&#43;</span>';
+    }
+  }
+
   public get gorduraVisceral2(): string {
     let indice: number;
 
