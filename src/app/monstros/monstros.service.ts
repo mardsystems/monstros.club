@@ -29,7 +29,7 @@ export class MonstrosService {
             usuario: user.uid,
             genero: 'Masculino',
             altura: 1.72,
-            dataDeNascimento: firebase.firestore.Timestamp.fromDate(new Date(1982, 4, 8))
+            dataDeNascimento: firebase.firestore.Timestamp.now()
           };
 
           const document = this.db.doc<MonstroDocument>(`${this.PATH}/${user.uid}`);
