@@ -68,6 +68,10 @@ export class Monstro {
   }
 }
 
+export class AdaptadorParaUserInfo{
+
+}
+
 export interface SolicitacaoDeCadastroDeMonstro {
   displayName?: string;
   email?: string;

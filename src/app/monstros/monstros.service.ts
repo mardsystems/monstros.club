@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { Monstro, SolicitacaoDeCadastroDeMonstro } from './monstros.model';
 
@@ -20,25 +20,49 @@ export class MonstrosService {
     this.monstroLogado$ = this.authService.user$.pipe(
       switchMap(user => {
         if (user) {
-          const newDocument: MonstroDocument = {
-            displayName: user.displayName,
-            email: user.email,
-            photoURL: user.photoURL,
-            id: user.uid,
-            nome: user.displayName,
-            usuario: user.uid,
-            genero: 'Masculino',
-            altura: 1.72,
-            dataDeNascimento: firebase.firestore.Timestamp.now()
-          };
+          const monstro$ = this.obtemMonstroObservavel(user.uid).pipe(
+            tap(monstro => {
+              const solicitacao: SolicitacaoDeCadastroDeMonstro = {
+                displayName: user.displayName
+              };
 
-          const document = this.db.doc<MonstroDocument>(`${this.PATH}/${user.uid}`);
+              this.atualizaMonstro(user.uid, solicitacao);
 
-          document.set(newDocument, { merge: true });
+              return monstro;
+            }),
+            catchError((err, o) => {
+              const solicitacao: SolicitacaoDeCadastroDeMonstro = {
+                displayName: user.displayName,
+                dataDeNascimento: new Date(1982, 4, 8)
+              };
 
-          const monstro$ = document.valueChanges().pipe(
-            map(value => this.mapMonstro(value))
+              this.cadastraMonstro(solicitacao);
+
+              const x = this.obtemMonstroObservavel(user.uid);
+
+              return x;
+            })
           );
+
+          // const newDocument: MonstroDocument = {
+          //   displayName: user.displayName,
+          //   email: user.email,
+          //   photoURL: user.photoURL,
+          //   id: user.uid,
+          //   nome: user.displayName,
+          //   usuario: user.uid,
+          //   genero: 'Masculino',
+          //   altura: 1.72,
+          //   dataDeNascimento: firebase.firestore.Timestamp.fromDate(new Date(1982, 4, 8))
+          // };
+
+          // const document = this.db.doc<MonstroDocument>(`${this.PATH}/${user.uid}`);
+
+          // document.set(newDocument, { merge: true });
+
+          // const monstro$ = document.valueChanges().pipe(
+          //   map(value => this.mapMonstro(value))
+          // );
 
           return monstro$;
         } else {
