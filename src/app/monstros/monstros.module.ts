@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { HomeComponent } from './home/home.component';
 import { MedidaComponent } from './medidas/medida.component';
 import { MedidasComponent } from './medidas/medidas.component';
 import { MedidasService } from './medidas/medidas.service';
@@ -19,8 +17,6 @@ import { MonstroPerfilComponent } from './monstro-perfil.component';
     MedidaComponent,
     MedidasComponent,
     SeriesComponent,
-    DashboardComponent,
-    HomeComponent,
     MonstroNaoEncontradoComponent,
     MonstroPerfilComponent
   ],
