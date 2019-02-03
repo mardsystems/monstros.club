@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
-import { HomeComponent } from './home/home.component';
 import { MedidasComponent } from './medidas/medidas.component';
 import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-nao-encontrado.component';
+import { MonstroPerfilComponent } from './monstro-perfil.component';
 import { MonstrosComponent } from './monstros.component';
 import { SeriesComponent } from './series/series.component';
 
@@ -21,7 +21,7 @@ const monstrosRoutes: Routes = [
         children: [
           { path: 'series', component: SeriesComponent },
           { path: 'medidas', component: MedidasComponent },
-          { path: '', component: HomeComponent }
+          { path: '', component: MonstroPerfilComponent }
         ]
       }
     ]

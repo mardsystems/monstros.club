@@ -99,7 +99,7 @@ export class MedidasComponent implements OnInit {
 
     this.medidas$.pipe(
       take(1)
-    ).subscribe((value) => {
+    ).subscribe(() => {
       this.loading = false;
     });
 

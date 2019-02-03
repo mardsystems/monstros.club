@@ -89,25 +89,25 @@ export class MedidasService {
     return medida$;
   }
 
-  private mapMedidas(values: MedidaDocument[]): Medida[] {
-    return values.map((value, index) => {
-      const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
+  // private mapMedidas(values: MedidaDocument[]): Medida[] {
+  //   return values.map((value, index) => {
+  //     const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
 
-      return new Medida(
-        value.id,
-        null,
-        monstroId,
-        value.data.toDate(),
-        value.peso,
-        value.gordura,
-        value.gorduraVisceral,
-        value.musculo,
-        value.idadeCorporal,
-        value.metabolismoBasal,
-        value.indiceDeMassaCorporal
-      );
-    });
-  }
+  //     return new Medida(
+  //       value.id,
+  //       null,
+  //       monstroId,
+  //       value.data.toDate(),
+  //       value.peso,
+  //       value.gordura,
+  //       value.gorduraVisceral,
+  //       value.musculo,
+  //       value.idadeCorporal,
+  //       value.metabolismoBasal,
+  //       value.indiceDeMassaCorporal
+  //     );
+  //   });
+  // }
 
   private mapMedida(value: MedidaDocument, monstro: Monstro): Medida {
     const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);

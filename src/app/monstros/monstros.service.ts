@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
-import { map, switchMap, catchError, tap } from 'rxjs/operators';
+import { map, switchMap, catchError, tap, first } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { Monstro, SolicitacaoDeCadastroDeMonstro } from './monstros.model';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,12 @@ export class MonstrosService {
           const monstro$ = this.obtemMonstroObservavel(user.uid).pipe(
             tap(monstro => {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
-                displayName: user.displayName
+                isEdit: true,
+                id: monstro.id,
+                displayName: user.displayName,
+                usuario: monstro.usuario,
+                dataDeNascimento: moment(monstro.dataDeNascimento),
+                nome: monstro.nome
               };
 
               this.atualizaMonstro(user.uid, solicitacao);
@@ -32,8 +38,9 @@ export class MonstrosService {
             }),
             catchError((err, o) => {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
+                isEdit: false,
                 displayName: user.displayName,
-                dataDeNascimento: new Date(1982, 4, 8)
+                dataDeNascimento: moment(new Date(1982, 4, 8))
               };
 
               this.cadastraMonstro(solicitacao);
@@ -110,7 +117,7 @@ export class MonstrosService {
       solicitacao.usuario,
       solicitacao.genero,
       solicitacao.altura,
-      solicitacao.dataDeNascimento
+      solicitacao.dataDeNascimento.toDate()
     );
 
     const result = this.add(monstro);
@@ -132,8 +139,12 @@ export class MonstrosService {
 
   atualizaMonstro(monstroId: string, solicitacao: SolicitacaoDeCadastroDeMonstro): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.obtemMonstroObservavel(monstroId).subscribe(monstro => {
+      this.obtemMonstroObservavel(monstroId).pipe(first()).subscribe(monstro => {
         monstro.defineNome(solicitacao.nome);
+
+        monstro.defineUsuario(solicitacao.usuario);
+
+        monstro.defineDataDeNascimento(solicitacao.dataDeNascimento.toDate());
 
         const result = this.update(monstro);
 

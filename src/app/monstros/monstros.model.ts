@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export class Monstro {
   public constructor(
     private _displayName: string,
@@ -64,15 +66,36 @@ export class Monstro {
   }
 
   public get idade(): Number {
-    return 36;
+    const now = new Date(Date.now());
+
+    const calculateYear = now.getFullYear();
+    const calculateMonth = now.getMonth();
+    const calculateDay = now.getDate();
+
+    const birthYear = this._dataDeNascimento.getFullYear();
+    const birthMonth = this._dataDeNascimento.getMonth();
+    const birthDay = this._dataDeNascimento.getDate();
+
+    let age = calculateYear - birthYear;
+    const ageMonth = calculateMonth - birthMonth;
+    const ageDay = calculateDay - birthDay;
+
+    if (ageMonth < 0 || (ageMonth === 0 && ageDay < 0)) {
+      age = age - 1;
+    }
+
+    return age;
   }
 }
 
-export class AdaptadorParaUserInfo{
+export class AdaptadorParaUserInfo {
 
 }
 
-export interface SolicitacaoDeCadastroDeMonstro {
+export class SolicitacaoDeCadastroDeMonstro {
+  isEdit: boolean;
+  // Usado apenas na edição.
+  id?: string;
   displayName?: string;
   email?: string;
   photoURL?: string;
@@ -80,5 +103,26 @@ export interface SolicitacaoDeCadastroDeMonstro {
   usuario?: string;
   genero?: string;
   altura?: number;
-  dataDeNascimento?: Date;
+  dataDeNascimento?: moment.Moment;
+
+  static toAdd(): SolicitacaoDeCadastroDeMonstro {
+    return {
+      isEdit: false
+    };
+  }
+
+  static toEdit(monstro: Monstro): SolicitacaoDeCadastroDeMonstro {
+    return {
+      isEdit: true,
+      id: monstro.id,
+      displayName: monstro.displayName,
+      email: monstro.email,
+      photoURL: monstro.photoURL,
+      nome: monstro.nome,
+      usuario: monstro.usuario,
+      genero: monstro.genero,
+      altura: monstro.altura,
+      dataDeNascimento: moment(monstro.dataDeNascimento)
+    };
+  }
 }

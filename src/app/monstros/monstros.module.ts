@@ -11,6 +11,7 @@ import { MonstrosMaterialModule } from './monstros-material.module';
 import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
 import { SeriesComponent } from './series/series.component';
+import { MonstroPerfilComponent } from './monstro-perfil.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { SeriesComponent } from './series/series.component';
     SeriesComponent,
     DashboardComponent,
     HomeComponent,
-    MonstroNaoEncontradoComponent
+    MonstroNaoEncontradoComponent,
+    MonstroPerfilComponent
   ],
   imports: [
     CommonModule,
