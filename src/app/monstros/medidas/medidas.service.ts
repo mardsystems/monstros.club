@@ -6,7 +6,7 @@ import { Observable, combineLatest } from 'rxjs';
 import { first, map, mergeMap, merge, switchMap } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
 import { MonstrosService, MonstroDocument } from '../monstros.service';
-import { Medida, SolicitacaoDeCadastroDeMedida } from './medidas.model';
+import { Medida, SolicitacaoDeCadastroDeMedida, TipoDeBalanca } from './medidas.model';
 import * as _ from 'lodash';
 
 @Injectable({
@@ -117,6 +117,7 @@ export class MedidasService {
       monstro,
       monstroId,
       value.data.toDate(),
+      TipoDeBalanca[value.tipoDeBalanca],
       value.peso,
       value.gordura,
       value.gorduraVisceral,
@@ -157,6 +158,7 @@ export class MedidasService {
           monstro,
           solicitacao.monstroId,
           solicitacao.data.toDate(),
+          solicitacao.tipoDeBalanca,
           solicitacao.peso,
           solicitacao.gordura,
           solicitacao.gorduraVisceral,
@@ -229,6 +231,7 @@ export class MedidasService {
       // monstroId: `monstros/${medida.monstro.id}`,
       monstroId: `monstros/${medida.monstroId}`,
       data: firebase.firestore.Timestamp.fromDate(medida.data),
+      tipoDeBalanca: medida.tipoDeBalanca,
       peso: medida.peso,
       gordura: medida.gordura,
       gorduraVisceral: medida.gorduraVisceral,
@@ -254,9 +257,9 @@ export class MedidasService {
 
 interface MedidaDocument {
   id: string;
-  // monstro: MonstroDocument;
   monstroId: string;
   data: firebase.firestore.Timestamp;
+  tipoDeBalanca: string;
   peso: number;
   gordura: number;
   gorduraVisceral: number;

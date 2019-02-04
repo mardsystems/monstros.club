@@ -3,6 +3,7 @@ import { SolicitacaoDeCadastroDeMonstro } from './monstros.model';
 import { MonstrosService } from './monstros.service';
 import { ParamMap, ActivatedRoute } from '@angular/router';
 import { switchMap, take } from 'rxjs/operators';
+import { CalculoDeIdade } from '../app.services';
 
 @Component({
   selector: 'app-monstro-perfil',
@@ -17,7 +18,8 @@ export class MonstroPerfilComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private monstrosService: MonstrosService
+    private monstrosService: MonstrosService,
+    private calculoDeIdade: CalculoDeIdade
   ) { }
 
   ngOnInit() {
@@ -37,6 +39,16 @@ export class MonstroPerfilComponent implements OnInit {
     monstro$.subscribe(monstro => {
       this.model = SolicitacaoDeCadastroDeMonstro.toEdit(monstro);
     });
+  }
+
+  public get idade(): Number {
+    if (!this.model.dataDeNascimento) {
+      return 0;
+    }
+
+    const idade = this.calculoDeIdade.calculaIdade(this.model.dataDeNascimento.toDate());
+
+    return idade;
   }
 
   onSave(): void {

@@ -18,6 +18,10 @@
       </mat-form-field>
 
       <mat-form-field>
+        <input type="text" placeholder="Idade" matInput [ngModel]="idade" readonly>
+      </mat-form-field>
+
+      <mat-form-field>
         <input type="text" placeholder="E-mail" matInput [(ngModel)]="model.email" required #email="ngModel">
       </mat-form-field>
 
@@ -29,8 +33,11 @@
         <input type="text" placeholder="Usuário" matInput [(ngModel)]="model.usuario" required #usuario="ngModel">
       </mat-form-field>
 
-      <mat-form-field>
-        <input type="text" placeholder="Gênero" matInput [(ngModel)]="model.genero" required #genero="ngModel">
+      <mat-form-field hideRequiredMarker>
+        <mat-select placeholder="Gênero" [(ngModel)]="model.genero" required name="genero">
+          <mat-option value="Masculino">Masculino</mat-option>
+          <mat-option value="Feminino">Feminino</mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field>

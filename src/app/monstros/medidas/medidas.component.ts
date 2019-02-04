@@ -8,9 +8,10 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { SelectivePreloadingStrategyService } from '../../selective-preloading-strategy.service';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
-import { MedidaComponent } from './medida.component';
-import { Medida, SolicitacaoDeCadastroDeMedida } from './medidas.model';
+import { MedidaComponent, MedidaViewModel } from './medida.component';
+import { Medida, SolicitacaoDeCadastroDeMedida, Balanca, BalancaOmronHBF214 } from './medidas.model';
 import { MedidasService } from './medidas.service';
+import { CalculoDeIdade } from 'src/app/app.services';
 
 const columnDefinitions = [
   { def: 'col1', showMobile: true },
@@ -24,6 +25,7 @@ const columnDefinitions = [
 })
 export class MedidasComponent implements OnInit {
   medidas$: Observable<Medida[]>;
+  balanca: Balanca;
   // medidaSelecionada: Medida;
   loading = true;
   fullDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
@@ -51,6 +53,7 @@ export class MedidasComponent implements OnInit {
     private authService: AuthService,
     private monstrosService: MonstrosService,
     private medidasService: MedidasService,
+    private calculoDeIdade: CalculoDeIdade,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
@@ -69,6 +72,8 @@ export class MedidasComponent implements OnInit {
     this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
       this.monstroLogado = monstroLogado;
     });
+
+    this.balanca = new BalancaOmronHBF214();
   }
 
   private _mobileQueryListener(ev: MediaQueryListEvent) {
@@ -155,22 +160,34 @@ export class MedidasComponent implements OnInit {
   //   this.medidasService.atualizaMedida(medida);
   // }
 
-  importaMedidas() {
-    this.medidasService.importaMedidas();
-  }
-
   onAdd(): void {
-    const model = SolicitacaoDeCadastroDeMedida.toAdd(this.monstroId);
+    const idade = this.calculoDeIdade.calculaIdade(this.monstroLogado.dataDeNascimento);
 
-    const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
+    const genero = this.monstroLogado.genero;
+
+    if (this.monstroLogado.id !== this.monstroId) {
+      return;
+    }
+
+    const model = MedidaViewModel.toAddViewModel(this.monstroLogado, idade, genero);
+
+    const config: MatDialogConfig<MedidaViewModel> = { data: model };
 
     this.dialog.open(MedidaComponent, config);
   }
 
   onEdit(medida: Medida): void {
-    const model = SolicitacaoDeCadastroDeMedida.toEdit(medida);
+    const idade = this.calculoDeIdade.calculaIdade(this.monstroLogado.dataDeNascimento);
 
-    const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
+    const genero = this.monstroLogado.genero;
+
+    if (this.monstroLogado.id !== this.monstroId) {
+      return;
+    }
+
+    const model = MedidaViewModel.toEditViewModel(this.monstroLogado, medida, idade, genero);
+
+    const config: MatDialogConfig<MedidaViewModel> = { data: model };
 
     this.dialog.open(MedidaComponent, config);
   }

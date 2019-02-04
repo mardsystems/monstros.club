@@ -1,7 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { SolicitacaoDeCadastroDeMedida } from './medidas.model';
+import {
+  IMedidaDeGordura,
+  IMedidaDeGorduraVisceral,
+  IMedidaDeIndiceDeMassaCorporal,
+  IMedidaDeMusculo,
+  Medida,
+  SolicitacaoDeCadastroDeMedida
+} from './medidas.model';
 import { MedidasService } from './medidas.service';
+import { Monstro } from '../monstros.model';
 
 @Component({
   selector: 'app-medida',
@@ -13,7 +21,7 @@ export class MedidaComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public model: SolicitacaoDeCadastroDeMedida,
+    public model: MedidaViewModel,
     private dialogRef: MatDialogRef<MedidaComponent>,
     private medidasService: MedidasService
   ) { }
@@ -33,5 +41,57 @@ export class MedidaComponent implements OnInit {
     operation.then(() => {
       this.dialogRef.close();
     });
+  }
+}
+
+export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida {
+  isEdit: boolean;
+  id?: string; // Usado apenas na edição.
+  idade?: number;
+  genero?: string;
+  monstro: Monstro;
+
+  static toAddViewModel(monstro: Monstro, idade: number, genero: string): MedidaViewModel {
+    const solicitacao = SolicitacaoDeCadastroDeMedida.toAdd(monstro.id, idade, genero);
+
+    return {
+      isEdit: false,
+      id: null,
+      idade: idade,
+      genero: genero,
+      monstro: monstro,
+      monstroId: solicitacao.monstroId,
+      data: solicitacao.data,
+      tipoDeBalanca: solicitacao.tipoDeBalanca,
+      peso: solicitacao.peso,
+      gordura: solicitacao.gordura,
+      gorduraVisceral: solicitacao.gorduraVisceral,
+      musculo: solicitacao.musculo,
+      idadeCorporal: solicitacao.idadeCorporal,
+      metabolismoBasal: solicitacao.metabolismoBasal,
+      indiceDeMassaCorporal: solicitacao.indiceDeMassaCorporal
+    };
+  }
+
+  static toEditViewModel(monstro: Monstro, medida: Medida, idade: number, genero: string): MedidaViewModel {
+    const solicitacao = SolicitacaoDeCadastroDeMedida.toAdd(monstro.id, idade, genero);
+
+    return {
+      isEdit: true,
+      id: medida.id,
+      idade: idade,
+      genero: genero,
+      monstro: monstro,
+      monstroId: solicitacao.monstroId,
+      data: solicitacao.data,
+      tipoDeBalanca: solicitacao.tipoDeBalanca,
+      peso: solicitacao.peso,
+      gordura: solicitacao.gordura,
+      gorduraVisceral: solicitacao.gorduraVisceral,
+      musculo: solicitacao.musculo,
+      idadeCorporal: solicitacao.idadeCorporal,
+      metabolismoBasal: solicitacao.metabolismoBasal,
+      indiceDeMassaCorporal: solicitacao.indiceDeMassaCorporal
+    };
   }
 }

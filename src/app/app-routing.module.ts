@@ -9,12 +9,12 @@ import { SelectivePreloadingStrategyService } from './selective-preloading-strat
 const routes: Routes = [
   { path: '', component: HomeComponent },
   // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   {
     path: ':monstroId',
     loadChildren: './monstros/monstros.module#MonstrosModule',
     canLoad: [AuthGuard]
   },
-  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: '**', component: PageNotFoundComponent }
 ];
 

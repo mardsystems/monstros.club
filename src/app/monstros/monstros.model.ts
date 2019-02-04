@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { ICalculoDeIdade } from '../app.model';
 
 export class Monstro {
   public constructor(
@@ -8,9 +9,10 @@ export class Monstro {
     private _id: string,
     private _nome: string,
     private _usuario: string,
-    private _genero: string,
+    private _genero: Genero,
     private _altura: number,
-    private _dataDeNascimento: Date
+    private _dataDeNascimento: Date,
+    private _calculoDeIdade: ICalculoDeIdade
   ) {
 
   }
@@ -33,59 +35,48 @@ export class Monstro {
 
   public get dataDeNascimento() { return this._dataDeNascimento; }
 
-  defineDisplayName(displayName: string) {
+  public defineDisplayName(displayName: string) {
     this._displayName = displayName;
   }
 
-  defineEmail(email: string) {
+  public defineEmail(email: string) {
     this._email = email;
   }
 
-  definePhotoURL(photoURL: string) {
+  public definePhotoURL(photoURL: string) {
     this._photoURL = photoURL;
   }
 
-  defineNome(nome: string) {
+  public defineNome(nome: string) {
     this._nome = nome;
   }
 
-  defineUsuario(usuario: string) {
+  public defineUsuario(usuario: string) {
     this._usuario = usuario;
   }
 
-  defineGenero(genero: string) {
+  public defineGenero(genero: Genero) {
     this._genero = genero;
   }
 
-  defineAltura(altura: number) {
+  public defineAltura(altura: number) {
     this._altura = altura;
   }
 
-  defineDataDeNascimento(dataDeNascimento: Date) {
+  public defineDataDeNascimento(dataDeNascimento: Date) {
     this._dataDeNascimento = dataDeNascimento;
   }
 
-  public get idade(): Number {
-    const now = new Date(Date.now());
+  public get idade(): number {
+    const idade = this._calculoDeIdade.calculaIdade(this._dataDeNascimento);
 
-    const calculateYear = now.getFullYear();
-    const calculateMonth = now.getMonth();
-    const calculateDay = now.getDate();
-
-    const birthYear = this._dataDeNascimento.getFullYear();
-    const birthMonth = this._dataDeNascimento.getMonth();
-    const birthDay = this._dataDeNascimento.getDate();
-
-    let age = calculateYear - birthYear;
-    const ageMonth = calculateMonth - birthMonth;
-    const ageDay = calculateDay - birthDay;
-
-    if (ageMonth < 0 || (ageMonth === 0 && ageDay < 0)) {
-      age = age - 1;
-    }
-
-    return age;
+    return idade;
   }
+}
+
+export enum Genero {
+  Masculino = 'Masculino',
+  Feminino = 'Feminino'
 }
 
 export class AdaptadorParaUserInfo {
@@ -101,7 +92,7 @@ export class SolicitacaoDeCadastroDeMonstro {
   photoURL?: string;
   nome?: string;
   usuario?: string;
-  genero?: string;
+  genero?: Genero;
   altura?: number;
   dataDeNascimento?: moment.Moment;
 

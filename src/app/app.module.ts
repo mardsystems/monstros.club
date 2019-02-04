@@ -1,6 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -31,8 +31,8 @@ registerLocaleData(localePt);
     PageNotFoundComponent,
     DoacaoComponent,
     HomeComponent,
-    RankingComponent,
-    AdminComponent
+    AdminComponent,
+    RankingComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +45,9 @@ registerLocaleData(localePt);
     AngularFireAuthModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },

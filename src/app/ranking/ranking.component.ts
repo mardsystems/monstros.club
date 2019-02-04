@@ -9,7 +9,7 @@ import { SelectivePreloadingStrategyService } from '../selective-preloading-stra
 import { Monstro } from '../monstros/monstros.model';
 import { MonstrosService } from '../monstros/monstros.service';
 import { MedidaComponent } from '../monstros/medidas/medida.component';
-import { Medida, SolicitacaoDeCadastroDeMedida } from '../monstros/medidas/medidas.model';
+import { Medida, SolicitacaoDeCadastroDeMedida, BalancaOmronHBF214, Balanca } from '../monstros/medidas/medidas.model';
 import { MedidasService } from '../monstros/medidas/medidas.service';
 
 const columnDefinitions = [
@@ -46,6 +46,7 @@ const columnDefinitions = [
 })
 export class RankingComponent implements OnInit {
   medidas$: Observable<Medida[]>;
+  balanca: Balanca;
   // medidaSelecionada: Medida;
   loading = true;
   fullDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
@@ -91,6 +92,8 @@ export class RankingComponent implements OnInit {
     this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
       this.monstroLogado = monstroLogado;
     });
+
+    this.balanca = new BalancaOmronHBF214();
   }
 
   private _mobileQueryListener(ev: MediaQueryListEvent) {
@@ -170,25 +173,21 @@ export class RankingComponent implements OnInit {
   //   this.medidasService.atualizaMedida(medida);
   // }
 
-  importaMedidas() {
-    this.medidasService.importaMedidas();
-  }
+  // onAdd(): void {
+  //   const model = SolicitacaoDeCadastroDeMedida.toAdd(this.monstroId);
 
-  onAdd(): void {
-    const model = SolicitacaoDeCadastroDeMedida.toAdd(this.monstroId);
+  //   const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
 
-    const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
+  //   this.dialog.open(MedidaComponent, config);
+  // }
 
-    this.dialog.open(MedidaComponent, config);
-  }
+  // onEdit(medida: Medida): void {
+  //   const model = SolicitacaoDeCadastroDeMedida.toEdit(medida);
 
-  onEdit(medida: Medida): void {
-    const model = SolicitacaoDeCadastroDeMedida.toEdit(medida);
+  //   const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
 
-    const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
-
-    this.dialog.open(MedidaComponent, config);
-  }
+  //   this.dialog.open(MedidaComponent, config);
+  // }
 
   onDelete(medida: Medida): void {
     this.medidasService.excluiMedida(medida.id);

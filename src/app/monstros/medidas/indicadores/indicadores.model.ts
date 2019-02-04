@@ -1,0 +1,1 @@
+export const CONST_CLASSIFICACAO_INVALIDA = -99;

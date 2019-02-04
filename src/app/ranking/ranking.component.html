@@ -26,17 +26,21 @@
 
     <ng-container matColumnDef="gordura">
       <th mat-header-cell *matHeaderCellDef> Gordura </th>
-      <td mat-cell *matCellDef="let medida"> {{medida.gordura}}<span innerHTML="{{medida.gordura2}}"></span></td>
+      <td mat-cell *matCellDef="let medida"> {{medida.gordura}}<indicador-de-gordura [medida]="medida" [balanca]="balanca"></indicador-de-gordura>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="gorduraVisceral">
       <th mat-header-cell *matHeaderCellDef class="gorduraVisceral"> Gordura Visceral </th>
-      <td mat-cell *matCellDef="let medida"> {{medida.gorduraVisceral}}<span innerHTML="{{medida.gorduraVisceral2}}"></span></td>
+      <td mat-cell *matCellDef="let medida"> {{medida.gorduraVisceral}}<indicador-de-gordura-visceral [medida]="medida"
+          [balanca]="balanca"></indicador-de-gordura-visceral>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="musculo">
-      <th mat-header-cell *matHeaderCellDef> Músculos </th>
-      <td mat-cell *matCellDef="let medida"> {{medida.musculo}} </td>
+      <th mat-header-cell *matHeaderCellDef> Músculo </th>
+      <td mat-cell *matCellDef="let medida"> {{medida.musculo}}<indicador-de-musculo [medida]="medida" [balanca]="balanca"></indicador-de-musculo>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="idadeCorporal">
@@ -51,7 +55,9 @@
 
     <ng-container matColumnDef="indiceDeMassaCorporal">
       <th mat-header-cell *matHeaderCellDef> IMC </th>
-      <td mat-cell *matCellDef="let medida"> {{medida.indiceDeMassaCorporal}}<span innerHTML="{{medida.indiceDeMassaCorporal2}}"></span></td>
+      <td mat-cell *matCellDef="let medida"> {{medida.indiceDeMassaCorporal}}<indicador-de-indice-de-massa-corporal
+          [medida]="medida" [balanca]="balanca"></indicador-de-indice-de-massa-corporal>
+      </td>
     </ng-container>
 
     <!-- <ng-container matColumnDef="menu">

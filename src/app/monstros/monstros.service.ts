@@ -4,8 +4,9 @@ import * as firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, catchError, tap, first } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-import { Monstro, SolicitacaoDeCadastroDeMonstro } from './monstros.model';
+import { Monstro, SolicitacaoDeCadastroDeMonstro, Genero } from './monstros.model';
 import * as moment from 'moment';
+import { CalculoDeIdade } from '../app.services';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class MonstrosService {
 
   constructor(
     private db: AngularFirestore,
-    private authService: AuthService
+    private authService: AuthService,
+    private calculoDeIdade: CalculoDeIdade
   ) {
     this.monstroLogado$ = this.authService.user$.pipe(
       switchMap(user => {
@@ -27,49 +29,37 @@ export class MonstrosService {
                 isEdit: true,
                 id: monstro.id,
                 displayName: user.displayName,
+                email: user.email,
+                photoURL: user.photoURL,
+                nome: monstro.nome,
                 usuario: monstro.usuario,
-                dataDeNascimento: moment(monstro.dataDeNascimento),
-                nome: monstro.nome
+                genero: monstro.genero,
+                altura: monstro.altura,
+                dataDeNascimento: moment(monstro.dataDeNascimento)
               };
 
               this.atualizaMonstro(user.uid, solicitacao);
-
-              return monstro;
             }),
             catchError((err, o) => {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
                 isEdit: false,
                 displayName: user.displayName,
-                dataDeNascimento: moment(new Date(1982, 4, 8))
+                email: user.email,
+                photoURL: user.photoURL,
+                nome: user.displayName,
+                usuario: user.uid,
+                genero: null,
+                altura: null,
+                dataDeNascimento: null
               };
 
               this.cadastraMonstro(solicitacao);
 
-              const x = this.obtemMonstroObservavel(user.uid);
+              const monstroCadastrado$ = this.obtemMonstroObservavel(user.uid);
 
-              return x;
+              return monstroCadastrado$;
             })
           );
-
-          // const newDocument: MonstroDocument = {
-          //   displayName: user.displayName,
-          //   email: user.email,
-          //   photoURL: user.photoURL,
-          //   id: user.uid,
-          //   nome: user.displayName,
-          //   usuario: user.uid,
-          //   genero: 'Masculino',
-          //   altura: 1.72,
-          //   dataDeNascimento: firebase.firestore.Timestamp.fromDate(new Date(1982, 4, 8))
-          // };
-
-          // const document = this.db.doc<MonstroDocument>(`${this.PATH}/${user.uid}`);
-
-          // document.set(newDocument, { merge: true });
-
-          // const monstro$ = document.valueChanges().pipe(
-          //   map(value => this.mapMonstro(value))
-          // );
 
           return monstro$;
         } else {
@@ -99,9 +89,10 @@ export class MonstrosService {
       value.id,
       value.nome,
       value.usuario,
-      value.genero,
+      Genero[value.genero],
       value.altura,
-      (value.dataDeNascimento ? value.dataDeNascimento.toDate() : null)
+      (value.dataDeNascimento ? value.dataDeNascimento.toDate() : null),
+      this.calculoDeIdade
     );
   }
 
@@ -117,7 +108,8 @@ export class MonstrosService {
       solicitacao.usuario,
       solicitacao.genero,
       solicitacao.altura,
-      solicitacao.dataDeNascimento.toDate()
+      solicitacao.dataDeNascimento.toDate(),
+      this.calculoDeIdade
     );
 
     const result = this.add(monstro);
@@ -140,9 +132,19 @@ export class MonstrosService {
   atualizaMonstro(monstroId: string, solicitacao: SolicitacaoDeCadastroDeMonstro): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.obtemMonstroObservavel(monstroId).pipe(first()).subscribe(monstro => {
+        monstro.defineDisplayName(solicitacao.displayName);
+
+        monstro.defineEmail(solicitacao.email);
+
+        monstro.definePhotoURL(solicitacao.photoURL);
+
         monstro.defineNome(solicitacao.nome);
 
         monstro.defineUsuario(solicitacao.usuario);
+
+        monstro.defineGenero(solicitacao.genero);
+
+        monstro.defineAltura(solicitacao.altura);
 
         monstro.defineDataDeNascimento(solicitacao.dataDeNascimento.toDate());
 

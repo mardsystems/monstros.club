@@ -3,6 +3,10 @@
 <mat-dialog-content class="form-container">
 
   <mat-form-field>
+    <input type="text" placeholder="Idade" matInput [ngModel]="model.idade" readonly>
+  </mat-form-field>
+
+  <mat-form-field>
     <input type="text" placeholder="Data" matInput [(ngModel)]="model.data" required [matDatepicker]="dataPicker" #data="ngModel">
     <mat-datepicker-toggle matSuffix [for]="dataPicker"></mat-datepicker-toggle>
     <mat-datepicker #dataPicker></mat-datepicker>
@@ -14,6 +18,7 @@
 
   <mat-form-field>
     <input type="number" placeholder="Gordura" matInput [(ngModel)]="model.gordura" required #gordura="ngModel">
+    <!-- <span matSuffix innerHTML="{{indicadorDeGordura}}"></span> -->
   </mat-form-field>
 
   <mat-form-field>

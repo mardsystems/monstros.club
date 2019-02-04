@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MedidasService } from '../monstros/medidas/medidas.service';
 
 @Component({
   selector: 'app-admin',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private medidasService: MedidasService
+  ) {
+
+  }
 
   ngOnInit() {
   }
 
+  importaMedidas() {
+    this.medidasService.importaMedidas();
+  }
 }

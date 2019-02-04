@@ -15,6 +15,7 @@ import {
   // MatNativeDateModule,
   MatProgressSpinnerModule
 } from '@angular/material';
+import { MatSelectModule } from '@angular/material/select';
 import { MatMomentDateModule, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatCardModule } from '@angular/material/card';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats } from '@angular/material/core';
@@ -60,6 +61,7 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatMenuModule,
     MatMomentDateModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     MatSortModule,
     MatSidenavModule,
     MatSlideToggleModule,
@@ -78,6 +80,7 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatListModule,
     MatMenuModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     MatSortModule,
     MatSidenavModule,
     MatSlideToggleModule,
