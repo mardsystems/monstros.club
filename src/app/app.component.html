@@ -19,26 +19,28 @@
     <a mat-icon-button (click)="sobre()">
       <mat-icon class="red-icon">favorite</mat-icon>
     </a>
+    <a mat-icon-button routerLink="/login" routerLinkActive="active" *ngIf="!monstroEstaLogado">
+      <mat-icon>person</mat-icon>
+    </a>
     <!-- <a mat-icon-button routerLink="/admin" routerLinkActive="active">
       <mat-icon>star_border</mat-icon>
     </a> -->
-    <a mat-icon-button routerLink="/login" routerLinkActive="active">
-      <mat-icon>person</mat-icon>
-    </a>
     <!-- <mat-icon class="example-icon">favorite</mat-icon>
       <mat-icon class="example-icon">delete</mat-icon> -->
-    <a mat-icon-button routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroLogado$ | async as monstroLogado">
-      <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro">
-      <!-- <mat-icon matListIcon>person</mat-icon> -->
-      <!-- <h3 matLine>{{ monstroLogado.email }}</h3>
-      <button mat-icon-button (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>
-      </button> -->
-      <!-- <p matLine>
-          <span> Este é o início </span>
-          <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
-        </p> -->
-    </a>
+    <span *ngIf="monstroLogado$ | async as monstroLogado">
+      <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <!-- <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro"> -->
+        <mat-icon matListIcon>person</mat-icon>
+        <!-- <h3 matLine>{{ monstroLogado.email }}</h3> -->
+        <!-- <button mat-icon-button (click)="logout()">
+              <mat-icon>exit_to_app</mat-icon>
+            </button> -->
+        <!-- <p matLine>
+                <span> Este é o início </span>
+                <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
+              </p> -->
+      </a>
+    </span>
   </mat-toolbar-row>
 </mat-toolbar>
 

@@ -32,7 +32,7 @@
           <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroLogado$ | async as monstroLogado">
             <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro">
             <!-- <mat-icon matListIcon>person</mat-icon> -->
-            <h3 matLine>{{ monstroLogado.email }}</h3>
+            <h3 matLine>{{ monstroLogado.nome }}</h3>
             <button mat-icon-button (click)="logout()">
               <mat-icon>exit_to_app</mat-icon>
             </button>

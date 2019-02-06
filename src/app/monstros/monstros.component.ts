@@ -19,6 +19,7 @@ export class MonstrosComponent implements OnDestroy {
   private _mobileQueryListener: () => void;
 
   constructor(
+    private router: Router,
     public authService: AuthService,
     private monstrosService: MonstrosService,
     private media: MediaMatcher,
@@ -38,6 +39,6 @@ export class MonstrosComponent implements OnDestroy {
   public logout() {
     this.authService.logout();
 
-    // this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 }

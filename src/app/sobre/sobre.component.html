@@ -1,8 +1,16 @@
 <h1 mat-dialog-title>Feito com Amor</h1>
 
 <mat-dialog-content class="form-container">
-  <!-- Place this tag where you want the button to render. -->
-  <a class="github-button" href="https://github.com/mardsystems/monstros.club" data-size="large" aria-label="Star mardsystems/monstros.club on GitHub">Star</a>
+  <p class="mat-body-strong">
+    Este projeto é de domínio público.
+  </p>
+
+  <p class="mat-body">
+    Mais detalhes no <a class="github-button" href="https://github.com/mardsystems/monstros.club" data-size="large"
+      aria-label="Star mardsystems/monstros.club on GitHub">GitHub</a>
+  </p>
+
+  <p class="mat-body">Faça uma doação pelo <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A3URPDNKV85C4&item_name=Monstros.Club&currency_code=BRL&source=url">Paypal</a></p>
 
   <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
     <input type="hidden" name="cmd" value="_donations" />
@@ -13,10 +21,11 @@
       title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
     <img alt="" border="0" src="https://www.paypal.com/pt_BR/i/scr/pixel.gif" width="1" height="1" />
   </form>
-  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A3URPDNKV85C4&item_name=Monstros.Club&currency_code=BRL&source=url"></a>
 
+  <p class="mat-body-strong">Versão <strong>1.0.0-alpha.1</strong></p>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>Fechar</button>
+  <button mat-button mat-dialog-close>FECHAR</button>
+  <button mat-button #atualizar>ATUALIZAR</button>
 </mat-dialog-actions>

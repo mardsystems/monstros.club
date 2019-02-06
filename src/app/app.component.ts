@@ -4,6 +4,7 @@ import { SobreComponent } from './sobre/sobre.component';
 import { MonstrosService } from './monstros/monstros.service';
 import { Monstro } from './monstros/monstros.model';
 import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 // import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -13,12 +14,19 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   monstroLogado$: Observable<Monstro>;
+  monstroEstaLogado = false;
 
   constructor(
     private dialog: MatDialog,
     private monstrosService: MonstrosService,
   ) {
     this.monstroLogado$ = this.monstrosService.monstroLogado$;
+
+    this.monstroLogado$.pipe(
+      first()
+    ).subscribe(() => {
+      this.monstroEstaLogado = true;
+    });
   }
 
   ngOnInit() {

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { SolicitacaoDeCadastroDeMonstro } from './monstros.model';
 import { MonstrosService } from './monstros.service';
-import { ParamMap, ActivatedRoute } from '@angular/router';
+import { ParamMap, ActivatedRoute, Router } from '@angular/router';
 import { switchMap, take } from 'rxjs/operators';
 import { CalculoDeIdade } from '../app.services';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-monstro-perfil',
@@ -18,6 +19,8 @@ export class MonstroPerfilComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
+    public authService: AuthService,
     private monstrosService: MonstrosService,
     private calculoDeIdade: CalculoDeIdade
   ) { }
@@ -60,5 +63,11 @@ export class MonstroPerfilComponent implements OnInit {
     operation.then(() => {
       // this.dialogRef.close();
     });
+  }
+
+  logout() {
+    this.authService.logout();
+
+    this.router.navigate(['/']);
   }
 }
