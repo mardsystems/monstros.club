@@ -7,7 +7,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, pathMatch: 'full' },
   // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   {
@@ -23,7 +23,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
       appRoutes,
       {
-        enableTracing: true, // <-- debugging purposes only
+        enableTracing: false, // <-- debugging purposes only
         preloadingStrategy: PreloadAllModules
       }
     )

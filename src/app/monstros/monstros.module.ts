@@ -35,7 +35,11 @@ import { SeriesComponent } from './series/series.component';
     MonstrosRoutingModule,
   ],
   entryComponents: [
-    MedidaComponent
+    MedidaComponent,
+    IndicadorDeGorduraVisceralComponent,
+    IndicadorDeGorduraComponent,
+    IndicadorDeIndiceDeMassaCorporalComponent,
+    IndicadorDeMusculoComponent
   ],
   providers: [
     MedidasService
