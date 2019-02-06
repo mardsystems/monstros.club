@@ -65,16 +65,16 @@ export class AppModule {
 
     this.monstroLogado$.subscribe((monstroLogado) => {
       if (monstroLogado != null) {
-        const redirectUrl = `${monstroLogado.id}`;
+        const redirectUrl =  ''; // `${monstroLogado.id}`;
 
         const navigationExtras: NavigationExtras = {
           queryParamsHandling: 'preserve',
           preserveFragment: true
         };
 
-        this.router.navigate([redirectUrl], navigationExtras);
+        // this.router.navigate([redirectUrl], navigationExtras);
       } else {
-        this.router.navigate(['/']);
+        // this.router.navigate(['/']);
       }
     });
   }

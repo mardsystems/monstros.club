@@ -9,11 +9,10 @@ import { delay, tap } from 'rxjs/operators';
 })
 export class AuthService {
   // isLoggedIn = false;
-  redirectUrl: string;
-  user$: Observable<UserInfo>;
-  localUser$: Subject<UserInfo>;
-
-  authState: any = null;
+  public redirectUrl: string;
+  public user$: Observable<UserInfo>;
+  private localUser$: Subject<UserInfo>;
+  private authState: any = null;
 
   constructor(
     private angularFireAuth: AngularFireAuth
