@@ -1,23 +1,17 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig, MatSort } from '@angular/material';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { MatDialog, MatSort } from '@angular/material';
 import { Observable } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
-import { AuthService } from 'src/app/auth/auth.service';
-import { SelectivePreloadingStrategyService } from '../selective-preloading-strategy.service';
+import { take } from 'rxjs/operators';
+import { Balanca, OmronHBF214, Medida } from '../monstros/medidas/medidas.model';
+import { MedidasService } from '../monstros/medidas/medidas.service';
 import { Monstro } from '../monstros/monstros.model';
 import { MonstrosService } from '../monstros/monstros.service';
-import { MedidaComponent } from '../monstros/medidas/medida.component';
-import { Medida, SolicitacaoDeCadastroDeMedida, BalancaOmronHBF214, Balanca } from '../monstros/medidas/medidas.model';
-import { MedidasService } from '../monstros/medidas/medidas.service';
 
 const columnDefinitions = [
   { def: 'col1', showMobile: true },
   { def: 'col2', showMobile: false },
 ];
-
-// import { take } from 'rxjs/operators/take';
 
 // export interface PeriodicElement {
 //   name: string;
@@ -55,10 +49,6 @@ export class RankingComponent implements OnInit {
   displayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal'];
   dataSource: any;
 
-  sessionId: Observable<string>;
-  token: Observable<string>;
-  modules: string[];
-
   monstroId: string;
   monstroLogado: Monstro;
 
@@ -68,10 +58,6 @@ export class RankingComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private preloadStrategy: SelectivePreloadingStrategyService,
-    private router: Router,
-    private authService: AuthService,
     private monstrosService: MonstrosService,
     private medidasService: MedidasService,
     changeDetectorRef: ChangeDetectorRef,
@@ -81,19 +67,11 @@ export class RankingComponent implements OnInit {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
 
-    this.modules = preloadStrategy.preloadedModules;
-
-    // this.authService.user$.subscribe((user) => {
-    //   this.monstroId = `monstros/${user.id}`;
-
-    //   // this.medidas.valueChanges();
-    // });
-
     this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
       this.monstroLogado = monstroLogado;
     });
 
-    this.balanca = new BalancaOmronHBF214();
+    this.balanca = new OmronHBF214();
   }
 
   private _mobileQueryListener(ev: MediaQueryListEvent) {
@@ -120,16 +98,6 @@ export class RankingComponent implements OnInit {
     this.medidas$.pipe(
       take(1)
     ).subscribe(() => this.loading = false);
-
-    // Capture the session ID if available
-    this.sessionId = this.route.queryParamMap.pipe(
-      map(params => params.get('session_id') || 'None')
-    );
-
-    // Capture the fragment if available
-    this.token = this.route.fragment.pipe(
-      map(fragment => fragment || 'None')
-    );
   }
 
   getDisplayedColumns(): string[] {
@@ -150,29 +118,6 @@ export class RankingComponent implements OnInit {
     return this.mobileQuery.matches;
   }
 
-  // novaMedida(): void {
-  //   const medida: Medida = {
-
-  //   };
-
-  //   medida.monstroId = 'monstros/vQeCUnaAWmzr2YxP5wB1';
-  //   medida.data = new Date();
-  //   medida.peso = 0;
-  //   medida.gordura = 0;
-  //   medida.gorduraVisceral = 0;
-  //   medida.musculo = 0;
-  //   medida.idadeCorporal = 0;
-  //   medida.metabolismoBasal = 0;
-  //   medida.indiceDeMassaCorporal = 0;
-
-  //   this.medidasService.cadastraMedida(medida);
-  // }
-
-  // atualizaMedida(medida: Medida): void {
-  //   // task.done = !task.done;
-  //   this.medidasService.atualizaMedida(medida);
-  // }
-
   // onAdd(): void {
   //   const model = SolicitacaoDeCadastroDeMedida.toAdd(this.monstroId);
 
@@ -189,7 +134,7 @@ export class RankingComponent implements OnInit {
   //   this.dialog.open(MedidaComponent, config);
   // }
 
-  onDelete(medida: Medida): void {
-    this.medidasService.excluiMedida(medida.id);
-  }
+  // onDelete(medida: Medida): void {
+  //   this.medidasService.excluiMedida(medida.id);
+  // }
 }

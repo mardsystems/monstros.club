@@ -1,21 +1,27 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { AuthGuard } from './auth/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
+// import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' },
-  // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  // {
+  //   path: 'compose',
+  //   component: ComposeMessageComponent,
+  //   outlet: 'popup'
+  // },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   {
     path: ':monstroId',
     loadChildren: './monstros/monstros.module#MonstrosModule',
-    canLoad: [AuthGuard]
+    canLoad: [AuthGuard],
+    // data: { preload: true }
   },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '', component: HomeComponent },
+  // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
@@ -24,7 +30,7 @@ const appRoutes: Routes = [
       appRoutes,
       {
         enableTracing: false, // <-- debugging purposes only
-        preloadingStrategy: PreloadAllModules
+        preloadingStrategy: PreloadAllModules // SelectivePreloadingStrategyService
       }
     )
   ],

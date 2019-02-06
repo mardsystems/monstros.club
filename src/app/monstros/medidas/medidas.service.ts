@@ -117,7 +117,7 @@ export class MedidasService {
       monstro,
       monstroId,
       value.data.toDate(),
-      TipoDeBalanca[value.tipoDeBalanca],
+      value.feitaCom as TipoDeBalanca,
       value.peso,
       value.gordura,
       value.gorduraVisceral,
@@ -158,7 +158,7 @@ export class MedidasService {
           monstro,
           solicitacao.monstroId,
           solicitacao.data.toDate(),
-          solicitacao.tipoDeBalanca,
+          solicitacao.feitaCom,
           solicitacao.peso,
           solicitacao.gordura,
           solicitacao.gorduraVisceral,
@@ -191,6 +191,8 @@ export class MedidasService {
     return new Promise<void>((resolve, reject) => {
       this.obtemMedidaObservavel(medidaId).pipe(first()).subscribe(medida => {
         medida.defineData(solicitacao.data.toDate());
+
+        medida.feitaCom(solicitacao.feitaCom);
 
         medida.definePeso(solicitacao.peso);
 
@@ -231,7 +233,7 @@ export class MedidasService {
       // monstroId: `monstros/${medida.monstro.id}`,
       monstroId: `monstros/${medida.monstroId}`,
       data: firebase.firestore.Timestamp.fromDate(medida.data),
-      tipoDeBalanca: medida.tipoDeBalanca,
+      feitaCom: medida.balancaUtilizada,
       peso: medida.peso,
       gordura: medida.gordura,
       gorduraVisceral: medida.gorduraVisceral,
@@ -259,7 +261,7 @@ interface MedidaDocument {
   id: string;
   monstroId: string;
   data: firebase.firestore.Timestamp;
-  tipoDeBalanca: string;
+  feitaCom: string;
   peso: number;
   gordura: number;
   gorduraVisceral: number;

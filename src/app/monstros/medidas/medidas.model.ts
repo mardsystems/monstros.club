@@ -8,7 +8,7 @@ export class Medida
     private _monstro: Monstro,
     private _monstroId: string,
     private _data: Date,
-    private _feitaPor: TipoDeBalanca,
+    private _feitaCom: TipoDeBalanca,
     private _peso: number,
     private _gordura: number,
     private _gorduraVisceral: number,
@@ -28,7 +28,7 @@ export class Medida
 
   public get data() { return this._data; }
 
-  public get tipoDeBalanca() { return this._feitaPor; }
+  public get balancaUtilizada() { return this._feitaCom; }
 
   public get peso() { return this._peso; }
 
@@ -46,6 +46,10 @@ export class Medida
 
   public defineData(data: Date) {
     this._data = data;
+  }
+
+  public feitaCom(tipoDeBalanca: TipoDeBalanca) {
+    this._feitaCom = tipoDeBalanca;
   }
 
   public definePeso(peso: number) {
@@ -79,25 +83,25 @@ export class Medida
 
 export interface IMedidaDeGordura {
   monstro: Monstro;
-  tipoDeBalanca: TipoDeBalanca;
+  balancaUtilizada: TipoDeBalanca;
   gordura?: number;
 }
 
 export interface IMedidaDeGorduraVisceral {
   monstro: Monstro;
-  tipoDeBalanca: TipoDeBalanca;
+  balancaUtilizada: TipoDeBalanca;
   gorduraVisceral?: number;
 }
 
 export interface IMedidaDeMusculo {
   monstro: Monstro;
-  tipoDeBalanca: TipoDeBalanca;
+  balancaUtilizada: TipoDeBalanca;
   musculo?: number;
 }
 
 export interface IMedidaDeIndiceDeMassaCorporal {
   monstro: Monstro;
-  tipoDeBalanca: TipoDeBalanca;
+  balancaUtilizada: TipoDeBalanca;
   indiceDeMassaCorporal?: number;
 }
 
@@ -113,8 +117,8 @@ export abstract class Balanca {
 
 export enum TipoDeBalanca {
   BalancaComum = 'Balança Comum',
-  BalancaOmronHBF214 = 'Omron HBF-214',
-  BalancaOmronHBF514C = 'Omron HBF-514C',
+  OmronHBF214 = 'Omron HBF-214',
+  OmronHBF514C = 'Omron HBF-514C',
   BalancaPersonalizada = 'Balança Personalizada'
 }
 
@@ -133,7 +137,7 @@ export class BalancaComum extends Balanca {
   }
 }
 
-export class BalancaOmronHBF214 extends Balanca {
+export class OmronHBF214 extends Balanca {
   public classificaGordura(idade: number, genero: string, gordura: number): number {
     let classificacao: number;
 
@@ -324,7 +328,7 @@ export class BalancaOmronHBF214 extends Balanca {
 export class SolicitacaoDeCadastroDeMedida {
   monstroId: string;
   data: moment.Moment;
-  tipoDeBalanca: TipoDeBalanca;
+  feitaCom: TipoDeBalanca;
   peso?: number;
   gordura?: number;
   gorduraVisceral?: number;
@@ -337,7 +341,7 @@ export class SolicitacaoDeCadastroDeMedida {
     return {
       monstroId: monstroId,
       data: moment(new Date(Date.now())),
-      tipoDeBalanca: TipoDeBalanca.BalancaOmronHBF214,
+      feitaCom: TipoDeBalanca.OmronHBF214,
       peso: null,
       gordura: null,
       gorduraVisceral: null,
@@ -352,7 +356,7 @@ export class SolicitacaoDeCadastroDeMedida {
     return {
       monstroId: medida.monstroId,
       data: moment(medida.data),
-      tipoDeBalanca: medida.tipoDeBalanca,
+      feitaCom: medida.balancaUtilizada,
       peso: medida.peso,
       gordura: medida.gordura,
       gorduraVisceral: medida.gorduraVisceral,

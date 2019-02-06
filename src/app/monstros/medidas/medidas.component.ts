@@ -1,17 +1,15 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort } from '@angular/material';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
-import { AuthService } from 'src/app/auth/auth.service';
-import { SelectivePreloadingStrategyService } from '../../selective-preloading-strategy.service';
+import { switchMap, take } from 'rxjs/operators';
+import { CalculoDeIdade } from 'src/app/app.services';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
 import { MedidaComponent, MedidaViewModel } from './medida.component';
-import { Medida, SolicitacaoDeCadastroDeMedida, Balanca, BalancaOmronHBF214 } from './medidas.model';
+import { Balanca, OmronHBF214, Medida } from './medidas.model';
 import { MedidasService } from './medidas.service';
-import { CalculoDeIdade } from 'src/app/app.services';
 
 const columnDefinitions = [
   { def: 'col1', showMobile: true },
@@ -26,17 +24,12 @@ const columnDefinitions = [
 export class MedidasComponent implements OnInit {
   medidas$: Observable<Medida[]>;
   balanca: Balanca;
-  // medidaSelecionada: Medida;
   loading = true;
   fullDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
     'idadeCorporal', 'metabolismoBasal', 'indiceDeMassaCorporal', 'menu'];
   minimalDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
   displayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
   dataSource: any;
-
-  sessionId: Observable<string>;
-  token: Observable<string>;
-  modules: string[];
 
   monstroId: string;
   monstroLogado: Monstro;
@@ -48,9 +41,6 @@ export class MedidasComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private preloadStrategy: SelectivePreloadingStrategyService,
-    private router: Router,
-    private authService: AuthService,
     private monstrosService: MonstrosService,
     private medidasService: MedidasService,
     private calculoDeIdade: CalculoDeIdade,
@@ -61,19 +51,11 @@ export class MedidasComponent implements OnInit {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
 
-    this.modules = preloadStrategy.preloadedModules;
-
-    // this.authService.user$.subscribe((user) => {
-    //   this.monstroId = `monstros/${user.id}`;
-
-    //   // this.medidas.valueChanges();
-    // });
-
     this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
       this.monstroLogado = monstroLogado;
     });
 
-    this.balanca = new BalancaOmronHBF214();
+    this.balanca = new OmronHBF214();
   }
 
   private _mobileQueryListener(ev: MediaQueryListEvent) {
@@ -107,16 +89,6 @@ export class MedidasComponent implements OnInit {
     ).subscribe(() => {
       this.loading = false;
     });
-
-    // Capture the session ID if available
-    this.sessionId = this.route.queryParamMap.pipe(
-      map(params => params.get('session_id') || 'None')
-    );
-
-    // Capture the fragment if available
-    this.token = this.route.fragment.pipe(
-      map(fragment => fragment || 'None')
-    );
   }
 
   getDisplayedColumns(): string[] {

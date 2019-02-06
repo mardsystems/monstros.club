@@ -62,7 +62,7 @@ export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida {
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       data: solicitacao.data,
-      tipoDeBalanca: solicitacao.tipoDeBalanca,
+      feitaCom: solicitacao.feitaCom,
       peso: solicitacao.peso,
       gordura: solicitacao.gordura,
       gorduraVisceral: solicitacao.gorduraVisceral,
@@ -74,7 +74,7 @@ export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida {
   }
 
   static toEditViewModel(monstro: Monstro, medida: Medida, idade: number, genero: string): MedidaViewModel {
-    const solicitacao = SolicitacaoDeCadastroDeMedida.toAdd(monstro.id, idade, genero);
+    const solicitacao = SolicitacaoDeCadastroDeMedida.toEdit(medida);
 
     return {
       isEdit: true,
@@ -84,7 +84,7 @@ export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida {
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       data: solicitacao.data,
-      tipoDeBalanca: solicitacao.tipoDeBalanca,
+      feitaCom: solicitacao.feitaCom,
       peso: solicitacao.peso,
       gordura: solicitacao.gordura,
       gorduraVisceral: solicitacao.gorduraVisceral,

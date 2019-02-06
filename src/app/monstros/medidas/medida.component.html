@@ -12,6 +12,15 @@
     <mat-datepicker #dataPicker></mat-datepicker>
   </mat-form-field>
 
+  <mat-form-field hideRequiredMarker>
+    <mat-select placeholder="Feita Com" [(ngModel)]="model.feitaCom" required name="feitaCom">
+      <mat-option value="Balança Comum">Balança Comum</mat-option>
+      <mat-option value="Omron HBF-214">Omron HBF-214</mat-option>
+      <mat-option value="Omron HBF-514C">Omron HBF-514C</mat-option>
+      <mat-option value="Feminino">Balança Personalizada</mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <mat-form-field>
     <input type="number" placeholder="Peso" matInput [(ngModel)]="model.peso" required #peso="ngModel">
   </mat-form-field>
