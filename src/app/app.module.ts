@@ -1,6 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
-import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -16,12 +16,12 @@ import { AppMaterialModule } from './app-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
-import { DoacaoComponent } from './doacao/doacao.component';
 import { HomeComponent } from './home/home.component';
 import { Monstro } from './monstros/monstros.model';
 import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { RankingComponent } from './ranking/ranking.component';
+import { SobreComponent } from './sobre/sobre.component';
 
 registerLocaleData(localePt);
 
@@ -29,10 +29,10 @@ registerLocaleData(localePt);
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-    DoacaoComponent,
     HomeComponent,
     AdminComponent,
-    RankingComponent
+    RankingComponent,
+    SobreComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +48,9 @@ registerLocaleData(localePt);
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
+  ],
+  entryComponents: [
+    SobreComponent
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },
@@ -65,7 +68,7 @@ export class AppModule {
 
     this.monstroLogado$.subscribe((monstroLogado) => {
       if (monstroLogado != null) {
-        const redirectUrl =  ''; // `${monstroLogado.id}`;
+        const redirectUrl = ''; // `${monstroLogado.id}`;
 
         const navigationExtras: NavigationExtras = {
           queryParamsHandling: 'preserve',
