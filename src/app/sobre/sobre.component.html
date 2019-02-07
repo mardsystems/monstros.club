@@ -10,7 +10,9 @@
       aria-label="Star mardsystems/monstros.club on GitHub">GitHub</a>
   </p>
 
-  <p class="mat-body">Faça uma doação pelo <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A3URPDNKV85C4&item_name=Monstros.Club&currency_code=BRL&source=url">Paypal</a></p>
+  <p class="mat-body">Faça uma doação pelo <a
+      href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A3URPDNKV85C4&item_name=Monstros.Club&currency_code=BRL&source=url">Paypal</a>
+  </p>
 
   <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
     <input type="hidden" name="cmd" value="_donations" />
@@ -22,18 +24,33 @@
     <img alt="" border="0" src="https://www.paypal.com/pt_BR/i/scr/pixel.gif" width="1" height="1" />
   </form>
 
-  <p class="mat-body-strong" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
-    Versão Atual <strong>{{atualizacaoDisponivel.versaoAtual}}</strong>
-    Versão Disponível<strong>{{atualizacaoDisponivel.versaoDisponivel}}</strong>
+  <p class="mat-body-strong">
+    Versão <strong>1.0.0-alpha.1</strong>
   </p>
 
-  <p class="mat-body-strong" *ngIf="atualizacaoAtivada$ | async as atualizacaoAtivada">
-    Versão Anterior <strong>{{atualizacaoAtivada.versaoAnterior}}</strong>
-    Versão Atual<strong>{{atualizacaoAtivada.versaoAtual}}</strong>
+  <p class="mat-body destaque" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
+    Versão <strong>{{atualizacaoDisponivel.versaoDisponivel}}</strong>(disponível)
   </p>
+
+  <!-- <div class="mat-body" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
+    Atualização disponível:
+    <p>Versão Atual <strong>{{atualizacaoDisponivel.versaoAtual}}</strong></p>
+
+  </div> -->
+
+  <div class="mat-body" *ngIf="atualizacaoAtivada$ | async as atualizacaoAtivada">
+    Atualização ativada:
+    <p>Versão Anterior <strong>{{atualizacaoAtivada.versaoAnterior}}</strong></p>
+    <p>Versão Atual<strong>{{atualizacaoAtivada.versaoAtual}}</strong></p>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>FECHAR</button>
-  <button mat-button #atualizar *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel" (click)="update()">ATUALIZAR</button>
+  <button mat-button (click)="checkForUpdate()">
+    CHECAR ATUALIZAÇÕES
+  </button>
+  <button mat-icon-button *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel" (click)="update()">
+    <mat-icon>refresh</mat-icon>
+  </button>
 </mat-dialog-actions>
