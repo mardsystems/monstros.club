@@ -37,8 +37,10 @@ export class MonstrosComponent implements OnDestroy {
   }
 
   public logout() {
-    this.authService.logout();
+    const result = this.authService.logout();
 
-    this.router.navigate(['/']);
+    result.then(() => {
+      // this.router.navigate(['/']);
+    });
   }
 }

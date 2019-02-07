@@ -1,23 +1,65 @@
 import { Injectable, ApplicationRef } from '@angular/core';
 import { ICalculoDeIdade } from './app.model';
 import { SwUpdate } from '@angular/service-worker';
-import { first } from 'rxjs/operators';
-import { interval, concat } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+import { interval, concat, Observable } from 'rxjs';
+
+export class AtualizacaoDisponivel {
+  versaoAtual: string;
+  versaoDisponivel: string;
+}
+
+export class AtualizacaoAtivada {
+  versaoAnterior: string;
+  versaoAtual: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LogUpdateService {
+  public atualizacaoDisponivel$: Observable<AtualizacaoDisponivel>;
+  public atualizacaoAtivada$: Observable<AtualizacaoAtivada>;
 
   constructor(updates: SwUpdate) {
-    updates.available.subscribe(event => {
-      console.log('current version is', event.current);
-      console.log('available version is', event.available);
-    });
-    updates.activated.subscribe(event => {
-      console.log('old version was', event.previous);
-      console.log('new version is', event.current);
-    });
+    this.atualizacaoDisponivel$ = updates.available.pipe(
+      map(update => {
+        const currentAppData = update.current.appData as any;
+
+        const availableAppData = update.available.appData as any;
+
+        const atualizacaoDisponivel: AtualizacaoDisponivel = {
+          versaoAtual: currentAppData.version,
+          versaoDisponivel: availableAppData.version
+        };
+
+        return atualizacaoDisponivel;
+      })
+    );
+
+    this.atualizacaoAtivada$ = updates.activated.pipe(
+      map(update => {
+        const previousAppData = update.previous.appData as any;
+
+        const currentAppData = update.current.appData as any;
+
+        const atualizacaoAtivada: AtualizacaoAtivada = {
+          versaoAnterior: previousAppData.version,
+          versaoAtual: currentAppData.version
+        };
+
+        return atualizacaoAtivada;
+      })
+    );
+
+    // updates.available.subscribe(event => {
+    //   console.log('current version is', event.current);
+    //   console.log('available version is', event.available);
+    // });
+    // updates.activated.subscribe(event => {
+    //   console.log('old version was', event.previous);
+    //   console.log('new version is', event.current);
+    // });
   }
 }
 

@@ -66,8 +66,10 @@ export class MonstroPerfilComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
+    const result = this.authService.logout();
 
-    this.router.navigate(['/']);
+    result.then(() => {
+      // this.router.navigate(['/']);
+    });
   }
 }

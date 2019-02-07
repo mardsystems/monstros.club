@@ -28,7 +28,7 @@
     <!-- <mat-icon class="example-icon">favorite</mat-icon>
       <mat-icon class="example-icon">delete</mat-icon> -->
     <span *ngIf="monstroLogado$ | async as monstroLogado">
-      <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroEstaLogado">
         <!-- <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro"> -->
         <mat-icon matListIcon>person</mat-icon>
         <!-- <h3 matLine>{{ monstroLogado.email }}</h3> -->

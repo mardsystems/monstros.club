@@ -37,33 +37,33 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   checkLogin(url: string): Observable<boolean> {
     return this.authService.user$.pipe(
       map((auth) => {
-        if (!auth) {
-          this.router.navigateByUrl('login');
+        if (auth) {
+          // if (this.authService.authenticated) { return true; }
+
+          return true;
+        } else {
+          // Store the attempted URL for redirecting
+          this.authService.redirectUrl = url;
+
+          // Create a dummy session id
+          const sessionId = 123456789;
+
+          // Set our navigation extras object
+          // that contains our global query params and fragment
+          const navigationExtras: NavigationExtras = {
+            queryParams: { 'session_id': sessionId },
+            fragment: 'anchor'
+          };
+
+          // Navigate to the login page with extras
+          this.router.navigate(['/login'], navigationExtras);
+
+          // this.router.navigateByUrl('login');
+
           return false;
         }
-        return true;
       }),
       take(1)
     );
-
-    // if (this.authService.authenticated) { return true; }
-
-    // // Store the attempted URL for redirecting
-    // this.authService.redirectUrl = url;
-
-    // // Create a dummy session id
-    // const sessionId = 123456789;
-
-    // // Set our navigation extras object
-    // // that contains our global query params and fragment
-    // const navigationExtras: NavigationExtras = {
-    //   queryParams: { 'session_id': sessionId },
-    //   fragment: 'anchor'
-    // };
-
-    // // Navigate to the login page with extras
-    // this.router.navigate(['/login'], navigationExtras);
-
-    // return false;
   }
 }

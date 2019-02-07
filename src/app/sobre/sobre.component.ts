@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { LogUpdateService, CheckForUpdateService } from '../app.services';
+import { LogUpdateService, CheckForUpdateService, AtualizacaoDisponivel, AtualizacaoAtivada } from '../app.services';
 import { SwUpdate } from '@angular/service-worker';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-sobre',
@@ -8,15 +9,17 @@ import { SwUpdate } from '@angular/service-worker';
   styleUrls: ['./sobre.component.scss']
 })
 export class SobreComponent implements OnInit {
+  atualizacaoDisponivel$: Observable<AtualizacaoDisponivel>;
+  atualizacaoAtivada$: Observable<AtualizacaoAtivada>;
 
   constructor(
     private logUpdateService: LogUpdateService,
     private checkForUpdateService: CheckForUpdateService,
     private updates: SwUpdate,
   ) {
-    updates.available.subscribe(event => {
+    this.atualizacaoDisponivel$ = logUpdateService.atualizacaoDisponivel$;
 
-    });
+    this.atualizacaoAtivada$ = logUpdateService.atualizacaoAtivada$;
   }
 
   ngOnInit() {

@@ -22,10 +22,12 @@ export class AppComponent implements OnInit {
   ) {
     this.monstroLogado$ = this.monstrosService.monstroLogado$;
 
-    this.monstroLogado$.pipe(
-      first()
-    ).subscribe(() => {
-      this.monstroEstaLogado = true;
+    this.monstroLogado$.subscribe((monstroLogado) => {
+      if (monstroLogado) {
+        this.monstroEstaLogado = true;
+      } else {
+        this.monstroEstaLogado = false;
+      }
     });
   }
 

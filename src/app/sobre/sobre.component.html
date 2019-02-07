@@ -22,10 +22,18 @@
     <img alt="" border="0" src="https://www.paypal.com/pt_BR/i/scr/pixel.gif" width="1" height="1" />
   </form>
 
-  <p class="mat-body-strong">Versão <strong>1.0.0-alpha.1</strong></p>
+  <p class="mat-body-strong" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
+    Versão Atual <strong>{{atualizacaoDisponivel.versaoAtual}}</strong>
+    Versão Disponível<strong>{{atualizacaoDisponivel.versaoDisponivel}}</strong>
+  </p>
+
+  <p class="mat-body-strong" *ngIf="atualizacaoAtivada$ | async as atualizacaoAtivada">
+    Versão Anterior <strong>{{atualizacaoAtivada.versaoAnterior}}</strong>
+    Versão Atual<strong>{{atualizacaoAtivada.versaoAtual}}</strong>
+  </p>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>FECHAR</button>
-  <button mat-button #atualizar>ATUALIZAR</button>
+  <button mat-button #atualizar *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel" (click)="update()">ATUALIZAR</button>
 </mat-dialog-actions>

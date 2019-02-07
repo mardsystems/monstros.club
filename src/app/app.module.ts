@@ -22,6 +22,7 @@ import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { SobreComponent } from './sobre/sobre.component';
+import { AuthService } from './auth/auth.service';
 
 registerLocaleData(localePt);
 
@@ -62,18 +63,19 @@ export class AppModule {
 
   constructor(
     private router: Router,
+    private authService: AuthService,
     private monstrosService: MonstrosService
   ) {
     this.monstroLogado$ = this.monstrosService.monstroLogado$;
 
     this.monstroLogado$.subscribe((monstroLogado) => {
-      if (monstroLogado != null) {
-        const redirectUrl = ''; // `${monstroLogado.id}`;
+      if (monstroLogado) {
+        // const redirectUrl = this.authService.redirectUrl; // ''; // `${monstroLogado.id}`;
 
-        const navigationExtras: NavigationExtras = {
-          queryParamsHandling: 'preserve',
-          preserveFragment: true
-        };
+        // const navigationExtras: NavigationExtras = {
+        //   queryParamsHandling: 'preserve',
+        //   preserveFragment: true
+        // };
 
         // this.router.navigate([redirectUrl], navigationExtras);
       } else {

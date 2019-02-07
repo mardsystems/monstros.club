@@ -34,9 +34,11 @@ export class LoginComponent {
   }
 
   logout() {
-    this.authService.logout();
+    const result = this.authService.logout();
 
-    this.setMessage();
+    result.then(() => {
+      this.setMessage();
+    });
   }
 
   private setMessage() {

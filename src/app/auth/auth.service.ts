@@ -3,18 +3,20 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { auth, UserInfo } from 'firebase/app';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   // isLoggedIn = false;
-  public redirectUrl: string;
+  public redirectUrl = '';
   public user$: Observable<UserInfo>;
   private localUser$: Subject<UserInfo>;
   private authState: any = null;
 
   constructor(
+    private router: Router,
     private angularFireAuth: AngularFireAuth
   ) {
     this.localUser$ = new Subject<UserInfo>();
@@ -120,7 +122,18 @@ export class AuthService {
         // this.isLoggedIn = true;
 
         // this.authState = userCredential.user;
+
         // this.updateUserData()
+
+        // const redirectUrl = this.authService.redirectUrl; // ''; // `${monstroLogado.id}`;
+
+        const navigationExtras: NavigationExtras = {
+          queryParamsHandling: 'preserve',
+          preserveFragment: true
+        };
+
+        this.router.navigate([this.redirectUrl], navigationExtras);
+
       })
       .catch(error => console.log(error));
   }
@@ -166,11 +179,17 @@ export class AuthService {
 
   //// Sign Out ////
 
-  logout(): void {
-    this.angularFireAuth.auth.signOut().then(() => {
+  logout(): Promise<void> {
+    const result = this.angularFireAuth.auth.signOut();
+
+    result.then(() => {
       // this.isLoggedIn = false;
+
+      this.localUser$.next(null);
+
+      this.router.navigate(['/']);
     });
 
-    this.localUser$.next(null);
+    return result;
   }
 }
