@@ -24,17 +24,25 @@
     <img alt="" border="0" src="https://www.paypal.com/pt_BR/i/scr/pixel.gif" width="1" height="1" />
   </form>
 
-  <p class="mat-body-strong">
+  <p></p>
+
+  <div class="mat-body-strong">
     Versão <strong>1.0.0-alpha.1</strong>
-  </p>
+    <button mat-icon-button (click)="activateUpdate()">
+      <mat-icon>system_update</mat-icon>
+    </button>
+  </div>
 
-  <p class="mat-body atualizacao" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
-    Versão <strong>{{atualizacaoDisponivel.versaoDisponivel}}</strong>(disponível)
-  </p>
+  <div class="mat-body atualizacao" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
+    Versão <strong>{{atualizacaoDisponivel.versaoDisponivel}}</strong> (disponível)
+  </div>
 
-  <p class="mat-body ativacao" *ngIf="atualizacaoAtivada$ | async as atualizacaoAtivada">
-    Versão <strong>{{atualizacaoAtivada.versaoAnterior}}</strong>(anterior)
-  </p>
+  <div class="mat-body ativacao" *ngIf="atualizacaoAtivada$ | async as atualizacaoAtivada">
+    Versão <strong>{{atualizacaoAtivada.versaoAnterior}}</strong> (anterior)
+    <button mat-icon-button (click)="reload()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
 
   <!-- <div class="mat-body" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
     Atualização disponível:
@@ -52,8 +60,5 @@
   <button mat-button mat-dialog-close>FECHAR</button>
   <button mat-button (click)="checkForUpdate()">
     CHECAR ATUALIZAÇÕES
-  </button>
-  <button mat-icon-button (click)="activateUpdate()">
-    <mat-icon>refresh</mat-icon>
   </button>
 </mat-dialog-actions>

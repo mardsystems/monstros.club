@@ -9,8 +9,8 @@ table {
 
 .foto {
   flex-shrink: 0;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -20,7 +20,7 @@ th.mat-header-cell {
 }
 
 td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
-  padding-top: 5px;
+  padding-top: 3px;
   padding-left: 16px;
   min-width: 50px;
 }
