@@ -14,6 +14,7 @@ import { MonstrosMaterialModule } from './monstros-material.module';
 import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
 import { SeriesComponent } from './series/series.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { SeriesComponent } from './series/series.component';
     SeriesComponent,
     MonstroNaoEncontradoComponent,
     MonstroPerfilComponent,
+    RankingComponent,
     IndicadorDeGorduraVisceralComponent,
     IndicadorDeGorduraComponent,
     IndicadorDeIndiceDeMassaCorporalComponent,

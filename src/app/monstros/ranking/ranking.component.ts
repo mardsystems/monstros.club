@@ -3,10 +3,10 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatSort } from '@angular/material';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Balanca, OmronHBF214, Medida } from '../monstros/medidas/medidas.model';
-import { MedidasService } from '../monstros/medidas/medidas.service';
-import { Monstro } from '../monstros/monstros.model';
-import { MonstrosService } from '../monstros/monstros.service';
+import { Balanca, OmronHBF214, Medida } from '../medidas/medidas.model';
+import { MedidasService } from '../medidas/medidas.service';
+import { Monstro } from '../monstros.model';
+import { MonstrosService } from '../monstros.service';
 
 const columnDefinitions = [
   { def: 'col1', showMobile: true },

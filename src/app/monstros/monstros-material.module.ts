@@ -20,6 +20,8 @@ import { MatMomentDateModule, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from 
 import { MatCardModule } from '@angular/material/card';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 
@@ -54,6 +56,8 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatCardModule,
     MatDatepickerModule,
     MatFormFieldModule,
+    MatDividerModule,
+    MatGridListModule,
     MatIconModule,
     MatInputModule,
     MatLineModule,
@@ -74,6 +78,8 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatDividerModule,
+    MatGridListModule,
     MatIconModule,
     MatInputModule,
     MatLineModule,

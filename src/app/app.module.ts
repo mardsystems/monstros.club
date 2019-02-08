@@ -20,7 +20,6 @@ import { HomeComponent } from './home/home.component';
 import { Monstro } from './monstros/monstros.model';
 import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { RankingComponent } from './ranking/ranking.component';
 import { SobreComponent } from './sobre/sobre.component';
 import { AuthService } from './auth/auth.service';
 
@@ -32,7 +31,6 @@ registerLocaleData(localePt);
     PageNotFoundComponent,
     HomeComponent,
     AdminComponent,
-    RankingComponent,
     SobreComponent
   ],
   imports: [

@@ -1,20 +1,96 @@
-/* Navigation link styles */
-nav a {
-  padding: 5px 10px;
-  text-decoration: none;
-  margin-right: 10px;
-  margin-top: 10px;
-  display: inline-block;
-  background-color: #eee;
-  border-radius: 4px;
+.container{
+  height: 60vh;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
 }
-nav a:visited, a:link {
-  color: #607D8B;
+
+.center{
+  width: 75%;
+  margin: 10px auto;
 }
-nav a:hover {
-  color: #039be5;
-  background-color: #CFD8DC;
+
+.example-card {
+  max-width: 400px;
 }
-nav a.active {
-  color: #039be5;
+
+.example-header-image {
+  background-image: url('../../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg');
+  background-size: cover;
 }
+
+@media only screen and (max-width: 750px) {
+  .container{
+    height: 84vh;
+  }
+
+  .center{
+    width: 100%;
+    margin: 10px auto;
+  }
+}
+
+// .app-container {
+//   height: 400px;
+//   overflow: auto;
+// }
+
+table {
+  // max-width: 400px;
+}
+
+.foto {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
+  padding-left: 16px;
+}
+
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+  // text-align: right;
+}
+
+th.data {
+  min-width: 60px;
+}
+
+th.peso {
+  min-width: 40px;
+}
+
+th.gorduraVisceral {
+  max-width: 60px;
+}
+
+th.idadeCorporal {
+  max-width: 50px;
+}
+
+th.metabolismoBasal {
+  max-width: 60px;
+}
+
+td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type, th.mat-header-cell:last-of-type {
+  text-align: right;
+  padding-right: 17px;
+}
+
+:host /deep/ .hint {
+  font-size: 11px;
+  font-weight: bold;
+  color: green;
+}
+
+:host /deep/ .hint.bad {
+  color: red;
+}
+
+:host /deep/ .hint.good {
+    color: blue;
+}
+
