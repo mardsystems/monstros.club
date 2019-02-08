@@ -1,6 +1,6 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatSort } from '@angular/material';
+import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Balanca, OmronHBF214, Medida } from '../medidas/medidas.model';
@@ -89,15 +89,15 @@ export class RankingComponent implements OnInit {
   ngOnInit() {
     this.medidas$ = this.medidasService.obtemMedidasObservaveisParaRanking();
 
-    // this.medidas$ = this.medidasService.obtemMedidas();
-
-    // this.dataSource = new MatTableDataSource(this.medidas$);
-
-    // this.dataSource.sort = this.sort;
-
     this.medidas$.pipe(
       take(1)
     ).subscribe(() => this.loading = false);
+
+    this.medidas$.subscribe(medidas => {
+      this.dataSource = new MatTableDataSource(medidas);
+
+      this.dataSource.sort = this.sort;
+    });
   }
 
   getDisplayedColumns(): string[] {

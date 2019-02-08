@@ -1,6 +1,6 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig, MatSort } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
@@ -78,16 +78,16 @@ export class MedidasComponent implements OnInit {
         return this.medidasService.obtemMedidasObservaveisParaExibicao(this.monstroId);
       }));
 
-    // this.medidas$ = this.medidasService.obtemMedidas();
-
-    // this.dataSource = new MatTableDataSource(this.medidas$);
-
-    // this.dataSource.sort = this.sort;
-
     this.medidas$.pipe(
       take(1)
     ).subscribe(() => {
       this.loading = false;
+    });
+
+    this.medidas$.subscribe(medidas => {
+      this.dataSource = new MatTableDataSource(medidas);
+
+      this.dataSource.sort = this.sort;
     });
   }
 
