@@ -6,6 +6,7 @@ import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-
 import { MonstroPerfilComponent } from './monstro-perfil.component';
 import { MonstrosComponent } from './monstros.component';
 import { SeriesComponent } from './series/series.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 const monstrosRoutes: Routes = [
   // { path: 'heroes', redirectTo: '/superheroes' },
@@ -21,6 +22,7 @@ const monstrosRoutes: Routes = [
         children: [
           { path: 'series', component: SeriesComponent },
           { path: 'medidas', component: MedidasComponent },
+          { path: 'ranking', component: RankingComponent },
           { path: '', component: MonstroPerfilComponent }
         ]
       }
