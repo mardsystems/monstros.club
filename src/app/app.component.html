@@ -28,7 +28,8 @@
     <!-- <mat-icon class="example-icon">favorite</mat-icon>
       <mat-icon class="example-icon">delete</mat-icon> -->
     <span *ngIf="monstroLogado$ | async as monstroLogado">
-      <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroEstaLogado">
+      <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroEstaLogado">
         <!-- <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro"> -->
         <mat-icon matListIcon>person</mat-icon>
         <!-- <h3 matLine>{{ monstroLogado.email }}</h3> -->
@@ -44,7 +45,6 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-
 <!-- <h1 class="title">Monstros Club</h1>
 <nav>
   <a routerLink="." routerLinkActive="active">Ranking</a>
@@ -52,9 +52,8 @@
   <a routerLink="/login" routerLinkActive="active">Login</a>
   <a [routerLink]="[{ outlets: { popup: ['compose'] } }]">Contato</a>
 </nav> -->
-<div>
-  <router-outlet #routerOutlet="outlet"></router-outlet>
-</div>
+<router-outlet #routerOutlet="outlet"></router-outlet>
+
 <!-- <div [@routeAnimation]="getAnimationData(routerOutlet)">
   <router-outlet #routerOutlet="outlet"></router-outlet>
 </div> -->

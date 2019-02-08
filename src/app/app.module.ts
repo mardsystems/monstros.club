@@ -23,6 +23,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { RankingComponent } from './ranking/ranking.component';
 import { SobreComponent } from './sobre/sobre.component';
 import { AuthService } from './auth/auth.service';
+import { TermosDeUsoComponent } from './termos-de-uso/termos-de-uso.component';
+import { PoliticaDePrivacidadeComponent } from './politica-de-privacidade/politica-de-privacidade.component';
 
 registerLocaleData(localePt);
 
@@ -33,7 +35,9 @@ registerLocaleData(localePt);
     HomeComponent,
     AdminComponent,
     RankingComponent,
-    SobreComponent
+    SobreComponent,
+    TermosDeUsoComponent,
+    PoliticaDePrivacidadeComponent
   ],
   imports: [
     BrowserModule,

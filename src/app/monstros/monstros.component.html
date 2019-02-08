@@ -10,7 +10,8 @@
       <!-- <span>{{title}}</span> -->
       <span class="app-fill-remaining-space"></span>
       <!-- <span>Right</span> -->
-      <a mat-icon-button href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A3URPDNKV85C4&item_name=Monstros.Club&currency_code=BRL&source=url">
+      <a mat-icon-button
+        href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A3URPDNKV85C4&item_name=Monstros.Club&currency_code=BRL&source=url">
         <mat-icon class="red-icon">favorite</mat-icon>
       </a>
       <button mat-icon-button [matMenuTriggerFor]="appMenu">
@@ -18,7 +19,7 @@
       </button>
     </mat-toolbar>
 
-    <mat-sidenav-container class="app-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav-container class="all-wrap app-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
       <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
         fixedTopGap="56">
         <mat-nav-list>
@@ -29,7 +30,8 @@
             </button>
             <a matLine href=".">Home</a>
           </mat-list-item> -->
-          <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroLogado$ | async as monstroLogado">
+          <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+            *ngIf="monstroLogado$ | async as monstroLogado">
             <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro">
             <!-- <mat-icon matListIcon>person</mat-icon> -->
             <h3 matLine>{{ monstroLogado.nome }}</h3>
@@ -54,11 +56,18 @@
         </mat-nav-list>
       </mat-sidenav>
 
-      <mat-sidenav-content>
-        <!-- <app-medidas></app-medidas> -->
-        <router-outlet></router-outlet>
-        <!-- <app-doacao></app-doacao> -->
-        <!-- <p *ngFor="let content of fillerContent">{{content}}</p> -->
+      <mat-sidenav-content class="page-wrap">
+        <main class="content">
+          <!-- <app-medidas></app-medidas> -->
+          <router-outlet></router-outlet>
+          <!-- <app-doacao></app-doacao> -->
+          <!-- <p *ngFor="let content of fillerContent">{{content}}</p> -->
+        </main>
+
+        <footer>
+          <a href="termos-de-uso">Termos de Uso</a>
+          <a href="politica-de-privacidade">Política de Privacidade</a>
+        </footer>
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>

@@ -4,6 +4,8 @@ import { AdminComponent } from './admin/admin.component';
 import { AuthGuard } from './auth/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { TermosDeUsoComponent } from './termos-de-uso/termos-de-uso.component';
+import { PoliticaDePrivacidadeComponent } from './politica-de-privacidade/politica-de-privacidade.component';
 // import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
 
 const appRoutes: Routes = [
@@ -13,6 +15,8 @@ const appRoutes: Routes = [
   //   outlet: 'popup'
   // },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  { path: 'termos-de-uso', component: TermosDeUsoComponent },
+  { path: 'politica-de-privacidade', component: PoliticaDePrivacidadeComponent },
   {
     path: ':monstroId',
     loadChildren: './monstros/monstros.module#MonstrosModule',
