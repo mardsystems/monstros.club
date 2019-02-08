@@ -1,10 +1,16 @@
 <mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="loading"></mat-spinner>
 
-<mat-nav-list>
-  <mat-list-item *ngFor="let serie of series$ | async">
-    {{serie.id}}, {{serie.data}}
-  </mat-list-item>
-</mat-nav-list>
+<div class="form-container" *ngIf="!loading">
+  <p class="mat-body">
+    Lançamento dia <strong>15 JAN 2019</strong>
+  </p>
+
+  <mat-nav-list>
+    <mat-list-item *ngFor="let serie of series$ | async">
+      {{serie.id}}, {{serie.data}}
+    </mat-list-item>
+  </mat-nav-list>
+</div>
 
 <!-- <mat-menu #taskMenu="matMenu" overlapTrigger="false">
   <ng-template matMenuContent let-medida="medida">

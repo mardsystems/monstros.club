@@ -1,10 +1,8 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatSort } from '@angular/material';
+import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { Balanca, OmronHBF214, Medida } from '../monstros/medidas/medidas.model';
-import { MedidasService } from '../monstros/medidas/medidas.service';
+import { first } from 'rxjs/operators';
 import { Monstro } from '../monstros/monstros.model';
 import { MonstrosService } from '../monstros/monstros.service';
 
@@ -13,44 +11,20 @@ const columnDefinitions = [
   { def: 'col2', showMobile: false },
 ];
 
-// export interface PeriodicElement {
-//   name: string;
-//   position: number;
-//   weight: number;
-//   symbol: string;
-// }
-
-// const ELEMENT_DATA: PeriodicElement[] = [
-//   {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-//   {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-//   {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-//   {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-//   {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-//   {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-//   {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-//   {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-//   {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-//   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-// ];
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  medidas$: Observable<Medida[]>;
-  balanca: Balanca;
-  // medidaSelecionada: Medida;
+  monstros$: Observable<Monstro[]>;
   loading = true;
-  fullDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
-    'idadeCorporal', 'metabolismoBasal', 'indiceDeMassaCorporal'];
-  minimalDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal'];
-  displayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal'];
+  fullDisplayedColumns: string[] = ['foto', 'nome', 'idade', 'genero', 'altura'];
+  minimalDisplayedColumns: string[] = ['foto', 'nome', 'idade', 'genero', 'altura'];
+  displayedColumns: string[] = ['foto', 'nome', 'idade', 'genero', 'altura'];
   dataSource: any;
-
-  monstroId: string;
-  monstroLogado: Monstro;
+  monstroLogado$: Observable<Monstro>;
+  monstroEstaLogado = false;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -59,7 +33,6 @@ export class HomeComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private monstrosService: MonstrosService,
-    private medidasService: MedidasService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
@@ -67,11 +40,15 @@ export class HomeComponent implements OnInit {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
 
-    this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
-      this.monstroLogado = monstroLogado;
-    });
+    this.monstroLogado$ = this.monstrosService.monstroLogado$;
 
-    this.balanca = new OmronHBF214();
+    this.monstroLogado$.subscribe((monstroLogado) => {
+      if (monstroLogado) {
+        this.monstroEstaLogado = true;
+      } else {
+        this.monstroEstaLogado = false;
+      }
+    });
   }
 
   private _mobileQueryListener(ev: MediaQueryListEvent) {
@@ -87,17 +64,17 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.medidas$ = this.medidasService.obtemMedidasObservaveisParaRanking();
+    this.monstros$ = this.monstrosService.obtemMonstrosObservaveisParaExibicao();
 
-    // this.medidas$ = this.medidasService.obtemMedidas();
-
-    // this.dataSource = new MatTableDataSource(this.medidas$);
-
-    // this.dataSource.sort = this.sort;
-
-    this.medidas$.pipe(
-      take(1)
+    this.monstros$.pipe(
+      first(),
     ).subscribe(() => this.loading = false);
+
+    this.monstros$.subscribe(monstros => {
+      this.dataSource = new MatTableDataSource(monstros);
+
+      this.dataSource.sort = this.sort;
+    });
   }
 
   getDisplayedColumns(): string[] {
@@ -135,6 +112,6 @@ export class HomeComponent implements OnInit {
   // }
 
   // onDelete(medida: Medida): void {
-  //   this.medidasService.excluiMedida(medida.id);
+  //   this.monstrosService.excluiMedida(medida.id);
   // }
 }

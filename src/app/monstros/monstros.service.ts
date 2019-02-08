@@ -21,10 +21,16 @@ export class MonstrosService {
     private calculoDeIdade: CalculoDeIdade
   ) {
     this.monstroLogado$ = this.authService.user$.pipe(
+      first(),
       switchMap(user => {
         if (user) {
+          // console.log(user);
+
           const monstro$ = this.obtemMonstroObservavel(user.uid).pipe(
+            first(),
             tap(monstro => {
+              // console.log(monstro);
+
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
                 isEdit: true,
                 id: monstro.id,
@@ -35,7 +41,8 @@ export class MonstrosService {
                 usuario: monstro.usuario,
                 genero: monstro.genero,
                 altura: monstro.altura,
-                dataDeNascimento: moment(monstro.dataDeNascimento)
+                dataDeNascimento: moment(monstro.dataDeNascimento),
+                dataDoUltimoLogin: moment()
               };
 
               this.atualizaMonstro(user.uid, solicitacao);
@@ -46,16 +53,19 @@ export class MonstrosService {
                 displayName: user.displayName,
                 email: user.email,
                 photoURL: user.photoURL,
-                nome: user.displayName,
+                nome: user.displayName || user.email,
                 usuario: user.uid,
                 genero: null,
                 altura: null,
-                dataDeNascimento: null
+                dataDeNascimento: null,
+                dataDoUltimoLogin: moment()
               };
 
               this.cadastraMonstro(solicitacao);
 
-              const monstroCadastrado$ = this.obtemMonstroObservavel(user.uid);
+              const monstroCadastrado$ = this.obtemMonstroObservavel(user.uid).pipe(
+                first()
+              );
 
               return monstroCadastrado$;
             })
@@ -67,6 +77,23 @@ export class MonstrosService {
         }
       })
     );
+  }
+
+  obtemMonstrosObservaveisParaExibicao(): Observable<Monstro[]> {
+    const collection = this.db.collection<MonstroDocument>(this.PATH, reference => {
+      return reference;
+        // .orderBy('dataDoUltimoLogin', 'desc');
+    });
+
+    const monstros$ = collection.valueChanges().pipe(
+      map(values => {
+        return values.map((value, index) => {
+          return this.mapMonstro(value);
+        });
+      })
+    );
+
+    return monstros$;
   }
 
   obtemMonstroObservavel(id: string): Observable<Monstro> {
@@ -92,6 +119,7 @@ export class MonstrosService {
       Genero[value.genero],
       value.altura,
       (value.dataDeNascimento ? value.dataDeNascimento.toDate() : null),
+      (value.dataDoUltimoLogin ? value.dataDoUltimoLogin.toDate() : null),
       this.calculoDeIdade
     );
   }
@@ -109,6 +137,7 @@ export class MonstrosService {
       solicitacao.genero,
       solicitacao.altura,
       solicitacao.dataDeNascimento.toDate(),
+      solicitacao.dataDoUltimoLogin.toDate(),
       this.calculoDeIdade
     );
 
@@ -148,6 +177,8 @@ export class MonstrosService {
 
         monstro.defineDataDeNascimento(solicitacao.dataDeNascimento.toDate());
 
+        monstro.defineDataDoUltimoLogin(solicitacao.dataDoUltimoLogin.toDate());
+
         const result = this.update(monstro);
 
         resolve(result);
@@ -178,6 +209,7 @@ export class MonstrosService {
       genero: monstro.genero,
       altura: monstro.altura,
       dataDeNascimento: firebase.firestore.Timestamp.fromDate(monstro.dataDeNascimento),
+      dataDoUltimoLogin: firebase.firestore.Timestamp.fromDate(monstro.dataDoUltimoLogin),
     };
 
     return newDocument;
@@ -204,4 +236,5 @@ export interface MonstroDocument {
   genero?: string;
   altura?: number;
   dataDeNascimento?: firebase.firestore.Timestamp;
+  dataDoUltimoLogin?: firebase.firestore.Timestamp;
 }

@@ -12,6 +12,7 @@ export class Monstro {
     private _genero: Genero,
     private _altura: number,
     private _dataDeNascimento: Date,
+    private _dataDoUltimoLogin: Date,
     private _calculoDeIdade: ICalculoDeIdade
   ) {
 
@@ -34,6 +35,8 @@ export class Monstro {
   public get altura() { return this._altura; }
 
   public get dataDeNascimento() { return this._dataDeNascimento; }
+
+  public get dataDoUltimoLogin() { return this._dataDoUltimoLogin; }
 
   public defineDisplayName(displayName: string) {
     this._displayName = displayName;
@@ -67,6 +70,10 @@ export class Monstro {
     this._dataDeNascimento = dataDeNascimento;
   }
 
+  public defineDataDoUltimoLogin(dataDoUltimoLogin: Date) {
+    this._dataDoUltimoLogin = dataDoUltimoLogin;
+  }
+
   public get idade(): number {
     const idade = this._calculoDeIdade.calculaIdade(this._dataDeNascimento);
 
@@ -95,6 +102,7 @@ export class SolicitacaoDeCadastroDeMonstro {
   genero?: Genero;
   altura?: number;
   dataDeNascimento?: moment.Moment;
+  dataDoUltimoLogin?: moment.Moment;
 
   static toAdd(): SolicitacaoDeCadastroDeMonstro {
     return {
@@ -113,7 +121,8 @@ export class SolicitacaoDeCadastroDeMonstro {
       usuario: monstro.usuario,
       genero: monstro.genero,
       altura: monstro.altura,
-      dataDeNascimento: moment(monstro.dataDeNascimento)
+      dataDeNascimento: moment(monstro.dataDeNascimento),
+      dataDoUltimoLogin: moment(monstro.dataDoUltimoLogin)
     };
   }
 }

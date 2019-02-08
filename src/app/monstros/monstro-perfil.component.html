@@ -9,55 +9,60 @@
   </mat-grid-list> -->
 
   <mat-card class="example-card center">
-      <mat-card-header>
-        <img mat-card-avatar src="{{model.photoURL}}" alt="Foto do {{model.nome}}">
-        <!-- <div mat-card-avatar class="example-header-image"></div> -->
-        <mat-card-title>{{model.nome}}</mat-card-title>
-        <mat-card-subtitle>O monstro mais forte de todos</mat-card-subtitle>
-      </mat-card-header>
-      <img mat-card-image src="{{model.photoURL}}" alt="Foto do {{model.nome}}">
-      <mat-card-content>
-        <mat-form-field>
-          <input type="text" placeholder="Data de Nascimento" matInput [(ngModel)]="model.dataDeNascimento" required
-            [matDatepicker]="dataPicker" #dataDeNascimento="ngModel">
-          <mat-datepicker-toggle matSuffix [for]="dataPicker"></mat-datepicker-toggle>
-          <mat-datepicker #dataPicker></mat-datepicker>
-        </mat-form-field>
+    <mat-card-header>
+      <img mat-card-avatar src="{{model.photoURL}}" alt="Foto do {{model.nome}}">
+      <!-- <div mat-card-avatar class="example-header-image"></div> -->
+      <mat-card-title>{{model.nome}}</mat-card-title>
+      <mat-card-subtitle>O monstro mais forte de todos</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="{{model.photoURL}}" alt="Foto do {{model.nome}}">
+    <mat-card-content>
+      <mat-form-field>
+        <input type="text" placeholder="Data de Nascimento" matInput [(ngModel)]="model.dataDeNascimento" required
+          [matDatepicker]="dataPicker" #dataDeNascimento="ngModel">
+        <mat-datepicker-toggle matSuffix [for]="dataPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dataPicker></mat-datepicker>
+      </mat-form-field>
 
-        <mat-form-field>
-          <input type="text" placeholder="Idade" matInput [ngModel]="idade" readonly>
-        </mat-form-field>
+      <mat-form-field>
+        <input type="text" placeholder="Idade" matInput [ngModel]="idade" readonly>
+      </mat-form-field>
 
-        <mat-form-field>
-          <input type="text" placeholder="E-mail" matInput [(ngModel)]="model.email" required #email="ngModel">
-        </mat-form-field>
+      <mat-form-field>
+        <input type="text" placeholder="E-mail" matInput [(ngModel)]="model.email" required #email="ngModel">
+      </mat-form-field>
 
-        <mat-form-field>
-          <input type="text" placeholder="Nome" matInput [(ngModel)]="model.nome" required #nome="ngModel">
-        </mat-form-field>
+      <mat-form-field>
+        <input type="text" placeholder="Nome" matInput [(ngModel)]="model.nome" required #nome="ngModel">
+      </mat-form-field>
 
-        <mat-form-field>
-          <input type="text" placeholder="Usuário" matInput [(ngModel)]="model.usuario" required #usuario="ngModel">
-        </mat-form-field>
+      <mat-form-field>
+        <input type="text" placeholder="Usuário" matInput [(ngModel)]="model.usuario" required #usuario="ngModel">
+      </mat-form-field>
 
-        <mat-form-field hideRequiredMarker>
-          <mat-select placeholder="Gênero" [(ngModel)]="model.genero" required name="genero">
-            <mat-option value="Masculino">Masculino</mat-option>
-            <mat-option value="Feminino">Feminino</mat-option>
-          </mat-select>
-        </mat-form-field>
+      <mat-form-field hideRequiredMarker>
+        <mat-select placeholder="Gênero" [(ngModel)]="model.genero" required name="genero">
+          <mat-option value="Masculino">Masculino</mat-option>
+          <mat-option value="Feminino">Feminino</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-        <mat-form-field>
-          <input type="number" placeholder="Altura" matInput [(ngModel)]="model.altura" required #altura="ngModel">
-        </mat-form-field>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button (click)="onSave()">SALVAR</button>
-        <!-- <a mat-button routerLink="/login" routerLinkActive="active">ENTRAR</a> -->
-        <button mat-button (click)="logout()">
-          DESCONECTAR
-          <!-- <mat-icon>exit_to_app</mat-icon> -->
-        </button>
-      </mat-card-actions>
-    </mat-card>
+      <mat-form-field>
+        <input type="number" placeholder="Altura" matInput [(ngModel)]="model.altura" required #altura="ngModel">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input type="datetime" placeholder="Data do Último Login" matInput [ngModel]="model.dataDoUltimoLogin" readonly>
+      </mat-form-field>
+
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="onSave()">SALVAR</button>
+      <!-- <a mat-button routerLink="/login" routerLinkActive="active">ENTRAR</a> -->
+      <button mat-button (click)="logout()">
+        DESCONECTAR
+        <!-- <mat-icon>exit_to_app</mat-icon> -->
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>
