@@ -29,7 +29,9 @@ export class SobreComponent implements OnInit {
     this.updates.checkForUpdate();
   }
 
-  update() {
-    document.location.reload();
+  activateUpdate() {
+    this.updates.activateUpdate();
+
+    // document.location.reload();
   }
 }

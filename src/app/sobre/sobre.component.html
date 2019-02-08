@@ -28,21 +28,24 @@
     Versão <strong>1.0.0-alpha.1</strong>
   </p>
 
-  <p class="mat-body destaque" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
+  <p class="mat-body atualizacao" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
     Versão <strong>{{atualizacaoDisponivel.versaoDisponivel}}</strong>(disponível)
+  </p>
+
+  <p class="mat-body ativacao" *ngIf="atualizacaoAtivada$ | async as atualizacaoAtivada">
+    Versão <strong>{{atualizacaoAtivada.versaoAnterior}}</strong>(anterior)
   </p>
 
   <!-- <div class="mat-body" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
     Atualização disponível:
     <p>Versão Atual <strong>{{atualizacaoDisponivel.versaoAtual}}</strong></p>
-
   </div> -->
 
-  <div class="mat-body" *ngIf="atualizacaoAtivada$ | async as atualizacaoAtivada">
+  <!-- <div class="mat-body" *ngIf="atualizacaoAtivada$ | async as atualizacaoAtivada">
     Atualização ativada:
     <p>Versão Anterior <strong>{{atualizacaoAtivada.versaoAnterior}}</strong></p>
     <p>Versão Atual<strong>{{atualizacaoAtivada.versaoAtual}}</strong></p>
-  </div>
+  </div> -->
 </mat-dialog-content>
 
 <mat-dialog-actions>
@@ -50,7 +53,7 @@
   <button mat-button (click)="checkForUpdate()">
     CHECAR ATUALIZAÇÕES
   </button>
-  <button mat-icon-button *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel" (click)="update()">
+  <button mat-icon-button (click)="activateUpdate()">
     <mat-icon>refresh</mat-icon>
   </button>
 </mat-dialog-actions>
