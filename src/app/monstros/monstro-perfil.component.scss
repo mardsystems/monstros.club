@@ -1,11 +1,11 @@
-.form-container {
-  display: flex;
-  flex-direction: column;
-}
+// .form-container {
+//   display: flex;
+//   flex-direction: column;
+// }
 
-.form-container > * {
-  width: 100%;
-}
+// .form-container > * {
+//   width: 100%;
+// }
 
 .center{
   width: 75%;
@@ -13,10 +13,42 @@
 }
 
 .example-card {
-  max-width: 400px;
+  max-width: 320px;
 }
 
 .example-header-image {
   // background-image: url('../../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg');
   background-size: cover;
+}
+
+#email {
+  width: 100%;
+}
+
+#dataDeNascimento {
+  max-width: 125px;
+}
+
+#idade {
+  max-width: 45px;
+}
+
+#genero {
+  max-width: 90px;
+}
+
+#altura {
+  max-width: 60px;
+}
+
+#nome {
+  width: 50%;
+}
+
+#usuario {
+  width: 50%;
+}
+
+#dataDoUltimoLogin {
+  width: 100%;
 }

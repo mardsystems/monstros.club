@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { SolicitacaoDeCadastroDeMonstro } from './monstros.model';
-import { MonstrosService } from './monstros.service';
-import { ParamMap, ActivatedRoute, Router } from '@angular/router';
-import { switchMap, take } from 'rxjs/operators';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { first, switchMap } from 'rxjs/operators';
 import { CalculoDeIdade } from '../app.services';
 import { AuthService } from '../auth/auth.service';
+import { SolicitacaoDeCadastroDeMonstro } from './monstros.model';
+import { MonstrosService } from './monstros.service';
 
 @Component({
   selector: 'app-monstro-perfil',
@@ -34,7 +34,7 @@ export class MonstroPerfilComponent implements OnInit {
       }));
 
     monstro$.pipe(
-      take(1)
+      first()
     ).subscribe(() => {
       this.loading = false;
     });

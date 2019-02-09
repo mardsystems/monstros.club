@@ -2,8 +2,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { Balanca, OmronHBF214, Medida } from '../medidas/medidas.model';
+import { first } from 'rxjs/operators';
+import { Balanca, Medida, OmronHBF214 } from '../medidas/medidas.model';
 import { MedidasService } from '../medidas/medidas.service';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
@@ -70,7 +70,7 @@ export class RankingComponent implements OnInit {
     this.medidas$ = this.medidasService.obtemMedidasObservaveisParaRanking();
 
     this.medidas$.pipe(
-      take(1)
+      first()
     ).subscribe(() => this.loading = false);
 
     this.medidas$.subscribe(medidas => {

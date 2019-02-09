@@ -3,12 +3,12 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { first, switchMap } from 'rxjs/operators';
 import { CalculoDeIdade } from 'src/app/app.services';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
 import { MedidaComponent, MedidaViewModel } from './medida.component';
-import { Balanca, OmronHBF214, Medida } from './medidas.model';
+import { Balanca, Medida, OmronHBF214 } from './medidas.model';
 import { MedidasService } from './medidas.service';
 
 const columnDefinitions = [
@@ -85,7 +85,7 @@ export class MedidasComponent implements OnInit {
     );
 
     this.medidas$.pipe(
-      take(1)
+      first()
     ).subscribe(() => {
       this.loading = false;
     });

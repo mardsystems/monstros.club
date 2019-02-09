@@ -17,41 +17,41 @@
     </mat-card-header>
     <img mat-card-image src="{{model.photoURL}}" alt="Foto do {{model.nome}}">
     <mat-card-content>
-      <mat-form-field>
+      <mat-form-field id="email">
+        <input type="text" placeholder="E-mail" matInput [(ngModel)]="model.email" required #email="ngModel">
+      </mat-form-field>
+
+      <mat-form-field id="dataDeNascimento">
         <input type="text" placeholder="Data de Nascimento" matInput [(ngModel)]="model.dataDeNascimento" required
           [matDatepicker]="dataPicker" #dataDeNascimento="ngModel">
         <mat-datepicker-toggle matSuffix [for]="dataPicker"></mat-datepicker-toggle>
         <mat-datepicker #dataPicker></mat-datepicker>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field id="idade">
         <input type="text" placeholder="Idade" matInput [ngModel]="idade" readonly>
       </mat-form-field>
 
-      <mat-form-field>
-        <input type="text" placeholder="E-mail" matInput [(ngModel)]="model.email" required #email="ngModel">
-      </mat-form-field>
-
-      <mat-form-field>
-        <input type="text" placeholder="Nome" matInput [(ngModel)]="model.nome" required #nome="ngModel">
-      </mat-form-field>
-
-      <mat-form-field>
-        <input type="text" placeholder="Usuário" matInput [(ngModel)]="model.usuario" required #usuario="ngModel">
-      </mat-form-field>
-
-      <mat-form-field hideRequiredMarker>
+      <mat-form-field id="genero" hideRequiredMarker>
         <mat-select placeholder="Gênero" [(ngModel)]="model.genero" required name="genero">
           <mat-option value="Masculino">Masculino</mat-option>
           <mat-option value="Feminino">Feminino</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field id="altura">
         <input type="number" placeholder="Altura" matInput [(ngModel)]="model.altura" required #altura="ngModel">
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field id="nome">
+        <input type="text" placeholder="Nome" matInput [(ngModel)]="model.nome" required #nome="ngModel">
+      </mat-form-field>
+
+      <mat-form-field id="usuario">
+        <input type="text" placeholder="Usuário" matInput [(ngModel)]="model.usuario" required #usuario="ngModel">
+      </mat-form-field>
+
+      <mat-form-field id="dataDoUltimoLogin">
         <input type="datetime" placeholder="Data do Último Login" matInput [ngModel]="model.dataDoUltimoLogin" readonly>
       </mat-form-field>
 
