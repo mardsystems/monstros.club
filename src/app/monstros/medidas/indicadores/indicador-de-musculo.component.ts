@@ -17,12 +17,8 @@ export class IndicadorDeMusculoComponent implements OnInit {
   }
 
   ngOnInit() {
-    const idade = this.medida.monstro.idade;
-
-    const genero = this.medida.monstro.genero;
-
     try {
-      this.classificacao = this.balanca.classificaMusculo(idade, genero, this.medida.musculo);
+      this.classificacao = this.balanca.classificaMusculo(this.medida);
     } catch (ex) {
       this.classificacao = CONST_CLASSIFICACAO_INVALIDA;
     }

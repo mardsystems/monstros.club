@@ -44,7 +44,8 @@ export class MedidaComponent implements OnInit {
   }
 }
 
-export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida {
+export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida
+  implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {
   isEdit: boolean;
   id?: string; // Usado apenas na edição.
   idade?: number;

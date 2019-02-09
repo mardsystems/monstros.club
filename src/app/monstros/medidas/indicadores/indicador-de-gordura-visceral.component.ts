@@ -18,7 +18,7 @@ export class IndicadorDeGorduraVisceralComponent implements OnInit {
 
   ngOnInit() {
     try {
-      this.classificacao = this.balanca.classificaGorduraVisceral(this.medida.gorduraVisceral);
+      this.classificacao = this.balanca.classificaGorduraVisceral(this.medida);
     } catch (ex) {
       this.classificacao = CONST_CLASSIFICACAO_INVALIDA;
     }

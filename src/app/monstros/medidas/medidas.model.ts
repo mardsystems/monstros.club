@@ -28,7 +28,7 @@ export class Medida
 
   public get data() { return this._data; }
 
-  public get balancaUtilizada() { return this._feitaCom; }
+  public get feitaCom() { return this._feitaCom; }
 
   public get peso() { return this._peso; }
 
@@ -48,7 +48,7 @@ export class Medida
     this._data = data;
   }
 
-  public feitaCom(tipoDeBalanca: TipoDeBalanca) {
+  public defineTipoDeBalanca(tipoDeBalanca: TipoDeBalanca) {
     this._feitaCom = tipoDeBalanca;
   }
 
@@ -82,37 +82,37 @@ export class Medida
 }
 
 export interface IMedidaDeGordura {
-  monstro: Monstro;
-  balancaUtilizada: TipoDeBalanca;
   gordura?: number;
+  monstro: Monstro;
+  feitaCom: TipoDeBalanca;
 }
 
 export interface IMedidaDeGorduraVisceral {
-  monstro: Monstro;
-  balancaUtilizada: TipoDeBalanca;
   gorduraVisceral?: number;
+  monstro: Monstro;
+  feitaCom: TipoDeBalanca;
 }
 
 export interface IMedidaDeMusculo {
-  monstro: Monstro;
-  balancaUtilizada: TipoDeBalanca;
   musculo?: number;
+  monstro: Monstro;
+  feitaCom: TipoDeBalanca;
 }
 
 export interface IMedidaDeIndiceDeMassaCorporal {
-  monstro: Monstro;
-  balancaUtilizada: TipoDeBalanca;
   indiceDeMassaCorporal?: number;
+  monstro: Monstro;
+  feitaCom: TipoDeBalanca;
 }
 
 export abstract class Balanca {
-  public abstract classificaGordura(idade: number, genero: string, gordura: number): number;
+  public abstract classificaGordura(medida: IMedidaDeGordura): number;
 
-  public abstract classificaGorduraVisceral(gorduraVisceral: number): number;
+  public abstract classificaGorduraVisceral(medida: IMedidaDeGorduraVisceral): number;
 
-  public abstract classificaMusculo(idade: number, genero: string, musculo: number): number;
+  public abstract classificaMusculo(medida: IMedidaDeMusculo): number;
 
-  public abstract classificaIndiceDeMassaCorporal(indiceDeMassaCorporal: number): number;
+  public abstract classificaIndiceDeMassaCorporal(medida: IMedidaDeIndiceDeMassaCorporal): number;
 }
 
 export enum TipoDeBalanca {
@@ -123,22 +123,28 @@ export enum TipoDeBalanca {
 }
 
 export class BalancaComum extends Balanca {
-  public classificaGordura(idade: number, genero: string, gordura: number): number {
+  public classificaGordura(medida: IMedidaDeGordura): number {
     throw new Error('Method not implemented.');
   }
-  public classificaGorduraVisceral(gorduraVisceral: number): number {
+  public classificaGorduraVisceral(medida: IMedidaDeGorduraVisceral): number {
     throw new Error('Method not implemented.');
   }
-  public classificaMusculo(idade: number, genero: string, musculo: number): number {
+  public classificaMusculo(medida: IMedidaDeMusculo): number {
     throw new Error('Method not implemented.');
   }
-  public classificaIndiceDeMassaCorporal(indiceDeMassaCorporal: number): number {
+  public classificaIndiceDeMassaCorporal(medida: IMedidaDeIndiceDeMassaCorporal): number {
     throw new Error('Method not implemented.');
   }
 }
 
 export class OmronHBF214 extends Balanca {
-  public classificaGordura(idade: number, genero: string, gordura: number): number {
+  public classificaGordura(medida: IMedidaDeGordura): number {
+    const idade = medida.monstro.idade;
+
+    const genero = medida.monstro.genero;
+
+    const gordura = medida.gordura;
+
     let classificacao: number;
 
     switch (genero) {
@@ -216,7 +222,9 @@ export class OmronHBF214 extends Balanca {
     return classificacao;
   }
 
-  public classificaGorduraVisceral(gorduraVisceral: number): number {
+  public classificaGorduraVisceral(medida: IMedidaDeGorduraVisceral): number {
+    const gorduraVisceral = medida.gorduraVisceral;
+
     let classificacao: number;
 
     if (gorduraVisceral > 14) {
@@ -230,7 +238,13 @@ export class OmronHBF214 extends Balanca {
     return classificacao;
   }
 
-  public classificaMusculo(idade: number, genero: string, musculo: number): number {
+  public classificaMusculo(medida: IMedidaDeMusculo): number {
+    const idade = medida.monstro.idade;
+
+    const genero = medida.monstro.genero;
+
+    const musculo = medida.musculo;
+
     let classificacao: number;
 
     switch (genero) {
@@ -308,7 +322,9 @@ export class OmronHBF214 extends Balanca {
     return classificacao;
   }
 
-  public classificaIndiceDeMassaCorporal(indiceDeMassaCorporal: number): number {
+  public classificaIndiceDeMassaCorporal(medida: IMedidaDeIndiceDeMassaCorporal): number {
+    const indiceDeMassaCorporal = medida.indiceDeMassaCorporal;
+
     let classificacao: number;
 
     if (indiceDeMassaCorporal < 18.5) {
@@ -356,7 +372,7 @@ export class SolicitacaoDeCadastroDeMedida {
     return {
       monstroId: medida.monstroId,
       data: moment(medida.data),
-      feitaCom: medida.balancaUtilizada,
+      feitaCom: medida.feitaCom,
       peso: medida.peso,
       gordura: medida.gordura,
       gorduraVisceral: medida.gorduraVisceral,

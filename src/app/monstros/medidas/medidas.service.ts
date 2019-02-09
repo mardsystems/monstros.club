@@ -192,7 +192,7 @@ export class MedidasService {
       this.obtemMedidaObservavel(medidaId).pipe(first()).subscribe(medida => {
         medida.defineData(solicitacao.data.toDate());
 
-        medida.feitaCom(solicitacao.feitaCom);
+        medida.defineTipoDeBalanca(solicitacao.feitaCom);
 
         medida.definePeso(solicitacao.peso);
 
@@ -233,7 +233,7 @@ export class MedidasService {
       // monstroId: `monstros/${medida.monstro.id}`,
       monstroId: `monstros/${medida.monstroId}`,
       data: firebase.firestore.Timestamp.fromDate(medida.data),
-      feitaCom: medida.balancaUtilizada,
+      feitaCom: medida.feitaCom,
       peso: medida.peso,
       gordura: medida.gordura,
       gorduraVisceral: medida.gorduraVisceral,

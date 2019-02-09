@@ -18,7 +18,7 @@ export class IndicadorDeIndiceDeMassaCorporalComponent implements OnInit {
 
   ngOnInit() {
     try {
-      this.classificacao = this.balanca.classificaIndiceDeMassaCorporal(this.medida.indiceDeMassaCorporal);
+      this.classificacao = this.balanca.classificaIndiceDeMassaCorporal(this.medida);
     } catch (ex) {
       this.classificacao = CONST_CLASSIFICACAO_INVALIDA;
     }

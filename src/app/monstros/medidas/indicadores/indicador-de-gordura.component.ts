@@ -17,12 +17,8 @@ export class IndicadorDeGorduraComponent implements OnInit {
   }
 
   ngOnInit() {
-    const idade = this.medida.monstro.idade;
-
-    const genero = this.medida.monstro.genero;
-
     try {
-      this.classificacao = this.balanca.classificaGordura(idade, genero, this.medida.gordura);
+      this.classificacao = this.balanca.classificaGordura(this.medida);
     } catch (ex) {
       this.classificacao = CONST_CLASSIFICACAO_INVALIDA;
     }
