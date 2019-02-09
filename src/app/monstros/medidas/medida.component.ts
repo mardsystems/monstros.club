@@ -48,18 +48,14 @@ export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida
   implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {
   isEdit: boolean;
   id?: string; // Usado apenas na edição.
-  idade?: number;
-  genero?: string;
   monstro: Monstro;
 
   static toAddViewModel(monstro: Monstro, idade: number, genero: string): MedidaViewModel {
-    const solicitacao = SolicitacaoDeCadastroDeMedida.toAdd(monstro.id, idade, genero);
+    const solicitacao = SolicitacaoDeCadastroDeMedida.toAdd(monstro.id);
 
     return {
       isEdit: false,
       id: null,
-      idade: idade,
-      genero: genero,
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       data: solicitacao.data,
@@ -74,14 +70,12 @@ export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida
     };
   }
 
-  static toEditViewModel(monstro: Monstro, medida: Medida, idade: number, genero: string): MedidaViewModel {
+  static toEditViewModel(monstro: Monstro, medida: Medida): MedidaViewModel {
     const solicitacao = SolicitacaoDeCadastroDeMedida.toEdit(medida);
 
     return {
       isEdit: true,
       id: medida.id,
-      idade: idade,
-      genero: genero,
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       data: solicitacao.data,

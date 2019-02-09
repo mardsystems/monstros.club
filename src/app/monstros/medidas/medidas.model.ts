@@ -353,7 +353,7 @@ export class SolicitacaoDeCadastroDeMedida {
   metabolismoBasal?: number;
   indiceDeMassaCorporal?: number;
 
-  static toAdd(monstroId: string, idade: number, genero: string): SolicitacaoDeCadastroDeMedida {
+  static toAdd(monstroId: string): SolicitacaoDeCadastroDeMedida {
     return {
       monstroId: monstroId,
       data: moment(new Date(Date.now())),

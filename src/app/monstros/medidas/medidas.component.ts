@@ -32,7 +32,7 @@ export class MedidasComponent implements OnInit {
   dataSource: any;
 
   monstroId: string;
-  monstroLogado: Monstro;
+  monstro: Monstro;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -51,9 +51,9 @@ export class MedidasComponent implements OnInit {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
 
-    this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
-      this.monstroLogado = monstroLogado;
-    });
+    // this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
+    //   this.monstroLogado = monstroLogado;
+    // });
 
     this.balanca = new OmronHBF214();
   }
@@ -75,8 +75,14 @@ export class MedidasComponent implements OnInit {
       switchMap((params: ParamMap) => {
         this.monstroId = params.get('monstroId');
 
-        return this.medidasService.obtemMedidasObservaveisParaExibicao(this.monstroId);
-      }));
+        return this.monstrosService.obtemMonstroObservavel(this.monstroId);
+      }),
+      switchMap(monstro => {
+        this.monstro = monstro;
+
+        return this.medidasService.obtemMedidasObservaveisParaExibicao(monstro);
+      })
+    );
 
     this.medidas$.pipe(
       take(1)
@@ -133,15 +139,15 @@ export class MedidasComponent implements OnInit {
   // }
 
   onAdd(): void {
-    const idade = this.calculoDeIdade.calculaIdade(this.monstroLogado.dataDeNascimento);
+    const idade = this.calculoDeIdade.calculaIdade(this.monstro.dataDeNascimento);
 
-    const genero = this.monstroLogado.genero;
+    const genero = this.monstro.genero;
 
-    if (this.monstroLogado.id !== this.monstroId) {
+    if (this.monstro.id !== this.monstroId) {
       return;
     }
 
-    const model = MedidaViewModel.toAddViewModel(this.monstroLogado, idade, genero);
+    const model = MedidaViewModel.toAddViewModel(this.monstro, idade, genero);
 
     const config: MatDialogConfig<MedidaViewModel> = { data: model };
 
@@ -149,15 +155,15 @@ export class MedidasComponent implements OnInit {
   }
 
   onEdit(medida: Medida): void {
-    const idade = this.calculoDeIdade.calculaIdade(this.monstroLogado.dataDeNascimento);
+    const idade = this.calculoDeIdade.calculaIdade(this.monstro.dataDeNascimento);
 
-    const genero = this.monstroLogado.genero;
+    const genero = this.monstro.genero;
 
-    if (this.monstroLogado.id !== this.monstroId) {
+    if (this.monstro.id !== this.monstroId) {
       return;
     }
 
-    const model = MedidaViewModel.toEditViewModel(this.monstroLogado, medida, idade, genero);
+    const model = MedidaViewModel.toEditViewModel(this.monstro, medida, idade, genero);
 
     const config: MatDialogConfig<MedidaViewModel> = { data: model };
 
