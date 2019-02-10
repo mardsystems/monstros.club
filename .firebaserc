@@ -1,6 +1,6 @@
 {
   "projects": {
     "default": "monstros-club",
-    "dev": "monstros-club-dev-2"
+    "teste": "monstros-club-teste"
   }
 }
