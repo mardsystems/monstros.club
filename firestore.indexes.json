@@ -1,0 +1,18 @@
+{
+  "indexes": [
+    {
+      "collectionId": "medidas",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "monstroId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "data",
+          "mode": "DESCENDING"
+        }
+      ]
+    }
+  ]
+}
