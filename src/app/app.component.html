@@ -2,20 +2,23 @@
 <!-- <mat-toolbar color="primary" class="mat-elevation-z2">Medidas</mat-toolbar> -->
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <a mat-button class="example-icon" routerLink="." routerLinkActive="active">
+    <a mat-button class="title" routerLink="." routerLinkActive="active">
       <h1>Monstros Club</h1>
     </a>
-  </mat-toolbar-row>
+  <!-- </mat-toolbar-row> -->
   <!--
     <mat-toolbar-row>
       <span>Second Line</span>
-      <span class="example-spacer"></span>
-      <mat-icon class="example-icon">verified_user</mat-icon>
+      <span class="space"></span>
+      <mat-icon>verified_user</mat-icon>
     </mat-toolbar-row> -->
 
-  <mat-toolbar-row>
+  <!-- <mat-toolbar-row> -->
     <!-- <span>Placar</span> -->
-    <span class="example-spacer"></span>
+    <span class="space"></span>
+    <!-- <a mat-icon-button routerLink="." routerLinkActive="active">
+      <img class="avatar" src="../assets/icons/icon-72x72.png" alt="Logo">
+    </a> -->
     <a mat-icon-button (click)="sobre()">
       <mat-icon class="red-icon">favorite</mat-icon>
     </a>
@@ -25,12 +28,22 @@
     <!-- <a mat-icon-button routerLink="/admin" routerLinkActive="active">
       <mat-icon>star_border</mat-icon>
     </a> -->
-    <!-- <mat-icon class="example-icon">favorite</mat-icon>
-      <mat-icon class="example-icon">delete</mat-icon> -->
+    <!-- <mat-icon>favorite</mat-icon>
+      <mat-icon>delete</mat-icon> -->
     <span *ngIf="monstroLogado$ | async as monstroLogado">
-      <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroEstaLogado">
+      <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="monstroEstaLogado">
+        <img class="avatar" src="{{monstroLogado.photoURL}}" alt="Foto do Monstro">
+        <!-- <mat-icon matListIcon>person</mat-icon> -->
+        <!-- <p matLine>
+          <span> Este é o início </span>
+          <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
+        </p> -->
+      </a>
+      <!-- <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroEstaLogado"> -->
         <!-- <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro"> -->
-        <mat-icon matListIcon>person</mat-icon>
+        <!-- <mat-icon matListIcon>person</mat-icon> -->
         <!-- <h3 matLine>{{ monstroLogado.email }}</h3> -->
         <!-- <button mat-icon-button (click)="logout()">
               <mat-icon>exit_to_app</mat-icon>
@@ -39,11 +52,10 @@
                 <span> Este é o início </span>
                 <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
               </p> -->
-      </a>
+      <!-- </a> -->
     </span>
   </mat-toolbar-row>
 </mat-toolbar>
-
 
 <!-- <h1 class="title">Monstros Club</h1>
 <nav>

@@ -1,10 +1,18 @@
 <div class="container">
-  <mat-card class="example-card">
+  <p></p>
+  <p class="mat-subheading-1">{{message}}</p>
+  <p class="mat-body">
+    Entrar com a conta do&nbsp;
+    <button mat-raised-button color="accent" (click)="googleLogin()" *ngIf="!authService.authenticated">GOOGLE</button>
+    <button mat-raised-button color="accent" (click)="logout()" *ngIf="authService.authenticated">SAIR</button>
+  </p>
+
+  <!-- <mat-card class="login-card">
     <mat-card-header>
       <mat-card-title>Login</mat-card-title>
     </mat-card-header>
-    <mat-card-content>
-      <form class="example-form" *ngIf="!authService.authenticated">
+    <mat-card-content> -->
+  <!-- <form class="example-form" *ngIf="!authService.authenticated">
         <table class="example-full-width" cellspacing="0">
           <tr>
             <td>
@@ -21,14 +29,14 @@
             </td>
           </tr>
         </table>
-      </form>
-      <p>{{message}}</p>
-      <!-- <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner> -->
-    </mat-card-content>
+      </form> -->
+  <!-- <p>{{message}}</p> -->
+  <!-- <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner> -->
+  <!-- </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button (click)="login()" color="primary" *ngIf="!authService.authenticated">Login</button>
-      <button mat-button (click)="googleLogin()" *ngIf="!authService.authenticated">Login with Google</button>
-      <button mat-button (click)="logout()" *ngIf="authService.authenticated">Logout</button>
+      <button mat-raised-button (click)="googleLogin()" *ngIf="!authService.authenticated">GOOGLE</button>
+      <button mat-raised-button (click)="logout()" *ngIf="authService.authenticated">SAIR</button>
     </mat-card-actions>
-  </mat-card>
+  </mat-card> -->
 </div>

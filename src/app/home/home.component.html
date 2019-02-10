@@ -2,16 +2,19 @@
 
 <div class="container" *ngIf="!loading">
   <div class="center">
-    <a mat-raised-button color="primary" routerLink="/login" routerLinkActive="active" *ngIf="!monstroEstaLogado">
-      ENTRAR
-    </a>
+    <div *ngIf="!monstroEstaLogado">
+      <h1 class="mat-headline">Entre para o maior Clube de Monstros de todos os tempos!</h1>
+      <a mat-raised-button color="accent" routerLink="/login" routerLinkActive="active">
+        ENTRAR
+      </a>
+    </div>
 
-    <span *ngIf="monstroLogado$ | async as monstroLogado">
-      <a mat-raised-button color="primary" routerLink="/{{monstroLogado.id}}" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroEstaLogado">
+    <div *ngIf="monstroLogado$ | async as monstroLogado">
+      <a mat-raised-button color="accent" routerLink="/{{monstroLogado.id}}" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
         IR PARA MEU PERFIL
       </a>
-    </span>
+    </div>
   </div>
 
   <!-- <div class="app-container mat-elevation-z8"> -->

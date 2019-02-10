@@ -18,7 +18,7 @@ export class LoginComponent {
   }
 
   googleLogin() {
-    this.message = 'Trying to log in Google ...';
+    this.message = 'Tentando entrar com a conta do Google ...';
 
     this.authService.googleLogin().then(() =>
       this.setMessage()
@@ -26,7 +26,7 @@ export class LoginComponent {
   }
 
   login() {
-    this.message = 'Trying to log in ...';
+    this.message = 'Tentando entrar ...';
 
     this.authService.login(this.username, this.password).subscribe(() =>
       this.setMessage()
@@ -42,7 +42,7 @@ export class LoginComponent {
   }
 
   private setMessage() {
-    this.message = 'Logged ' + (this.authService.authenticated ? 'in' : 'out');
+    this.message = 'Você está ' + (this.authService.authenticated ? 'conectado' : 'desconectado');
   }
 }
 

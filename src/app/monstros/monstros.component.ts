@@ -1,10 +1,13 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { MonstrosService } from './monstros.service';
 import { Monstro } from './monstros.model';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { SobreComponent } from '../sobre/sobre.component';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-monstros',
@@ -13,6 +16,10 @@ import { Observable } from 'rxjs';
 })
 export class MonstrosComponent implements OnDestroy {
   monstroLogado$: Observable<Monstro>;
+  monstroEstaLogado = false;
+
+  monstroId: string;
+  monstro$: Observable<Monstro>;
 
   mobileQuery: MediaQueryList;
 
@@ -21,7 +28,9 @@ export class MonstrosComponent implements OnDestroy {
   constructor(
     private router: Router,
     public authService: AuthService,
+    private route: ActivatedRoute,
     private monstrosService: MonstrosService,
+    private dialog: MatDialog,
     private media: MediaMatcher,
     private changeDetectorRef: ChangeDetectorRef,
   ) {
@@ -30,10 +39,30 @@ export class MonstrosComponent implements OnDestroy {
     this.mobileQuery.addListener(this._mobileQueryListener);
 
     this.monstroLogado$ = this.monstrosService.monstroLogado$;
+
+    this.monstroLogado$.subscribe((monstroLogado) => {
+      if (monstroLogado) {
+        this.monstroEstaLogado = true;
+      } else {
+        this.monstroEstaLogado = false;
+      }
+    });
+
+    this.monstro$ = this.route.paramMap.pipe(
+      switchMap((params: ParamMap) => {
+        this.monstroId = params.get('monstroId');
+
+        return this.monstrosService.obtemMonstroObservavel(this.monstroId);
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
+  sobre() {
+    this.dialog.open(SobreComponent);
   }
 
   public logout() {

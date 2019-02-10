@@ -14,7 +14,7 @@ import { first } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   monstroLogado$: Observable<Monstro>;
-  monstroEstaLogado = false;
+  monstroEstaLogado = true; // TODO: Refatorar.
 
   constructor(
     private dialog: MatDialog,

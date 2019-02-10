@@ -163,7 +163,7 @@ export class MedidasComponent implements OnInit {
       return;
     }
 
-    const model = MedidaViewModel.toEditViewModel(this.monstro, medida, idade, genero);
+    const model = MedidaViewModel.toEditViewModel(this.monstro, medida);
 
     const config: MatDialogConfig<MedidaViewModel> = { data: model };
 

@@ -1,21 +1,13 @@
-.center{
-  width: 75%;
-  margin: 10px auto;
-}
-
 .container{
-  height: 18vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
-.example-card {
+.login-card {
   max-width: 400px;
 }
 
 @media only screen and  (max-width: 750px) {
-  .container{
-    height: 50vh;
-  }
 }

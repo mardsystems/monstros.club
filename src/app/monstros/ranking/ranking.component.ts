@@ -38,7 +38,7 @@ export class RankingComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private monstrosService: MonstrosService,
+    // private monstrosService: MonstrosService,
     private medidasService: MedidasService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
@@ -47,9 +47,9 @@ export class RankingComponent implements OnInit {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
 
-    this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
-      this.monstroLogado = monstroLogado;
-    });
+    // this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
+    //   this.monstroLogado = monstroLogado;
+    // });
 
     this.balanca = new OmronHBF214();
   }

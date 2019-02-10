@@ -7,7 +7,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NavigationExtras, Router } from '@angular/router';
+// import { NavigationExtras, Router } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
@@ -18,10 +18,10 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { HomeComponent } from './home/home.component';
 import { Monstro } from './monstros/monstros.model';
-import { MonstrosService } from './monstros/monstros.service';
+// import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SobreComponent } from './sobre/sobre.component';
-import { AuthService } from './auth/auth.service';
+// import { AuthService } from './auth/auth.service';
 
 registerLocaleData(localePt);
 
@@ -60,25 +60,25 @@ export class AppModule {
   monstroLogado$: Observable<Monstro>;
 
   constructor(
-    private router: Router,
-    private authService: AuthService,
-    private monstrosService: MonstrosService
+    // private router: Router,
+    // private authService: AuthService,
+    // private monstrosService: MonstrosService
   ) {
-    this.monstroLogado$ = this.monstrosService.monstroLogado$;
+    // this.monstroLogado$ = this.monstrosService.monstroLogado$;
 
-    this.monstroLogado$.subscribe((monstroLogado) => {
-      if (monstroLogado) {
-        // const redirectUrl = this.authService.redirectUrl; // ''; // `${monstroLogado.id}`;
+    // this.monstroLogado$.subscribe((monstroLogado) => {
+    //   if (monstroLogado) {
+    //     // const redirectUrl = this.authService.redirectUrl; // ''; // `${monstroLogado.id}`;
 
-        // const navigationExtras: NavigationExtras = {
-        //   queryParamsHandling: 'preserve',
-        //   preserveFragment: true
-        // };
+    //     // const navigationExtras: NavigationExtras = {
+    //     //   queryParamsHandling: 'preserve',
+    //     //   preserveFragment: true
+    //     // };
 
-        // this.router.navigate([redirectUrl], navigationExtras);
-      } else {
-        // this.router.navigate(['/']);
-      }
-    });
+    //     // this.router.navigate([redirectUrl], navigationExtras);
+    //   } else {
+    //     // this.router.navigate(['/']);
+    //   }
+    // });
   }
 }

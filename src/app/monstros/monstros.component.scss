@@ -49,6 +49,17 @@ h1.app-name {
   flex: 1 1 auto;
 }
 
+.space {
+  flex: 1 1 auto;
+}
+.avatar {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .red-icon {
   color: red;
 }

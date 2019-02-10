@@ -21,7 +21,7 @@ export class MonstrosService {
     private calculoDeIdade: CalculoDeIdade
   ) {
     this.monstroLogado$ = this.authService.user$.pipe(
-      first(),
+      // first(),
       switchMap(user => {
         if (user) {
           // console.log(user);
