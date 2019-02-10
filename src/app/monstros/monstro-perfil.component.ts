@@ -44,16 +44,6 @@ export class MonstroPerfilComponent implements OnInit {
     });
   }
 
-  public get idade(): Number {
-    if (!this.model.dataDeNascimento) {
-      return 0;
-    }
-
-    const idade = this.calculoDeIdade.calculaIdade(this.model.dataDeNascimento.toDate());
-
-    return idade;
-  }
-
   onSave(): void {
     const operation: Promise<void> =
       (this.model.isEdit)

@@ -41,7 +41,7 @@ export class MonstrosService {
                 usuario: monstro.usuario,
                 genero: monstro.genero,
                 altura: monstro.altura,
-                dataDeNascimento: moment(monstro.dataDeNascimento),
+                dataDeNascimento: (monstro.dataDeNascimento ? moment(monstro.dataDeNascimento) : null),
                 dataDoUltimoLogin: moment()
               };
 
@@ -50,6 +50,7 @@ export class MonstrosService {
             catchError((err, o) => {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
                 isEdit: false,
+                id: user.uid,
                 displayName: user.displayName,
                 email: user.email,
                 photoURL: user.photoURL,
@@ -82,7 +83,7 @@ export class MonstrosService {
   obtemMonstrosObservaveisParaExibicao(): Observable<Monstro[]> {
     const collection = this.db.collection<MonstroDocument>(this.PATH, reference => {
       return reference;
-        // .orderBy('dataDoUltimoLogin', 'desc');
+      // .orderBy('dataDoUltimoLogin', 'desc');
     });
 
     const monstros$ = collection.valueChanges().pipe(
@@ -102,7 +103,7 @@ export class MonstrosService {
     const document = collection.doc<MonstroDocument>(id);
 
     const monstro$ = document.valueChanges().pipe(
-      map(value => this.mapMonstro(value))
+      map(value => this.mapMonstro(value)) // TODO: NotFoundError.
     );
 
     return monstro$;
@@ -116,7 +117,7 @@ export class MonstrosService {
       value.id,
       value.nome,
       value.usuario,
-      Genero[value.genero],
+      (value.genero ? Genero[value.genero] : null),
       value.altura,
       (value.dataDeNascimento ? value.dataDeNascimento.toDate() : null),
       (value.dataDoUltimoLogin ? value.dataDoUltimoLogin.toDate() : null),
@@ -125,18 +126,18 @@ export class MonstrosService {
   }
 
   cadastraMonstro(solicitacao: SolicitacaoDeCadastroDeMonstro): Promise<void> {
-    const monstroId = this.db.createId();
+    // const monstroId = this.db.createId();
 
     const monstro = new Monstro(
       solicitacao.displayName,
       solicitacao.email,
       solicitacao.photoURL,
-      monstroId,
+      solicitacao.id,
       solicitacao.nome,
       solicitacao.usuario,
       solicitacao.genero,
       solicitacao.altura,
-      solicitacao.dataDeNascimento.toDate(),
+      (solicitacao.dataDeNascimento ? solicitacao.dataDeNascimento.toDate() : null),
       solicitacao.dataDoUltimoLogin.toDate(),
       this.calculoDeIdade
     );
@@ -154,6 +155,8 @@ export class MonstrosService {
     const newDocument = this.mapTo(monstro);
 
     const result = document.set(newDocument);
+
+    console.log({ 'monstro adicionado': newDocument });
 
     return result;
   }
@@ -175,7 +178,9 @@ export class MonstrosService {
 
         monstro.defineAltura(solicitacao.altura);
 
-        monstro.defineDataDeNascimento(solicitacao.dataDeNascimento.toDate());
+        if (solicitacao.dataDeNascimento) {
+          monstro.defineDataDeNascimento(solicitacao.dataDeNascimento.toDate());
+        }
 
         monstro.defineDataDoUltimoLogin(solicitacao.dataDoUltimoLogin.toDate());
 
@@ -208,7 +213,7 @@ export class MonstrosService {
       usuario: monstro.usuario,
       genero: monstro.genero,
       altura: monstro.altura,
-      dataDeNascimento: firebase.firestore.Timestamp.fromDate(monstro.dataDeNascimento),
+      dataDeNascimento: (monstro.dataDeNascimento ? firebase.firestore.Timestamp.fromDate(monstro.dataDeNascimento) : null),
       dataDoUltimoLogin: firebase.firestore.Timestamp.fromDate(monstro.dataDoUltimoLogin),
     };
 

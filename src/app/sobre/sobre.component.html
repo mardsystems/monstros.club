@@ -31,13 +31,14 @@
       <mat-icon>tap_and_play</mat-icon>
     </button>
     &nbsp;
-    <strong>1.0.0-alpha.1+3</strong>
+    <strong>1.0.0-alpha.1+4</strong>
   </div>
 
   <div class="mat-body atualizacao" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
     <button mat-icon-button (click)="activateUpdate()">
       <mat-icon>system_update</mat-icon>
     </button>
+    &nbsp;
     <strong>{{atualizacaoDisponivel.versaoDisponivel}}</strong>&nbsp;<span class="mat-body-strong">(disponível)</span>
   </div>
 
@@ -45,7 +46,8 @@
     <button mat-icon-button (click)="reload()">
       <mat-icon>refresh</mat-icon>
     </button>
-    <strong>{{atualizacaoAtivada.versaoAnterior}}</strong>&nbsp;<span class="mat-body-strong">(anterior)</span>
+    &nbsp;
+    <strong>{{atualizacaoAtivada.versaoAtual}}</strong>&nbsp;<span class="mat-body-strong">(instalada)</span>
   </div>
 
   <!-- <div class="mat-body" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">

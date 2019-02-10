@@ -43,7 +43,6 @@ export class MedidasComponent implements OnInit {
     private route: ActivatedRoute,
     private monstrosService: MonstrosService,
     private medidasService: MedidasService,
-    private calculoDeIdade: CalculoDeIdade,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
@@ -139,15 +138,7 @@ export class MedidasComponent implements OnInit {
   // }
 
   onAdd(): void {
-    const idade = this.calculoDeIdade.calculaIdade(this.monstro.dataDeNascimento);
-
-    const genero = this.monstro.genero;
-
-    if (this.monstro.id !== this.monstroId) {
-      return;
-    }
-
-    const model = MedidaViewModel.toAddViewModel(this.monstro, idade, genero);
+    const model = MedidaViewModel.toAddViewModel(this.monstro);
 
     const config: MatDialogConfig<MedidaViewModel> = { data: model };
 
@@ -155,14 +146,6 @@ export class MedidasComponent implements OnInit {
   }
 
   onEdit(medida: Medida): void {
-    const idade = this.calculoDeIdade.calculaIdade(this.monstro.dataDeNascimento);
-
-    const genero = this.monstro.genero;
-
-    if (this.monstro.id !== this.monstroId) {
-      return;
-    }
-
     const model = MedidaViewModel.toEditViewModel(this.monstro, medida);
 
     const config: MatDialogConfig<MedidaViewModel> = { data: model };

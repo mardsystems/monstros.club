@@ -71,7 +71,9 @@ export class RankingComponent implements OnInit {
 
     this.medidas$.pipe(
       first()
-    ).subscribe(() => this.loading = false);
+    ).subscribe(() => {
+      this.loading = false;
+    });
 
     this.medidas$.subscribe(medidas => {
       this.dataSource = new MatTableDataSource(medidas);

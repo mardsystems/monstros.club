@@ -50,7 +50,7 @@ export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida
   id?: string; // Usado apenas na edição.
   monstro: Monstro;
 
-  static toAddViewModel(monstro: Monstro, idade: number, genero: string): MedidaViewModel {
+  static toAddViewModel(monstro: Monstro): MedidaViewModel {
     const solicitacao = SolicitacaoDeCadastroDeMedida.toAdd(monstro.id);
 
     return {

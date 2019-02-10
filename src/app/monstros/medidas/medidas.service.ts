@@ -27,7 +27,7 @@ export class MedidasService {
     });
 
     const medidas$ = collection.valueChanges().pipe(
-      mergeMap(values => {
+      switchMap(values => {
         const arrayDeMedidasObservaveis = values
           .filter(value => value.monstroId !== 'monstros/OJUFB66yLBwIOE2hk8hs')
           .map((value) => {
@@ -45,6 +45,8 @@ export class MedidasService {
         return todasAsMedidas$;
       })
     );
+
+    // return merge(medidas$, new Observable<Medida[]>(() => [])); // TODO: Problema quando não tem medidas.
 
     return medidas$;
   }
