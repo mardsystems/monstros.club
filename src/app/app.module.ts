@@ -21,6 +21,7 @@ import { Monstro } from './monstros/monstros.model';
 // import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SobreComponent } from './sobre/sobre.component';
+import { HttpClientModule } from '@angular/common/http';
 // import { AuthService } from './auth/auth.service';
 
 registerLocaleData(localePt);
@@ -43,6 +44,7 @@ registerLocaleData(localePt);
     AuthModule,
     AngularFireAuthModule,
     AppRoutingModule,
+    HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   schemas: [

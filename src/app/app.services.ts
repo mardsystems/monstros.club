@@ -3,6 +3,7 @@ import { ICalculoDeIdade } from './app.model';
 import { SwUpdate } from '@angular/service-worker';
 import { first, map } from 'rxjs/operators';
 import { interval, concat, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 export class AtualizacaoDisponivel {
   versaoAtual: string;
@@ -21,7 +22,14 @@ export class LogUpdateService {
   public atualizacaoDisponivel$: Observable<AtualizacaoDisponivel>;
   public atualizacaoAtivada$: Observable<AtualizacaoAtivada>;
 
-  constructor(updates: SwUpdate) {
+  constructor(
+    updates: SwUpdate,
+    private http: HttpClient
+  ) {
+    // this.getJSON().subscribe(data => {
+    //   console.log(data);
+    // });
+
     this.atualizacaoDisponivel$ = updates.available.pipe(
       map(update => {
         const currentAppData = update.current.appData as any;
@@ -60,6 +68,10 @@ export class LogUpdateService {
     //   console.log('old version was', event.previous);
     //   console.log('new version is', event.current);
     // });
+  }
+
+  public getJSON(): Observable<any> {
+    return this.http.get('ngsw-config.json');
   }
 }
 
