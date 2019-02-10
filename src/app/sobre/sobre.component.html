@@ -14,7 +14,7 @@
       href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A3URPDNKV85C4&item_name=Monstros.Club&currency_code=BRL&source=url">Paypal</a>
   </p>
 
-  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+  <!-- <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
     <input type="hidden" name="cmd" value="_donations" />
     <input type="hidden" name="business" value="A3URPDNKV85C4" />
     <input type="hidden" name="item_name" value="Monstros.Club" />
@@ -22,26 +22,30 @@
     <input type="image" src="https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
       title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
     <img alt="" border="0" src="https://www.paypal.com/pt_BR/i/scr/pixel.gif" width="1" height="1" />
-  </form>
+  </form> -->
 
-  <p></p>
+  <p class="mat-body-strong">Versão:</p>
 
-  <div class="mat-body-strong">
-    Versão <strong>1.0.0-alpha.1</strong>
-    <button mat-icon-button (click)="activateUpdate()">
-      <mat-icon>system_update</mat-icon>
+  <div class="mat-body">
+    <button mat-icon-button (click)="checkForUpdate()">
+      <mat-icon>tap_and_play</mat-icon>
     </button>
+    &nbsp;
+    <strong>1.0.0-alpha.1+2</strong>
   </div>
 
   <div class="mat-body atualizacao" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
-    Versão <strong>{{atualizacaoDisponivel.versaoDisponivel}}</strong> (disponível)
+    <button mat-icon-button (click)="activateUpdate()">
+      <mat-icon>system_update</mat-icon>
+    </button>
+    <strong>{{atualizacaoDisponivel.versaoDisponivel}}</strong>&nbsp;<span class="mat-body-strong">(disponível)</span>
   </div>
 
   <div class="mat-body ativacao" *ngIf="atualizacaoAtivada$ | async as atualizacaoAtivada">
-    Versão <strong>{{atualizacaoAtivada.versaoAnterior}}</strong> (anterior)
     <button mat-icon-button (click)="reload()">
       <mat-icon>refresh</mat-icon>
     </button>
+    <strong>{{atualizacaoAtivada.versaoAnterior}}</strong>&nbsp;<span class="mat-body-strong">(anterior)</span>
   </div>
 
   <!-- <div class="mat-body" *ngIf="atualizacaoDisponivel$ | async as atualizacaoDisponivel">
@@ -58,7 +62,4 @@
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>FECHAR</button>
-  <button mat-button (click)="checkForUpdate()">
-    CHECAR ATUALIZAÇÕES
-  </button>
 </mat-dialog-actions>
