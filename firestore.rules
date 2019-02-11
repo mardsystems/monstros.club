@@ -1,7 +1,40 @@
 service cloud.firestore {
   match /databases/{database}/documents {
+    function estaAutenticado() {
+      return request.auth.uid != null;
+    }
+
+    function ehVoceMesmo() {
+      return request.auth.uid == resource.data.id;
+    }
+
+    function naoEstaTentandoMudarOAdministrador() {
+      return !(request.resource.data.admin != resource.data.admin);
+    }
+
+    function naoEstaTentandoSerOAdministrador() {
+      return !(request.resource.data.admin == true);
+    }
+
+    function ehProprietario() {
+      return ('monstros/' + request.auth.uid) == resource.data.monstrosId;
+    }
+
+    function ehAdministrador() {
+      return get(/databases/$(database)/documents/monstros/$(request.auth.uid)).data.admin == true;
+    }
+
     match /{document=**} {
-      allow read, write: if true;
+      allow read: if true;
+    }
+
+    match /medidas/{medida} {
+      allow create, update, delete: if ehProprietario() || ehAdministrador();
+    }
+
+    match /monstros/{monstro} {
+      allow update, delete: if (ehVoceMesmo() && naoEstaTentandoSerOAdministrador()) || ehAdministrador();
+      allow create: if (estaAutenticado() && naoEstaTentandoSerOAdministrador());
     }
   }
 }

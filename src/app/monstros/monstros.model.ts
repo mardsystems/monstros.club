@@ -3,6 +3,7 @@ import { ICalculoDeIdade } from '../app.model';
 
 export class Monstro {
   public constructor(
+    private _admin: boolean,
     private _displayName: string,
     private _email: string,
     private _photoURL: string,
@@ -17,6 +18,8 @@ export class Monstro {
   ) {
 
   }
+
+  public get admin() { return this._admin; }
 
   public get displayName() { return this._displayName; }
 
@@ -98,6 +101,7 @@ export class SolicitacaoDeCadastroDeMonstro {
   isEdit: boolean;
   // Usado apenas na edição.
   id?: string;
+  admin?: boolean;
   displayName?: string;
   email?: string;
   photoURL?: string;
@@ -118,6 +122,7 @@ export class SolicitacaoDeCadastroDeMonstro {
     return {
       isEdit: true,
       id: monstro.id,
+      admin: monstro.admin,
       displayName: monstro.displayName,
       email: monstro.email,
       photoURL: monstro.photoURL,

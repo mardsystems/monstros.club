@@ -34,6 +34,7 @@ export class MonstrosService {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
                 isEdit: true,
                 id: monstro.id,
+                admin: monstro.admin,
                 displayName: user.displayName,
                 email: user.email,
                 photoURL: user.photoURL,
@@ -47,10 +48,11 @@ export class MonstrosService {
 
               this.atualizaMonstro(user.uid, solicitacao);
             }),
-            catchError((err, o) => {
+            catchError((error, monstro) => {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
                 isEdit: false,
                 id: user.uid,
+                admin: false,
                 displayName: user.displayName,
                 email: user.email,
                 photoURL: user.photoURL,
@@ -65,7 +67,12 @@ export class MonstrosService {
               this.cadastraMonstro(solicitacao);
 
               const monstroCadastrado$ = this.obtemMonstroObservavel(user.uid).pipe(
-                first()
+                first(),
+                catchError((error2, monstro2) => {
+                  console.log(error);
+
+                  return of(null);
+                })
               );
 
               return monstroCadastrado$;
@@ -77,6 +84,30 @@ export class MonstrosService {
           return of(null);
         }
       })
+    );
+  }
+
+  public estaAutenticado(): Observable<boolean> {
+    return this.monstroLogado$.pipe(
+      map(monstroLogado => monstroLogado != null)
+    );
+  }
+
+  public ehVoceMesmo(id: string): Observable<boolean> {
+    return this.monstroLogado$.pipe(
+      map(monstroLogado => monstroLogado != null && monstroLogado.id === id)
+    );
+  }
+
+  public ehProprietario(monstrosId: string): Observable<boolean> {
+    return this.monstroLogado$.pipe(
+      map(monstroLogado => ('monstros/' + monstroLogado.id) === monstrosId)
+    );
+  }
+
+  public ehAdministrador(): Observable<boolean> {
+    return this.monstroLogado$.pipe(
+      map(monstroLogado => monstroLogado != null && monstroLogado.admin)
     );
   }
 
@@ -103,7 +134,13 @@ export class MonstrosService {
     const document = collection.doc<MonstroDocument>(id);
 
     const monstro$ = document.valueChanges().pipe(
-      map(value => this.mapMonstro(value)) // TODO: NotFoundError.
+      map(value => {
+        if (value) {
+          return this.mapMonstro(value);
+        } else {
+          throw new Error('Monstro não encontrado.');
+        }
+      })
     );
 
     return monstro$;
@@ -111,6 +148,7 @@ export class MonstrosService {
 
   private mapMonstro(value: MonstroDocument): Monstro {
     return new Monstro(
+      value.admin,
       value.displayName,
       value.email,
       value.photoURL,
@@ -129,6 +167,7 @@ export class MonstrosService {
     // const monstroId = this.db.createId();
 
     const monstro = new Monstro(
+      solicitacao.admin,
       solicitacao.displayName,
       solicitacao.email,
       solicitacao.photoURL,
@@ -205,6 +244,7 @@ export class MonstrosService {
 
   private mapTo(monstro: Monstro): MonstroDocument {
     const newDocument: MonstroDocument = {
+      admin: (monstro.admin ? monstro.admin : false),
       displayName: monstro.displayName,
       email: monstro.email,
       photoURL: monstro.photoURL,
@@ -232,6 +272,7 @@ export class MonstrosService {
 }
 
 export interface MonstroDocument {
+  admin?: boolean;
   displayName?: string;
   email?: string;
   photoURL?: string;

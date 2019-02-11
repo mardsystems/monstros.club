@@ -2,9 +2,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
-import { first, switchMap } from 'rxjs/operators';
-import { CalculoDeIdade } from 'src/app/app.services';
+import { Observable, of } from 'rxjs';
+import { first, switchMap, catchError } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
 import { MedidaComponent, MedidaViewModel } from './medida.component';
@@ -25,6 +24,8 @@ export class MedidasComponent implements OnInit {
   medidas$: Observable<Medida[]>;
   balanca: Balanca;
   loading = true;
+  disabledWrite: boolean;
+
   fullDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
     'idadeCorporal', 'metabolismoBasal', 'indiceDeMassaCorporal', 'menu'];
   minimalDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'indiceDeMassaCorporal', 'menu'];
@@ -70,12 +71,20 @@ export class MedidasComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.medidas$ = this.route.paramMap.pipe(
+    const monstro$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
         this.monstroId = params.get('monstroId');
 
         return this.monstrosService.obtemMonstroObservavel(this.monstroId);
       }),
+      catchError((error, monstro) => {
+        console.log(error);
+
+        return of(null);
+      })
+    );
+
+    this.medidas$ = monstro$.pipe(
       switchMap(monstro => {
         this.monstro = monstro;
 
@@ -93,6 +102,22 @@ export class MedidasComponent implements OnInit {
       this.dataSource = new MatTableDataSource(medidas);
 
       this.dataSource.sort = this.sort;
+    });
+
+    monstro$.pipe(
+      first(),
+      switchMap(monstro => {
+        return this.monstrosService.ehVoceMesmo(monstro.id);
+      }),
+      switchMap(value => {
+        if (value) {
+          return of(true);
+        } else {
+          return this.monstrosService.ehAdministrador();
+        }
+      })
+    ).subscribe(value => {
+      this.disabledWrite = !value;
     });
   }
 

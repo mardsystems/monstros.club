@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { first, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { first, switchMap, map, catchError } from 'rxjs/operators';
 import { CalculoDeIdade } from '../app.services';
 import { AuthService } from '../auth/auth.service';
 import { SolicitacaoDeCadastroDeMonstro } from './monstros.model';
 import { MonstrosService } from './monstros.service';
+import { merge, of } from 'rxjs';
 
 @Component({
   selector: 'app-monstro-perfil',
@@ -13,13 +14,13 @@ import { MonstrosService } from './monstros.service';
 })
 export class MonstroPerfilComponent implements OnInit {
   loading = true;
+  disabledUpdate: boolean;
   public model: SolicitacaoDeCadastroDeMonstro = {
     isEdit: false
   };
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     public authService: AuthService,
     private monstrosService: MonstrosService,
     private calculoDeIdade: CalculoDeIdade
@@ -31,7 +32,13 @@ export class MonstroPerfilComponent implements OnInit {
         const monstroId = params.get('monstroId');
 
         return this.monstrosService.obtemMonstroObservavel(monstroId);
-      }));
+      }),
+      catchError((error, monstro) => {
+        console.log(error);
+
+        return of(null);
+      })
+    );
 
     monstro$.pipe(
       first()
@@ -40,7 +47,29 @@ export class MonstroPerfilComponent implements OnInit {
     });
 
     monstro$.subscribe(monstro => {
-      this.model = SolicitacaoDeCadastroDeMonstro.toEdit(monstro);
+      if (monstro) {
+        this.model = SolicitacaoDeCadastroDeMonstro.toEdit(monstro);
+      }
+    });
+
+    monstro$.pipe(
+      first(),
+      switchMap(monstro => {
+        if (!monstro) {
+          return of(false);
+        } else {
+          return this.monstrosService.ehVoceMesmo(monstro.id);
+        }
+      }),
+      switchMap(value => {
+        if (value) {
+          return of(true);
+        } else {
+          return this.monstrosService.ehAdministrador();
+        }
+      })
+    ).subscribe(value => {
+      this.disabledUpdate = !value;
     });
   }
 
@@ -65,11 +94,11 @@ export class MonstroPerfilComponent implements OnInit {
     });
   }
 
-  logout() {
-    const result = this.authService.logout();
+  // logout() {
+  //   const result = this.authService.logout();
 
-    result.then(() => {
-      // this.router.navigate(['/']);
-    });
-  }
+  //   result.then(() => {
+  //     // this.router.navigate(['/']);
+  //   });
+  // }
 }

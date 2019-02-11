@@ -31,8 +31,7 @@
     <!-- <mat-icon>favorite</mat-icon>
       <mat-icon>delete</mat-icon> -->
     <span *ngIf="monstroLogado$ | async as monstroLogado">
-      <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="monstroEstaLogado">
+      <a mat-icon-button *ngIf="monstroEstaLogado" [matMenuTriggerFor]="appMenu">
         <img class="avatar" src="{{monstroLogado.photoURL}}" alt="Foto do Monstro">
         <!-- <mat-icon matListIcon>person</mat-icon> -->
         <!-- <p matLine>
@@ -91,3 +90,12 @@
     <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
   </li>
 </ul> -->
+
+<mat-menu #appMenu="matMenu">
+  <!-- <button mat-menu-item>Configurações</button>
+  <button mat-menu-item>Ajuda</button>
+  <mat-divider></mat-divider> -->
+  <button mat-menu-item *ngIf="monstroLogado$ | async as monstroLogado" routerLink="/{{monstroLogado.id}}"
+    routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Meu Perfil</button>
+  <button mat-menu-item (click)="logout()">Sair</button>
+</mat-menu>

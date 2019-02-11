@@ -5,6 +5,7 @@ import { MonstrosService } from './monstros/monstros.service';
 import { Monstro } from './monstros/monstros.model';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { AuthService } from './auth/auth.service';
 // import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -17,6 +18,7 @@ export class AppComponent implements OnInit {
   monstroEstaLogado = true; // TODO: Refatorar.
 
   constructor(
+    private authService: AuthService,
     private dialog: MatDialog,
     private monstrosService: MonstrosService,
   ) {
@@ -37,6 +39,14 @@ export class AppComponent implements OnInit {
 
   sobre() {
     this.dialog.open(SobreComponent);
+  }
+
+  public logout() {
+    const result = this.authService.logout();
+
+    result.then(() => {
+      // this.router.navigate(['/']);
+    });
   }
 
   // getAnimationData(outlet: RouterOutlet) {

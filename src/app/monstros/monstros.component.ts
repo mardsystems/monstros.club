@@ -4,10 +4,10 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { MonstrosService } from './monstros.service';
 import { Monstro } from './monstros.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { SobreComponent } from '../sobre/sobre.component';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-monstros',
@@ -26,8 +26,7 @@ export class MonstrosComponent implements OnDestroy {
   private _mobileQueryListener: () => void;
 
   constructor(
-    private router: Router,
-    public authService: AuthService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private monstrosService: MonstrosService,
     private dialog: MatDialog,
@@ -53,6 +52,11 @@ export class MonstrosComponent implements OnDestroy {
         this.monstroId = params.get('monstroId');
 
         return this.monstrosService.obtemMonstroObservavel(this.monstroId);
+      }),
+      catchError((error, monstro) => {
+        console.log(error);
+
+        return of(null);
       })
     );
   }

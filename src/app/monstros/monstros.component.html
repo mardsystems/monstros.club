@@ -15,7 +15,6 @@
         <mat-icon class="red-icon">favorite</mat-icon>
       </a> -->
 
-
       <a mat-icon-button (click)="sobre()">
         <mat-icon class="red-icon">favorite</mat-icon>
       </a>
@@ -91,13 +90,13 @@
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>
-
-  <mat-menu #appMenu="matMenu">
-    <button mat-menu-item>Configurações</button>
-    <button mat-menu-item>Ajuda</button>
-    <mat-divider></mat-divider>
-    <button mat-menu-item *ngIf="monstroLogado$ | async as monstroLogado" routerLink="/{{monstroLogado.id}}"
-      routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Meu Perfil</button>
-    <button mat-menu-item (click)="logout()">Sair</button>
-  </mat-menu>
 </div>
+
+<mat-menu #appMenu="matMenu">
+  <!-- <button mat-menu-item>Configurações</button>
+  <button mat-menu-item>Ajuda</button>
+  <mat-divider></mat-divider> -->
+  <button mat-menu-item *ngIf="monstroLogado$ | async as monstroLogado" routerLink="/{{monstroLogado.id}}"
+    routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Meu Perfil</button>
+  <button mat-menu-item (click)="logout()">Sair</button>
+</mat-menu>

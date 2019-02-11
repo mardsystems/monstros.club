@@ -75,17 +75,17 @@
 
 <mat-menu #medidaMenu="matMenu" overlapTrigger="false">
   <ng-template matMenuContent let-medida="medidaAtualizadaOuExcluida">
-    <button mat-menu-item (click)="onEdit(medida)">
+    <button mat-menu-item (click)="onEdit(medida)" [disabled]="disabledWrite">
       <mat-icon>edit</mat-icon>
       <span>Editar</span>
     </button>
-    <button mat-menu-item (click)="onDelete(medida)">
+    <button mat-menu-item (click)="onDelete(medida)" [disabled]="disabledWrite">
       <mat-icon>delete</mat-icon>
       <span>Remover</span>
     </button>
   </ng-template>
 </mat-menu>
 
-<button mat-fab class="fab-bottom-right" (click)="onAdd()">
+<button mat-fab class="fab-bottom-right" (click)="onAdd()" [disabled]="disabledWrite">
   <mat-icon>add</mat-icon>
 </button>

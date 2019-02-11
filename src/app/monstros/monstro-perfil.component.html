@@ -57,12 +57,12 @@
 
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button (click)="onSave()">SALVAR</button>
+      <button mat-button (click)="onSave()" [disabled]="disabledUpdate">SALVAR</button>
       <!-- <a mat-button routerLink="/login" routerLinkActive="active">ENTRAR</a> -->
-      <button mat-button (click)="logout()">
-        DESCONECTAR
-        <!-- <mat-icon>exit_to_app</mat-icon> -->
-      </button>
+      <!-- <button mat-button (click)="logout()">
+        DESCONECTAR -->
+      <!-- <mat-icon>exit_to_app</mat-icon> -->
+      <!-- </button> -->
     </mat-card-actions>
   </mat-card>
 </div>
