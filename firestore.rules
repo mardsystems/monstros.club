@@ -17,7 +17,7 @@ service cloud.firestore {
     }
 
     function ehProprietario() {
-      return ('monstros/' + request.auth.uid) == resource.data.monstrosId;
+      return ('monstros/' + request.auth.uid) == resource.data.monstroId;
     }
 
     function ehAdministrador() {
