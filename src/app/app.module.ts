@@ -1,4 +1,5 @@
 import { registerLocaleData } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import localePt from '@angular/common/locales/pt';
 import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
@@ -17,12 +18,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { HomeComponent } from './home/home.component';
+// import { AuthService } from './auth/auth.service';
+import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-nao-encontrado.component';
 import { Monstro } from './monstros/monstros.model';
 // import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SobreComponent } from './sobre/sobre.component';
-import { HttpClientModule } from '@angular/common/http';
-// import { AuthService } from './auth/auth.service';
 
 registerLocaleData(localePt);
 
@@ -30,6 +31,7 @@ registerLocaleData(localePt);
   declarations: [
     AppComponent,
     PageNotFoundComponent,
+    MonstroNaoEncontradoComponent,
     HomeComponent,
     AdminComponent,
     SobreComponent

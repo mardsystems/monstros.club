@@ -1,41 +1,37 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { AuthService } from '../auth/auth.service';
-import { MonstrosService } from './monstros.service';
-import { Monstro } from './monstros.model';
-import { Observable, of } from 'rxjs';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
-import { switchMap, catchError } from 'rxjs/operators';
+import { Monstro } from './monstros.model';
+import { MonstrosService } from './monstros.service';
 
 @Component({
   selector: 'app-monstros',
   templateUrl: './monstros.component.html',
   styleUrls: ['./monstros.component.scss']
 })
-export class MonstrosComponent implements OnDestroy {
+export class MonstrosComponent {
   monstroLogado$: Observable<Monstro>;
   monstroEstaLogado = false;
 
   monstroId: string;
   monstro$: Observable<Monstro>;
 
-  mobileQuery: MediaQueryList;
-
-  private _mobileQueryListener: () => void;
+  desktopQuery: MediaQueryList;
 
   constructor(
-    private authService: AuthService,
+    private dialog: MatDialog,
+    private router: Router,
     private route: ActivatedRoute,
     private monstrosService: MonstrosService,
-    private dialog: MatDialog,
-    private media: MediaMatcher,
-    private changeDetectorRef: ChangeDetectorRef,
+    private authService: AuthService,
+    media: MediaMatcher
   ) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
+    this.desktopQuery = media.matchMedia('(min-width: 600px)');
 
     this.monstroLogado$ = this.monstrosService.monstroLogado$;
 
@@ -54,15 +50,17 @@ export class MonstrosComponent implements OnDestroy {
         return this.monstrosService.obtemMonstroObservavel(this.monstroId);
       }),
       catchError((error, monstro) => {
-        console.log(error);
+        console.log(`Não foi possível montar o ambiente 'Monstros'.\nRazão:\n${error}`);
+
+        this.router.navigateByUrl('404', { skipLocationChange: true });
 
         return of(null);
       })
     );
   }
 
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
+  get isMobile(): boolean {
+    return !this.desktopQuery.matches;
   }
 
   sobre() {

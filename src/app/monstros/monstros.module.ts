@@ -8,13 +8,12 @@ import { IndicadorDeMusculoComponent } from './medidas/indicadores/indicador-de-
 import { MedidaComponent } from './medidas/medida.component';
 import { MedidasComponent } from './medidas/medidas.component';
 import { MedidasService } from './medidas/medidas.service';
-import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-nao-encontrado.component';
 import { MonstroPerfilComponent } from './monstro-perfil.component';
 import { MonstrosMaterialModule } from './monstros-material.module';
 import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
-import { SeriesComponent } from './series/series.component';
 import { RankingComponent } from './ranking/ranking.component';
+import { SeriesComponent } from './series/series.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +21,6 @@ import { RankingComponent } from './ranking/ranking.component';
     MedidaComponent,
     MedidasComponent,
     SeriesComponent,
-    MonstroNaoEncontradoComponent,
     MonstroPerfilComponent,
     RankingComponent,
     IndicadorDeGorduraVisceralComponent,

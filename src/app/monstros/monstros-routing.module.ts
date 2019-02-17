@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
 import { MedidasComponent } from './medidas/medidas.component';
-import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-nao-encontrado.component';
 import { MonstroPerfilComponent } from './monstro-perfil.component';
 import { MonstrosComponent } from './monstros.component';
 import { SeriesComponent } from './series/series.component';
@@ -31,7 +30,6 @@ const monstrosRoutes: Routes = [
   // { path: ':monstro/series', component: SeriesComponent },
   // { path: 'superheroes',  component: HeroListComponent, data: { animation: 'heroes' } },
   // { path: 'superhero/:id', component: HeroDetailComponent, data: { animation: 'hero' } }
-  { path: '**', component: MonstroNaoEncontradoComponent }
 ];
 
 @NgModule({

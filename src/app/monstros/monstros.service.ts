@@ -69,7 +69,7 @@ export class MonstrosService {
               const monstroCadastrado$ = this.obtemMonstroObservavel(user.uid).pipe(
                 first(),
                 catchError((error2, monstro2) => {
-                  console.log(error);
+                  console.log(`Retornando nenhum monstro após o cadastro do mesmo.\nRazão:\n${error2}`);
 
                   return of(null);
                 })
@@ -138,7 +138,7 @@ export class MonstrosService {
         if (value) {
           return this.mapMonstro(value);
         } else {
-          throw new Error('Monstro não encontrado.');
+          throw new Error(`Monstro não encontrado (id: '${id}').`);
         }
       })
     );

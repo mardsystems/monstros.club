@@ -9,8 +9,15 @@ import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
 
 const columnDefinitions = [
-  { def: 'col1', showMobile: true },
-  { def: 'col2', showMobile: false },
+  { showMobile: true, def: 'foto' },
+  { showMobile: true, def: 'data' },
+  { showMobile: true, def: 'peso' },
+  { showMobile: true, def: 'gordura' },
+  { showMobile: false, def: 'gorduraVisceral' },
+  { showMobile: true, def: 'musculo' },
+  { showMobile: false, def: 'idadeCorporal' },
+  { showMobile: false, def: 'metabolismoBasal' },
+  { showMobile: true, def: 'indiceDeMassaCorporal' },
 ];
 
 @Component({
@@ -21,49 +28,22 @@ const columnDefinitions = [
 export class RankingComponent implements OnInit {
   medidas$: Observable<Medida[]>;
   balanca: Balanca;
-  // medidaSelecionada: Medida;
   loading = true;
-  fullDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
-    'idadeCorporal', 'metabolismoBasal', 'indiceDeMassaCorporal'];
-  minimalDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'indiceDeMassaCorporal'];
-  displayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal'];
+
+  // medidaSelecionada: Medida;
+
   dataSource: any;
-
-  monstroId: string;
-  monstroLogado: Monstro;
-
   @ViewChild(MatSort) sort: MatSort;
 
-  mobileQuery: MediaQueryList;
+  desktopQuery: MediaQueryList;
 
   constructor(
-    private dialog: MatDialog,
-    // private monstrosService: MonstrosService,
     private medidasService: MedidasService,
-    changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
-
-    // this.monstrosService.monstroLogado$.subscribe((monstroLogado) => {
-    //   this.monstroLogado = monstroLogado;
-    // });
-
     this.balanca = new OmronHBF214();
-  }
 
-  private _mobileQueryListener(ev: MediaQueryListEvent) {
-    // if (ev.matches) {
-    //   this.fullDisplayedColumns.forEach(element => {
-    //     this.displayedColumns.push(element);
-    //   });
-    // } else {
-    //   this.minimalDisplayedColumns.forEach(element => {
-    //     this.displayedColumns.push(element);
-    //   });
-    // }
+    this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
 
   ngOnInit() {
@@ -71,9 +51,7 @@ export class RankingComponent implements OnInit {
 
     this.medidas$.pipe(
       first()
-    ).subscribe(() => {
-      this.loading = false;
-    });
+    ).subscribe(() => this.loading = false);
 
     this.medidas$.subscribe(medidas => {
       this.dataSource = new MatTableDataSource(medidas);
@@ -82,41 +60,17 @@ export class RankingComponent implements OnInit {
     });
   }
 
+  get isDesktop(): boolean {
+    return this.desktopQuery.matches;
+  }
+
   getDisplayedColumns(): string[] {
-    const isMobile = this.isMobile();
+    const isDesktop = this.isDesktop;
 
-    if (isMobile) {
-      return this.minimalDisplayedColumns;
-    } else {
-      return this.fullDisplayedColumns;
-    }
+    const displayedColumns = columnDefinitions
+      .filter(cd => isDesktop || cd.showMobile)
+      .map(cd => cd.def);
 
-    // return this.columnDefinitions
-    //   .filter(cd => !isMobile || cd.showMobile)
-    //   .map(cd => cd.def);
+    return displayedColumns;
   }
-
-  isMobile(): boolean {
-    return this.mobileQuery.matches;
-  }
-
-  // onAdd(): void {
-  //   const model = SolicitacaoDeCadastroDeMedida.toAdd(this.monstroId);
-
-  //   const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
-
-  //   this.dialog.open(MedidaComponent, config);
-  // }
-
-  // onEdit(medida: Medida): void {
-  //   const model = SolicitacaoDeCadastroDeMedida.toEdit(medida);
-
-  //   const config: MatDialogConfig<SolicitacaoDeCadastroDeMedida> = { data: model };
-
-  //   this.dialog.open(MedidaComponent, config);
-  // }
-
-  // onDelete(medida: Medida): void {
-  //   this.medidasService.excluiMedida(medida.id);
-  // }
 }

@@ -1,9 +1,9 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, NavigationExtras } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { first, switchMap, catchError } from 'rxjs/operators';
+import { catchError, first, switchMap } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
 import { MedidaComponent, MedidaViewModel } from './medida.component';
@@ -28,17 +28,12 @@ const columnDefinitions = [
   templateUrl: './medidas.component.html',
   styleUrls: ['./medidas.component.scss']
 })
-export class MedidasComponent implements OnInit, OnDestroy {
+export class MedidasComponent implements OnInit {
   medidas$: Observable<Medida[]>;
   monstro: Monstro;
   balanca: Balanca;
   loading = true;
   disabledWrite: boolean;
-
-  // fullDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'gorduraVisceral', 'musculo',
-  //   'idadeCorporal', 'metabolismoBasal', 'indiceDeMassaCorporal', 'menu'];
-  // minimalDisplayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'indiceDeMassaCorporal', 'menu'];
-  // displayedColumns: string[] = ['foto', 'data', 'peso', 'gordura', 'musculo', 'idadeCorporal', 'indiceDeMassaCorporal', 'menu'];
 
   dataSource: any;
   @ViewChild(MatSort) sort: MatSort;
@@ -50,24 +45,11 @@ export class MedidasComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private medidasService: MedidasService,
     private monstrosService: MonstrosService,
-    changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
 
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
-
-    // this.desktopQueryListener = () => changeDetectorRef.detectChanges();
-
-    this.desktopQuery.addListener(this.desktopQueryListener);
-  }
-
-  private desktopQueryListener(e: MediaQueryListEvent) {
-    // this.changeDetectorRef.detectChanges();
-  }
-
-  isDesktop(): boolean {
-    return this.desktopQuery.matches;
   }
 
   ngOnInit() {
@@ -78,7 +60,7 @@ export class MedidasComponent implements OnInit, OnDestroy {
         return this.monstrosService.obtemMonstroObservavel(monstroId);
       }),
       catchError((error, monstro) => {
-        console.log(error);
+        console.log(`Não foi possível montar as medidas do monstro.\nRazão:\n${error}`);
 
         return of(null);
       })
@@ -94,9 +76,7 @@ export class MedidasComponent implements OnInit, OnDestroy {
 
     this.medidas$.pipe(
       first()
-    ).subscribe(() => {
-      this.loading = false;
-    });
+    ).subscribe(() => this.loading = false);
 
     this.medidas$.subscribe(medidas => {
       this.dataSource = new MatTableDataSource(medidas);
@@ -121,22 +101,18 @@ export class MedidasComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.desktopQuery.removeListener(this.desktopQueryListener);
+  get isDesktop(): boolean {
+    return this.desktopQuery.matches;
   }
 
   getDisplayedColumns(): string[] {
-    const isDesktop = this.isDesktop();
+    const isDesktop = this.isDesktop;
 
-    // if (isMobile) {
-    //   return this.minimalDisplayedColumns;
-    // } else {
-    //   return this.fullDisplayedColumns;
-    // }
-
-    return columnDefinitions
+    const displayedColumns = columnDefinitions
       .filter(cd => isDesktop || cd.showMobile)
       .map(cd => cd.def);
+
+    return displayedColumns;
   }
 
   onAdd(): void {

@@ -33,8 +33,8 @@ export class MonstroPerfilComponent implements OnInit {
 
         return this.monstrosService.obtemMonstroObservavel(monstroId);
       }),
-      catchError((error, monstro) => {
-        console.log(error);
+      catchError((error) => {
+        console.log(`Não foi possível montar o perfil do monstro.\nRazão:\n${error}`);
 
         return of(null);
       })
