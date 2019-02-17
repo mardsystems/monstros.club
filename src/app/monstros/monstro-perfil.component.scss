@@ -7,19 +7,29 @@
 //   width: 100%;
 // }
 
-.center{
-  width: 75%;
-  margin: 10px auto;
-}
-
 mat-card.monstro {
-  max-width: 320px;
+  width: 100%;
+  margin: 10px auto 12px;
 }
 
 // div[mat-card-avatar].monstro {
 //   background-image: url('../../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg');
 //   background-size: cover;
 // }
+
+@media only screen and (min-width: 600px) {
+  // .container {
+  //   height: 60vh;
+  // }
+
+  mat-card.monstro {
+    width: 75%;
+    margin: 10px auto;
+    max-width: 320px;
+    // width: 50%;
+    // margin: 28px auto 30px;
+  }
+}
 
 #email {
   width: 100%;
