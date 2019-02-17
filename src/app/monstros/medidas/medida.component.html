@@ -1,13 +1,13 @@
 <h1 mat-dialog-title>{{ dialogTitle }}</h1>
 
-<mat-dialog-content class="form-container">
-
+<mat-dialog-content class="container">
   <mat-form-field>
     <input type="text" placeholder="Idade" matInput [ngModel]="model.monstro.idade" readonly>
   </mat-form-field>
 
   <mat-form-field>
-    <input type="text" placeholder="Data" matInput [(ngModel)]="model.data" required [matDatepicker]="dataPicker" #data="ngModel">
+    <input type="text" placeholder="Data" matInput [(ngModel)]="model.data" required [matDatepicker]="dataPicker"
+      #data="ngModel">
     <mat-datepicker-toggle matSuffix [for]="dataPicker"></mat-datepicker-toggle>
     <mat-datepicker #dataPicker></mat-datepicker>
   </mat-form-field>
@@ -53,11 +53,11 @@
     <input type="number" placeholder="IMC" matInput [(ngModel)]="model.indiceDeMassaCorporal" required
       #indiceDeMassaCorporal="ngModel">
   </mat-form-field>
-
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>CANCELAR</button>
-  <button mat-button [disabled]="data.invalid || peso.invalid || gordura.invalid || gorduraVisceral.invalid || musculo.invalid || idadeCorporal.invalid || metabolismoBasal.invalid || indiceDeMassaCorporal.invalid"
+  <button mat-button
+    [disabled]="data.invalid || peso.invalid || gordura.invalid || gorduraVisceral.invalid || musculo.invalid || idadeCorporal.invalid || metabolismoBasal.invalid || indiceDeMassaCorporal.invalid"
     (click)="onSave()">SALVAR</button>
 </mat-dialog-actions>

@@ -1,18 +1,5 @@
-// .app-container {
-//   height: 400px;
-//   overflow: auto;
-// }
-
 table {
   width: 100%;
-}
-
-.foto {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 th.mat-header-cell {
@@ -25,9 +12,9 @@ td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:
   min-width: 50px;
 }
 
-td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
-  // text-align: right;
-}
+// td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+//   text-align: right;
+// }
 
 th.data {
   min-width: 60px;

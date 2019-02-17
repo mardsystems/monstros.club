@@ -1,9 +1,9 @@
-// .form-container {
+// .container {
 //   display: flex;
 //   flex-direction: column;
 // }
 
-// .form-container > * {
+// .container > * {
 //   width: 100%;
 // }
 
@@ -12,14 +12,14 @@
   margin: 10px auto;
 }
 
-.example-card {
+mat-card.monstro {
   max-width: 320px;
 }
 
-.example-header-image {
-  // background-image: url('../../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg');
-  background-size: cover;
-}
+// div[mat-card-avatar].monstro {
+//   background-image: url('../../assets/foto-vQeCUnaAWmzr2YxP5wB1.jpg');
+//   background-size: cover;
+// }
 
 #email {
   width: 100%;
