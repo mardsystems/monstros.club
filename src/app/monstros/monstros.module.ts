@@ -14,6 +14,7 @@ import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { SeriesComponent } from './series/series.component';
+import { RankingsComponent } from './rankings/rankings.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { SeriesComponent } from './series/series.component';
     IndicadorDeGorduraVisceralComponent,
     IndicadorDeGorduraComponent,
     IndicadorDeIndiceDeMassaCorporalComponent,
-    IndicadorDeMusculoComponent
+    IndicadorDeMusculoComponent,
+    RankingsComponent
   ],
   imports: [
     CommonModule,
