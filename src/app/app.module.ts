@@ -19,7 +19,6 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { HomeComponent } from './home/home.component';
 // import { AuthService } from './auth/auth.service';
-import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-nao-encontrado.component';
 import { Monstro } from './monstros/monstros.model';
 // import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -31,7 +30,6 @@ registerLocaleData(localePt);
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-    MonstroNaoEncontradoComponent,
     HomeComponent,
     AdminComponent,
     SobreComponent

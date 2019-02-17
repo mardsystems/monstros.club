@@ -5,7 +5,6 @@ import { AuthGuard } from './auth/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 // import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
-import { MonstroNaoEncontradoComponent } from './monstro-nao-encontrado/monstro-nao-encontrado.component';
 
 const appRoutes: Routes = [
   // {
@@ -14,7 +13,7 @@ const appRoutes: Routes = [
   //   outlet: 'popup'
   // },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
-  { path: '404', component: MonstroNaoEncontradoComponent },
+  { path: '404', component: PageNotFoundComponent },
   {
     path: ':monstroId',
     loadChildren: './monstros/monstros.module#MonstrosModule',
@@ -23,7 +22,7 @@ const appRoutes: Routes = [
   },
   { path: '', component: HomeComponent },
   // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: '**', component: PageNotFoundComponent },
+  // { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
