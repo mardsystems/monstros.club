@@ -3,10 +3,6 @@ body {
   margin: 0;
 }
 
-.basic-container {
-  padding: 30px;
-}
-
 mat-sidenav {
   width: 280px;
 }
@@ -60,6 +56,14 @@ h1.app-name {
   border-radius: 50%;
   object-fit: cover;
 }
+
+.mat-nav-list a.active {
+  background: #ede7f6;
+}
+
+// .active-list-item {
+//   color: #3F51B5 !important;
+// }
 
 .red-icon {
   color: red;

@@ -1,104 +1,108 @@
-<div class="mat-app-background basic-container">
-  <div class="app-container" [class.app-is-mobile]="isMobile">
-    <mat-toolbar color="primary" class="app-toolbar">
-      <button mat-icon-button (click)="snav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <a mat-button routerLink=".." routerLinkActive="active">
-        <h1 class="app-name">Monstros Club</h1>
-      </a>
-      <!-- <span>{{title}}</span> -->
-      <span class="app-fill-remaining-space"></span>
-      <!-- <span>Right</span> -->
-      <!-- <a mat-icon-button
+<div class="app-container" [class.app-is-mobile]="isMobile">
+  <mat-toolbar color="primary" class="app-toolbar">
+    <button mat-icon-button (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <a mat-button routerLink=".." routerLinkActive="active">
+      <h1 class="app-name">Monstros Club</h1>
+    </a>
+    <!-- <span>{{title}}</span> -->
+    <span class="app-fill-remaining-space"></span>
+    <!-- <span>Right</span> -->
+    <!-- <a mat-icon-button
         href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A3URPDNKV85C4&item_name=Monstros.Club&currency_code=BRL&source=url">
         <mat-icon class="red-icon">favorite</mat-icon>
       </a> -->
 
-      <a mat-icon-button (click)="sobre()">
-        <mat-icon class="red-icon">favorite</mat-icon>
-      </a>
-      <!-- <a mat-icon-button routerLink="/login" routerLinkActive="active" *ngIf="!monstroEstaLogado">
+    <a mat-icon-button (click)="sobre()">
+      <mat-icon class="red-icon">favorite</mat-icon>
+    </a>
+    <!-- <a mat-icon-button routerLink="/login" routerLinkActive="active" *ngIf="!monstroEstaLogado">
         <mat-icon>person</mat-icon>
       </a> -->
-      <!-- <a mat-icon-button routerLink="/admin" routerLinkActive="active">
+    <!-- <a mat-icon-button routerLink="/admin" routerLinkActive="active">
           <mat-icon>star_border</mat-icon>
         </a> -->
-      <!-- <mat-icon>favorite</mat-icon>
+    <!-- <mat-icon>favorite</mat-icon>
           <mat-icon>delete</mat-icon> -->
-      <span *ngIf="monstroLogado$ | async as monstroLogado">
-        <a mat-icon-button *ngIf="monstroEstaLogado" [matMenuTriggerFor]="appMenu">
-          <img class="avatar" src="{{monstroLogado.photoURL}}" alt="Foto do Monstro">
-          <!-- <mat-icon matListIcon>person</mat-icon> -->
-          <!-- <p matLine>
+    <span *ngIf="monstroLogado$ | async as monstroLogado">
+      <a mat-icon-button *ngIf="monstroEstaLogado" [matMenuTriggerFor]="appMenu">
+        <img class="avatar" src="{{monstroLogado.photoURL}}" alt="Foto do Monstro">
+        <!-- <mat-icon matListIcon>person</mat-icon> -->
+        <!-- <p matLine>
               <span> Este é o início </span>
               <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
             </p> -->
-        </a>
-        <!-- <button mat-icon-button [matMenuTriggerFor]="appMenu">
+      </a>
+      <!-- <button mat-icon-button [matMenuTriggerFor]="appMenu">
         <mat-icon>more_vert</mat-icon>
       </button> -->
-      </span>
-    </mat-toolbar>
+    </span>
+  </mat-toolbar>
 
-    <mat-sidenav-container class="app-sidenav-container" [style.marginTop.px]="isMobile ? 56 : 0">
-      <mat-sidenav #snav [mode]="isMobile ? 'over' : 'side'" [fixedInViewport]="isMobile" fixedTopGap="56">
-        <mat-nav-list>
-          <!-- <h3 mat-subheader>Monstro</h3> -->
-          <!-- <mat-list-item>
+  <mat-sidenav-container class="app-sidenav-container" [style.marginTop.px]="isMobile ? 56 : 0">
+    <mat-sidenav #snav [mode]="isMobile ? 'over' : 'side'" [fixedInViewport]="isMobile" fixedTopGap="56">
+      <mat-nav-list>
+        <!-- <h3 mat-subheader>Monstro</h3> -->
+        <!-- <mat-list-item>
             <button mat-icon-button>
               <mat-icon>info</mat-icon>
             </button>
             <a matLine href=".">Home</a>
           </mat-list-item> -->
-          <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-            *ngIf="monstro$ | async as monstro">
-            <img matListAvatar src="{{monstro.photoURL}}" alt="Foto do Monstro">
-            <!-- <mat-icon matListIcon>person</mat-icon> -->
-            <h3 matLine>{{ monstro.nome }}</h3>
-            <!-- <button mat-icon-button (click)="logout()">
+        <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+          *ngIf="monstro$ | async as monstro">
+          <img matListAvatar src="{{monstro.photoURL}}" alt="Foto do Monstro">
+          <!-- <mat-icon matListIcon>person</mat-icon> -->
+          <h3 matLine>{{ monstro.nome }}</h3>
+          <!-- <button mat-icon-button (click)="logout()">
               <mat-icon>exit_to_app</mat-icon>
             </button> -->
-            <!-- <p matLine>
+          <!-- <p matLine>
               <span> Este é o início </span>
-              <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
+              <span class="demo-2"> asdfkal ksjd fhlkash djklf haslk df  </span>
             </p> -->
-          </a>
-          <mat-divider></mat-divider>
-          <a mat-list-item routerLink="./series" routerLinkActive="active">
-            <mat-icon matListIcon>fitness_center</mat-icon>
-            <h3 matLine>Séries</h3>
-          </a>
-          <a mat-list-item routerLink="./medidas" routerLinkActive="active">
-            <mat-icon matListIcon>near_me</mat-icon>
-            <h3 matLine>Medidas</h3>
-          </a>
-          <a mat-list-item routerLink="./ranking" routerLinkActive="active">
-            <mat-icon matListIcon>group_work</mat-icon>
-            <h3 matLine>Ranking</h3>
-          </a>
-          <a mat-list-item routerLink="./rankings" routerLinkActive="active">
-            <mat-icon matListIcon>stars</mat-icon>
-            <h3 matLine>Rankings</h3>
-          </a>
-          <!-- <a mat-list-item routerLink="." *ngFor="let nav of fillerNav">{{nav}}</a> -->
-        </mat-nav-list>
-      </mat-sidenav>
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="./series" routerLinkActive="active">
+          <mat-icon matListIcon>fitness_center</mat-icon>
+          <h3 matLine>Séries</h3>
+        </a>
+        <a mat-list-item routerLink="./treinos" routerLinkActive="active">
+          <mat-icon matListIcon>directions_run</mat-icon>
+          <h3 matLine>Treinos</h3>
+        </a>
+        <a mat-list-item routerLink="./medidas" routerLinkActive="active">
+          <mat-icon matListIcon>near_me</mat-icon>
+          <h3 matLine>Medidas</h3>
+        </a>
+        <!-- <a mat-list-item routerLink="./ranking" routerLinkActive="active">
+          <mat-icon matListIcon>group_work</mat-icon>
+          <h3 matLine>Ranking</h3>
+        </a> -->
+        <a mat-list-item routerLink="./rankings" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <mat-icon matListIcon>stars</mat-icon>
+          <h3 matLine>Rankings</h3>
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="./configuracoes" routerLinkActive="active">
+          <mat-icon matListIcon>settings</mat-icon>
+          <h3 matLine>Configurações</h3>
+        </a>
+        <a mat-list-item href="https://github.com/mardsystems/monstros.club/wiki" target="parent">
+          <mat-icon matListIcon>help</mat-icon>
+          <h3 matLine>Ajuda</h3>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
 
-      <mat-sidenav-content>
-        <!-- <app-medidas></app-medidas> -->
-        <router-outlet></router-outlet>
-        <!-- <app-doacao></app-doacao> -->
-        <!-- <p *ngFor="let content of fillerContent">{{content}}</p> -->
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  </div>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>
 
 <mat-menu #appMenu="matMenu">
-  <!-- <button mat-menu-item>Configurações</button>
-  <button mat-menu-item>Ajuda</button>
-  <mat-divider></mat-divider> -->
   <button mat-menu-item *ngIf="monstroLogado$ | async as monstroLogado" routerLink="/{{monstroLogado.id}}"
     routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Meu Perfil</button>
   <button mat-menu-item (click)="logout()">Sair</button>

@@ -8,7 +8,7 @@ import { MonstrosService } from './monstros.service';
 import { merge, of } from 'rxjs';
 
 @Component({
-  selector: 'app-monstro-perfil',
+  selector: 'monstro-perfil',
   templateUrl: './monstro-perfil.component.html',
   styleUrls: ['./monstro-perfil.component.scss']
 })

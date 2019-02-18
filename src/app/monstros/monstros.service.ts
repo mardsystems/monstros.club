@@ -111,10 +111,10 @@ export class MonstrosService {
     );
   }
 
-  obtemMonstrosObservaveisParaExibicao(): Observable<Monstro[]> {
+  obtemMonstrosObservaveisParaAdministracao(): Observable<Monstro[]> {
     const collection = this.db.collection<MonstroDocument>(this.PATH, reference => {
-      return reference;
-      // .orderBy('dataDoUltimoLogin', 'desc');
+      return reference
+        .orderBy('dataDoUltimoLogin', 'desc');
     });
 
     const monstros$ = collection.valueChanges().pipe(

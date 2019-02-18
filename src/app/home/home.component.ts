@@ -1,18 +1,7 @@
-import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
-import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { Monstro } from '../monstros/monstros.model';
+import { Observable } from 'rxjs';
 import { MonstrosService } from '../monstros/monstros.service';
-
-const columnDefinitions = [
-  { showMobile: true, def: 'foto' },
-  { showMobile: true, def: 'nome' },
-  { showMobile: true, def: 'idade' },
-  { showMobile: true, def: 'genero' },
-  { showMobile: true, def: 'altura' },
-];
 
 @Component({
   selector: 'app-home',
@@ -23,51 +12,29 @@ export class HomeComponent implements OnInit {
   loading = true;
   monstroLogado$: Observable<Monstro>;
   monstroEstaLogado = false;
-  monstros$: Observable<Monstro[]>;
-
-  dataSource: any;
-  @ViewChild(MatSort) sort: MatSort;
-
-  desktopQuery: MediaQueryList;
+  ehAdministrador = false;
 
   constructor(
     private monstrosService: MonstrosService,
-    media: MediaMatcher
   ) {
-    this.desktopQuery = media.matchMedia('(min-width: 600px)');
 
     this.monstroLogado$ = this.monstrosService.monstroLogado$;
 
     this.monstroLogado$.subscribe((monstroLogado) => {
+      this.loading = false;
+
       if (monstroLogado) {
         this.monstroEstaLogado = true;
       } else {
         this.monstroEstaLogado = false;
       }
     });
-  }
 
-  ngOnInit() {
-    this.monstros$ = this.monstrosService.obtemMonstrosObservaveisParaExibicao();
-
-    this.monstros$.pipe(
-      first(),
-    ).subscribe(() => this.loading = false);
-
-    this.monstros$.subscribe(monstros => {
-      this.dataSource = new MatTableDataSource(monstros);
-
-      this.dataSource.sort = this.sort;
+    this.monstrosService.ehAdministrador().subscribe((ehAdministrador) => {
+      this.ehAdministrador = ehAdministrador;
     });
   }
 
-  getDisplayedColumns(): string[] {
-    const isDesktop = this.desktopQuery.matches;
-
-    const displayedColumns = columnDefinitions
-      .filter(cd => isDesktop || cd.showMobile)
-      .map(cd => cd.def);
-
-    return displayedColumns;
+  ngOnInit() {
   }
 }

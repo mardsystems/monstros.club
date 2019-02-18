@@ -17,7 +17,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'app-rankings',
+  selector: 'monstros-rankings',
   templateUrl: './rankings.component.html',
   styleUrls: ['./rankings.component.scss']
 })

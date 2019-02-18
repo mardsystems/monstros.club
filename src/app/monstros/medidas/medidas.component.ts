@@ -24,7 +24,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'app-medidas',
+  selector: 'monstros-medidas',
   templateUrl: './medidas.component.html',
   styleUrls: ['./medidas.component.scss']
 })

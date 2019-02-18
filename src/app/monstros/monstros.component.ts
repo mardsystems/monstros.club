@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
+import { StorageService } from '../app.services';
 import { AuthService } from '../auth/auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
 import { Monstro } from './monstros.model';
@@ -29,6 +30,7 @@ export class MonstrosComponent {
     private route: ActivatedRoute,
     private monstrosService: MonstrosService,
     private authService: AuthService,
+    private storageService: StorageService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
@@ -57,6 +59,8 @@ export class MonstrosComponent {
         return of(null);
       })
     );
+
+    // this.snav.
   }
 
   get isMobile(): boolean {

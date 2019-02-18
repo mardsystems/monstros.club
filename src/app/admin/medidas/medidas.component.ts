@@ -1,12 +1,10 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { Balanca, Medida, OmronHBF214 } from '../medidas/medidas.model';
-import { MedidasService } from '../medidas/medidas.service';
-import { Monstro } from '../monstros.model';
-import { MonstrosService } from '../monstros.service';
+import { Balanca, Medida, OmronHBF214 } from '../../monstros/medidas/medidas.model';
+import { MedidasService } from '../../monstros/medidas/medidas.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -21,11 +19,11 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'app-ranking',
-  templateUrl: './ranking.component.html',
-  styleUrls: ['./ranking.component.scss']
+  selector: 'admin-medidas',
+  templateUrl: './medidas.component.html',
+  styleUrls: ['./medidas.component.scss']
 })
-export class RankingComponent implements OnInit {
+export class MedidasComponent implements OnInit {
   medidas$: Observable<Medida[]>;
   balanca: Balanca;
   loading = true;
@@ -47,7 +45,7 @@ export class RankingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.medidas$ = this.medidasService.obtemMedidasObservaveisParaRanking();
+    this.medidas$ = this.medidasService.obtemMedidasObservaveisParaAdministracao();
 
     this.medidas$.pipe(
       first()

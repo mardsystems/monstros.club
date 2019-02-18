@@ -12,7 +12,7 @@ import { MedidasService } from './medidas.service';
 import { Monstro } from '../monstros.model';
 
 @Component({
-  selector: 'app-medida',
+  selector: 'monstros-medida',
   templateUrl: './medida.component.html',
   styleUrls: ['./medida.component.scss']
 })

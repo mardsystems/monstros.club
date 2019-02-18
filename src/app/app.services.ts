@@ -5,6 +5,29 @@ import { first, map } from 'rxjs/operators';
 import { interval, concat, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
+@Injectable({
+  providedIn: 'root'
+})
+export class StorageService {
+  constructor() { }
+
+  get(key: string) {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (e) {
+      console.error('Erro ao pegar dados do localStorage.', e);
+      return null;
+    }
+  }
+  set(key: string, data: any): void {
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch (e) {
+      console.error('Erro ao salvar no localStorage.', e);
+    }
+  }
+}
+
 export class AtualizacaoDisponivel {
   versaoAtual: string;
   versaoDisponivel: string;

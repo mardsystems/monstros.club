@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AdminComponent } from './admin/admin.component';
 import { AuthGuard } from './auth/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -12,7 +11,12 @@ const appRoutes: Routes = [
   //   component: ComposeMessageComponent,
   //   outlet: 'popup'
   // },
-  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  {
+    path: 'admin',
+    loadChildren: './admin/admin.module#AdminModule',
+    canLoad: [AuthGuard]
+  },
+  // { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: '404', component: PageNotFoundComponent },
   {
     path: ':monstroId',
@@ -32,7 +36,7 @@ const appRoutes: Routes = [
       {
         enableTracing: false, // <-- debugging purposes only
         // urlUpdateStrategy: 'deferred' | 'eager',
-        preloadingStrategy: PreloadAllModules // SelectivePreloadingStrategyService
+        // preloadingStrategy: PreloadAllModules // SelectivePreloadingStrategyService
       }
     )
   ],

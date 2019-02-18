@@ -1,0 +1,20 @@
+<div class="container">
+  <h3 class="mat-headline">Actions</h3>
+  <button mat-icon-button (click)="importaMedidas()">
+    <mat-icon>playlist_add</mat-icon>
+  </button>
+
+  <p></p>
+
+  <h3 class="mat-headline">Variables</h3>
+  <p class="mat-body">Session ID: {{ sessionId | async }}</p>
+  <a id="anchor"></a>
+  <p class="mat-body">Token: {{ token | async }}</p>
+
+  <p></p>
+
+  <h3 class="mat-headline">Preloaded Modules</h3>
+  <ul class="mat-body">
+    <li *ngFor="let module of modules">{{ module }}</li>
+  </ul>
+</div>

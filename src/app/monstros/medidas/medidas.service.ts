@@ -20,7 +20,7 @@ export class MedidasService {
     private monstrosService: MonstrosService
   ) { }
 
-  obtemMedidasObservaveisParaRanking(): Observable<Medida[]> {
+  obtemMedidasObservaveisParaAdministracao(): Observable<Medida[]> {
     const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
       return reference
         .orderBy('data', 'desc');

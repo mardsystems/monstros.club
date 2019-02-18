@@ -1,41 +1,66 @@
-import { Component, OnInit } from '@angular/core';
-import { MedidasService } from '../monstros/medidas/medidas.service';
-import { SelectivePreloadingStrategyService } from '../selective-preloading-strategy.service';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { Component } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
+import { Monstro } from '../monstros/monstros.model';
+import { MonstrosService } from '../monstros/monstros.service';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnInit {
-  sessionId: Observable<string>;
-  token: Observable<string>;
-  modules: string[];
+export class AdminComponent {
+  monstroLogado$: Observable<Monstro>;
+  monstroEstaLogado = false;
+
+  monstroId: string;
+  monstro$: Observable<Monstro>;
+
+  desktopQuery: MediaQueryList;
+
+  links = [
+    { title: 'Dashboard', path: '/admin/dashboard', icon: 'dashboard' },
+    { title: 'Monstros', path: '/admin/monstros', icon: 'supervised_user_circle' },
+    { title: 'Medidas', path: '/admin/medidas', icon: 'group_work' },
+  ];
+  activePath: string;
 
   constructor(
-    private route: ActivatedRoute,
-    private preloadStrategy: SelectivePreloadingStrategyService,
-    private medidasService: MedidasService
+    private monstrosService: MonstrosService,
+    private authService: AuthService,
+    private router: Router,
+    media: MediaMatcher
   ) {
-    this.modules = preloadStrategy.preloadedModules;
+    this.desktopQuery = media.matchMedia('(min-width: 600px)');
+
+    this.activePath = this.router.url;
+
+    this.monstroLogado$ = this.monstrosService.monstroLogado$;
+
+    this.monstroLogado$.subscribe((monstroLogado) => {
+      if (monstroLogado) {
+        this.monstroEstaLogado = true;
+      } else {
+        this.monstroEstaLogado = false;
+      }
+    });
+
+    this.monstro$ = this.monstroLogado$;
+
+    // this.snav.
   }
 
-  ngOnInit() {
-    // Capture the session ID if available
-    this.sessionId = this.route.queryParamMap.pipe(
-      map(params => params.get('session_id') || 'None')
-    );
-
-    // Capture the fragment if available
-    this.token = this.route.fragment.pipe(
-      map(fragment => fragment || 'None')
-    );
+  get isMobile(): boolean {
+    return !this.desktopQuery.matches;
   }
 
-  importaMedidas() {
-    this.medidasService.importaMedidas();
+  public logout() {
+    const result = this.authService.logout();
+
+    result.then(() => {
+      // this.router.navigate(['/']);
+    });
   }
 }

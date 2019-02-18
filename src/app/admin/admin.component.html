@@ -1,15 +1,36 @@
-<p>Dashboard</p>
+<mat-toolbar color="accent">
+  <a mat-button routerLink=".">
+    <mat-icon>security</mat-icon>
+    <h1 class="title">Admininstração</h1>
+  </a>
+</mat-toolbar>
 
-Actions
-<button mat-button (click)="importaMedidas()">
-  <mat-icon>playlist_add</mat-icon>
-</button>
+<nav mat-tab-nav-bar>
+  <a mat-tab-link *ngFor="let link of links" [routerLink]="link.path" (click)="activePath = link.path"
+    [active]="activePath == link.path">
+    <mat-icon class="tab">{{link.icon}}</mat-icon>
+    {{link.title}}
+  </a>
+</nav>
 
-<p>Session ID: {{ sessionId | async }}</p>
-<a id="anchor"></a>
-<p>Token: {{ token | async }}</p>
+<!-- <nav mat-tab-nav-bar>
+  <a mat-tab-link *ngFor="let link of links" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+    [active]="rla.isActive">
+    <mat-icon class="tab">{{link.icon}}</mat-icon>
+    {{link.title}}
+  </a>
+  <a mat-tab-link routerLink="./" routerLinkActive #dashboard="routerLinkActive" [active]="dashboard.isActive">
+    <mat-icon class="tab">dashboard</mat-icon>
+    Dashboard
+  </a>
+  <a mat-tab-link routerLink="./monstros" routerLinkActive #monstros="routerLinkActive" [active]="monstros.isActive">
+    <mat-icon class="tab">supervised_user_circle</mat-icon>
+    Monstros
+  </a>
+  <a mat-tab-link routerLink="./medidas" routerLinkActive #medidas="routerLinkActive" [active]="medidas.isActive">
+    <mat-icon class="tab">group_work</mat-icon>
+    Medidas
+  </a>
+</nav> -->
 
-Preloaded Modules
-<ul>
-  <li *ngFor="let module of modules">{{ module }}</li>
-</ul>
+<router-outlet></router-outlet>

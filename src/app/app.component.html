@@ -2,30 +2,31 @@
 <!-- <mat-toolbar color="primary" class="mat-elevation-z2">Medidas</mat-toolbar> -->
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <a mat-button class="title" routerLink="." routerLinkActive="active">
+    <a mat-button class="title" routerLink=".">
       <h1>Monstros Club</h1>
     </a>
-  <!-- </mat-toolbar-row> -->
-  <!--
+    <!-- </mat-toolbar-row> -->
+    <!--
     <mat-toolbar-row>
       <span>Second Line</span>
       <span class="space"></span>
       <mat-icon>verified_user</mat-icon>
     </mat-toolbar-row> -->
 
-  <!-- <mat-toolbar-row> -->
+    <!-- <mat-toolbar-row> -->
     <!-- <span>Placar</span> -->
     <span class="space"></span>
-    <!-- <a mat-icon-button routerLink="." routerLinkActive="active">
+    <!-- <a mat-icon-button routerLink=".">
       <img class="avatar" src="../assets/icons/icon-72x72.png" alt="Logo">
     </a> -->
     <a mat-icon-button (click)="sobre()">
       <mat-icon class="red-icon">favorite</mat-icon>
     </a>
-    <a mat-icon-button routerLink="/login" routerLinkActive="active" *ngIf="!monstroEstaLogado">
+    <!-- <a [routerLink]="[{ outlets: { popup: ['compose'] } }]">Contato</a> -->
+    <a mat-icon-button routerLink="/login" *ngIf="!monstroEstaLogado">
       <mat-icon>person</mat-icon>
     </a>
-    <!-- <a mat-icon-button routerLink="/admin" routerLinkActive="active">
+    <!-- <a mat-icon-button routerLink="/admin">
       <mat-icon>star_border</mat-icon>
     </a> -->
     <!-- <mat-icon>favorite</mat-icon>
@@ -39,15 +40,15 @@
           <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
         </p> -->
       </a>
-      <!-- <a mat-icon-button routerLink="/{{monstroLogado.id}}" routerLinkActive="active"
+      <!-- <a mat-icon-button routerLink="/{{monstroLogado.id}}"
         [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroEstaLogado"> -->
-        <!-- <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro"> -->
-        <!-- <mat-icon matListIcon>person</mat-icon> -->
-        <!-- <h3 matLine>{{ monstroLogado.email }}</h3> -->
-        <!-- <button mat-icon-button (click)="logout()">
+      <!-- <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro"> -->
+      <!-- <mat-icon matListIcon>person</mat-icon> -->
+      <!-- <h3 matLine>{{ monstroLogado.email }}</h3> -->
+      <!-- <button mat-icon-button (click)="logout()">
               <mat-icon>exit_to_app</mat-icon>
             </button> -->
-        <!-- <p matLine>
+      <!-- <p matLine>
                 <span> Este é o início </span>
                 <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
               </p> -->
@@ -56,16 +57,7 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<!-- <h1 class="title">Monstros Club</h1>
-<nav>
-  <a routerLink="." routerLinkActive="active">Ranking</a>
-  <a routerLink="/admin" routerLinkActive="active">Admin</a>
-  <a routerLink="/login" routerLinkActive="active">Login</a>
-  <a [routerLink]="[{ outlets: { popup: ['compose'] } }]">Contato</a>
-</nav> -->
-<div>
-  <router-outlet #routerOutlet="outlet"></router-outlet>
-</div>
+<router-outlet #routerOutlet="outlet"></router-outlet>
 <!-- <div [@routeAnimation]="getAnimationData(routerOutlet)">
   <router-outlet #routerOutlet="outlet"></router-outlet>
 </div> -->
@@ -95,7 +87,8 @@
   <!-- <button mat-menu-item>Configurações</button>
   <button mat-menu-item>Ajuda</button>
   <mat-divider></mat-divider> -->
-  <button mat-menu-item *ngIf="monstroLogado$ | async as monstroLogado" routerLink="/{{monstroLogado.id}}"
-    routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Meu Perfil</button>
+  <button mat-menu-item *ngIf="monstroLogado$ | async as monstroLogado" routerLink="/{{monstroLogado.id}}">
+    Meu Perfil
+  </button>
   <button mat-menu-item (click)="logout()">Sair</button>
 </mat-menu>

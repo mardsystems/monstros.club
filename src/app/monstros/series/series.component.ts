@@ -6,7 +6,7 @@ import { tap, delay } from 'rxjs/operators';
 import { Serie } from './series.model';
 
 @Component({
-  selector: 'app-series',
+  selector: 'monstros-series',
   templateUrl: './series.component.html',
   styleUrls: ['./series.component.scss']
 })

@@ -12,7 +12,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { AdminComponent } from './admin/admin.component';
 import { AppMaterialModule } from './app-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -31,8 +30,7 @@ registerLocaleData(localePt);
     AppComponent,
     PageNotFoundComponent,
     HomeComponent,
-    AdminComponent,
-    SobreComponent
+    SobreComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,13 +43,17 @@ registerLocaleData(localePt);
     AngularFireAuthModule,
     AppRoutingModule,
     HttpClientModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],
   entryComponents: [
-    SobreComponent
+    SobreComponent,
+    // IndicadorDeGorduraVisceralComponent,
+    // IndicadorDeGorduraComponent,
+    // IndicadorDeIndiceDeMassaCorporalComponent,
+    // IndicadorDeMusculoComponent
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },
