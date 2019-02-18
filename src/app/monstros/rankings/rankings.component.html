@@ -11,9 +11,29 @@
   <ng-container matColumnDef="foto">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let ranking">
-      <img class="foto" src="{{ranking.proprietario.photoURL}}" alt="{{ranking.monstroId}}">
+      <img class="foto" src="{{ranking.proprietario.photoURL}}" alt="{{ranking.proprietarioId}}">
     </td>
   </ng-container>
+
+  <ng-container matColumnDef="nome">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="nome"> Nome </th>
+    <td mat-cell *matCellDef="let ranking"> {{ranking.nome}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="participantes">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="participantes"> Participantes </th>
+    <td mat-cell *matCellDef="let ranking">
+      <span>{{ranking.participantes[0].participante.nome}}</span>
+      <span *ngFor="let participacao of ranking.participantes">
+        {{participacao.nome}}
+      </span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="feitoCom">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="feitoCom"> Feito Com </th>
+      <td mat-cell *matCellDef="let ranking"> {{ranking.feitoCom}} </td>
+    </ng-container>
 
   <ng-container matColumnDef="dataDeCriacao">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="dataDeCriacao"> Data de Criação </th>
@@ -49,6 +69,6 @@
   </ng-template>
 </mat-menu>
 
-<!-- <button mat-fab class="fab-bottom-right" (click)="onAdd()" [disabled]="disabledWrite">
+<button mat-fab class="fab-bottom-right" (click)="onAdd()" [disabled]="disabledWrite">
   <mat-icon>add</mat-icon>
-</button> -->
+</button>

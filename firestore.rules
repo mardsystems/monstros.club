@@ -32,14 +32,19 @@ service cloud.firestore {
       allow read: if true;
     }
 
+    match /monstros/{monstro} {
+      allow update, delete: if (ehVoceMesmo() && naoEstaTentandoSerOAdministrador()) || ehAdministrador();
+      allow create: if (estaAutenticado() && naoEstaTentandoSerOAdministrador());
+    }
+
     match /medidas/{medida} {
       allow create: if ehSeuRecurso() || ehAdministrador();
       allow update, delete: if ehProprietario() || ehAdministrador();
     }
 
-    match /monstros/{monstro} {
-      allow update, delete: if (ehVoceMesmo() && naoEstaTentandoSerOAdministrador()) || ehAdministrador();
-      allow create: if (estaAutenticado() && naoEstaTentandoSerOAdministrador());
+    match /rankings/{ranking} {
+      allow create: if ehSeuRecurso() || ehAdministrador();
+      allow update, delete: if ehProprietario() || ehAdministrador();
     }
   }
 }

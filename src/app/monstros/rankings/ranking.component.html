@@ -1,3 +1,29 @@
-<p>
-  ranking works!
-</p>
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+
+<mat-dialog-content class="container">
+  <mat-form-field>
+    <input type="text" placeholder="Proprietário" matInput [ngModel]="model.proprietario.nome" readonly>
+  </mat-form-field>
+
+  <mat-form-field id="nome">
+    <input type="text" placeholder="Nome" matInput [(ngModel)]="model.nome" required #nome="ngModel">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="text" placeholder="Data de Criação" matInput [ngModel]="model.dataDeCriacao" readonly>
+  </mat-form-field>
+
+  <mat-form-field hideRequiredMarker>
+    <mat-select placeholder="Feito Com" [(ngModel)]="model.feitoCom" required name="feitoCom">
+      <mat-option value="Balança Comum">Balança Comum</mat-option>
+      <mat-option value="Omron HBF-214">Omron HBF-214</mat-option>
+      <mat-option value="Omron HBF-514C">Omron HBF-514C</mat-option>
+      <mat-option value="Feminino">Balança Personalizada</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>CANCELAR</button>
+  <button mat-button [disabled]="nome.invalid" (click)="onSave()">SALVAR</button>
+</mat-dialog-actions>

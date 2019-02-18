@@ -12,6 +12,7 @@ const columnDefinitions = [
   { showMobile: true, def: 'idade' },
   { showMobile: true, def: 'genero' },
   { showMobile: true, def: 'altura' },
+  { showMobile: false, def: 'dataDoUltimoLogin' },
 ];
 
 @Component({
@@ -32,7 +33,7 @@ export class MonstrosComponent implements OnInit {
     private monstrosService: MonstrosService,
     media: MediaMatcher
   ) {
-    this.desktopQuery = media.matchMedia('(min-width: 600px)');
+    this.desktopQuery = media.matchMedia('(min-width: 750px)');
   }
 
   ngOnInit() {
@@ -47,6 +48,10 @@ export class MonstrosComponent implements OnInit {
 
       this.dataSource.sort = this.sort;
     });
+  }
+
+  get isDesktop(): boolean {
+    return this.desktopQuery.matches;
   }
 
   getDisplayedColumns(): string[] {

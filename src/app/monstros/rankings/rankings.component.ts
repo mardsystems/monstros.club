@@ -4,14 +4,18 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
+import { Balanca, OmronHBF214 } from '../medidas/medidas.model';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
+import { RankingComponent, RankingViewModel } from './ranking.component';
 import { Ranking } from './rankings.model';
 import { RankingsService } from './rankings.service';
-import { Balanca, OmronHBF214 } from '../medidas/medidas.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
+  { showMobile: true, def: 'nome' },
+  { showMobile: true, def: 'participantes' },
+  { showMobile: false, def: 'feitoCom' },
   { showMobile: true, def: 'dataDeCriacao' },
   { showMobile: true, def: 'menu' },
 ];
@@ -108,21 +112,21 @@ export class RankingsComponent implements OnInit {
     return displayedColumns;
   }
 
-  // onAdd(): void {
-  //   const model = RankingViewModel.toAddViewModel(this.monstro);
+  onAdd(): void {
+    const model = RankingViewModel.toAddViewModel(this.monstro);
 
-  //   const config: MatDialogConfig<RankingViewModel> = { data: model };
+    const config: MatDialogConfig<RankingViewModel> = { data: model };
 
-  //   this.dialog.open(RankingComponent, config);
-  // }
+    this.dialog.open(RankingComponent, config);
+  }
 
-  // onEdit(ranking: Ranking): void {
-  //   const model = RankingViewModel.toEditViewModel(this.monstro, ranking);
+  onEdit(ranking: Ranking): void {
+    const model = RankingViewModel.toEditViewModel(this.monstro, ranking);
 
-  //   const config: MatDialogConfig<RankingViewModel> = { data: model };
+    const config: MatDialogConfig<RankingViewModel> = { data: model };
 
-  //   this.dialog.open(RankingComponent, config);
-  // }
+    this.dialog.open(RankingComponent, config);
+  }
 
   onDelete(ranking: Ranking): void {
     this.rankingsService.excluiRanking(ranking.id);

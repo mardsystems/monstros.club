@@ -4,9 +4,9 @@ import * as firebase from 'firebase/app';
 import * as moment from 'moment';
 import { Observable, combineLatest } from 'rxjs';
 import { first, map, mergeMap, merge, switchMap } from 'rxjs/operators';
-import { Monstro } from '../monstros.model';
+import { Monstro, Genero } from '../monstros.model';
 import { MonstrosService, MonstroDocument } from '../monstros.service';
-import { Ranking, SolicitacaoDeCadastroDeRanking } from './rankings.model';
+import { Ranking, SolicitacaoDeCadastroDeRanking, Participacao } from './rankings.model';
 import * as _ from 'lodash';
 import { TipoDeBalanca } from '../medidas/medidas.model';
 
@@ -30,9 +30,9 @@ export class RankingsService {
     const rankings$ = collection.valueChanges().pipe(
       switchMap(values => {
         const arrayDeRankingsObservaveis = values
-          .filter(value => value.monstroId !== 'monstros/OJUFB66yLBwIOE2hk8hs')
+          // .filter(value => value.monstroId !== 'monstros/OJUFB66yLBwIOE2hk8hs')
           .map((value) => {
-            const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
+            const monstroId = value.monstroId.id;
 
             const rankingComMonstro$ = this.monstrosService.obtemMonstroObservavel(monstroId).pipe(
               map(monstro => this.mapRanking(value, monstro))
@@ -53,10 +53,13 @@ export class RankingsService {
   }
 
   obtemRankingsObservaveisParaExibicao(monstro: Monstro): Observable<Ranking[]> {
+    const monstroRef = this.monstrosService.obtemMonstroRef(monstro.id);
+
     const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
       return reference
-        .where('monstroId', '==', `monstros/${monstro.id}`);
-        // .orderBy('data', 'desc');
+        .where('monstroId', '==', monstroRef);
+      // .where('monstroId', '==', `/monstros/${monstro.id}`);
+      // .orderBy('data', 'desc');
     });
 
     const rankings$ = collection.valueChanges().pipe(
@@ -87,16 +90,31 @@ export class RankingsService {
   }
 
   private mapRanking(value: RankingDocument, monstro: Monstro): Ranking {
-    const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
+    const monstroId = value.monstroId.id;
 
-    const CONST_TIMESTAMP_FALSO = 0;
+    const CONST_TIMESTAMP_FALSO = 1;
+
+    const participantes = value.participantes.map(participacaoDoc => {
+      const participanteFake = monstro;
+
+      const participacao = new Participacao(
+        participanteFake,
+        participacaoDoc.desde.toDate(),
+        participacaoDoc.ehAdministrador
+      );
+
+      return participacao;
+    });
 
     return new Ranking(
       value.id,
+      value.nome,
       monstro,
       monstroId,
       value.feitoCom as TipoDeBalanca,
-      CONST_TIMESTAMP_FALSO
+      CONST_TIMESTAMP_FALSO,
+      value.dataDeCriacao.toDate(),
+      participantes
     );
   }
 
@@ -106,12 +124,12 @@ export class RankingsService {
     const collection = this.db.collection<RankingDocument>(this.PATH, reference =>
       reference
         .where('monstroId', '==', idAntigo)
-        // .orderBy('data', 'desc')
+      // .orderBy('data', 'desc')
     );
 
     collection.valueChanges().subscribe(rankings => {
       rankings.forEach(ranking => {
-        ranking.monstroId = 'monstros/2MvVXS8931bRukYSnGCJZo98BrH3';
+        // ranking.monstroId = 'monstros/2MvVXS8931bRukYSnGCJZo98BrH3';
 
         const document = collection.doc<RankingDocument>(ranking.id);
 
@@ -127,6 +145,7 @@ export class RankingsService {
 
         const ranking = new Ranking(
           rankingId,
+          solicitacao.nome,
           monstro,
           solicitacao.proprietarioId,
           solicitacao.feitoCom as TipoDeBalanca
@@ -154,7 +173,7 @@ export class RankingsService {
   atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.obtemRankingObservavel(rankingId).pipe(first()).subscribe(ranking => {
-        // ranking.defineData(solicitacao.data.toDate());
+        ranking.defineNome(solicitacao.nome);
 
         const result = this.update(ranking);
 
@@ -176,13 +195,27 @@ export class RankingsService {
   }
 
   private mapTo(ranking: Ranking): RankingDocument {
+    const monstroRef = this.monstrosService.obtemMonstroRef(ranking.proprietarioId);
+
     const newDocument: RankingDocument = {
       id: ranking.id,
+      nome: ranking.nome,
       // monstroId: `monstros/${ranking.monstro.id}`,
-      monstroId: `monstros/${ranking.proprietarioId}`,
+      // monstroId: `monstros/${ranking.proprietarioId}`,
+      monstroId: monstroRef,
       dataDeCriacao: firebase.firestore.Timestamp.fromDate(ranking.dataDeCriacao),
       feitoCom: ranking.feitoCom,
-      participantes: []
+      participantes: ranking.participantes.map(participacao => {
+        const participanteRef = this.monstrosService.obtemMonstroRef(participacao.participante.id);
+
+        const participacaoDocument: ParticipacaoNoRankingDocument = {
+          participanteId: participanteRef,
+          desde: firebase.firestore.Timestamp.fromDate(participacao.desde),
+          ehAdministrador: participacao.ehAdministrador
+        };
+
+        return participacaoDocument;
+      })
     };
 
     return newDocument;
@@ -201,15 +234,16 @@ export class RankingsService {
 
 interface RankingDocument {
   id: string;
-  monstroId: string;
+  nome: string;
+  monstroId: firebase.firestore.DocumentReference;
   dataDeCriacao: firebase.firestore.Timestamp;
   feitoCom: string;
   participantes: ParticipacaoNoRankingDocument[];
 }
 
 interface ParticipacaoNoRankingDocument {
-  monstroId: string;
-  rankingId: string;
+  participanteId: firebase.firestore.DocumentReference;
+  // rankingId: firebase.firestore.DocumentReference;
   desde: firebase.firestore.Timestamp;
   ehAdministrador: boolean;
 }

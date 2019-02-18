@@ -32,6 +32,12 @@
       <td mat-cell *matCellDef="let monstro"> {{monstro.altura}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="dataDoUltimoLogin">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="dataDoUltimoLogin"> Data do Último Login </th>
+      <td mat-cell *matCellDef="let monstro"> {{monstro.dataDoUltimoLogin | date:'dd/MM/yyyy hh:mm:ss' | uppercase}}
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="this.getDisplayedColumns(); sticky: true;"></tr>
     <tr mat-row *matRowDef="let row; columns: this.getDisplayedColumns();"></tr>
   </table>

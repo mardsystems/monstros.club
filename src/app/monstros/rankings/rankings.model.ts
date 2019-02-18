@@ -3,22 +3,36 @@ import * as moment from 'moment';
 import { TipoDeBalanca } from '../medidas/medidas.model';
 
 export class Ranking {
-  private _dataDeCriacao: Date;
-  private _participantes: Monstro[];
+  private _participantes: Participacao[];
 
   public constructor(
     private _id: string,
+    private _nome: string,
     private _proprietario: Monstro,
     private _proprietarioId: string,
     private _feitoCom: TipoDeBalanca,
-    private _timestamp?: number
+    private _timestamp?: number,
+    private _dataDeCriacao?: Date,
+    participantes?: Participacao[]
   ) {
-    if (!_timestamp) {
-      this._dataDeCriacao = new Date(Date.now());
+    if (_timestamp) {
+      this._participantes = participantes;
+    } else {
+      const agora = new Date(Date.now());
+
+      this._dataDeCriacao = agora;
+
+      const ehAdministrador = true;
+
+      this._participantes = [];
+
+      this.adicionaParticipante(this._proprietario, agora, ehAdministrador);
     }
   }
 
   public get id() { return this._id; }
+
+  public get nome() { return this._nome; }
 
   public get proprietario() { return this._proprietario; }
 
@@ -32,26 +46,70 @@ export class Ranking {
 
   public get timestamp() { return this._timestamp; }
 
-  public adicionaParticipante(participante: Monstro) {
-    this._participantes.push(participante);
+  public defineNome(nome: string) {
+    this._nome = nome;
+  }
+
+  public adicionaParticipante(participante: Monstro, desde: Date, ehAdministrador: boolean) {
+    const participacao = new Participacao(
+      participante,
+      desde,
+      ehAdministrador
+    );
+
+    this._participantes.push(participacao);
+  }
+}
+
+export class Participacao {
+  public constructor(
+    // private _ranking: Ranking,
+    private _participante: Monstro,
+    private _desde: Date,
+    private _ehAdministrador: boolean,
+    private _timestamp?: number
+  ) {
+    if (!_timestamp) {
+      this._desde = new Date(Date.now());
+    }
+  }
+
+  // public get ranking() { return this._ranking; }
+
+  public get participante() { return this._participante; }
+
+  public get desde() { return this._desde; }
+
+  public get ehAdministrador() { return this._ehAdministrador; }
+
+  public get timestamp() { return this._timestamp; }
+
+  public defineComoAdministrador(ehAdministrador: boolean) {
+    this._ehAdministrador = ehAdministrador;
   }
 }
 
 export class SolicitacaoDeCadastroDeRanking {
+  nome: string;
   proprietarioId: string;
+  dataDeCriacao: moment.Moment;
   feitoCom: TipoDeBalanca;
 
-  static toAdd(monstroId: string): SolicitacaoDeCadastroDeRanking {
+  static toAdd(proprietarioId: string): SolicitacaoDeCadastroDeRanking {
     return {
-      proprietarioId: monstroId,
+      nome: null,
+      proprietarioId: proprietarioId,
+      dataDeCriacao: moment(new Date(Date.now())),
       feitoCom: TipoDeBalanca.OmronHBF214,
     };
   }
 
-  static toEdit(medida: Ranking): SolicitacaoDeCadastroDeRanking {
+  static toEdit(ranking: Ranking): SolicitacaoDeCadastroDeRanking {
     return {
-      proprietarioId: medida.proprietarioId,
-      feitoCom: medida.feitoCom,
+      nome: ranking.nome,
+      proprietarioId: ranking.proprietarioId,
+      dataDeCriacao: moment(ranking.dataDeCriacao),
+      feitoCom: ranking.feitoCom,
     };
   }
 }

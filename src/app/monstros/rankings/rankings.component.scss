@@ -25,8 +25,20 @@ th.mat-header-cell:first-of-type {
 //   text-align: right;
 // }
 
-th.data {
-  min-width: 60px;
+th.nome {
+  min-width: 100px;
+}
+
+th.participantes {
+  min-width: 120px;
+}
+
+th.feitoCom {
+  min-width: 100px;
+}
+
+th.dataDeCriacao {
+  min-width: 100px;
 }
 
 td.mat-cell:last-of-type,

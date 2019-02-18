@@ -1,6 +1,6 @@
-# Monstros.Club
+# Monstros Club
 
-Monstros.Club é uma aplicação que permite os monstros cadastrarem suas medidas (para monitoramento da saúde) e executar suas séries (previamente cadastradas).
+Monstros Club é uma aplicação que permite os monstros cadastrarem suas medidas (para monitoramento da saúde) e executar suas séries (previamente cadastradas).
 
 # Funcionalidades
 
@@ -28,6 +28,25 @@ A execução de série é a melhor.
 
 ## Terceira versão
 ![monstros.club-domínio-3](doc/monstros.club-domínio-3.png)
+
+## Configurar o ambiente de desenvolvimento
+* npm install -g angular/cli
+
+* git clone https://github.com/mardsystems/monstros.club.git
+* cd monstros.club
+* npm install
+
+* ng serve -o
+
+## Publicação
+* npm install -g firebase-tools
+
+* firebase login
+* firebase init
+* firebase deploy
+
+## Compilação e Publicação
+* npm run deploy
 
 ## Development server
 
