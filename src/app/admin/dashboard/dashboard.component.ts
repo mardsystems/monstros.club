@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { StorageService } from 'src/app/app.services';
 import { MedidasService } from 'src/app/monstros/medidas/medidas.service';
 import { SelectivePreloadingStrategyService } from 'src/app/selective-preloading-strategy.service';
 
@@ -18,7 +17,6 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private storageService: StorageService,
     private medidasService: MedidasService,
     preloadStrategy: SelectivePreloadingStrategyService
   ) {

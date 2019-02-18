@@ -59,8 +59,24 @@ export class MonstrosComponent {
         return of(null);
       })
     );
+  }
 
-    // this.snav.
+  // private _sidenavOpened: boolean;
+
+  get sidenavOpened(): boolean {
+    const sidenavOpened = this.storageService.get('sidenavOpened');
+
+    return sidenavOpened;
+
+    // return this._sidenavOpened;
+  }
+
+  set sidenavOpened(value: boolean) {
+    // const myData = { foo: 'bar' };
+
+    this.storageService.set('sidenavOpened', value);
+
+    // this._sidenavOpened = value;
   }
 
   get isMobile(): boolean {
