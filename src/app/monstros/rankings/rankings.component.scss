@@ -1,3 +1,10 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 12em;
+}
+
 table {
   width: 100%;
 }

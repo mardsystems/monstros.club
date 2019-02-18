@@ -7,6 +7,7 @@ import { MonstroPerfilComponent } from './monstro-perfil.component';
 import { MonstrosComponent } from './monstros.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesComponent } from './series/series.component';
+import { TreinosComponent } from './treinos/treinos.component';
 
 const monstrosRoutes: Routes = [
   // { path: 'heroes', redirectTo: '/superheroes' },
@@ -21,9 +22,8 @@ const monstrosRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
           { path: 'series', component: SeriesComponent },
-          // { path: 'treinos', component: TreinosComponent },
+          { path: 'treinos', component: TreinosComponent },
           { path: 'medidas', component: MedidasComponent },
-          // { path: 'ranking', component: RankingComponent },
           { path: 'rankings', component: RankingsComponent },
           // { path: 'rankings/:rankingId', component: RankingComponent },
           { path: 'configuracoes', component: ConfiguracoesComponent },

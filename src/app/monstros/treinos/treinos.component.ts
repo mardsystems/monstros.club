@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
-import { Serie } from './series.model';
+import { Treino } from './treinos.model';
 
 @Component({
-  selector: 'monstros-series',
-  templateUrl: './series.component.html',
-  styleUrls: ['./series.component.scss']
+  selector: 'monstros-treinos',
+  templateUrl: './treinos.component.html',
+  styleUrls: ['./treinos.component.scss']
 })
-export class SeriesComponent implements OnInit {
-  series$: Observable<Serie[]>;
+export class TreinosComponent implements OnInit {
+  series$: Observable<Treino[]>;
   loading = false;
 
   constructor() { }

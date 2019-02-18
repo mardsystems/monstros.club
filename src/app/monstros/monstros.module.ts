@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AppCommonModule } from '../app-common.module';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { MedidaComponent } from './medidas/medida.component';
 import { MedidasComponent } from './medidas/medidas.component';
@@ -9,18 +10,19 @@ import { MonstroPerfilComponent } from './monstro-perfil.component';
 import { MonstrosMaterialModule } from './monstros-material.module';
 import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
+import { RankingComponent } from './rankings/ranking.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesComponent } from './series/series.component';
-import { RankingComponent } from './rankings/ranking.component';
-import { AppCommonModule } from '../app-common.module';
+import { TreinosComponent } from './treinos/treinos.component';
 
 @NgModule({
   declarations: [
     MonstrosComponent,
+    MonstroPerfilComponent,
+    SeriesComponent,
+    TreinosComponent,
     MedidaComponent,
     MedidasComponent,
-    SeriesComponent,
-    MonstroPerfilComponent,
     RankingComponent,
     RankingsComponent,
     ConfiguracoesComponent,

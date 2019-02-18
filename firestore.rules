@@ -16,6 +16,10 @@ service cloud.firestore {
       return !(request.resource.data.admin == true);
     }
 
+    function ehSeuRecurso() {
+      return ('monstros/' + request.auth.uid) == request.resource.data.monstroId;
+    }
+
     function ehProprietario() {
       return ('monstros/' + request.auth.uid) == resource.data.monstroId;
     }
@@ -29,7 +33,8 @@ service cloud.firestore {
     }
 
     match /medidas/{medida} {
-      allow create, update, delete: if ehProprietario() || ehAdministrador();
+      allow create: if ehSeuRecurso() || ehAdministrador();
+      allow update, delete: if ehProprietario() || ehAdministrador();
     }
 
     match /monstros/{monstro} {
