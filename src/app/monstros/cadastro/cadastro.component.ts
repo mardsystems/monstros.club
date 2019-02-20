@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { first, switchMap, map, catchError } from 'rxjs/operators';
-import { CalculoDeIdade } from '../app.services';
-import { AuthService } from '../auth/auth.service';
-import { SolicitacaoDeCadastroDeMonstro } from './monstros.model';
-import { MonstrosService } from './monstros.service';
+import { CalculoDeIdade } from '../../app.services';
+import { AuthService } from '../../auth/auth.service';
+import { SolicitacaoDeCadastroDeMonstro } from '../monstros.model';
+import { MonstrosService } from '../monstros.service';
 import { merge, of } from 'rxjs';
 
 @Component({
-  selector: 'monstro-perfil',
-  templateUrl: './monstro-perfil.component.html',
-  styleUrls: ['./monstro-perfil.component.scss']
+  selector: 'monstros-cadastro',
+  templateUrl: './cadastro.component.html',
+  styleUrls: ['./cadastro.component.scss']
 })
-export class MonstroPerfilComponent implements OnInit {
+export class CadastroComponent implements OnInit {
   loading = true;
   disabledUpdate: boolean;
   public model: SolicitacaoDeCadastroDeMonstro = {

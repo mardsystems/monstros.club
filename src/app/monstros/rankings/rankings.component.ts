@@ -7,7 +7,7 @@ import { catchError, first, switchMap } from 'rxjs/operators';
 import { Balanca, OmronHBF214 } from '../medidas/medidas.model';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
-import { RankingComponent, RankingViewModel } from './ranking.component';
+import { CadastroComponent, RankingViewModel } from './cadastro/cadastro.component';
 import { Ranking } from './rankings.model';
 import { RankingsService } from './rankings.service';
 
@@ -117,7 +117,7 @@ export class RankingsComponent implements OnInit {
 
     const config: MatDialogConfig<RankingViewModel> = { data: model };
 
-    this.dialog.open(RankingComponent, config);
+    this.dialog.open(CadastroComponent, config);
   }
 
   onEdit(ranking: Ranking): void {
@@ -125,7 +125,7 @@ export class RankingsComponent implements OnInit {
 
     const config: MatDialogConfig<RankingViewModel> = { data: model };
 
-    this.dialog.open(RankingComponent, config);
+    this.dialog.open(CadastroComponent, config);
   }
 
   onDelete(ranking: Ranking): void {

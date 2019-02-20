@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
-import { MedidaComponent, MedidaViewModel } from './medida.component';
+import { CadastroComponent, CadastroDeMedidaViewModel } from './cadastro/cadastro.component';
 import { Balanca, Medida, OmronHBF214 } from './medidas.model';
 import { MedidasService } from './medidas.service';
 
@@ -116,19 +116,19 @@ export class MedidasComponent implements OnInit {
   }
 
   onAdd(): void {
-    const model = MedidaViewModel.toAddViewModel(this.monstro);
+    const model = CadastroDeMedidaViewModel.toAddViewModel(this.monstro);
 
-    const config: MatDialogConfig<MedidaViewModel> = { data: model };
+    const config: MatDialogConfig<CadastroDeMedidaViewModel> = { data: model };
 
-    this.dialog.open(MedidaComponent, config);
+    this.dialog.open(CadastroComponent, config);
   }
 
   onEdit(medida: Medida): void {
-    const model = MedidaViewModel.toEditViewModel(this.monstro, medida);
+    const model = CadastroDeMedidaViewModel.toEditViewModel(this.monstro, medida);
 
-    const config: MatDialogConfig<MedidaViewModel> = { data: model };
+    const config: MatDialogConfig<CadastroDeMedidaViewModel> = { data: model };
 
-    this.dialog.open(MedidaComponent, config);
+    this.dialog.open(CadastroComponent, config);
   }
 
   onDelete(medida: Medida): void {

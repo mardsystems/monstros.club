@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { MedidasComponent } from './medidas/medidas.component';
-import { MonstroPerfilComponent } from './monstro-perfil.component';
+import * as monstros from './cadastro/cadastro.component';
 import { MonstrosComponent } from './monstros.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesComponent } from './series/series.component';
@@ -27,7 +27,7 @@ const monstrosRoutes: Routes = [
           { path: 'rankings', component: RankingsComponent },
           // { path: 'rankings/:rankingId', component: RankingComponent },
           { path: 'configuracoes', component: ConfiguracoesComponent },
-          { path: '', component: MonstroPerfilComponent }
+          { path: '', component: monstros.CadastroComponent }
         ]
       }
     ]

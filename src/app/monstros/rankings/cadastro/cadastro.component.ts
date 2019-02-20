@@ -1,21 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Monstro } from '../monstros.model';
-import { Ranking, SolicitacaoDeCadastroDeRanking } from './rankings.model';
-import { RankingsService } from './rankings.service';
+import { Monstro } from '../../monstros.model';
+import { Ranking, SolicitacaoDeCadastroDeRanking } from '../rankings.model';
+import { RankingsService } from '../rankings.service';
 
 @Component({
-  selector: 'monstros-ranking',
-  templateUrl: './ranking.component.html',
-  styleUrls: ['./ranking.component.scss']
+  selector: 'monstros-rankings-cadastro',
+  templateUrl: './cadastro.component.html',
+  styleUrls: ['./cadastro.component.scss']
 })
-export class RankingComponent implements OnInit {
+export class CadastroComponent implements OnInit {
   dialogTitle = 'Novo Ranking';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public model: RankingViewModel,
-    private dialogRef: MatDialogRef<RankingComponent>,
+    private dialogRef: MatDialogRef<CadastroComponent>,
     private medidasService: RankingsService
   ) { }
 

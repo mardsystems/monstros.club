@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MonstroPerfilComponent } from './monstro-perfil.component';
+import { CadastroComponent } from './cadastro.component';
 
-describe('MonstroPerfilComponent', () => {
-  let component: MonstroPerfilComponent;
-  let fixture: ComponentFixture<MonstroPerfilComponent>;
+describe('RankingComponent', () => {
+  let component: CadastroComponent;
+  let fixture: ComponentFixture<CadastroComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MonstroPerfilComponent ]
+      declarations: [ CadastroComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MonstroPerfilComponent);
+    fixture = TestBed.createComponent(CadastroComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

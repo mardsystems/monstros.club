@@ -3,14 +3,14 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '../app-common.module';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
-import { MedidaComponent } from './medidas/medida.component';
+import { CadastroComponent as CadastroDeMedidasComponent } from './medidas/cadastro/cadastro.component';
 import { MedidasComponent } from './medidas/medidas.component';
 import { MedidasService } from './medidas/medidas.service';
-import { MonstroPerfilComponent } from './monstro-perfil.component';
+import { CadastroComponent as CadastroDeMonstrosComponent } from './cadastro/cadastro.component';
 import { MonstrosMaterialModule } from './monstros-material.module';
 import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
-import { RankingComponent } from './rankings/ranking.component';
+import { CadastroComponent as CadastroDeRankingsComponent } from './rankings/cadastro/cadastro.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
@@ -18,12 +18,12 @@ import { TreinosComponent } from './treinos/treinos.component';
 @NgModule({
   declarations: [
     MonstrosComponent,
-    MonstroPerfilComponent,
+    CadastroDeMonstrosComponent,
     SeriesComponent,
     TreinosComponent,
-    MedidaComponent,
+    CadastroDeMedidasComponent,
     MedidasComponent,
-    RankingComponent,
+    CadastroDeRankingsComponent,
     RankingsComponent,
     ConfiguracoesComponent,
   ],
@@ -35,8 +35,8 @@ import { TreinosComponent } from './treinos/treinos.component';
     AppCommonModule,
   ],
   entryComponents: [
-    MedidaComponent,
-    RankingComponent,
+    CadastroDeMedidasComponent,
+    CadastroDeRankingsComponent,
   ],
   providers: [
     MedidasService

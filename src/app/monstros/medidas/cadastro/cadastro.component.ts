@@ -7,22 +7,22 @@ import {
   IMedidaDeMusculo,
   Medida,
   SolicitacaoDeCadastroDeMedida
-} from './medidas.model';
-import { MedidasService } from './medidas.service';
-import { Monstro } from '../monstros.model';
+} from '../medidas.model';
+import { MedidasService } from '../medidas.service';
+import { Monstro } from '../../monstros.model';
 
 @Component({
-  selector: 'monstros-medida',
-  templateUrl: './medida.component.html',
-  styleUrls: ['./medida.component.scss']
+  selector: 'monstros-medidas-cadastro',
+  templateUrl: './cadastro.component.html',
+  styleUrls: ['./cadastro.component.scss']
 })
-export class MedidaComponent implements OnInit {
+export class CadastroComponent implements OnInit {
   dialogTitle = 'Nova Medida';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public model: MedidaViewModel,
-    private dialogRef: MatDialogRef<MedidaComponent>,
+    public model: CadastroDeMedidaViewModel,
+    private dialogRef: MatDialogRef<CadastroComponent>,
     private medidasService: MedidasService
   ) { }
 
@@ -44,13 +44,13 @@ export class MedidaComponent implements OnInit {
   }
 }
 
-export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida
+export class CadastroDeMedidaViewModel extends SolicitacaoDeCadastroDeMedida
   implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {
   isEdit: boolean;
   id?: string; // Usado apenas na edição.
   monstro: Monstro;
 
-  static toAddViewModel(monstro: Monstro): MedidaViewModel {
+  static toAddViewModel(monstro: Monstro): CadastroDeMedidaViewModel {
     const solicitacao = SolicitacaoDeCadastroDeMedida.toAdd(monstro.id);
 
     return {
@@ -70,7 +70,7 @@ export class MedidaViewModel extends SolicitacaoDeCadastroDeMedida
     };
   }
 
-  static toEditViewModel(monstro: Monstro, medida: Medida): MedidaViewModel {
+  static toEditViewModel(monstro: Monstro, medida: Medida): CadastroDeMedidaViewModel {
     const solicitacao = SolicitacaoDeCadastroDeMedida.toEdit(medida);
 
     return {
