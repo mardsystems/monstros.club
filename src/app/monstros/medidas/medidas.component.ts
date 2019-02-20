@@ -1,12 +1,13 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
-import { ActivatedRoute, ParamMap, Router, NavigationExtras } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
-import { CadastroComponent, CadastroDeMedidaViewModel } from './cadastro/cadastro.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
+import { CadastroDeMedidaViewModel } from './cadastro/cadastro.model';
 import { Balanca, Medida, OmronHBF214 } from './medidas.model';
 import { MedidasService } from './medidas.service';
 

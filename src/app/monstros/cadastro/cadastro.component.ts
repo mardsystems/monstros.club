@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { first, switchMap, map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError, first, switchMap } from 'rxjs/operators';
 import { CalculoDeIdade } from '../../app.services';
 import { AuthService } from '../../auth/auth.service';
 import { SolicitacaoDeCadastroDeMonstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
-import { merge, of } from 'rxjs';
 
 @Component({
   selector: 'monstros-cadastro',

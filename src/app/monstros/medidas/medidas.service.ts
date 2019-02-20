@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import * as moment from 'moment';
-import { Observable, combineLatest } from 'rxjs';
-import { first, map, mergeMap, merge, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { first, map, switchMap } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
-import { MonstrosService, MonstroDocument } from '../monstros.service';
-import { Medida, SolicitacaoDeCadastroDeMedida, TipoDeBalanca } from './medidas.model';
-import * as _ from 'lodash';
+import { MonstrosService } from '../monstros.service';
+import { SolicitacaoDeCadastroDeMedida } from './cadastro/cadastro.model';
+import { Medida, TipoDeBalanca } from './medidas.model';
 
 @Injectable({
   providedIn: 'root'

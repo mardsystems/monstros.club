@@ -1,15 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import {
-  IMedidaDeGordura,
-  IMedidaDeGorduraVisceral,
-  IMedidaDeIndiceDeMassaCorporal,
-  IMedidaDeMusculo,
-  Medida,
-  SolicitacaoDeCadastroDeMedida
-} from '../medidas.model';
 import { MedidasService } from '../medidas.service';
-import { Monstro } from '../../monstros.model';
+import { CadastroDeMedidaViewModel } from './cadastro.model';
 
 @Component({
   selector: 'monstros-medidas-cadastro',
@@ -41,52 +33,5 @@ export class CadastroComponent implements OnInit {
     operation.then(() => {
       this.dialogRef.close();
     });
-  }
-}
-
-export class CadastroDeMedidaViewModel extends SolicitacaoDeCadastroDeMedida
-  implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {
-  isEdit: boolean;
-  id?: string; // Usado apenas na edição.
-  monstro: Monstro;
-
-  static toAddViewModel(monstro: Monstro): CadastroDeMedidaViewModel {
-    const solicitacao = SolicitacaoDeCadastroDeMedida.toAdd(monstro.id);
-
-    return {
-      isEdit: false,
-      id: null,
-      monstro: monstro,
-      monstroId: solicitacao.monstroId,
-      data: solicitacao.data,
-      feitaCom: solicitacao.feitaCom,
-      peso: solicitacao.peso,
-      gordura: solicitacao.gordura,
-      gorduraVisceral: solicitacao.gorduraVisceral,
-      musculo: solicitacao.musculo,
-      idadeCorporal: solicitacao.idadeCorporal,
-      metabolismoBasal: solicitacao.metabolismoBasal,
-      indiceDeMassaCorporal: solicitacao.indiceDeMassaCorporal
-    };
-  }
-
-  static toEditViewModel(monstro: Monstro, medida: Medida): CadastroDeMedidaViewModel {
-    const solicitacao = SolicitacaoDeCadastroDeMedida.toEdit(medida);
-
-    return {
-      isEdit: true,
-      id: medida.id,
-      monstro: monstro,
-      monstroId: solicitacao.monstroId,
-      data: solicitacao.data,
-      feitaCom: solicitacao.feitaCom,
-      peso: solicitacao.peso,
-      gordura: solicitacao.gordura,
-      gorduraVisceral: solicitacao.gorduraVisceral,
-      musculo: solicitacao.musculo,
-      idadeCorporal: solicitacao.idadeCorporal,
-      metabolismoBasal: solicitacao.metabolismoBasal,
-      indiceDeMassaCorporal: solicitacao.indiceDeMassaCorporal
-    };
   }
 }
