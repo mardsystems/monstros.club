@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { Observable, of } from 'rxjs';
-import { map, switchMap, catchError, tap, first } from 'rxjs/operators';
-import { AuthService } from '../auth/auth.service';
-import { Monstro, SolicitacaoDeCadastroDeMonstro, Genero } from './monstros.domain-model';
 import * as moment from 'moment';
+import { Observable, of } from 'rxjs';
+import { catchError, first, map, switchMap, tap } from 'rxjs/operators';
 import { CalculoDeIdade } from '../app.services';
+import { AuthService } from '../auth/auth.service';
+import { SolicitacaoDeCadastroDeMonstro } from './cadastro/cadastro.application-model';
+import { Genero, Monstro } from './monstros.domain-model';
 
 @Injectable({
   providedIn: 'root'

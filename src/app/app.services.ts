@@ -1,5 +1,5 @@
 import { Injectable, ApplicationRef } from '@angular/core';
-import { ICalculoDeIdade } from './app.model';
+import { ICalculoDeIdade } from './app-common.domain-model';
 import { SwUpdate } from '@angular/service-worker';
 import { first, map } from 'rxjs/operators';
 import { interval, concat, Observable } from 'rxjs';

@@ -1,4 +1,4 @@
-import { ICalculoDeIdade } from '../app.model';
+import { ICalculoDeIdade } from '../app-common.domain-model';
 
 export class Monstro {
   public constructor(
