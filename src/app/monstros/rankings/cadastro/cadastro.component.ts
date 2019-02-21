@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Monstro } from '../../monstros.model';
-import { Ranking } from '../rankings.model';
+import { Ranking } from '../rankings.domain-model';
 import { RankingsService } from '../rankings.service';
-import { SolicitacaoDeCadastroDeRanking } from './cadastro.model';
+import { SolicitacaoDeCadastroDeRanking } from './cadastro.application-model';
 
 @Component({
   selector: 'monstros-rankings-cadastro',

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MedidasService } from '../medidas.service';
-import { CadastroDeMedidaViewModel } from './cadastro.model';
+import { CadastroDeMedidaViewModel } from './cadastro.presentation-model';
 
 @Component({
   selector: 'monstros-medidas-cadastro',

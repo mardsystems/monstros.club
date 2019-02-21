@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { Balanca, Medida, OmronHBF214 } from '../../monstros/medidas/medidas.model';
+import { Balanca, Medida, OmronHBF214 } from '../../monstros/medidas/medidas.domain-model';
 import { MedidasService } from '../../monstros/medidas/medidas.service';
 
 const columnDefinitions = [

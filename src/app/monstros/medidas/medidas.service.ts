@@ -5,8 +5,8 @@ import { combineLatest, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
-import { SolicitacaoDeCadastroDeMedida } from './cadastro/cadastro.model';
-import { Medida, TipoDeBalanca } from './medidas.model';
+import { SolicitacaoDeCadastroDeMedida } from './cadastro/cadastro.application-model';
+import { Medida, TipoDeBalanca } from './medidas.domain-model';
 
 @Injectable({
   providedIn: 'root'

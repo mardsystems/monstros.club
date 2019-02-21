@@ -7,8 +7,8 @@ import { catchError, first, switchMap } from 'rxjs/operators';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
 import { CadastroComponent } from './cadastro/cadastro.component';
-import { CadastroDeMedidaViewModel } from './cadastro/cadastro.model';
-import { Balanca, Medida, OmronHBF214 } from './medidas.model';
+import { CadastroDeMedidaViewModel } from './cadastro/cadastro.presentation-model';
+import { Balanca, Medida, OmronHBF214 } from './medidas.domain-model';
 import { MedidasService } from './medidas.service';
 
 const columnDefinitions = [

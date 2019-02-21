@@ -1,4 +1,4 @@
-import { TipoDeBalanca } from '../medidas/medidas.model';
+import { TipoDeBalanca } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.model';
 
 export class Ranking {

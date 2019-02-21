@@ -4,8 +4,8 @@ import { of } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
 import { CalculoDeIdade } from '../../app.services';
 import { AuthService } from '../../auth/auth.service';
-import { SolicitacaoDeCadastroDeMonstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
+import { SolicitacaoDeCadastroDeMonstro } from './cadastro.application-model';
 
 @Component({
   selector: 'monstros-cadastro',

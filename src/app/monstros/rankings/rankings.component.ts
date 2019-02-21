@@ -4,11 +4,11 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
-import { Balanca, OmronHBF214 } from '../medidas/medidas.model';
+import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.model';
 import { MonstrosService } from '../monstros.service';
 import { CadastroComponent, RankingViewModel } from './cadastro/cadastro.component';
-import { Ranking } from './rankings.model';
+import { Ranking } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
 
 const columnDefinitions = [
