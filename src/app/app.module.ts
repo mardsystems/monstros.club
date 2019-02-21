@@ -18,7 +18,7 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { HomeComponent } from './home/home.component';
 // import { AuthService } from './auth/auth.service';
-import { Monstro } from './monstros/monstros.model';
+import { Monstro } from './monstros/monstros.domain-model';
 // import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SobreComponent } from './sobre/sobre.component';

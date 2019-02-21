@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Genero, Monstro } from '../monstros.model';
+import { Genero, Monstro } from '../monstros.domain-model';
 
 export class SolicitacaoDeCadastroDeMonstro {
   isEdit: boolean;

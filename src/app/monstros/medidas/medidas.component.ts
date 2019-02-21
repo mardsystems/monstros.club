@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
-import { Monstro } from '../monstros.model';
+import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { CadastroDeMedidaViewModel } from './cadastro/cadastro.presentation-model';

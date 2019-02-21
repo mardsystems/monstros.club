@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { SobreComponent } from './sobre/sobre.component';
 import { MonstrosService } from './monstros/monstros.service';
-import { Monstro } from './monstros/monstros.model';
+import { Monstro } from './monstros/monstros.domain-model';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { AuthService } from './auth/auth.service';

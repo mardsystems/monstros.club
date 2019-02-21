@@ -4,7 +4,7 @@ import * as firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, catchError, tap, first } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-import { Monstro, SolicitacaoDeCadastroDeMonstro, Genero } from './monstros.model';
+import { Monstro, SolicitacaoDeCadastroDeMonstro, Genero } from './monstros.domain-model';
 import * as moment from 'moment';
 import { CalculoDeIdade } from '../app.services';
 

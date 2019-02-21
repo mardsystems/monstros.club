@@ -4,7 +4,7 @@ import * as firebase from 'firebase/app';
 import { combineLatest, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
-import { Monstro } from '../monstros.model';
+import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeRanking } from './cadastro/cadastro.application-model';
 import { Participacao, Ranking } from './rankings.domain-model';

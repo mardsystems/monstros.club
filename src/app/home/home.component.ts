@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Monstro } from '../monstros/monstros.model';
+import { Monstro } from '../monstros/monstros.domain-model';
 import { Observable } from 'rxjs';
 import { MonstrosService } from '../monstros/monstros.service';
 

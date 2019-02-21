@@ -1,5 +1,5 @@
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
-import { Monstro } from '../monstros.model';
+import { Monstro } from '../monstros.domain-model';
 
 export class Ranking {
   private _participantes: Participacao[];

@@ -1,4 +1,4 @@
-import { Genero, Monstro } from '../monstros.model';
+import { Genero, Monstro } from '../monstros.domain-model';
 
 export class Medida
   implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {

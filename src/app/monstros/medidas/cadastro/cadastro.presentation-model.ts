@@ -1,4 +1,4 @@
-import { Monstro } from '../../monstros.model';
+import { Monstro } from '../../monstros.domain-model';
 import {
   IMedidaDeGordura,
   IMedidaDeGorduraVisceral,

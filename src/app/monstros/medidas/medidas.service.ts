@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
-import { Monstro } from '../monstros.model';
+import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeMedida } from './cadastro/cadastro.application-model';
 import { Medida, TipoDeBalanca } from './medidas.domain-model';

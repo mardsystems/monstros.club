@@ -7,7 +7,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { StorageService } from '../app.services';
 import { AuthService } from '../auth/auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
-import { Monstro } from './monstros.model';
+import { Monstro } from './monstros.domain-model';
 import { MonstrosService } from './monstros.service';
 
 @Component({

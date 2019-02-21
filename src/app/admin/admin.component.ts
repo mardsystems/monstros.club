@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { Monstro } from '../monstros/monstros.model';
+import { Monstro } from '../monstros/monstros.domain-model';
 import { MonstrosService } from '../monstros/monstros.service';
 
 @Component({
