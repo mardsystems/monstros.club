@@ -6,13 +6,14 @@ import { first, map, switchMap } from 'rxjs/operators';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { SolicitacaoDeCadastroDeRanking } from './cadastro/cadastro.application-model';
+import { SolicitacaoDeCadastroDeRanking, ICadastroDeRanking, SolicitacaoDeParticipacaoDeRanking } from './cadastro/cadastro.application-model';
 import { Participacao, Ranking } from './rankings.domain-model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RankingsService {
+export class RankingsService
+  implements ICadastroDeRanking {
   PATH = '/rankings';
 
   constructor(
@@ -218,6 +219,22 @@ export class RankingsService {
     };
 
     return newDocument;
+  }
+
+  adicionaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.obtemRankingObservavel(solicitacao.rankingId).pipe(first()).subscribe(ranking => {
+        const participante = null; // solicitacao.participanteId;
+
+        const agora = new Date(Date.now());
+
+        ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
+
+        const result = this.update(ranking);
+
+        resolve(result);
+      });
+    });
   }
 
   excluiRanking(rankingId: string): Promise<void> {

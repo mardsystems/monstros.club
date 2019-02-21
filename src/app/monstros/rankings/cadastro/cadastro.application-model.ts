@@ -26,3 +26,19 @@ export class SolicitacaoDeCadastroDeRanking {
     };
   }
 }
+
+export class SolicitacaoDeParticipacaoDeRanking {
+  rankingId: string;
+  participanteId: string;
+  ehAdministrador: boolean;
+}
+
+export interface ICadastroDeRanking {
+  cadastraRanking(solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void>;
+
+  atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void>;
+
+  adicionaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void>;
+
+  excluiRanking(rankingId: string): Promise<void>;
+}

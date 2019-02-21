@@ -7,7 +7,8 @@ import { catchError, first, switchMap } from 'rxjs/operators';
 import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { CadastroComponent, RankingViewModel } from './cadastro/cadastro.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
+import { RankingViewModel } from './cadastro/cadastro.presentation-model';
 import { Ranking } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
 
