@@ -1,18 +1,61 @@
 {
   "indexes": [
     {
-      "collectionId": "medidas",
-      "state": "READY",
+      "collectionGroup": "medidas",
+      "queryScope": "COLLECTION",
       "fields": [
         {
           "fieldPath": "monstroId",
-          "mode": "ASCENDING"
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "indiceDeMassaCorporal",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "medidas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "monstroId",
+          "order": "ASCENDING"
         },
         {
           "fieldPath": "data",
-          "mode": "DESCENDING"
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "medidas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "monstroId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "gordura",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "medidas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "monstroId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "musculo",
+          "order": "DESCENDING"
         }
       ]
     }
-  ]
+  ],
+  "fieldOverrides": []
 }

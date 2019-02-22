@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of, merge } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeMedida } from './cadastro/cadastro.application-model';
 import { Medida, TipoDeBalanca } from './medidas.domain-model';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -69,23 +70,95 @@ export class MedidasService {
   }
 
   obtemMedidasObservaveisParaExibicaoPorMonstros(monstros: Monstro[]): Observable<Medida[]> {
-    return null;
+    const medidasPorMonstros$Array = monstros.map(monstro => {
+      const collection1 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+        return reference
+          .where('monstroId', '==', `monstros/${monstro.id}`)
+          .orderBy('data', 'desc')
+          .limit(3);
+      });
 
-    // const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
-    //   return reference
-    //     .where('monstroId', '==', `monstros/${monstro.id}`)
-    //     .orderBy('data', 'desc');
-    // });
+      const medidas1$ = collection1.valueChanges().pipe(
+        map(values => {
+          return values.map((value, index) => {
+            return this.mapMedida(value, monstro);
+          });
+        })
+      );
 
-    // const medidas$ = collection.valueChanges().pipe(
-    //   map(values => {
-    //     return values.map((value, index) => {
-    //       return this.mapMedida(value, monstro);
-    //     });
-    //   })
-    // );
+      //
 
-    // return medidas$;
+      const collection2 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+        return reference
+          .where('monstroId', '==', `monstros/${monstro.id}`)
+          .orderBy('gordura', 'asc')
+          .limit(1);
+      });
+
+      const medidas2$ = collection2.valueChanges().pipe(
+        map(values => {
+          return values.map((value, index) => {
+            return this.mapMedida(value, monstro);
+          });
+        })
+      );
+
+      //
+
+      const collection3 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+        return reference
+          .where('monstroId', '==', `monstros/${monstro.id}`)
+          .orderBy('musculo', 'desc')
+          .limit(1);
+      });
+
+      const medidas3$ = collection3.valueChanges().pipe(
+        map(values => {
+          return values.map((value, index) => {
+            return this.mapMedida(value, monstro);
+          });
+        })
+      );
+
+      //
+
+      const collection4 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+        return reference
+          .where('monstroId', '==', `monstros/${monstro.id}`)
+          .orderBy('indiceDeMassaCorporal', 'asc')
+          .limit(1);
+      });
+
+      const medida4$ = collection4.valueChanges().pipe(
+        map(values => {
+          return values.map((value, index) => {
+            return this.mapMedida(value, monstro);
+          });
+        })
+      );
+
+      //
+
+      const medidas$ = merge(medidas1$); // , medidas2$, medidas3$, medida4$
+
+      return medidas$;
+    });
+
+    const medidasPorMonstros$ = combineLatest(medidasPorMonstros$Array);
+
+    const medidas: Medida[] = [];
+
+    const medidasPorMonstrosUnificado$ = medidasPorMonstros$.pipe(
+      map(arrayDeArray => {
+        arrayDeArray.forEach(array => array.forEach(medida => medidas.push(medida)));
+
+        const medidasSemRepeticao = _.uniqBy(medidas, 'id');
+
+        return medidas;
+      })
+    );
+
+    return medidasPorMonstrosUnificado$;
   }
 
   obtemMedidaObservavel(id: string): Observable<Medida> {

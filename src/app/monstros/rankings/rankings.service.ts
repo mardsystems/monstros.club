@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, merge } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
@@ -25,56 +25,110 @@ export class RankingsService
     private monstrosService: MonstrosService
   ) { }
 
-  obtemRankingsObservaveisParaRanking(): Observable<Ranking[]> {
-    const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
-      return reference;
-      // .orderBy('data', 'desc');
-    });
+  obtemRankingsObservaveisParaExibicao(monstro: Monstro): Observable<Ranking[]> {
+    const rankingsProprietarios$ = this.obtemRankingsObservaveisParaExibicaoPorProprietario(monstro);
 
-    const rankings$ = collection.valueChanges().pipe(
-      switchMap(values => {
-        const arrayDeRankingsObservaveis = values
-          // .filter(value => value.monstroId !== 'monstros/OJUFB66yLBwIOE2hk8hs')
-          .map((value) => {
-            const monstroId = value.monstroId.id;
+    const rankingsPorParticipantes$ = this.obtemRankingsObservaveisPorParticipante(monstro);
 
-            const rankingComMonstro$ = this.monstrosService.obtemMonstroObservavel(monstroId).pipe(
-              map(monstro => this.mapRanking(value, monstro))
-            );
-
-            return rankingComMonstro$;
-          });
-
-        const todasAsRankings$ = combineLatest(arrayDeRankingsObservaveis);
-
-        return todasAsRankings$;
-      })
-    );
-
-    // return merge(rankings$, new Observable<Ranking[]>(() => [])); // TODO: Problema quando não tem rankings.
+    const rankings$ = merge(rankingsProprietarios$, rankingsPorParticipantes$);
 
     return rankings$;
   }
 
-  obtemRankingsObservaveisParaExibicao(monstro: Monstro): Observable<Ranking[]> {
-    const monstroRef = this.monstrosService.obtemMonstroRef(monstro.id);
+  obtemRankingsObservaveisParaExibicaoPorProprietario(proprietario: Monstro): Observable<Ranking[]> {
+    const monstroRef = this.monstrosService.obtemMonstroRef(proprietario.id);
 
     const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
-      return reference
-        .where('monstroId', '==', monstroRef);
-      // .where('monstroId', '==', `/monstros/${monstro.id}`);
+      return reference;
+      // .where('monstroId', '==', monstroRef);
       // .orderBy('data', 'desc');
     });
 
     const rankings$ = collection.valueChanges().pipe(
-      map(values => {
-        return values.map((value, index) => {
-          return this.mapRanking(value, monstro);
+      switchMap(values => this.mapRankingsObservaveis(proprietario, values))
+    );
+
+    return rankings$;
+  }
+
+  private mapRankingsObservaveis(proprietario: Monstro, values: RankingDocument[]): Observable<Ranking[]> {
+    const rankings$Array = values.map((value) => this.mapRankingObservavel(proprietario, value));
+
+    const rankings$ = combineLatest(rankings$Array);
+
+    return rankings$;
+  }
+
+  private mapRankingObservavel(proprietario: Monstro, value: RankingDocument): Observable<Ranking> {
+    const rankings$ = this.mapParticipacoesObservaveis(value).pipe(
+      map(participantes => this.mapRanking(value, proprietario, participantes))
+    );
+
+    return rankings$;
+  }
+
+  private mapParticipacoesObservaveis(value: RankingDocument): Observable<Participacao[]> {
+    const participacoes$Array = value.participantes.map(participacaoValue => {
+      const monstro$ = this.monstrosService.obtemMonstroObservavel(participacaoValue.participanteId.id).pipe(
+        map(monstro => {
+          const participacao = new Participacao(
+            monstro,
+            participacaoValue.desde.toDate(),
+            participacaoValue.ehAdministrador
+          );
+
+          return participacao;
+        })
+      );
+
+      return monstro$;
+    });
+
+    const participacoes$ = combineLatest(participacoes$Array);
+
+    return participacoes$;
+  }
+
+  obtemRankingsObservaveisPorParticipante(participante: Monstro): Observable<Ranking[]> {
+    const monstroRef = this.monstrosService.obtemMonstroRef(participante.id);
+
+    const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
+      return reference
+        .where('participanteId', '==', monstroRef);
+      // .orderBy('data', 'desc');
+    });
+
+    // const collection = this.db.collection<RankingDocument>(this.PATH);
+
+    // const document = collection.doc<RankingDocument>('iPNln1DVy2G6Ys29eUU8');
+
+    // const query = document.collection<RankingDocument>('participantess', reference => {
+    //   return reference
+    //     .where('participanteId', '==', monstroRef);
+    //   // .orderBy('data', 'desc');
+    // });
+
+    const rankings$ = collection.valueChanges().pipe(
+      switchMap(values => {
+        const rankingsComProprietario$Array = values.map(value => {
+          const rankingComProprietario$ = this.monstrosService.obtemMonstroObservavel(value.monstroId.id).pipe(
+            switchMap(monstro => this.mapRankingObservavel(monstro, value))
+          );
+
+          return rankingComProprietario$;
         });
+
+        const rankingsComProprietario$ = combineLatest(rankingsComProprietario$Array);
+
+        return rankingsComProprietario$;
       })
     );
 
     return rankings$;
+
+    // // return merge(rankings$, new Observable<Ranking[]>(() => [])); // TODO: Problema quando não tem rankings.
+
+    // return rankings$;
   }
 
   obtemRankingObservavel(id: string): Observable<Ranking> {
@@ -83,37 +137,27 @@ export class RankingsService
     const document = collection.doc<RankingDocument>(id);
 
     const ranking$ = document.valueChanges().pipe(
-      map(value => {
-        const monstro = null;
+      switchMap(value => {
+        const rankingComProprietario$ = this.monstrosService.obtemMonstroObservavel(value.monstroId.id).pipe(
+          switchMap(monstro => this.mapRankingObservavel(monstro, value))
+        );
 
-        return this.mapRanking(value, monstro);
+        return rankingComProprietario$;
       })
     );
 
     return ranking$;
   }
 
-  private mapRanking(value: RankingDocument, monstro: Monstro): Ranking {
+  private mapRanking(value: RankingDocument, proprietario: Monstro, participantes: Participacao[]): Ranking {
     const monstroId = value.monstroId.id;
 
     const CONST_TIMESTAMP_FALSO = 1;
 
-    const participantes = value.participantes.map(participacaoDoc => {
-      const participanteFake = monstro;
-
-      const participacao = new Participacao(
-        participanteFake,
-        participacaoDoc.desde.toDate(),
-        participacaoDoc.ehAdministrador
-      );
-
-      return participacao;
-    });
-
     return new Ranking(
       value.id,
       value.nome,
-      monstro,
+      proprietario,
       monstroId,
       value.feitoCom as TipoDeBalanca,
       CONST_TIMESTAMP_FALSO,
@@ -212,7 +256,7 @@ export class RankingsService
       participantes: ranking.participantes.map(participacao => {
         const participanteRef = this.monstrosService.obtemMonstroRef(participacao.participante.id);
 
-        const participacaoDocument: ParticipacaoNoRankingDocument = {
+        const participacaoDocument: ParticipacaoDocument = {
           participanteId: participanteRef,
           desde: firebase.firestore.Timestamp.fromDate(participacao.desde),
           ehAdministrador: participacao.ehAdministrador
@@ -227,16 +271,37 @@ export class RankingsService
 
   adicionaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.obtemRankingObservavel(solicitacao.rankingId).pipe(first()).subscribe(ranking => {
-        const participante = null; // solicitacao.participanteId;
+      // this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).pipe(
+      //   first(),
+      //   map(monstro => {
+      //     this.obtemRankingObservavel(solicitacao.rankingId).subscribe(ranking => {
+      //       const participante = monstro; // solicitacao.participanteId;
 
-        const agora = new Date(Date.now());
+      //       const agora = new Date(Date.now());
 
-        ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
+      //       ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
 
-        const result = this.update(ranking);
+      //       const result = this.update(ranking);
 
-        resolve(result);
+      //       resolve(result);
+      //     });
+      //   })
+      // );
+
+      this.obtemRankingObservavel(solicitacao.rankingId).pipe(
+        first()
+      ).subscribe(ranking => {
+        this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).subscribe(monstro => {
+          const participante = monstro; // solicitacao.participanteId;
+
+          const agora = new Date(Date.now());
+
+          ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
+
+          const result = this.update(ranking);
+
+          resolve(result);
+        });
       });
     });
   }
@@ -258,10 +323,10 @@ interface RankingDocument {
   monstroId: firebase.firestore.DocumentReference;
   dataDeCriacao: firebase.firestore.Timestamp;
   feitoCom: string;
-  participantes: ParticipacaoNoRankingDocument[];
+  participantes: ParticipacaoDocument[];
 }
 
-interface ParticipacaoNoRankingDocument {
+interface ParticipacaoDocument {
   participanteId: firebase.firestore.DocumentReference;
   // rankingId: firebase.firestore.DocumentReference;
   desde: firebase.firestore.Timestamp;

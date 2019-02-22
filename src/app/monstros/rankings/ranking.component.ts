@@ -10,7 +10,7 @@ import { Ranking } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
 
 const columnDefinitions = [
-  { showMobile: true, def: 'foto' },
+  { showMobile: true, def: 'monstro' },
   { showMobile: true, def: 'data' },
   { showMobile: true, def: 'peso' },
   { showMobile: true, def: 'gordura' },

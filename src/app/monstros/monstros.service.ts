@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import * as moment from 'moment';
-import { Observable, of } from 'rxjs';
+import { Observable, of, combineLatest } from 'rxjs';
 import { catchError, first, map, switchMap, tap } from 'rxjs/operators';
 import { CalculoDeIdade } from '../app.services';
 import { AuthService } from '../auth/auth.service';
@@ -145,6 +145,15 @@ export class MonstrosService {
     );
 
     return monstro$;
+  }
+
+  obtemMonstrosObservaveis(ids: string[]): Observable<Monstro[]> {
+    const arrayDeMonstrosObservaveis = ids
+      .map((id) => this.obtemMonstroObservavel(id));
+
+    const todosOsMonstros$ = combineLatest(arrayDeMonstrosObservaveis);
+
+    return todosOsMonstros$;
   }
 
   obtemMonstroRef(id: string): DocumentReference {

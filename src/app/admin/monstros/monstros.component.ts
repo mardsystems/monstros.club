@@ -33,7 +33,7 @@ export class MonstrosComponent implements OnInit {
     private monstrosService: MonstrosService,
     media: MediaMatcher
   ) {
-    this.desktopQuery = media.matchMedia('(min-width: 750px)');
+    this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
 
   ngOnInit() {

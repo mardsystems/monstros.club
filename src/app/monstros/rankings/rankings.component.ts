@@ -13,11 +13,11 @@ import { Ranking } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
 
 const columnDefinitions = [
-  { showMobile: true, def: 'foto' },
+  { showMobile: false, def: 'proprietario' },
   { showMobile: true, def: 'nome' },
   { showMobile: true, def: 'participantes' },
   { showMobile: false, def: 'feitoCom' },
-  { showMobile: true, def: 'dataDeCriacao' },
+  { showMobile: false, def: 'dataDeCriacao' },
   { showMobile: true, def: 'menu' },
 ];
 
