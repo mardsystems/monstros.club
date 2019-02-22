@@ -60,7 +60,7 @@ export class MedidasComponent implements OnInit {
 
         return this.monstrosService.obtemMonstroObservavel(monstroId);
       }),
-      catchError((error, monstro) => {
+      catchError((error, source$) => {
         console.log(`Não foi possível montar as medidas do monstro.\nRazão:\n${error}`);
 
         return of(null);

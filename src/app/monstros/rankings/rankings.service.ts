@@ -6,7 +6,11 @@ import { first, map, switchMap } from 'rxjs/operators';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { SolicitacaoDeCadastroDeRanking, ICadastroDeRanking, SolicitacaoDeParticipacaoDeRanking } from './cadastro/cadastro.application-model';
+import {
+  SolicitacaoDeCadastroDeRanking,
+  ICadastroDeRanking,
+  SolicitacaoDeParticipacaoDeRanking
+} from './cadastro/cadastro.application-model';
 import { Participacao, Ranking } from './rankings.domain-model';
 
 @Injectable({

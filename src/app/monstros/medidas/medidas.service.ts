@@ -68,6 +68,26 @@ export class MedidasService {
     return medidas$;
   }
 
+  obtemMedidasObservaveisParaExibicaoPorMonstros(monstros: Monstro[]): Observable<Medida[]> {
+    return null;
+
+    // const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
+    //   return reference
+    //     .where('monstroId', '==', `monstros/${monstro.id}`)
+    //     .orderBy('data', 'desc');
+    // });
+
+    // const medidas$ = collection.valueChanges().pipe(
+    //   map(values => {
+    //     return values.map((value, index) => {
+    //       return this.mapMedida(value, monstro);
+    //     });
+    //   })
+    // );
+
+    // return medidas$;
+  }
+
   obtemMedidaObservavel(id: string): Observable<Medida> {
     const collection = this.db.collection<MedidaDocument>(this.PATH);
 

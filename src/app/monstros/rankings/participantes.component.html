@@ -1,0 +1,6 @@
+<a mat-icon-button class="participacao" *ngFor="let participacao of ranking.participantes" routerLink="../../{{participacao.participante.id}}">
+  <img class="avatar" src="{{participacao.participante.photoURL}}" alt="{{participacao.participante.id}}">
+</a>
+<button mat-icon-button (click)="onAdd()">
+  <mat-icon>add</mat-icon>
+</button>

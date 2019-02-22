@@ -1,15 +1,15 @@
 <mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="loading"></mat-spinner>
 
-<div class="container" *ngIf="!loading">
+<!-- <div class="container" *ngIf="!loading">
   <p class="mat-body">
     Relançamento dia <strong>25 FEV 2019</strong>
   </p>
-</div>
+</div> -->
 
 <!-- <div class="app-container mat-elevation-z8"> -->
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" *ngIf="!loading">
   <ng-container matColumnDef="foto">
-    <th mat-header-cell *matHeaderCellDef></th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="proprietario"> Proprietário </th>
     <td mat-cell *matCellDef="let ranking">
       <img class="foto" src="{{ranking.proprietario.photoURL}}" alt="{{ranking.proprietarioId}}">
     </td>
@@ -17,23 +17,24 @@
 
   <ng-container matColumnDef="nome">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="nome"> Nome </th>
-    <td mat-cell *matCellDef="let ranking"> {{ranking.nome}} </td>
+    <td mat-cell *matCellDef="let ranking">
+      <a routerLink="./{{ranking.id}}">
+        {{ranking.nome}}
+      </a>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="participantes">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="participantes"> Participantes </th>
     <td mat-cell *matCellDef="let ranking">
-      <span>{{ranking.participantes[0].participante.nome}}</span>
-      <span *ngFor="let participacao of ranking.participantes">
-        {{participacao.nome}}
-      </span>
+      <monstros-rankings-participantes [ranking]="ranking"></monstros-rankings-participantes>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="feitoCom">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="feitoCom"> Feito Com </th>
-      <td mat-cell *matCellDef="let ranking"> {{ranking.feitoCom}} </td>
-    </ng-container>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="feitoCom"> Feito Com </th>
+    <td mat-cell *matCellDef="let ranking"> {{ranking.feitoCom}} </td>
+  </ng-container>
 
   <ng-container matColumnDef="dataDeCriacao">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="dataDeCriacao"> Data de Criação </th>

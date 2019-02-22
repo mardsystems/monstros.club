@@ -14,6 +14,9 @@ import { CadastroComponent as CadastroDeRankingsComponent } from './rankings/cad
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
+import { ParticipacaoComponent as ParticipacaoNoRankingComponent } from './rankings/cadastro/participacao.component';
+import { RankingComponent } from './rankings/ranking.component';
+import { ParticipantesComponent } from './rankings/participantes.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { TreinosComponent } from './treinos/treinos.component';
     CadastroDeRankingsComponent,
     RankingsComponent,
     ConfiguracoesComponent,
+    ParticipacaoNoRankingComponent,
+    RankingComponent,
+    ParticipantesComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +43,7 @@ import { TreinosComponent } from './treinos/treinos.component';
   entryComponents: [
     CadastroDeMedidasComponent,
     CadastroDeRankingsComponent,
+    ParticipacaoNoRankingComponent,
   ],
   providers: [
     MedidasService

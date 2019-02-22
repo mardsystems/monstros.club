@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+
+<mat-dialog-content class="container">
+  <mat-form-field>
+    <input type="text" placeholder="Ranking" matInput [ngModel]="model.ranking.nome" readonly>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="text" placeholder="Participante Id" matInput [ngModel]="model.participanteId" required
+      #participanteId="ngModel">
+  </mat-form-field>
+
+  <section>
+    <mat-checkbox [(ngModel)]="model.ehAdministrador" color="primary">Administrador</mat-checkbox>
+  </section>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>CANCELAR</button>
+  <button mat-button [disabled]="participanteId.invalid" (click)="onSave()">ADICIONAR</button>
+</mat-dialog-actions>
