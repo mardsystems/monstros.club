@@ -2,8 +2,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
-import { catchError, first, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, first, switchMap, map } from 'rxjs/operators';
 import { Balanca, Medida, OmronHBF214 } from '../../monstros/medidas/medidas.domain-model';
 import { MedidasService } from '../../monstros/medidas/medidas.service';
 import { Ranking } from './rankings.domain-model';
@@ -50,15 +50,13 @@ export class RankingComponent implements OnInit {
 
   ngOnInit() {
     const ranking$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        const rankingId = params.get('rankingId');
-
-        return this.rankingsService.obtemRankingObservavel(rankingId);
-      }),
+      // first(),
+      map(params => params.get('rankingId')),
+      switchMap(rankingId => this.rankingsService.obtemRankingObservavel(rankingId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar o ranking.\nRazão:\n${error}`);
 
-        return source$;
+        return of(null); // Observable.throw(e);
       })
     );
 

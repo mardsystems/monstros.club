@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { combineLatest, Observable, of, merge } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of, merge, forkJoin } from 'rxjs';
+import { first, map, switchMap, combineAll, mergeAll, tap, mergeMap, toArray } from 'rxjs/operators';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeMedida } from './cadastro/cadastro.application-model';
@@ -70,17 +70,22 @@ export class MedidasService {
   }
 
   obtemMedidasObservaveisParaExibicaoPorMonstros(monstros: Monstro[]): Observable<Medida[]> {
+    let mergeCount = 0;
+
     const medidasPorMonstros$Array = monstros.map(monstro => {
       const collection1 = this.db.collection<MedidaDocument>(this.PATH, reference => {
         return reference
           .where('monstroId', '==', `monstros/${monstro.id}`)
           .orderBy('data', 'desc')
-          .limit(3);
+          .limit(1);
       });
 
       const medidas1$ = collection1.valueChanges().pipe(
+        first(),
         map(values => {
           return values.map((value, index) => {
+            console.log('monstro: ' + monstro.nome + '; data: ' + value.data);
+
             return this.mapMedida(value, monstro);
           });
         })
@@ -96,8 +101,11 @@ export class MedidasService {
       });
 
       const medidas2$ = collection2.valueChanges().pipe(
+        first(),
         map(values => {
           return values.map((value, index) => {
+            console.log('monstro: ' + monstro.nome + '; gordura: ' + value.gordura);
+
             return this.mapMedida(value, monstro);
           });
         })
@@ -113,8 +121,11 @@ export class MedidasService {
       });
 
       const medidas3$ = collection3.valueChanges().pipe(
+        first(),
         map(values => {
           return values.map((value, index) => {
+            console.log('monstro: ' + monstro.nome + '; musculo: ' + value.musculo);
+
             return this.mapMedida(value, monstro);
           });
         })
@@ -129,9 +140,12 @@ export class MedidasService {
           .limit(1);
       });
 
-      const medida4$ = collection4.valueChanges().pipe(
+      const medidas4$ = collection4.valueChanges().pipe(
+        first(),
         map(values => {
           return values.map((value, index) => {
+            console.log('monstro: ' + monstro.nome + '; indiceDeMassaCorporal: ' + value.indiceDeMassaCorporal);
+
             return this.mapMedida(value, monstro);
           });
         })
@@ -139,22 +153,33 @@ export class MedidasService {
 
       //
 
-      const medidas$ = merge(medidas1$); // , medidas2$, medidas3$, medida4$
+      const medidas$ = merge(...[medidas1$, medidas2$, medidas3$, medidas4$]).pipe(
+        // first(),
+        mergeMap(flat => flat),
+        toArray(),
+        tap(medidas2 => {
+          console.log('monstro: ' + monstro.nome + '; merge-count: ' + ++mergeCount + '; medidas.length: ' + medidas2.length);
+        })
+      );
 
       return medidas$;
     });
 
     const medidasPorMonstros$ = combineLatest(medidasPorMonstros$Array);
 
-    const medidas: Medida[] = [];
+    let combineCount = 0;
 
     const medidasPorMonstrosUnificado$ = medidasPorMonstros$.pipe(
       map(arrayDeArray => {
+        console.log('combine: ' + '' + '; combine-count: ' + ++combineCount + '; arrayDeArray.length: ' + arrayDeArray.length);
+
+        const medidas: Medida[] = [];
+
         arrayDeArray.forEach(array => array.forEach(medida => medidas.push(medida)));
 
         const medidasSemRepeticao = _.uniqBy(medidas, 'id');
 
-        return medidas;
+        return medidasSemRepeticao;
       })
     );
 

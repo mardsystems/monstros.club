@@ -49,7 +49,7 @@ export class MonstrosService {
 
               this.atualizaMonstro(user.uid, solicitacao);
             }),
-            catchError((error, monstro) => {
+            catchError((error, source$) => {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
                 isEdit: false,
                 id: user.uid,

@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, first, switchMap } from 'rxjs/operators';
+import { catchError, first, switchMap, map } from 'rxjs/operators';
 import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
@@ -52,12 +52,9 @@ export class RankingsComponent implements OnInit {
 
   ngOnInit() {
     const monstro$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        const monstroId = params.get('monstroId');
-
-        return this.monstrosService.obtemMonstroObservavel(monstroId);
-      }),
-      catchError((error, monstro) => {
+      map(params => params.get('monstroId')),
+      switchMap((monstroId) => this.monstrosService.obtemMonstroObservavel(monstroId)),
+      catchError((error, source$) => {
         console.log(`Não foi possível montar os rankings do monstro.\nRazão:\n${error}`);
 
         return of(null);

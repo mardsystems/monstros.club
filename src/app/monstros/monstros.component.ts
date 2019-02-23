@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, map } from 'rxjs/operators';
 import { StorageService } from '../app.services';
 import { AuthService } from '../auth/auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
@@ -19,7 +19,6 @@ export class MonstrosComponent {
   monstroLogado$: Observable<Monstro>;
   monstroEstaLogado = false;
 
-  monstroId: string;
   monstro$: Observable<Monstro>;
 
   desktopQuery: MediaQueryList;
@@ -46,12 +45,9 @@ export class MonstrosComponent {
     });
 
     this.monstro$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        this.monstroId = params.get('monstroId');
-
-        return this.monstrosService.obtemMonstroObservavel(this.monstroId);
-      }),
-      catchError((error, monstro) => {
+      map(params => params.get('monstroId')),
+      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId)),
+      catchError((error, source$) => {
         console.log(`Não foi possível montar o ambiente 'Monstros'.\nRazão:\n${error}`);
 
         this.router.navigateByUrl('404', { skipLocationChange: true });
