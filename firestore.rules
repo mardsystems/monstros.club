@@ -46,5 +46,10 @@ service cloud.firestore {
       allow create: if ehSeuRecurso() || ehAdministrador();
       allow update, delete: if ehProprietario() || ehAdministrador();
     }
+
+    match /rankings-participacoes/{rankingParticipacoes} {
+      allow create: if true;
+      allow update, delete: if true;
+    }
   }
 }
