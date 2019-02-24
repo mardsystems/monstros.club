@@ -306,6 +306,43 @@ export class RankingsService
     });
   }
 
+  removeParticipante(rankingId: string, participanteId: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      // this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).pipe(
+      //   first(),
+      //   map(monstro => {
+      //     this.obtemRankingObservavel(solicitacao.rankingId).subscribe(ranking => {
+      //       const participante = monstro; // solicitacao.participanteId;
+
+      //       const agora = new Date(Date.now());
+
+      //       ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
+
+      //       const result = this.update(ranking);
+
+      //       resolve(result);
+      //     });
+      //   })
+      // );
+
+      this.obtemRankingObservavel(rankingId).pipe(
+        first()
+      ).subscribe(ranking => {
+        this.monstrosService.obtemMonstroObservavel(participanteId).subscribe(monstro => {
+          const participante = monstro; // solicitacao.participanteId;
+
+          const agora = new Date(Date.now());
+
+          ranking.removeParticipante(participante.id);
+
+          const result = this.update(ranking);
+
+          resolve(result);
+        });
+      });
+    });
+  }
+
   excluiRanking(rankingId: string): Promise<void> {
     const collection = this.db.collection<RankingDocument>(this.PATH);
 

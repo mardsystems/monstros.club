@@ -1,5 +1,6 @@
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
+import * as _ from 'lodash';
 
 export class Ranking {
   private _participantes: Participacao[];
@@ -57,6 +58,10 @@ export class Ranking {
     );
 
     this._participantes.push(participacao);
+  }
+
+  public removeParticipante(participanteId: string) {
+    _.remove(this._participantes, participante => participante.participante.id === participanteId);
   }
 }
 

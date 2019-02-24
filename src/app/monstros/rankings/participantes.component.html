@@ -1,6 +1,20 @@
-<a mat-icon-button class="participacao" *ngFor="let participacao of ranking.participantes" routerLink="../../{{participacao.participante.id}}">
+<a mat-icon-button class="participacao" *ngFor="let participacao of ranking.participantes"
+  [matMenuTriggerFor]="participacaoMenu" [matMenuTriggerData]="{participacao2: participacao}">
   <img class="avatar" src="{{participacao.participante.photoURL}}" alt="{{participacao.participante.id}}">
 </a>
 <button mat-icon-button (click)="onAdd()">
   <mat-icon>add</mat-icon>
 </button>
+
+<mat-menu #participacaoMenu="matMenu" overlapTrigger="false">
+  <ng-template matMenuContent let-participacao="participacao2">
+    <button mat-menu-item routerLink="../../{{participacao.participante.id}}">
+      <mat-icon>info</mat-icon>
+      <span>Visualizar Perfil</span>
+    </button>
+    <button mat-menu-item (click)="onDelete(participacao)" [disabled]="disabledWrite">
+      <mat-icon>delete</mat-icon>
+      <span>Remover Participação</span>
+    </button>
+  </ng-template>
+</mat-menu>
