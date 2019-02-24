@@ -8,6 +8,17 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
+export class LogService {
+  constructor() { }
+
+  debug(message?: any, ...optionalParams: any[]): void {
+    console.log(message, optionalParams);
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class StorageService {
   constructor() { }
 

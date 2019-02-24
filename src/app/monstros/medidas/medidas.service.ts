@@ -8,6 +8,7 @@ import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeMedida } from './cadastro/cadastro.application-model';
 import { Medida, TipoDeBalanca } from './medidas.domain-model';
 import * as _ from 'lodash';
+import { LogService } from 'src/app/app.services';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class MedidasService {
 
   constructor(
     private db: AngularFirestore,
-    private monstrosService: MonstrosService
+    private monstrosService: MonstrosService,
+    private log: LogService
   ) { }
 
   obtemMedidasObservaveisParaAdministracao(): Observable<Medida[]> {
@@ -84,7 +86,7 @@ export class MedidasService {
         first(),
         map(values => {
           return values.map((value, index) => {
-            console.log('monstro: ' + monstro.nome + '; data: ' + value.data);
+            this.log.debug('monstro: ' + monstro.nome + '; data: ' + value.data);
 
             return this.mapMedida(value, monstro);
           });
@@ -104,7 +106,7 @@ export class MedidasService {
         first(),
         map(values => {
           return values.map((value, index) => {
-            console.log('monstro: ' + monstro.nome + '; gordura: ' + value.gordura);
+            this.log.debug('monstro: ' + monstro.nome + '; gordura: ' + value.gordura);
 
             return this.mapMedida(value, monstro);
           });
@@ -124,7 +126,7 @@ export class MedidasService {
         first(),
         map(values => {
           return values.map((value, index) => {
-            console.log('monstro: ' + monstro.nome + '; musculo: ' + value.musculo);
+            this.log.debug('monstro: ' + monstro.nome + '; musculo: ' + value.musculo);
 
             return this.mapMedida(value, monstro);
           });
@@ -144,7 +146,7 @@ export class MedidasService {
         first(),
         map(values => {
           return values.map((value, index) => {
-            console.log('monstro: ' + monstro.nome + '; indiceDeMassaCorporal: ' + value.indiceDeMassaCorporal);
+            this.log.debug('monstro: ' + monstro.nome + '; indiceDeMassaCorporal: ' + value.indiceDeMassaCorporal);
 
             return this.mapMedida(value, monstro);
           });
@@ -158,7 +160,7 @@ export class MedidasService {
         mergeMap(flat => flat),
         toArray(),
         tap(medidas2 => {
-          console.log('monstro: ' + monstro.nome + '; merge-count: ' + ++mergeCount + '; medidas.length: ' + medidas2.length);
+          this.log.debug('monstro: ' + monstro.nome + '; merge-count: ' + ++mergeCount + '; medidas.length: ' + medidas2.length);
         })
       );
 
@@ -171,7 +173,7 @@ export class MedidasService {
 
     const medidasPorMonstrosUnificado$ = medidasPorMonstros$.pipe(
       map(arrayDeArray => {
-        console.log('combine: ' + '' + '; combine-count: ' + ++combineCount + '; arrayDeArray.length: ' + arrayDeArray.length);
+        this.log.debug('combine: ' + '' + '; combine-count: ' + ++combineCount + '; arrayDeArray.length: ' + arrayDeArray.length);
 
         const medidas: Medida[] = [];
 
@@ -293,9 +295,9 @@ export class MedidasService {
 
     const document = collection.doc<MedidaDocument>(medida.id);
 
-    const newDocument = this.mapTo(medida);
+    const doc = this.mapTo(medida);
 
-    const result = document.set(newDocument);
+    const result = document.set(doc);
 
     return result;
   }
@@ -333,15 +335,15 @@ export class MedidasService {
 
     const document = collection.doc<MedidaDocument>(medida.id);
 
-    const newDocument = this.mapTo(medida);
+    const doc = this.mapTo(medida);
 
-    const result = document.update(newDocument);
+    const result = document.update(doc);
 
     return result;
   }
 
   private mapTo(medida: Medida): MedidaDocument {
-    const newDocument: MedidaDocument = {
+    const doc: MedidaDocument = {
       id: medida.id,
       // monstroId: `monstros/${medida.monstro.id}`,
       monstroId: `monstros/${medida.monstroId}`,
@@ -356,7 +358,7 @@ export class MedidasService {
       indiceDeMassaCorporal: medida.indiceDeMassaCorporal
     };
 
-    return newDocument;
+    return doc;
   }
 
   excluiMedida(medidaId: string): Promise<void> {

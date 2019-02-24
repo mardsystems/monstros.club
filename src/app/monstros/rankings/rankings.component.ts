@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, first, switchMap, map } from 'rxjs/operators';
+import { catchError, first, switchMap, map, tap, distinctUntilChanged } from 'rxjs/operators';
 import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
@@ -11,6 +11,7 @@ import { CadastroComponent } from './cadastro/cadastro.component';
 import { RankingViewModel } from './cadastro/cadastro.presentation-model';
 import { Ranking } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
+import { LogService } from 'src/app/app.services';
 
 const columnDefinitions = [
   { showMobile: false, def: 'proprietario' },
@@ -43,6 +44,7 @@ export class RankingsComponent implements OnInit {
     private route: ActivatedRoute,
     private rankingsService: RankingsService,
     private monstrosService: MonstrosService,
+    private log: LogService,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -51,8 +53,14 @@ export class RankingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.log.debug('ngOnInit');
+
     const monstro$ = this.route.paramMap.pipe(
+      first(),
+      tap((value) => this.log.debug('paramMap1', value)),
       map(params => params.get('monstroId')),
+      tap((value) => this.log.debug('paramMap2', value)),
+      distinctUntilChanged(),
       switchMap((monstroId) => this.monstrosService.obtemMonstroObservavel(monstroId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar os rankings do monstro.\nRazão:\n${error}`);
@@ -62,6 +70,8 @@ export class RankingsComponent implements OnInit {
     );
 
     this.rankings$ = monstro$.pipe(
+      // first(),
+      tap((value) => this.log.debug('RankingsComponent.ngOnInit', value)),
       switchMap(monstro => {
         this.monstro = monstro;
 

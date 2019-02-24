@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { combineLatest, Observable, merge } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
+import * as _ from 'lodash';
+import { combineLatest, merge, Observable, empty } from 'rxjs';
+import { first, map, mergeMap, switchMap, toArray, tap } from 'rxjs/operators';
+import { LogService } from 'src/app/app.services';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import {
-  SolicitacaoDeCadastroDeRanking,
   ICadastroDeRanking,
+  SolicitacaoDeCadastroDeRanking,
   SolicitacaoDeParticipacaoDeRanking
 } from './cadastro/cadastro.application-model';
 import { Participacao, Ranking } from './rankings.domain-model';
@@ -19,18 +21,34 @@ import { Participacao, Ranking } from './rankings.domain-model';
 export class RankingsService
   implements ICadastroDeRanking {
   PATH = '/rankings';
+  PATH_PARTICIPACOES = this.PATH + '-participacoes';
 
   constructor(
     private db: AngularFirestore,
-    private monstrosService: MonstrosService
+    private monstrosService: MonstrosService,
+    private log: LogService
   ) { }
+
+  ref(id: string): DocumentReference {
+    const collection = this.db.collection<RankingDocument>(this.PATH);
+
+    const document = collection.doc<RankingDocument>(id);
+
+    return document.ref;
+  }
 
   obtemRankingsObservaveisParaExibicao(monstro: Monstro): Observable<Ranking[]> {
     const rankingsProprietarios$ = this.obtemRankingsObservaveisParaExibicaoPorProprietario(monstro);
 
     const rankingsPorParticipantes$ = this.obtemRankingsObservaveisPorParticipante(monstro);
 
-    const rankings$ = merge(rankingsProprietarios$, rankingsPorParticipantes$);
+    const rankings$ = merge(...[rankingsProprietarios$, rankingsPorParticipantes$])
+      .pipe(
+        first(),
+        tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicao', value)),
+        mergeMap(flat => flat),
+        toArray()
+      );
 
     return rankings$;
   }
@@ -39,12 +57,14 @@ export class RankingsService
     const monstroRef = this.monstrosService.obtemMonstroRef(proprietario.id);
 
     const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
-      return reference;
-      // .where('monstroId', '==', monstroRef);
+      return reference
+        .where('monstroId', '==', monstroRef);
       // .orderBy('data', 'desc');
     });
 
     const rankings$ = collection.valueChanges().pipe(
+      // first(),
+      tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicaoPorProprietario', value)),
       switchMap(values => this.mapRankingsObservaveis(proprietario, values))
     );
 
@@ -61,6 +81,7 @@ export class RankingsService
 
   private mapRankingObservavel(proprietario: Monstro, value: RankingDocument): Observable<Ranking> {
     const rankings$ = this.mapParticipacoesObservaveis(value).pipe(
+      // first(),
       map(participantes => this.mapRanking(value, proprietario, participantes))
     );
 
@@ -90,41 +111,36 @@ export class RankingsService
   }
 
   obtemRankingsObservaveisPorParticipante(participante: Monstro): Observable<Ranking[]> {
-    const monstroRef = this.monstrosService.obtemMonstroRef(participante.id);
-
-    const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
-      return reference
-        .where('participanteId', '==', monstroRef);
-      // .orderBy('data', 'desc');
-    });
-
-    // const collection = this.db.collection<RankingDocument>(this.PATH);
-
-    // const document = collection.doc<RankingDocument>('iPNln1DVy2G6Ys29eUU8');
-
-    // const query = document.collection<RankingDocument>('participantess', reference => {
-    //   return reference
-    //     .where('participanteId', '==', monstroRef);
-    //   // .orderBy('data', 'desc');
-    // });
-
-    const rankings$ = collection.valueChanges().pipe(
-      switchMap(values => {
-        const rankingsComProprietario$Array = values.map(value => {
-          const rankingComProprietario$ = this.monstrosService.obtemMonstroObservavel(value.monstroId.id).pipe(
-            switchMap(monstro => this.mapRankingObservavel(monstro, value))
-          );
-
-          return rankingComProprietario$;
+    const rankingsPorParticipante$ = this.obtemRankingParticipacoes(participante).pipe(
+      tap((value) => this.log.debug('obtemRankingsObservaveisPorParticipante', value)),
+      switchMap(rankingsParticipacoes => {
+        const rankings$Array = rankingsParticipacoes.map(rankingParticipacao => {
+          return this.obtemRankingObservavel(rankingParticipacao.rankingId.id);
         });
 
-        const rankingsComProprietario$ = combineLatest(rankingsComProprietario$Array);
+        const ranking$ = combineLatest(rankings$Array);
 
-        return rankingsComProprietario$;
+        return ranking$;
       })
     );
 
-    return rankings$;
+    // const rankings$ = collection.valueChanges().pipe(
+    //   switchMap(values => {
+    //     const rankingsComProprietario$Array = values.map(value => {
+    //       const rankingComProprietario$ = this.monstrosService.obtemMonstroObservavel(value.monstroId.id).pipe(
+    //         switchMap(monstro => this.mapRankingObservavel(monstro, value))
+    //       );
+
+    //       return rankingComProprietario$;
+    //     });
+
+    //     const rankingsComProprietario$ = combineLatest(rankingsComProprietario$Array);
+
+    //     return rankingsComProprietario$;
+    //   })
+    // );
+
+    return rankingsPorParticipante$;
 
     // // return merge(rankings$, new Observable<Ranking[]>(() => [])); // TODO: Problema quando não tem rankings.
 
@@ -201,7 +217,7 @@ export class RankingsService
 
         const result = this.add(ranking);
 
-        resolve(result);
+        return result;
       });
     });
   }
@@ -211,11 +227,19 @@ export class RankingsService
 
     const document = collection.doc<RankingDocument>(ranking.id);
 
-    const newDocument = this.mapTo(ranking);
+    const doc = this.mapTo(ranking);
 
-    const result = document.set(newDocument);
+    const result = document.set(doc);
 
-    return result;
+    //
+
+    const addRankingsParticipacoesResult = this.addRankingsParticipacoes(ranking);
+
+    const allResult = Promise.all([result, addRankingsParticipacoesResult]).then((results) => {
+      this.log.debug('add: ' + results);
+    });
+
+    return allResult;
   }
 
   atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
@@ -228,45 +252,6 @@ export class RankingsService
         resolve(result);
       });
     });
-  }
-
-  private update(ranking: Ranking): Promise<void> {
-    const collection = this.db.collection<RankingDocument>(this.PATH);
-
-    const document = collection.doc<RankingDocument>(ranking.id);
-
-    const newDocument = this.mapTo(ranking);
-
-    const result = document.update(newDocument);
-
-    return result;
-  }
-
-  private mapTo(ranking: Ranking): RankingDocument {
-    const monstroRef = this.monstrosService.obtemMonstroRef(ranking.proprietarioId);
-
-    const newDocument: RankingDocument = {
-      id: ranking.id,
-      nome: ranking.nome,
-      // monstroId: `monstros/${ranking.monstro.id}`,
-      // monstroId: `monstros/${ranking.proprietarioId}`,
-      monstroId: monstroRef,
-      dataDeCriacao: firebase.firestore.Timestamp.fromDate(ranking.dataDeCriacao),
-      feitoCom: ranking.feitoCom,
-      participantes: ranking.participantes.map(participacao => {
-        const participanteRef = this.monstrosService.obtemMonstroRef(participacao.participante.id);
-
-        const participacaoDocument: ParticipacaoDocument = {
-          participanteId: participanteRef,
-          desde: firebase.firestore.Timestamp.fromDate(participacao.desde),
-          ehAdministrador: participacao.ehAdministrador
-        };
-
-        return participacaoDocument;
-      })
-    };
-
-    return newDocument;
   }
 
   adicionaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void> {
@@ -343,14 +328,230 @@ export class RankingsService
     });
   }
 
+  private update(ranking: Ranking): Promise<void> {
+    const collection = this.db.collection<RankingDocument>(this.PATH);
+
+    const document = collection.doc<RankingDocument>(ranking.id);
+
+    const doc = this.mapTo(ranking);
+
+    const result = document.update(doc);
+
+    //
+
+    const updateRankingsParticipacoesResult = this.updateRankingsParticipacoes(ranking);
+
+    const allResult = Promise.all([result, updateRankingsParticipacoesResult]).then((results) => {
+      this.log.debug('update: ' + results);
+    });
+
+    return allResult;
+  }
+
+  private mapTo(ranking: Ranking): RankingDocument {
+    const monstroRef = this.monstrosService.obtemMonstroRef(ranking.proprietarioId);
+
+    const doc: RankingDocument = {
+      id: ranking.id,
+      nome: ranking.nome,
+      // monstroId: `monstros/${ranking.monstro.id}`,
+      // monstroId: `monstros/${ranking.proprietarioId}`,
+      monstroId: monstroRef,
+      dataDeCriacao: firebase.firestore.Timestamp.fromDate(ranking.dataDeCriacao),
+      feitoCom: ranking.feitoCom,
+      participantes: ranking.participantes.map(participacao => {
+        const participanteRef = this.monstrosService.obtemMonstroRef(participacao.participante.id);
+
+        const participacaoDocument: ParticipacaoDocument = {
+          participanteId: participanteRef,
+          desde: firebase.firestore.Timestamp.fromDate(participacao.desde),
+          ehAdministrador: participacao.ehAdministrador
+        };
+
+        return participacaoDocument;
+      })
+    };
+
+    return doc;
+  }
+
   excluiRanking(rankingId: string): Promise<void> {
     const collection = this.db.collection<RankingDocument>(this.PATH);
 
     const document = collection.doc<RankingDocument>(rankingId);
 
+    //
+
+    const excluiRankingsParticicacoesResult = this.excluiRankingsParticicacoesPorRanking(rankingId);
+
+    //
+
     const result = document.delete();
 
+    //
+
+    const allResult = Promise.all([result, excluiRankingsParticicacoesResult]).then((results) => {
+      this.log.debug('excluiRanking: ' + results);
+    });
+
+    return allResult;
+  }
+
+  // Rankings - Participações.
+
+  obtemRankingParticipacoes(participante: Monstro): Observable<RankingParticipacaoDocument[]> {
+    const monstroRef = this.monstrosService.obtemMonstroRef(participante.id);
+
+    const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
+      return reference
+        .where('participanteId', '==', monstroRef);
+      // .orderBy('data', 'desc');
+    });
+
+    const participacoes$ = collection.valueChanges();
+
+    return participacoes$;
+  }
+
+  addRankingsParticipacoes(ranking: Ranking): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const rankingRef = this.ref(ranking.id);
+
+      const participanteResults = ranking.participantes.map(participacao => {
+        const rankingParticipacaoId = this.db.createId();
+
+        const participanteRef = this.monstrosService.obtemMonstroRef(participacao.participante.id);
+
+        const doc: RankingParticipacaoDocument = {
+          id: rankingParticipacaoId,
+          participanteId: participanteRef,
+          rankingId: rankingRef
+        };
+
+        const result = this.addRankingParticipacao(doc);
+
+        return result;
+      });
+
+      const allResult = Promise.all(participanteResults).then((results) => {
+        this.log.debug('addRankingsParticipacoes: ' + results);
+      });
+
+      resolve(allResult);
+    });
+  }
+
+  private updateRankingsParticipacoes(ranking: Ranking): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const rankingRef = this.ref(ranking.id);
+
+      const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
+        return reference
+          .where('rankingId', '==', rankingRef);
+      });
+
+      collection.valueChanges().pipe(first()).subscribe(values => {
+        const participantesAindaNaoCadastrados = _.differenceBy(ranking.participantes, values, 'participanteId');
+
+        const participantesAindaNaoCadastradosResult = participantesAindaNaoCadastrados.map(participanteAindaNaoCadastrado => {
+          const rankingParticipacaoId = this.db.createId();
+
+          const participanteRef = this.monstrosService.obtemMonstroRef(participanteAindaNaoCadastrado.participante.id);
+
+          const doc: RankingParticipacaoDocument = {
+            id: rankingParticipacaoId,
+            participanteId: participanteRef,
+            rankingId: rankingRef
+          };
+
+          const result = this.addRankingParticipacao(doc);
+
+          return result;
+        });
+
+        const participantesRemovidos = _.differenceBy(values, ranking.participantes, 'participanteId');
+
+        const participantesRemovidosResult = participantesRemovidos.map(participanteRemovido => {
+          const document = collection.doc<RankingParticipacaoDocument>(participanteRemovido.id);
+
+          const result = document.delete();
+
+          return result;
+        });
+
+        const bothResults = [participantesAindaNaoCadastradosResult, participantesRemovidosResult];
+
+        const allResult = Promise.all(bothResults).then((results) => {
+          this.log.debug('updateRankingsParticipacoes: ' + results);
+        });
+
+        resolve(allResult);
+      });
+    });
+  }
+
+  addRankingParticipacao(rankingParticipacaoDoc: RankingParticipacaoDocument): Promise<void> {
+    const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES);
+
+    const document = collection.doc<RankingParticipacaoDocument>(rankingParticipacaoDoc.id);
+
+    const result = document.set(rankingParticipacaoDoc);
+
     return result;
+  }
+
+  excluiRankingsParticicacoesPorRanking(rankingId: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const rankingRef = this.ref(rankingId);
+
+      const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
+        return reference
+          .where('rankingId', '==', rankingRef);
+      });
+
+      collection.valueChanges().pipe(first()).subscribe(values => {
+        const deleteResults = values.map(doc => {
+          const document = collection.doc<RankingParticipacaoDocument>(doc.id);
+
+          const result = document.delete();
+
+          return result;
+        });
+
+        const allResult = Promise.all(deleteResults).then((results) => {
+          this.log.debug('excluiRankingsParticicacoesPorRanking: ' + results);
+        });
+
+        resolve(allResult);
+      });
+    });
+  }
+
+  excluiRankingsParticicacoesPorParticipante(participanteId: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const monstroRef = this.monstrosService.obtemMonstroRef(participanteId);
+
+      const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
+        return reference
+          .where('participanteId', '==', monstroRef);
+      });
+
+      collection.valueChanges().pipe(first()).subscribe(values => {
+        const deleteResults = values.map(doc => {
+          const document = collection.doc<RankingParticipacaoDocument>(doc.id);
+
+          const result = document.delete();
+
+          return result;
+        });
+
+        const allResult = Promise.all(deleteResults).then((results) => {
+          this.log.debug('excluiRankingsParticicacoesPorParticipante: ' + results);
+        });
+
+        resolve(allResult);
+      });
+    });
   }
 }
 
@@ -368,4 +569,10 @@ interface ParticipacaoDocument {
   // rankingId: firebase.firestore.DocumentReference;
   desde: firebase.firestore.Timestamp;
   ehAdministrador: boolean;
+}
+
+interface RankingParticipacaoDocument {
+  id: string;
+  participanteId: firebase.firestore.DocumentReference;
+  rankingId: firebase.firestore.DocumentReference;
 }

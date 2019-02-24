@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, switchMap, map } from 'rxjs/operators';
-import { StorageService } from '../app.services';
+import { catchError, switchMap, map, first, tap } from 'rxjs/operators';
+import { StorageService, LogService } from '../app.services';
 import { AuthService } from '../auth/auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
 import { Monstro } from './monstros.domain-model';
@@ -30,6 +30,7 @@ export class MonstrosComponent {
     private monstrosService: MonstrosService,
     private authService: AuthService,
     private storageService: StorageService,
+    private log: LogService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
@@ -45,7 +46,10 @@ export class MonstrosComponent {
     });
 
     this.monstro$ = this.route.paramMap.pipe(
+      first(),
+      tap((value) => this.log.debug('paramMap1', value)),
       map(params => params.get('monstroId')),
+      tap((value) => this.log.debug('paramMap2', value)),
       switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar o ambiente 'Monstros'.\nRazão:\n${error}`);

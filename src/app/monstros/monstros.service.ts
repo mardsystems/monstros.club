@@ -209,11 +209,11 @@ export class MonstrosService {
 
     const document = collection.doc<MonstroDocument>(monstro.id);
 
-    const newDocument = this.mapTo(monstro);
+    const doc = this.mapTo(monstro);
 
-    const result = document.set(newDocument);
+    const result = document.set(doc);
 
-    console.log({ 'monstro adicionado': newDocument });
+    console.log({ 'monstro adicionado': doc });
 
     return result;
   }
@@ -253,15 +253,15 @@ export class MonstrosService {
 
     const document = collection.doc<MonstroDocument>(monstro.id);
 
-    const newDocument = this.mapTo(monstro);
+    const doc = this.mapTo(monstro);
 
-    const result = document.update(newDocument);
+    const result = document.update(doc);
 
     return result;
   }
 
   private mapTo(monstro: Monstro): MonstroDocument {
-    const newDocument: MonstroDocument = {
+    const doc: MonstroDocument = {
       admin: (monstro.admin ? monstro.admin : false),
       displayName: monstro.displayName,
       email: monstro.email,
@@ -275,7 +275,7 @@ export class MonstrosService {
       dataDoUltimoLogin: firebase.firestore.Timestamp.fromDate(monstro.dataDoUltimoLogin),
     };
 
-    return newDocument;
+    return doc;
   }
 
   excluiMonstro(monstroId: string): Promise<void> {

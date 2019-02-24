@@ -3,13 +3,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, first, switchMap } from 'rxjs/operators';
+import { catchError, first, switchMap, tap, map } from 'rxjs/operators';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { CadastroDeMedidaViewModel } from './cadastro/cadastro.presentation-model';
 import { Balanca, Medida, OmronHBF214 } from './medidas.domain-model';
 import { MedidasService } from './medidas.service';
+import { LogService } from 'src/app/app.services';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -46,6 +47,7 @@ export class MedidasComponent implements OnInit {
     private route: ActivatedRoute,
     private medidasService: MedidasService,
     private monstrosService: MonstrosService,
+    private log: LogService,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -55,11 +57,11 @@ export class MedidasComponent implements OnInit {
 
   ngOnInit() {
     const monstro$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        const monstroId = params.get('monstroId');
-
-        return this.monstrosService.obtemMonstroObservavel(monstroId);
-      }),
+      first(),
+      tap((value) => this.log.debug('paramMap1', value)),
+      map(params => params.get('monstroId')),
+      tap((value) => this.log.debug('paramMap2', value)),
+      switchMap((monstroId) => this.monstrosService.obtemMonstroObservavel(monstroId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar as medidas do monstro.\nRazão:\n${error}`);
 

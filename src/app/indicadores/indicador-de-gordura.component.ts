@@ -7,7 +7,7 @@ import { Balanca, IMedidaDeGordura, CONST_CLASSIFICACAO_INVALIDA } from '../mons
   templateUrl: './indicador-de-gordura.component.html',
   styleUrls: ['./indicador-de-gordura.component.scss']
 })
-export class IndicadorDeGorduraComponent implements OnInit, OnChanges {
+export class IndicadorDeGorduraComponent implements OnInit {
   @Input() medida: IMedidaDeGordura;
   @Input() balanca: Balanca;
   @Output() classificacao: number;
@@ -32,14 +32,14 @@ export class IndicadorDeGorduraComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    const x = changes;
+  // ngOnChanges(changes: SimpleChanges) {
+  //   const x = changes;
 
-    this.executaClassificacao();
+  //   this.executaClassificacao();
 
-    // this.doSomething(changes.categoryId.currentValue);
+  //   // this.doSomething(changes.categoryId.currentValue);
 
-    // You can also use categoryId.previousValue and
-    // categoryId.firstChange for comparing old and new values
-  }
+  //   // You can also use categoryId.previousValue and
+  //   // categoryId.firstChange for comparing old and new values
+  // }
 }
