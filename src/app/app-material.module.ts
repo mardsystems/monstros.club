@@ -15,6 +15,7 @@ import {
   MatToolbarModule
 } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -25,6 +26,7 @@ import { MatTableModule } from '@angular/material/table';
     CommonModule,
     MatButtonModule,
     MatCardModule,
+    MatChipsModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,
@@ -42,6 +44,7 @@ import { MatTableModule } from '@angular/material/table';
   exports: [
     MatButtonModule,
     MatCardModule,
+    MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,

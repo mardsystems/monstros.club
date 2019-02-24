@@ -78,7 +78,7 @@ export class Monstro {
 
   public get idade(): number {
     if (!this._dataDeNascimento) {
-      return -1;
+      return null;
     }
 
     const idade = this._calculoDeIdade.calculaIdade(this._dataDeNascimento);

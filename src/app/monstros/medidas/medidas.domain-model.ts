@@ -104,6 +104,9 @@ export interface IMedidaDeIndiceDeMassaCorporal {
   feitaCom: TipoDeBalanca;
 }
 
+export const CONST_CLASSIFICACAO_NULA = -99;
+export const CONST_CLASSIFICACAO_INVALIDA = +99;
+
 export abstract class Balanca {
   public abstract classificaGordura(medida: IMedidaDeGordura): number;
 
@@ -138,6 +141,22 @@ export class BalancaComum extends Balanca {
 
 export class OmronHBF214 extends Balanca {
   public classificaGordura(medida: IMedidaDeGordura): number {
+    if (!medida.monstro.idade) {
+      return CONST_CLASSIFICACAO_NULA;
+    }
+
+    if (!medida.monstro.genero) {
+      return CONST_CLASSIFICACAO_NULA;
+    }
+
+    if (!medida.gordura) {
+      return CONST_CLASSIFICACAO_NULA;
+    }
+
+    if (medida.gordura <= 0) {
+      return CONST_CLASSIFICACAO_INVALIDA;
+    }
+
     const idade = medida.monstro.idade;
 
     const genero = medida.monstro.genero;
@@ -222,6 +241,14 @@ export class OmronHBF214 extends Balanca {
   }
 
   public classificaGorduraVisceral(medida: IMedidaDeGorduraVisceral): number {
+    if (!medida.gorduraVisceral) {
+      return CONST_CLASSIFICACAO_NULA;
+    }
+
+    if (medida.gorduraVisceral <= 0) {
+      return CONST_CLASSIFICACAO_INVALIDA;
+    }
+
     const gorduraVisceral = medida.gorduraVisceral;
 
     let classificacao: number;
@@ -238,6 +265,22 @@ export class OmronHBF214 extends Balanca {
   }
 
   public classificaMusculo(medida: IMedidaDeMusculo): number {
+    if (!medida.monstro.idade) {
+      return CONST_CLASSIFICACAO_NULA;
+    }
+
+    if (!medida.monstro.genero) {
+      return CONST_CLASSIFICACAO_NULA;
+    }
+
+    if (!medida.musculo) {
+      return CONST_CLASSIFICACAO_NULA;
+    }
+
+    if (medida.musculo <= 0) {
+      return CONST_CLASSIFICACAO_INVALIDA;
+    }
+
     const idade = medida.monstro.idade;
 
     const genero = medida.monstro.genero;
@@ -322,6 +365,14 @@ export class OmronHBF214 extends Balanca {
   }
 
   public classificaIndiceDeMassaCorporal(medida: IMedidaDeIndiceDeMassaCorporal): number {
+    if (!medida.indiceDeMassaCorporal) {
+      return CONST_CLASSIFICACAO_NULA;
+    }
+
+    if (medida.indiceDeMassaCorporal <= 0) {
+      return CONST_CLASSIFICACAO_INVALIDA;
+    }
+
     const indiceDeMassaCorporal = medida.indiceDeMassaCorporal;
 
     let classificacao: number;

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
-import { Balanca, IMedidaDeIndiceDeMassaCorporal } from '../monstros/medidas/medidas.domain-model';
-import { CONST_CLASSIFICACAO_INVALIDA } from './indicadores.model';
+import { Balanca, IMedidaDeIndiceDeMassaCorporal, CONST_CLASSIFICACAO_INVALIDA } from '../monstros/medidas/medidas.domain-model';
+// import { CONST_CLASSIFICACAO_INVALIDA } from './indicadores.model';
 
 @Component({
   selector: 'indicador-de-indice-de-massa-corporal',
@@ -17,6 +17,14 @@ export class IndicadorDeIndiceDeMassaCorporalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.executaClassificacao();
+  }
+
+  public change(e) {
+    this.executaClassificacao();
+  }
+
+  private executaClassificacao() {
     try {
       this.classificacao = this.balanca.classificaIndiceDeMassaCorporal(this.medida);
     } catch (ex) {

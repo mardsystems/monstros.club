@@ -13,7 +13,8 @@
   </mat-form-field>
 
   <mat-form-field hideRequiredMarker>
-    <mat-select placeholder="Feita Com" [(ngModel)]="model.feitaCom" required name="feitaCom">
+    <mat-select placeholder="Feita Com" [(ngModel)]="model.feitaCom"
+      (selectionChange)="feitaCom_selectionChange($event)" required name="feitaCom">
       <mat-option value="Balança Comum">Balança Comum</mat-option>
       <mat-option value="Omron HBF-214">Omron HBF-214</mat-option>
       <mat-option value="Omron HBF-514C">Omron HBF-514C</mat-option>
@@ -26,17 +27,29 @@
   </mat-form-field>
 
   <mat-form-field>
-    <input type="number" placeholder="Gordura" matInput [(ngModel)]="model.gordura" required #gordura="ngModel">
-    <!-- <span matSuffix innerHTML="{{indicadorDeGordura}}"></span> -->
+    <input type="number" placeholder="Gordura" matInput [(ngModel)]="model.gordura" required #gordura="ngModel"
+      (input)="indicadorDeGordura.change($event)">
+    <indicador-de-gordura matSuffix [medida]="model" [balanca]="balanca" #indicadorDeGordura></indicador-de-gordura>
+    <!-- <mat-chip-list matSuffix>
+      <mat-chip color="primary" selected>
+        teste
+      </mat-chip>
+      <mat-chip color="accent" selected>
+      </mat-chip>
+    </mat-chip-list> -->
   </mat-form-field>
 
   <mat-form-field>
     <input type="number" placeholder="Gordura Visceral" matInput [(ngModel)]="model.gorduraVisceral" required
-      #gorduraVisceral="ngModel">
+      #gorduraVisceral="ngModel" (input)="indicadorDeGorduraVisceral.change($event)">
+    <indicador-de-gordura-visceral matSuffix [medida]="model" [balanca]="balanca" #indicadorDeGorduraVisceral>
+    </indicador-de-gordura-visceral>
   </mat-form-field>
 
   <mat-form-field>
-    <input type="number" placeholder="Músculo" matInput [(ngModel)]="model.musculo" required #musculo="ngModel">
+    <input type="number" placeholder="Músculo" matInput [(ngModel)]="model.musculo" required #musculo="ngModel"
+      (input)="indicadorDeMusculo.change($event)">
+    <indicador-de-musculo matSuffix [medida]="model" [balanca]="balanca" #indicadorDeMusculo></indicador-de-musculo>
   </mat-form-field>
 
   <mat-form-field>
@@ -51,7 +64,9 @@
 
   <mat-form-field>
     <input type="number" placeholder="IMC" matInput [(ngModel)]="model.indiceDeMassaCorporal" required
-      #indiceDeMassaCorporal="ngModel">
+      #indiceDeMassaCorporal="ngModel" (input)="indicadorDeIndiceDeMassaCorporal.change($event)">
+    <indicador-de-indice-de-massa-corporal matSuffix [medida]="model" [balanca]="balanca"
+      #indicadorDeIndiceDeMassaCorporal></indicador-de-indice-de-massa-corporal>
   </mat-form-field>
 </mat-dialog-content>
 

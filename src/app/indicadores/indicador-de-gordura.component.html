@@ -1,8 +1,9 @@
-<span [ngSwitch]="classificacao">
+<ng-container [ngSwitch]="classificacao">
   <span *ngSwitchCase="-1" class="good">&#8722;</span>
   <span *ngSwitchCase="0" class="normal">&#10003;</span>
   <span *ngSwitchCase="+1" class="bad">&#43;</span>
   <span *ngSwitchCase="+2" class="bad">&#43;&#43;</span>
-  <mat-icon *ngSwitchCase="-99" style="color: orange">waring</mat-icon>
-  <mat-icon *ngSwitchDefault style="color: red">error</mat-icon>
-</span>
+  <span *ngSwitchCase="-99"></span>
+  <mat-icon *ngSwitchCase="+99" class="warning">waring</mat-icon>
+  <mat-icon *ngSwitchDefault class="error">error</mat-icon>
+</ng-container>

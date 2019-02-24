@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
-import { Balanca, IMedidaDeGorduraVisceral } from '../monstros/medidas/medidas.domain-model';
-import { CONST_CLASSIFICACAO_INVALIDA } from './indicadores.model';
+import { Balanca, IMedidaDeGorduraVisceral, CONST_CLASSIFICACAO_INVALIDA } from '../monstros/medidas/medidas.domain-model';
+// import { CONST_CLASSIFICACAO_INVALIDA } from './indicadores.model';
 
 @Component({
   selector: 'indicador-de-gordura-visceral',
@@ -17,6 +17,14 @@ export class IndicadorDeGorduraVisceralComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.executaClassificacao();
+  }
+
+  public change(e) {
+    this.executaClassificacao();
+  }
+
+  private executaClassificacao() {
     try {
       this.classificacao = this.balanca.classificaGorduraVisceral(this.medida);
     } catch (ex) {

@@ -1,13 +1,13 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
-import { Balanca, IMedidaDeGordura } from '../monstros/medidas/medidas.domain-model';
-import { CONST_CLASSIFICACAO_INVALIDA } from './indicadores.model';
+import { Component, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Balanca, IMedidaDeGordura, CONST_CLASSIFICACAO_INVALIDA } from '../monstros/medidas/medidas.domain-model';
+// import { CONST_CLASSIFICACAO_INVALIDA } from './indicadores.model';
 
 @Component({
   selector: 'indicador-de-gordura',
   templateUrl: './indicador-de-gordura.component.html',
   styleUrls: ['./indicador-de-gordura.component.scss']
 })
-export class IndicadorDeGorduraComponent implements OnInit {
+export class IndicadorDeGorduraComponent implements OnInit, OnChanges {
   @Input() medida: IMedidaDeGordura;
   @Input() balanca: Balanca;
   @Output() classificacao: number;
@@ -17,10 +17,29 @@ export class IndicadorDeGorduraComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.executaClassificacao();
+  }
+
+  public change(e) {
+    this.executaClassificacao();
+  }
+
+  private executaClassificacao() {
     try {
       this.classificacao = this.balanca.classificaGordura(this.medida);
     } catch (ex) {
       this.classificacao = CONST_CLASSIFICACAO_INVALIDA;
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const x = changes;
+
+    this.executaClassificacao();
+
+    // this.doSomething(changes.categoryId.currentValue);
+
+    // You can also use categoryId.previousValue and
+    // categoryId.firstChange for comparing old and new values
   }
 }
