@@ -29,6 +29,9 @@ A execução de série é a melhor.
 ## Terceira versão
 ![monstros.club-domínio-3](doc/monstros.club-domínio-3.png)
 
+## Quarta versão
+![monstros.club-domínio-4](doc/monstros.club-domínio-4.png)
+
 ## Configurar o ambiente de desenvolvimento
 * npm install -g angular/cli
 

@@ -7,9 +7,9 @@ import { catchError, first, switchMap, tap, map } from 'rxjs/operators';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { CadastroComponent } from './cadastro/cadastro.component';
-import { CadastroDeMedidaViewModel } from './cadastro/cadastro.presentation-model';
-import { Balanca, Medida, OmronHBF214 } from './series.domain-model';
-import { MedidasService } from './series.service';
+import { CadastroDeSerieViewModel } from './cadastro/cadastro.presentation-model';
+import { Serie } from './series.domain-model';
+import { SeriesService } from './series.service';
 import { LogService } from 'src/app/app.services';
 
 const columnDefinitions = [
@@ -31,9 +31,9 @@ const columnDefinitions = [
   styleUrls: ['./series.component.scss']
 })
 export class SeriesComponent implements OnInit {
-  medidas$: Observable<Medida[]>;
+  medidas$: Observable<Serie[]>;
   monstro: Monstro;
-  balanca: Balanca;
+  // balanca: Balanca;
   loading = true;
   disabledWrite: boolean;
 
@@ -45,12 +45,12 @@ export class SeriesComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private medidasService: MedidasService,
+    private medidasService: SeriesService,
     private monstrosService: MonstrosService,
     private log: LogService,
     media: MediaMatcher
   ) {
-    this.balanca = new OmronHBF214();
+    // this.balanca = new OmronHBF214();
 
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
@@ -119,22 +119,22 @@ export class SeriesComponent implements OnInit {
   }
 
   onAdd(): void {
-    const model = CadastroDeMedidaViewModel.toAddViewModel(this.monstro);
+    const model = CadastroDeSerieViewModel.toAddViewModel(this.monstro);
 
-    const config: MatDialogConfig<CadastroDeMedidaViewModel> = { data: model };
-
-    this.dialog.open(CadastroComponent, config);
-  }
-
-  onEdit(medida: Medida): void {
-    const model = CadastroDeMedidaViewModel.toEditViewModel(this.monstro, medida);
-
-    const config: MatDialogConfig<CadastroDeMedidaViewModel> = { data: model };
+    const config: MatDialogConfig<CadastroDeSerieViewModel> = { data: model };
 
     this.dialog.open(CadastroComponent, config);
   }
 
-  onDelete(medida: Medida): void {
+  onEdit(medida: Serie): void {
+    const model = CadastroDeSerieViewModel.toEditViewModel(this.monstro, medida);
+
+    const config: MatDialogConfig<CadastroDeSerieViewModel> = { data: model };
+
+    this.dialog.open(CadastroComponent, config);
+  }
+
+  onDelete(medida: Serie): void {
     this.medidasService.excluiMedida(medida.id);
   }
 }

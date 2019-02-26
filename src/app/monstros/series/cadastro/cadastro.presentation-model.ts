@@ -1,21 +1,16 @@
 import { Monstro } from '../../monstros.domain-model';
 import {
-  IMedidaDeGordura,
-  IMedidaDeGorduraVisceral,
-  IMedidaDeIndiceDeMassaCorporal,
-  IMedidaDeMusculo,
-  Medida,
+  Serie,
 } from '../series.domain-model';
-import { SolicitacaoDeCadastroDeMedida } from './cadastro.application-model';
+import { SolicitacaoDeCadastroDeSerie } from './cadastro.application-model';
 
-export class CadastroDeMedidaViewModel extends SolicitacaoDeCadastroDeMedida
-  implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {
+export class CadastroDeSerieViewModel extends SolicitacaoDeCadastroDeSerie {
   isEdit: boolean;
   id?: string; // Usado apenas na edição.
   monstro: Monstro;
 
-  static toAddViewModel(monstro: Monstro): CadastroDeMedidaViewModel {
-    const solicitacao = SolicitacaoDeCadastroDeMedida.toAdd(monstro.id);
+  static toAddViewModel(monstro: Monstro): CadastroDeSerieViewModel {
+    const solicitacao = SolicitacaoDeCadastroDeSerie.toAdd(monstro.id);
 
     return {
       isEdit: false,
@@ -23,7 +18,7 @@ export class CadastroDeMedidaViewModel extends SolicitacaoDeCadastroDeMedida
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       data: solicitacao.data,
-      feitaCom: solicitacao.feitaCom,
+      // feitaCom: solicitacao.feitaCom,
       peso: solicitacao.peso,
       gordura: solicitacao.gordura,
       gorduraVisceral: solicitacao.gorduraVisceral,
@@ -34,8 +29,8 @@ export class CadastroDeMedidaViewModel extends SolicitacaoDeCadastroDeMedida
     };
   }
 
-  static toEditViewModel(monstro: Monstro, medida: Medida): CadastroDeMedidaViewModel {
-    const solicitacao = SolicitacaoDeCadastroDeMedida.toEdit(medida);
+  static toEditViewModel(monstro: Monstro, medida: Serie): CadastroDeSerieViewModel {
+    const solicitacao = SolicitacaoDeCadastroDeSerie.toEdit(medida);
 
     return {
       isEdit: true,
@@ -43,7 +38,7 @@ export class CadastroDeMedidaViewModel extends SolicitacaoDeCadastroDeMedida
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       data: solicitacao.data,
-      feitaCom: solicitacao.feitaCom,
+      // feitaCom: solicitacao.feitaCom,
       peso: solicitacao.peso,
       gordura: solicitacao.gordura,
       gorduraVisceral: solicitacao.gorduraVisceral,

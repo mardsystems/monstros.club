@@ -1,10 +1,10 @@
 import * as moment from 'moment';
-import { Medida, TipoDeBalanca } from '../series.domain-model';
+import { Serie, TipoDeSerie } from '../series.domain-model';
 
-export class SolicitacaoDeCadastroDeMedida {
+export class SolicitacaoDeCadastroDeSerie {
   monstroId: string;
   data: moment.Moment;
-  feitaCom: TipoDeBalanca;
+  // feitaCom: TipoDeSerie;
   peso?: number;
   gordura?: number;
   gorduraVisceral?: number;
@@ -13,11 +13,11 @@ export class SolicitacaoDeCadastroDeMedida {
   metabolismoBasal?: number;
   indiceDeMassaCorporal?: number;
 
-  static toAdd(monstroId: string): SolicitacaoDeCadastroDeMedida {
+  static toAdd(monstroId: string): SolicitacaoDeCadastroDeSerie {
     return {
       monstroId: monstroId,
       data: moment(new Date(Date.now())),
-      feitaCom: TipoDeBalanca.OmronHBF214,
+      // feitaCom: TipoDeSerie.OmronHBF214,
       peso: null,
       gordura: null,
       gorduraVisceral: null,
@@ -28,12 +28,12 @@ export class SolicitacaoDeCadastroDeMedida {
     };
   }
 
-  static toEdit(medida: Medida): SolicitacaoDeCadastroDeMedida {
+  static toEdit(medida: Serie): SolicitacaoDeCadastroDeSerie {
     return {
       monstroId: medida.monstroId,
       data: moment(medida.data),
-      feitaCom: medida.feitaCom,
-      peso: medida.peso,
+      // feitaCom: medida.tipo,
+      peso: medida.quantidade,
       gordura: medida.gordura,
       gorduraVisceral: medida.gorduraVisceral,
       musculo: medida.musculo,

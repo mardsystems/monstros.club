@@ -5,16 +5,16 @@ import { combineLatest, Observable, of, merge, forkJoin } from 'rxjs';
 import { first, map, switchMap, combineAll, mergeAll, tap, mergeMap, toArray } from 'rxjs/operators';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { SolicitacaoDeCadastroDeMedida } from './cadastro/cadastro.application-model';
-import { Medida, TipoDeBalanca } from './series.domain-model';
+import { SolicitacaoDeCadastroDeSerie } from './cadastro/cadastro.application-model';
+import { Serie, TipoDeSerie } from './series.domain-model';
 import * as _ from 'lodash';
 import { LogService } from 'src/app/app.services';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MedidasService {
-  PATH = '/medidas';
+export class SeriesService {
+  PATH = '/series';
 
   constructor(
     private db: AngularFirestore,
@@ -22,13 +22,13 @@ export class MedidasService {
     private log: LogService
   ) { }
 
-  obtemMedidasObservaveisParaAdministracao(): Observable<Medida[]> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
+  obtemMedidasObservaveisParaAdministracao(): Observable<Serie[]> {
+    const collection = this.db.collection<SerieDocument>(this.PATH, reference => {
       return reference
         .orderBy('data', 'desc');
     });
 
-    const medidas$ = collection.valueChanges().pipe(
+    const series$ = collection.valueChanges().pipe(
       switchMap(values => {
         const arrayDeMedidasObservaveis = values
           .filter(value => value.monstroId !== 'monstros/OJUFB66yLBwIOE2hk8hs')
@@ -48,19 +48,19 @@ export class MedidasService {
       })
     );
 
-    // return merge(medidas$, new Observable<Medida[]>(() => [])); // TODO: Problema quando não tem medidas.
+    // return merge(series$, new Observable<Serie[]>(() => [])); // TODO: Problema quando não tem series.
 
-    return medidas$;
+    return series$;
   }
 
-  obtemMedidasObservaveisParaExibicao(monstro: Monstro): Observable<Medida[]> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
+  obtemMedidasObservaveisParaExibicao(monstro: Monstro): Observable<Serie[]> {
+    const collection = this.db.collection<SerieDocument>(this.PATH, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('data', 'desc');
     });
 
-    const medidas$ = collection.valueChanges().pipe(
+    const series$ = collection.valueChanges().pipe(
       map(values => {
         return values.map((value, index) => {
           return this.mapMedida(value, monstro);
@@ -68,14 +68,14 @@ export class MedidasService {
       })
     );
 
-    return medidas$;
+    return series$;
   }
 
-  obtemMedidasObservaveisParaExibicaoPorMonstros(monstros: Monstro[]): Observable<Medida[]> {
+  obtemMedidasObservaveisParaExibicaoPorMonstros(monstros: Monstro[]): Observable<Serie[]> {
     let mergeCount = 0;
 
     const medidasPorMonstros$Array = monstros.map(monstro => {
-      const collection1 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      const collection1 = this.db.collection<SerieDocument>(this.PATH, reference => {
         return reference
           .where('monstroId', '==', `monstros/${monstro.id}`)
           .orderBy('data', 'desc')
@@ -95,7 +95,7 @@ export class MedidasService {
 
       //
 
-      const collection2 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      const collection2 = this.db.collection<SerieDocument>(this.PATH, reference => {
         return reference
           .where('monstroId', '==', `monstros/${monstro.id}`)
           .orderBy('gordura', 'asc')
@@ -115,7 +115,7 @@ export class MedidasService {
 
       //
 
-      const collection3 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      const collection3 = this.db.collection<SerieDocument>(this.PATH, reference => {
         return reference
           .where('monstroId', '==', `monstros/${monstro.id}`)
           .orderBy('musculo', 'desc')
@@ -135,7 +135,7 @@ export class MedidasService {
 
       //
 
-      const collection4 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      const collection4 = this.db.collection<SerieDocument>(this.PATH, reference => {
         return reference
           .where('monstroId', '==', `monstros/${monstro.id}`)
           .orderBy('indiceDeMassaCorporal', 'asc')
@@ -155,16 +155,16 @@ export class MedidasService {
 
       //
 
-      const medidas$ = merge(...[medidas1$, medidas2$, medidas3$, medidas4$]).pipe(
+      const series$ = merge(...[medidas1$, medidas2$, medidas3$, medidas4$]).pipe(
         // first(),
         mergeMap(flat => flat),
         toArray(),
         tap(medidas2 => {
-          this.log.debug('monstro: ' + monstro.nome + '; merge-count: ' + ++mergeCount + '; medidas.length: ' + medidas2.length);
+          this.log.debug('monstro: ' + monstro.nome + '; merge-count: ' + ++mergeCount + '; series.length: ' + medidas2.length);
         })
       );
 
-      return medidas$;
+      return series$;
     });
 
     const medidasPorMonstros$ = combineLatest(medidasPorMonstros$Array);
@@ -175,11 +175,11 @@ export class MedidasService {
       map(arrayDeArray => {
         this.log.debug('combine: ' + '' + '; combine-count: ' + ++combineCount + '; arrayDeArray.length: ' + arrayDeArray.length);
 
-        const medidas: Medida[] = [];
+        const series: Serie[] = [];
 
-        arrayDeArray.forEach(array => array.forEach(medida => medidas.push(medida)));
+        arrayDeArray.forEach(array => array.forEach(serie => series.push(serie)));
 
-        const medidasSemRepeticao = _.uniqBy(medidas, 'id');
+        const medidasSemRepeticao = _.uniqBy(series, 'id');
 
         return medidasSemRepeticao;
       })
@@ -188,12 +188,12 @@ export class MedidasService {
     return medidasPorMonstrosUnificado$;
   }
 
-  obtemMedidaObservavel(id: string): Observable<Medida> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH);
+  obtemMedidaObservavel(id: string): Observable<Serie> {
+    const collection = this.db.collection<SerieDocument>(this.PATH);
 
-    const document = collection.doc<MedidaDocument>(id);
+    const document = collection.doc<SerieDocument>(id);
 
-    const medida$ = document.valueChanges().pipe(
+    const serie$ = document.valueChanges().pipe(
       map(value => {
         const monstro = null;
 
@@ -201,14 +201,14 @@ export class MedidasService {
       })
     );
 
-    return medida$;
+    return serie$;
   }
 
-  // private mapMedidas(values: MedidaDocument[]): Medida[] {
+  // private mapMedidas(values: MedidaDocument[]): Serie[] {
   //   return values.map((value, index) => {
   //     const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
 
-  //     return new Medida(
+  //     return new Serie(
   //       value.id,
   //       null,
   //       monstroId,
@@ -224,15 +224,17 @@ export class MedidasService {
   //   });
   // }
 
-  private mapMedida(value: MedidaDocument, monstro: Monstro): Medida {
+  private mapMedida(value: SerieDocument, monstro: Monstro): Serie {
     const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
 
-    return new Medida(
+    return new Serie(
       value.id,
+      null,
+      null,
       monstro,
       monstroId,
       value.data.toDate(),
-      value.feitaCom as TipoDeBalanca,
+      // value.feitaCom as TipoDeSerie,
       value.peso,
       value.gordura,
       value.gorduraVisceral,
@@ -246,34 +248,36 @@ export class MedidasService {
   importaMedidas() {
     const idAntigo = 'monstros/FCmLKJPLf4ejTazweTCP';
 
-    const collection = this.db.collection<MedidaDocument>(this.PATH, reference =>
+    const collection = this.db.collection<SerieDocument>(this.PATH, reference =>
       reference
         .where('monstroId', '==', idAntigo)
         .orderBy('data', 'desc')
     );
 
-    collection.valueChanges().subscribe(medidas => {
-      medidas.forEach(medida => {
-        medida.monstroId = 'monstros/2MvVXS8931bRukYSnGCJZo98BrH3';
+    collection.valueChanges().subscribe(series => {
+      series.forEach(serie => {
+        serie.monstroId = 'monstros/2MvVXS8931bRukYSnGCJZo98BrH3';
 
-        const document = collection.doc<MedidaDocument>(medida.id);
+        const document = collection.doc<SerieDocument>(serie.id);
 
-        document.update(medida);
+        document.update(serie);
       });
     });
   }
 
-  cadastraMedida(solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
+  cadastraMedida(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.monstrosService.obtemMonstroObservavel(solicitacao.monstroId).pipe(first()).subscribe(monstro => {
-        const medidaId = this.db.createId();
+        const serieId = this.db.createId();
 
-        const medida = new Medida(
-          medidaId,
+        const serie = new Serie(
+          serieId,
+          null,
+          null,
           monstro,
           solicitacao.monstroId,
           solicitacao.data.toDate(),
-          solicitacao.feitaCom,
+          // solicitacao.feitaCom,
           solicitacao.peso,
           solicitacao.gordura,
           solicitacao.gorduraVisceral,
@@ -283,88 +287,88 @@ export class MedidasService {
           solicitacao.indiceDeMassaCorporal
         );
 
-        const result = this.add(medida);
+        const result = this.add(serie);
 
         resolve(result);
       });
     });
   }
 
-  private add(medida: Medida): Promise<void> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH);
+  private add(serie: Serie): Promise<void> {
+    const collection = this.db.collection<SerieDocument>(this.PATH);
 
-    const document = collection.doc<MedidaDocument>(medida.id);
+    const document = collection.doc<SerieDocument>(serie.id);
 
-    const doc = this.mapTo(medida);
+    const doc = this.mapTo(serie);
 
     const result = document.set(doc);
 
     return result;
   }
 
-  atualizaMedida(medidaId: string, solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
+  atualizaMedida(medidaId: string, solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.obtemMedidaObservavel(medidaId).pipe(first()).subscribe(medida => {
-        medida.defineData(solicitacao.data.toDate());
+      this.obtemMedidaObservavel(medidaId).pipe(first()).subscribe(serie => {
+        // serie.defineData(solicitacao.data.toDate());
 
-        medida.defineTipoDeBalanca(solicitacao.feitaCom);
+        // serie.defineTipoDeBalanca(solicitacao.feitaCom);
 
-        medida.definePeso(solicitacao.peso);
+        serie.definePeso(solicitacao.peso);
 
-        medida.defineGordura(solicitacao.gordura);
+        serie.defineGordura(solicitacao.gordura);
 
-        medida.defineGorduraVisceral(solicitacao.gorduraVisceral);
+        serie.defineGorduraVisceral(solicitacao.gorduraVisceral);
 
-        medida.defineMusculo(solicitacao.musculo);
+        serie.defineMusculo(solicitacao.musculo);
 
-        medida.defineIdadeCorporal(solicitacao.idadeCorporal);
+        serie.defineIdadeCorporal(solicitacao.idadeCorporal);
 
-        medida.defineMetabolismoBasal(solicitacao.metabolismoBasal);
+        serie.defineMetabolismoBasal(solicitacao.metabolismoBasal);
 
-        medida.defineIndiceDeMassaCorporal(solicitacao.indiceDeMassaCorporal);
+        serie.defineIndiceDeMassaCorporal(solicitacao.indiceDeMassaCorporal);
 
-        const result = this.update(medida);
+        const result = this.update(serie);
 
         resolve(result);
       });
     });
   }
 
-  private update(medida: Medida): Promise<void> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH);
+  private update(serie: Serie): Promise<void> {
+    const collection = this.db.collection<SerieDocument>(this.PATH);
 
-    const document = collection.doc<MedidaDocument>(medida.id);
+    const document = collection.doc<SerieDocument>(serie.id);
 
-    const doc = this.mapTo(medida);
+    const doc = this.mapTo(serie);
 
     const result = document.update(doc);
 
     return result;
   }
 
-  private mapTo(medida: Medida): MedidaDocument {
-    const doc: MedidaDocument = {
-      id: medida.id,
-      // monstroId: `monstros/${medida.monstro.id}`,
-      monstroId: `monstros/${medida.monstroId}`,
-      data: firebase.firestore.Timestamp.fromDate(medida.data),
-      feitaCom: medida.feitaCom,
-      peso: medida.peso,
-      gordura: medida.gordura,
-      gorduraVisceral: medida.gorduraVisceral,
-      musculo: medida.musculo,
-      idadeCorporal: medida.idadeCorporal,
-      metabolismoBasal: medida.metabolismoBasal,
-      indiceDeMassaCorporal: medida.indiceDeMassaCorporal
+  private mapTo(serie: Serie): SerieDocument {
+    const doc: SerieDocument = {
+      id: serie.id,
+      // monstroId: `monstros/${serie.monstro.id}`,
+      monstroId: `monstros/${serie.monstroId}`,
+      data: firebase.firestore.Timestamp.fromDate(serie.data),
+      // feitaCom: serie.tipo,
+      peso: serie.quantidade,
+      gordura: serie.gordura,
+      gorduraVisceral: serie.gorduraVisceral,
+      musculo: serie.musculo,
+      idadeCorporal: serie.idadeCorporal,
+      metabolismoBasal: serie.metabolismoBasal,
+      indiceDeMassaCorporal: serie.indiceDeMassaCorporal
     };
 
     return doc;
   }
 
   excluiMedida(medidaId: string): Promise<void> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH);
+    const collection = this.db.collection<SerieDocument>(this.PATH);
 
-    const document = collection.doc<MedidaDocument>(medidaId);
+    const document = collection.doc<SerieDocument>(medidaId);
 
     const result = document.delete();
 
@@ -372,11 +376,11 @@ export class MedidasService {
   }
 }
 
-interface MedidaDocument {
+interface SerieDocument {
   id: string;
   monstroId: string;
   data: firebase.firestore.Timestamp;
-  feitaCom: string;
+  // feitaCom: string;
   peso: number;
   gordura: number;
   gorduraVisceral: number;
