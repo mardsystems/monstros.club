@@ -10,34 +10,49 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { first, map, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { LogService } from '../app.services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private log: LogService
+  ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const url: string = state.url;
+
+    this.log.debug('canActivate: ', url);
 
     return this.checkLogin(url);
   }
 
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    this.log.debug('canActivateChild: ', route.url);
+
     return this.canActivate(route, state);
   }
 
   canLoad(route: Route): Observable<boolean> {
     const url = `/${route.path}`;
 
+    this.log.debug('canLoad: ', url);
+
     return this.checkLogin(url);
   }
 
   checkLogin(url: string): Observable<boolean> {
-    return this.authService.user$.pipe(
+    const isLoggedIn$ = this.authService.user$.pipe(
+      first(),
       map((auth) => {
+        this.log.debug('checkLogin: ', (auth !== null ? auth.uid : 'nulo') + '"');
+        this.log.debug('url: ', url);
+
         if (auth) {
           // if (this.authService.authenticated) { return true; }
 
@@ -64,7 +79,9 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
           return false;
         }
       }),
-      first()
+      tap(value => this.log.debug('isLoggedIn', value))
     );
+
+    return isLoggedIn$;
   }
 }

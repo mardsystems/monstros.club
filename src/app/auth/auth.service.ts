@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth, UserInfo } from 'firebase/app';
 import { merge, Observable, of, Subject } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
+import { delay, tap, first } from 'rxjs/operators';
 import { Router, NavigationExtras } from '@angular/router';
+import { LogService } from '../app.services';
 
 @Injectable({
   providedIn: 'root',
@@ -17,15 +18,17 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private angularFireAuth: AngularFireAuth
+    private angularFireAuth: AngularFireAuth,
+    private log: LogService
   ) {
     this.localUser$ = new Subject<UserInfo>();
 
     this.user$ = this.angularFireAuth.authState; // merge(this.angularFireAuth.authState, this.localUser$);
 
-    this.user$.subscribe((user) => {
-      console.log('user: "' + (user !== null ? user.uid : 'nulo') + '"');
-
+    this.user$.pipe(
+      // first(),
+      tap((value) => this.log.debug('authState$: ', value)),
+    ).subscribe((user) => {
       this.authState = user;
     });
   }
@@ -119,6 +122,8 @@ export class AuthService {
   private socialSignIn(provider) {
     return this.angularFireAuth.auth.signInWithPopup(provider)
       .then((userCredential) => {
+        this.log.debug('signInWithPopup: ', (userCredential !== null ? userCredential.user.uid : 'nulo') + '"');
+
         // this.isLoggedIn = true;
 
         // this.authState = userCredential.user;
@@ -133,7 +138,6 @@ export class AuthService {
         };
 
         this.router.navigate([this.redirectUrl], navigationExtras);
-
       })
       .catch(error => console.log(error));
   }

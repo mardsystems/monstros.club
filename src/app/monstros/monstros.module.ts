@@ -17,6 +17,7 @@ import { TreinosComponent } from './treinos/treinos.component';
 import { ParticipacaoComponent as ParticipacaoNoRankingComponent } from './rankings/cadastro/participacao.component';
 import { RankingComponent } from './rankings/ranking.component';
 import { ParticipantesComponent } from './rankings/participantes.component';
+import { CadastroComponent as CadastroDeSeriesComponent } from './series/cadastro/cadastro.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ParticipantesComponent } from './rankings/participantes.component';
     ParticipacaoNoRankingComponent,
     RankingComponent,
     ParticipantesComponent,
+    CadastroDeSeriesComponent,
   ],
   imports: [
     CommonModule,
