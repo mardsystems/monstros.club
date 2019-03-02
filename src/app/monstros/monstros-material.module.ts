@@ -13,6 +13,7 @@ import {
   MatFormFieldModule,
   MatMenuModule,
   // MatNativeDateModule,
+  MatProgressBarModule,
   MatProgressSpinnerModule
 } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -67,6 +68,7 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatListModule,
     MatMenuModule,
     MatMomentDateModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -90,6 +92,7 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatLineModule,
     MatListModule,
     MatMenuModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatSelectModule,

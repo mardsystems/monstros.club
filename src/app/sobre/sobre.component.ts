@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LogUpdateService, CheckForUpdateService, AtualizacaoDisponivel, AtualizacaoAtivada } from '../app.services';
+import { LogUpdateService, CheckForUpdateService, AtualizacaoDisponivel, AtualizacaoAtivada } from '../app-common.services';
 import { SwUpdate } from '@angular/service-worker';
 import { Observable } from 'rxjs';
 

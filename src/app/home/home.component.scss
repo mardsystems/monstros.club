@@ -7,18 +7,10 @@
   // align-items: center;
 }
 
-div.perfil,
-table.monstros {
+div.perfil {
   width: 100%;
   margin: 10px auto 12px;
-}
-
-div.perfil {
   text-align: center;
-}
-
-table.monstros {
-  max-width: 600px;
 }
 
 @media only screen and (min-width: 750px) {
@@ -26,41 +18,8 @@ table.monstros {
     height: 60vh;
   }
 
-  div.perfil,
-  table.monstros {
-      width: 50%;
+  div.perfil {
+    width: 50%;
     margin: 28px auto 30px;
   }
 }
-
-td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
-  padding-top: 3px;
-  padding-left: 16px;
-}
-
-// td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
-//   text-align: right;
-// }
-
-th.data {
-  min-width: 60px;
-}
-
-th.peso {
-  min-width: 40px;
-}
-
-th.gorduraVisceral {
-  max-width: 60px;
-}
-
-th.idadeCorporal {
-  max-width: 50px;
-}
-
-th.metabolismoBasal {
-  max-width: 60px;
-}
-
-// td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type, th.mat-header-cell:last-of-type {
-// }

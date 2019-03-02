@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { AdminGuard } from './auth/admin.guard.';
 // import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
 
 const appRoutes: Routes = [
@@ -14,7 +15,8 @@ const appRoutes: Routes = [
   {
     path: 'admin',
     loadChildren: './admin/admin.module#AdminModule',
-    canLoad: [AuthGuard]
+    canLoad: [AdminGuard],
+    data: { animation: 'admin' }
   },
   // { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: '404', component: PageNotFoundComponent },
@@ -22,9 +24,15 @@ const appRoutes: Routes = [
     path: ':monstroId',
     loadChildren: './monstros/monstros.module#MonstrosModule',
     canLoad: [AuthGuard],
-    // data: { preload: true }
+    data: {
+      animation: 'monstros',
+      //  preload: true
+    }
   },
-  { path: '', component: HomeComponent },
+  {
+    path: '',
+    component: HomeComponent, data: { animation: 'home' }
+  },
   // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   // { path: '**', component: PageNotFoundComponent },
 ];
@@ -34,7 +42,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
       appRoutes,
       {
-        enableTracing: true, // <-- debugging purposes only
+        enableTracing: false, // <-- debugging purposes only
         // urlUpdateStrategy: 'deferred' | 'eager',
         // preloadingStrategy: PreloadAllModules // SelectivePreloadingStrategyService
       }

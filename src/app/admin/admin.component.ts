@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Monstro } from '../monstros/monstros.domain-model';
 import { MonstrosService } from '../monstros/monstros.service';
+import { LogService } from '../app-common.services';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin',
@@ -31,6 +33,7 @@ export class AdminComponent {
     private monstrosService: MonstrosService,
     private authService: AuthService,
     private router: Router,
+    private log: LogService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
@@ -39,7 +42,9 @@ export class AdminComponent {
 
     this.monstroLogado$ = this.monstrosService.monstroLogado$;
 
-    this.monstroLogado$.subscribe((monstroLogado) => {
+    this.monstroLogado$.pipe(
+      tap((value) => this.log.debug('AdminComponent: constructor: monstroLogado: ', value))
+    ).subscribe((monstroLogado) => {
       if (monstroLogado) {
         this.monstroEstaLogado = true;
       } else {

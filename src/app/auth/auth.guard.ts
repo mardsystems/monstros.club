@@ -12,7 +12,7 @@ import {
 import { Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-import { LogService } from '../app.services';
+import { LogService } from '../app-common.services';
 
 @Injectable({
   providedIn: 'root',
@@ -27,13 +27,13 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const url: string = state.url;
 
-    this.log.debug('canActivate: ', url);
+    // this.log.debug('AuthGuard: canActivate: url: ', url);
 
     return this.checkLogin(url);
   }
 
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    this.log.debug('canActivateChild: ', route.url);
+    // this.log.debug('AuthGuard: canActivateChild: url: ', route.url);
 
     return this.canActivate(route, state);
   }
@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   canLoad(route: Route): Observable<boolean> {
     const url = `/${route.path}`;
 
-    this.log.debug('canLoad: ', url);
+    // this.log.debug('AuthGuard: canLoad: url: ', url);
 
     return this.checkLogin(url);
   }
@@ -49,9 +49,10 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   checkLogin(url: string): Observable<boolean> {
     const isLoggedIn$ = this.authService.user$.pipe(
       first(),
+      // tap((value) => this.log.debug('AuthGuard: checkLogin: user: ', value)),
       map((auth) => {
-        this.log.debug('checkLogin: ', (auth !== null ? auth.uid : 'nulo') + '"');
-        this.log.debug('url: ', url);
+        // this.log.debug('AuthGuard: checkLogin: auth: ', (auth !== null ? auth.uid : 'nulo') + '"');
+        // this.log.debug('AuthGuard: checkLogin: url: ', url);
 
         if (auth) {
           // if (this.authService.authenticated) { return true; }
@@ -79,7 +80,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
           return false;
         }
       }),
-      tap(value => this.log.debug('isLoggedIn', value))
+      // tap(value => this.log.debug('AuthGuard: checkLogin: isLoggedIn: ', value))
     );
 
     return isLoggedIn$;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Monstro } from '../monstros/monstros.domain-model';
 import { Observable } from 'rxjs';
+import { Monstro } from '../monstros/monstros.domain-model';
 import { MonstrosService } from '../monstros/monstros.service';
 
 @Component({
@@ -9,30 +9,20 @@ import { MonstrosService } from '../monstros/monstros.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  loading = true;
+  ehAnonimo$: Observable<boolean>;
+
   monstroLogado$: Observable<Monstro>;
-  monstroEstaLogado = false;
-  ehAdministrador = false;
+
+  ehAdministrador$: Observable<boolean>;
 
   constructor(
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosService
   ) {
+    this.ehAnonimo$ = this.monstrosService.ehAnonimo();
 
     this.monstroLogado$ = this.monstrosService.monstroLogado$;
 
-    this.monstroLogado$.subscribe((monstroLogado) => {
-      this.loading = false;
-
-      if (monstroLogado) {
-        this.monstroEstaLogado = true;
-      } else {
-        this.monstroEstaLogado = false;
-      }
-    });
-
-    this.monstrosService.ehAdministrador().subscribe((ehAdministrador) => {
-      this.ehAdministrador = ehAdministrador;
-    });
+    this.ehAdministrador$ = this.monstrosService.ehAdministrador();
   }
 
   ngOnInit() {

@@ -1,16 +1,16 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, first, switchMap, tap, map } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import { LogService } from 'src/app/app-common.services';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { CadastroDeMedidaViewModel } from './cadastro/cadastro.presentation-model';
 import { Balanca, Medida, OmronHBF214 } from './medidas.domain-model';
 import { MedidasService } from './medidas.service';
-import { LogService } from 'src/app/app.services';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -31,13 +31,16 @@ const columnDefinitions = [
   styleUrls: ['./medidas.component.scss']
 })
 export class MedidasComponent implements OnInit {
-  medidas$: Observable<Medida[]>;
   monstro: Monstro;
+
+  medidas$: Observable<Medida[]>;
+
   balanca: Balanca;
-  loading = true;
-  disabledWrite: boolean;
+
+  disabledWrite$: Observable<boolean>;
 
   dataSource: any;
+
   @ViewChild(MatSort) sort: MatSort;
 
   desktopQuery: MediaQueryList;
@@ -57,16 +60,15 @@ export class MedidasComponent implements OnInit {
 
   ngOnInit() {
     const monstro$ = this.route.paramMap.pipe(
-      first(),
-      tap((value) => this.log.debug('paramMap1', value)),
+      // first(),
       map(params => params.get('monstroId')),
-      tap((value) => this.log.debug('paramMap2', value)),
-      switchMap((monstroId) => this.monstrosService.obtemMonstroObservavel(monstroId)),
+      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar as medidas do monstro.\nRazão:\n${error}`);
 
-        return of(null);
-      })
+        return source$;
+      }),
+      shareReplay()
     );
 
     this.medidas$ = monstro$.pipe(
@@ -74,12 +76,9 @@ export class MedidasComponent implements OnInit {
         this.monstro = monstro;
 
         return this.medidasService.obtemMedidasObservaveisParaExibicao(monstro);
-      })
+      }),
+      shareReplay()
     );
-
-    this.medidas$.pipe(
-      first()
-    ).subscribe(() => this.loading = false);
 
     this.medidas$.subscribe(medidas => {
       this.dataSource = new MatTableDataSource(medidas);
@@ -87,8 +86,8 @@ export class MedidasComponent implements OnInit {
       this.dataSource.sort = this.sort;
     });
 
-    monstro$.pipe(
-      first(),
+    this.disabledWrite$ = monstro$.pipe(
+      // first(),
       switchMap(monstro => {
         return this.monstrosService.ehVoceMesmo(monstro.id);
       }),
@@ -98,10 +97,10 @@ export class MedidasComponent implements OnInit {
         } else {
           return this.monstrosService.ehAdministrador();
         }
-      })
-    ).subscribe(value => {
-      this.disabledWrite = !value;
-    });
+      }),
+      map(value => !value),
+      shareReplay()
+    );
   }
 
   get isDesktop(): boolean {

@@ -35,8 +35,8 @@ registerLocaleData(localePt);
     ExerciciosComponent,
   ],
   imports: [
-    BrowserModule,
     BrowserAnimationsModule,
+    BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     FormsModule,

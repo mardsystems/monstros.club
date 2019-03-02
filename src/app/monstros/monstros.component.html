@@ -25,8 +25,8 @@
         </a> -->
     <!-- <mat-icon>favorite</mat-icon>
           <mat-icon>delete</mat-icon> -->
-    <span *ngIf="monstroLogado$ | async as monstroLogado">
-      <a mat-icon-button *ngIf="monstroEstaLogado" [matMenuTriggerFor]="appMenu">
+    <ng-container *ngIf="(monstroLogado$ | async) as monstroLogado">
+      <a mat-icon-button [matMenuTriggerFor]="appMenu">
         <img class="avatar" src="{{monstroLogado.photoURL}}" alt="Foto do Monstro">
         <!-- <mat-icon matListIcon>person</mat-icon> -->
         <!-- <p matLine>
@@ -37,9 +37,10 @@
       <!-- <button mat-icon-button [matMenuTriggerFor]="appMenu">
         <mat-icon>more_vert</mat-icon>
       </button> -->
-    </span>
+    </ng-container>
   </mat-toolbar>
-
+  <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate">
+  </mat-progress-bar>
   <mat-sidenav-container class="app-sidenav-container" [style.marginTop.px]="isMobile ? 56 : 0">
     <mat-sidenav #snav [mode]="isMobile ? 'over' : 'side'" [fixedInViewport]="isMobile" fixedTopGap="56"
       [(opened)]="sidenavOpened">
@@ -52,7 +53,7 @@
             <a matLine href=".">Home</a>
           </mat-list-item> -->
         <a mat-list-item routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-          *ngIf="monstro$ | async as monstro">
+          *ngIf="monstro">
           <img matListAvatar src="{{monstro.photoURL}}" alt="Foto do Monstro">
           <!-- <mat-icon matListIcon>person</mat-icon> -->
           <h3 matLine>{{ monstro.nome }}</h3>
@@ -98,13 +99,17 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <router-outlet></router-outlet>
+      <div [@routeAnimation]="getAnimationData(routerOutlet)">
+        <router-outlet #routerOutlet="outlet"></router-outlet>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
 
 <mat-menu #appMenu="matMenu">
-  <button mat-menu-item *ngIf="monstroLogado$ | async as monstroLogado" routerLink="/{{monstroLogado.id}}"
-    routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Meu Perfil</button>
-  <button mat-menu-item (click)="logout()">Sair</button>
+  <ng-container *ngIf="(monstroLogado$ | async) as monstroLogado">
+    <button mat-menu-item routerLink="/{{monstroLogado.id}}" routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">Meu Perfil</button>
+    <button mat-menu-item (click)="logout()">Sair</button>
+  </ng-container>
 </mat-menu>

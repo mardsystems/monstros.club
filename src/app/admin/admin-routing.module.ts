@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '../auth/auth.guard';
+import { AdminGuard } from '../auth/admin.guard.';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MedidasComponent } from './medidas/medidas.component';
@@ -10,11 +10,11 @@ const adminRoutes: Routes = [
   {
     path: '',
     component: AdminComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AdminGuard],
     children: [
       {
         path: '',
-        canActivateChild: [AuthGuard],
+        canActivateChild: [AdminGuard],
         children: [
           { path: 'dashboard', component: DashboardComponent },
           { path: 'monstros', component: MonstrosComponent },

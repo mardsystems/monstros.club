@@ -8,7 +8,7 @@ import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeSerie } from './cadastro/cadastro.application-model';
 import { Serie, TipoDeSerie } from './series.domain-model';
 import * as _ from 'lodash';
-import { LogService } from 'src/app/app.services';
+import { LogService } from 'src/app/app-common.services';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +36,7 @@ export class SeriesService {
             const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
 
             const medidaComMonstro$ = this.monstrosService.obtemMonstroObservavel(monstroId).pipe(
+              first(),
               map(monstro => this.mapMedida(value, monstro))
             );
 

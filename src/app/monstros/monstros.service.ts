@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import * as moment from 'moment';
-import { Observable, of, combineLatest } from 'rxjs';
-import { catchError, first, map, switchMap, tap } from 'rxjs/operators';
-import { CalculoDeIdade } from '../app.services';
+import { Observable, of, combineLatest, Subject } from 'rxjs';
+import { catchError, first, map, switchMap, tap, shareReplay } from 'rxjs/operators';
+import { CalculoDeIdade, LogService } from '../app-common.services';
 import { AuthService } from '../auth/auth.service';
 import { SolicitacaoDeCadastroDeMonstro } from './cadastro/cadastro.application-model';
 import { Genero, Monstro } from './monstros.domain-model';
@@ -19,36 +19,18 @@ export class MonstrosService {
   constructor(
     private db: AngularFirestore,
     private authService: AuthService,
-    private calculoDeIdade: CalculoDeIdade
+    private calculoDeIdade: CalculoDeIdade,
+    private log: LogService
   ) {
+    this.log.debug('MonstrosService: constructor()');
+
     this.monstroLogado$ = this.authService.user$.pipe(
       // first(),
+      tap((value) => this.log.debug('MonstrosService: constructor: user: ', value)),
       switchMap(user => {
         if (user) {
-          // console.log(user);
-
           const monstro$ = this.obtemMonstroObservavel(user.uid).pipe(
-            first(),
-            tap(monstro => {
-              // console.log(monstro);
-
-              const solicitacao: SolicitacaoDeCadastroDeMonstro = {
-                isEdit: true,
-                id: monstro.id,
-                admin: monstro.admin,
-                displayName: user.displayName,
-                email: user.email,
-                photoURL: user.photoURL,
-                nome: monstro.nome,
-                usuario: monstro.usuario,
-                genero: monstro.genero,
-                altura: monstro.altura,
-                dataDeNascimento: (monstro.dataDeNascimento ? moment(monstro.dataDeNascimento) : null),
-                dataDoUltimoLogin: moment()
-              };
-
-              this.atualizaMonstro(user.uid, solicitacao);
-            }),
+            first(), // TODO: Evita depedência cíclica com a atualização posterior do mostro.
             catchError((error, source$) => {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
                 isEdit: false,
@@ -68,23 +50,98 @@ export class MonstrosService {
               this.cadastraMonstro(solicitacao);
 
               const monstroCadastrado$ = this.obtemMonstroObservavel(user.uid).pipe(
-                first(),
-                catchError((error2, monstro2) => {
+                // first(),
+                tap((value) => this.log.debug('MonstrosService: monstroCadastrado: ', value)),
+                catchError((error2, source2$) => {
+                  // this.log.debug(`Retornando nenhum monstro após o cadastro do mesmo.\nRazão:\n${error2}`);
                   console.log(`Retornando nenhum monstro após o cadastro do mesmo.\nRazão:\n${error2}`);
 
-                  return of(null);
+                  return source2$;
                 })
               );
 
               return monstroCadastrado$;
-            })
+            }),
+            map(monstro => {
+              this.log.debug('MonstrosService: constructor: monstro: ', monstro);
+
+              const solicitacao: SolicitacaoDeCadastroDeMonstro = {
+                isEdit: true,
+                id: monstro.id,
+                admin: monstro.admin,
+                displayName: user.displayName,
+                email: user.email,
+                photoURL: user.photoURL,
+                nome: monstro.nome,
+                usuario: monstro.usuario,
+                genero: monstro.genero,
+                altura: monstro.altura,
+                dataDeNascimento: (monstro.dataDeNascimento ? moment(monstro.dataDeNascimento) : null),
+                dataDoUltimoLogin: moment()
+              };
+
+              this.atualizaMonstro(user.uid, solicitacao);
+
+              return monstro;
+            }),
+            // tap(monstro => {
+            //   this.log.debug('MonstrosService: constructor: monstro: ', monstro);
+
+            //   const solicitacao: SolicitacaoDeCadastroDeMonstro = {
+            //     isEdit: true,
+            //     id: monstro.id,
+            //     admin: monstro.admin,
+            //     displayName: user.displayName,
+            //     email: user.email,
+            //     photoURL: user.photoURL,
+            //     nome: monstro.nome,
+            //     usuario: monstro.usuario,
+            //     genero: monstro.genero,
+            //     altura: monstro.altura,
+            //     dataDeNascimento: (monstro.dataDeNascimento ? moment(monstro.dataDeNascimento) : null),
+            //     dataDoUltimoLogin: moment()
+            //   };
+
+            //   this.atualizaMonstro(user.uid, solicitacao);
+            // }),
+            // catchError((error, source$) => {
+            //   const solicitacao: SolicitacaoDeCadastroDeMonstro = {
+            //     isEdit: false,
+            //     id: user.uid,
+            //     admin: false,
+            //     displayName: user.displayName,
+            //     email: user.email,
+            //     photoURL: user.photoURL,
+            //     nome: user.displayName || user.email,
+            //     usuario: user.uid,
+            //     genero: null,
+            //     altura: null,
+            //     dataDeNascimento: null,
+            //     dataDoUltimoLogin: moment()
+            //   };
+
+            //   this.cadastraMonstro(solicitacao);
+
+            //   const monstroCadastrado$ = this.obtemMonstroObservavel(user.uid).pipe(
+            //     // first(),
+            //     catchError((error2, source2$) => {
+            //       // this.log.debug(`Retornando nenhum monstro após o cadastro do mesmo.\nRazão:\n${error2}`);
+            //       console.log(`Retornando nenhum monstro após o cadastro do mesmo.\nRazão:\n${error2}`);
+
+            //       return source2$;
+            //     })
+            //   );
+
+            //   return monstroCadastrado$;
+            // })
           );
 
           return monstro$;
         } else {
           return of(null);
         }
-      })
+      }),
+      shareReplay()
     );
   }
 
@@ -94,15 +151,21 @@ export class MonstrosService {
     );
   }
 
+  public ehAnonimo(): Observable<boolean> {
+    return this.monstroLogado$.pipe(
+      map(monstroLogado => monstroLogado == null)
+    );
+  }
+
   public ehVoceMesmo(id: string): Observable<boolean> {
     return this.monstroLogado$.pipe(
       map(monstroLogado => monstroLogado != null && monstroLogado.id === id)
     );
   }
 
-  public ehProprietario(monstrosId: string): Observable<boolean> {
+  public ehProprietario(monstroId: string): Observable<boolean> {
     return this.monstroLogado$.pipe(
-      map(monstroLogado => ('monstros/' + monstroLogado.id) === monstrosId)
+      map(monstroLogado => ('monstros/' + monstroLogado.id) === monstroId)
     );
   }
 
@@ -135,13 +198,16 @@ export class MonstrosService {
     const document = collection.doc<MonstroDocument>(id);
 
     const monstro$ = document.valueChanges().pipe(
+      // first(),
+      // tap((value2) => this.log.debug('obtemMonstroObservavel', value2)),
       map(value => {
         if (value) {
           return this.mapMonstro(value);
         } else {
           throw new Error(`Monstro não encontrado (id: '${id}').`);
         }
-      })
+      }),
+      shareReplay()
     );
 
     return monstro$;
@@ -149,7 +215,9 @@ export class MonstrosService {
 
   obtemMonstrosObservaveis(ids: string[]): Observable<Monstro[]> {
     const arrayDeMonstrosObservaveis = ids
-      .map((id) => this.obtemMonstroObservavel(id));
+      .map((id) => this.obtemMonstroObservavel(id).pipe(
+        // first()
+      ));
 
     const todosOsMonstros$ = combineLatest(arrayDeMonstrosObservaveis);
 
@@ -220,7 +288,9 @@ export class MonstrosService {
 
   atualizaMonstro(monstroId: string, solicitacao: SolicitacaoDeCadastroDeMonstro): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.obtemMonstroObservavel(monstroId).pipe(first()).subscribe(monstro => {
+      this.obtemMonstroObservavel(monstroId).pipe(
+        first()
+      ).subscribe(monstro => {
         monstro.defineDisplayName(solicitacao.displayName);
 
         monstro.defineEmail(solicitacao.email);

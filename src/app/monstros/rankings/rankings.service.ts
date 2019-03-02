@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import * as _ from 'lodash';
-import { combineLatest, merge, Observable, empty } from 'rxjs';
-import { first, map, mergeMap, switchMap, toArray, tap } from 'rxjs/operators';
-import { LogService } from 'src/app/app.services';
+import { combineLatest, merge, Observable, empty, EMPTY, forkJoin } from 'rxjs';
+import { first, map, mergeMap, switchMap, toArray, tap, shareReplay, catchError } from 'rxjs/operators';
+import { LogService } from 'src/app/app-common.services';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
@@ -42,13 +42,38 @@ export class RankingsService
 
     const rankingsPorParticipantes$ = this.obtemRankingsObservaveisPorParticipante(monstro);
 
-    const rankings$ = merge(...[rankingsProprietarios$, rankingsPorParticipantes$])
-      .pipe(
-        first(),
-        tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicao', value)),
-        mergeMap(flat => flat),
-        toArray()
-      );
+    // const rankings$ = forkJoin(rankingsProprietarios$, rankingsPorParticipantes$).pipe(
+    //   first(),
+    //   tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicao', value)),
+    //   switchMap(arrayDeArray => {
+    //     const x = combineLatest(arrayDeArray);
+
+    //     return x;
+    //   })
+    // );
+
+    // const rankings$ = merge(...[rankingsProprietarios$]).pipe(
+    //   first(),
+    //   tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicao', value)),
+    //   mergeMap(flat => flat),
+    //   toArray(),
+    //   catchError((error, source$) => {
+    //     this.log.debug('obtemRankingsObservaveisParaExibicao: error: ', error);
+
+    //     return source$;
+    //   })
+    // );
+
+    // const rankings$ = merge(rankingsProprietarios$, rankingsPorParticipantes$).pipe(
+    //   first(),
+    //   tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicao', value)),
+    //   // mergeMap(flat => flat),
+    //   // toArray()
+    // );
+
+    const rankings$ = rankingsProprietarios$;
+
+    // const rankings$ = rankingsPorParticipantes$;
 
     return rankings$;
   }
@@ -58,14 +83,15 @@ export class RankingsService
 
     const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
       return reference
-        .where('monstroId', '==', monstroRef);
+        .where('monstroRef', '==', monstroRef);
       // .orderBy('data', 'desc');
     });
 
     const rankings$ = collection.valueChanges().pipe(
       // first(),
       tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicaoPorProprietario', value)),
-      switchMap(values => this.mapRankingsObservaveis(proprietario, values))
+      switchMap(values => this.mapRankingsObservaveis(proprietario, values)),
+      // shareReplay()
     );
 
     return rankings$;
@@ -82,7 +108,8 @@ export class RankingsService
   private mapRankingObservavel(proprietario: Monstro, value: RankingDocument): Observable<Ranking> {
     const rankings$ = this.mapParticipacoesObservaveis(value).pipe(
       // first(),
-      map(participantes => this.mapRanking(value, proprietario, participantes))
+      map(participantes => this.mapRanking(value, proprietario, participantes)),
+      // shareReplay()
     );
 
     return rankings$;
@@ -91,6 +118,8 @@ export class RankingsService
   private mapParticipacoesObservaveis(value: RankingDocument): Observable<Participacao[]> {
     const participacoes$Array = value.participantes.map(participacaoValue => {
       const monstro$ = this.monstrosService.obtemMonstroObservavel(participacaoValue.participanteId.id).pipe(
+        // first(),
+        tap((value2) => this.log.debug('mapParticipacoesObservaveis', value2)),
         map(monstro => {
           const participacao = new Participacao(
             monstro,
@@ -99,7 +128,8 @@ export class RankingsService
           );
 
           return participacao;
-        })
+        }),
+        shareReplay()
       );
 
       return monstro$;
@@ -112,16 +142,26 @@ export class RankingsService
 
   obtemRankingsObservaveisPorParticipante(participante: Monstro): Observable<Ranking[]> {
     const rankingsPorParticipante$ = this.obtemRankingParticipacoes(participante).pipe(
+      // first(),
       tap((value) => this.log.debug('obtemRankingsObservaveisPorParticipante', value)),
       switchMap(rankingsParticipacoes => {
         const rankings$Array = rankingsParticipacoes.map(rankingParticipacao => {
           return this.obtemRankingObservavel(rankingParticipacao.rankingId.id);
         });
 
-        const ranking$ = combineLatest(rankings$Array);
+        const ranking$ = combineLatest(rankings$Array).pipe(
+          // first(),
+          tap((value) => this.log.debug('obtemRankingsObservaveisPorParticipante: combined', value)),
+          catchError((error, source$) => {
+            this.log.debug('obtemRankingsObservaveisPorParticipante: error: ', error);
+
+            return source$;
+          })
+        );
 
         return ranking$;
-      })
+      }),
+      // shareReplay()
     );
 
     // const rankings$ = collection.valueChanges().pipe(
@@ -150,23 +190,34 @@ export class RankingsService
   obtemRankingObservavel(id: string): Observable<Ranking> {
     const collection = this.db.collection<RankingDocument>(this.PATH);
 
+    this.log.debug('obtemRankingObservavel: id: ', id);
+
     const document = collection.doc<RankingDocument>(id);
 
     const ranking$ = document.valueChanges().pipe(
+      // first(),
+      tap((value) => this.log.debug('obtemRankingObservavel: value: ', value)),
       switchMap(value => {
-        const rankingComProprietario$ = this.monstrosService.obtemMonstroObservavel(value.monstroId.id).pipe(
-          switchMap(monstro => this.mapRankingObservavel(monstro, value))
+        const rankingComProprietario$ = this.monstrosService.obtemMonstroObservavel(value.monstroRef.id).pipe(
+          // first(),
+          switchMap(monstro => this.mapRankingObservavel(monstro, value)),
+          catchError((error, source$) => {
+            this.log.debug('obtemRankingObservavel: error: ', error);
+
+            return source$;
+          })
         );
 
         return rankingComProprietario$;
-      })
+      }),
+      // shareReplay()
     );
 
     return ranking$;
   }
 
   private mapRanking(value: RankingDocument, proprietario: Monstro, participantes: Participacao[]): Ranking {
-    const monstroId = value.monstroId.id;
+    const monstroId = value.monstroRef.id;
 
     const CONST_TIMESTAMP_FALSO = 1;
 
@@ -204,7 +255,10 @@ export class RankingsService
 
   cadastraRanking(solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.monstrosService.obtemMonstroObservavel(solicitacao.proprietarioId).pipe(first()).subscribe(monstro => {
+      this.monstrosService.obtemMonstroObservavel(solicitacao.proprietarioId).pipe(
+        first(),
+        tap((value) => this.log.debug('cadastraRanking: value: ', value)),
+      ).subscribe(monstro => {
         const rankingId = this.db.createId();
 
         const ranking = new Ranking(
@@ -217,7 +271,7 @@ export class RankingsService
 
         const result = this.add(ranking);
 
-        return result;
+        return resolve(result);
       });
     });
   }
@@ -237,6 +291,9 @@ export class RankingsService
 
     const allResult = Promise.all([result, addRankingsParticipacoesResult]).then((results) => {
       this.log.debug('add: ' + results);
+      // return new Promisse<void>((resolve, reject)=>{
+      //   return
+      // })
     });
 
     return allResult;
@@ -244,7 +301,9 @@ export class RankingsService
 
   atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.obtemRankingObservavel(rankingId).pipe(first()).subscribe(ranking => {
+      this.obtemRankingObservavel(rankingId).pipe(
+        first()
+      ).subscribe(ranking => {
         ranking.defineNome(solicitacao.nome);
 
         const result = this.update(ranking);
@@ -276,7 +335,9 @@ export class RankingsService
       this.obtemRankingObservavel(solicitacao.rankingId).pipe(
         first()
       ).subscribe(ranking => {
-        this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).subscribe(monstro => {
+        this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).pipe(
+          first()
+        ).subscribe(monstro => {
           const participante = monstro; // solicitacao.participanteId;
 
           const agora = new Date(Date.now());
@@ -313,7 +374,9 @@ export class RankingsService
       this.obtemRankingObservavel(rankingId).pipe(
         first()
       ).subscribe(ranking => {
-        this.monstrosService.obtemMonstroObservavel(participanteId).subscribe(monstro => {
+        this.monstrosService.obtemMonstroObservavel(participanteId).pipe(
+          first()
+        ).subscribe(monstro => {
           const participante = monstro; // solicitacao.participanteId;
 
           const agora = new Date(Date.now());
@@ -356,7 +419,7 @@ export class RankingsService
       nome: ranking.nome,
       // monstroId: `monstros/${ranking.monstro.id}`,
       // monstroId: `monstros/${ranking.proprietarioId}`,
-      monstroId: monstroRef,
+      monstroRef: monstroRef,
       dataDeCriacao: firebase.firestore.Timestamp.fromDate(ranking.dataDeCriacao),
       feitoCom: ranking.feitoCom,
       participantes: ranking.participantes.map(participacao => {
@@ -450,7 +513,9 @@ export class RankingsService
           .where('rankingId', '==', rankingRef);
       });
 
-      collection.valueChanges().pipe(first()).subscribe(values => {
+      collection.valueChanges().pipe(
+        first()
+      ).subscribe(values => {
         const participantesAindaNaoCadastrados = _.differenceBy(ranking.participantes, values, 'participanteId');
 
         const participantesAindaNaoCadastradosResult = participantesAindaNaoCadastrados.map(participanteAindaNaoCadastrado => {
@@ -509,7 +574,9 @@ export class RankingsService
           .where('rankingId', '==', rankingRef);
       });
 
-      collection.valueChanges().pipe(first()).subscribe(values => {
+      collection.valueChanges().pipe(
+        first()
+      ).subscribe(values => {
         const deleteResults = values.map(doc => {
           const document = collection.doc<RankingParticipacaoDocument>(doc.id);
 
@@ -536,7 +603,9 @@ export class RankingsService
           .where('participanteId', '==', monstroRef);
       });
 
-      collection.valueChanges().pipe(first()).subscribe(values => {
+      collection.valueChanges().pipe(
+        first()
+      ).subscribe(values => {
         const deleteResults = values.map(doc => {
           const document = collection.doc<RankingParticipacaoDocument>(doc.id);
 
@@ -558,7 +627,7 @@ export class RankingsService
 interface RankingDocument {
   id: string;
   nome: string;
-  monstroId: firebase.firestore.DocumentReference;
+  monstroRef: firebase.firestore.DocumentReference;
   dataDeCriacao: firebase.firestore.Timestamp;
   feitoCom: string;
   participantes: ParticipacaoDocument[];

@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth, UserInfo } from 'firebase/app';
 import { merge, Observable, of, Subject } from 'rxjs';
-import { delay, tap, first } from 'rxjs/operators';
+import { delay, tap, first, shareReplay } from 'rxjs/operators';
 import { Router, NavigationExtras } from '@angular/router';
-import { LogService } from '../app.services';
+import { LogService } from '../app-common.services';
 
 @Injectable({
   providedIn: 'root',
@@ -21,14 +21,19 @@ export class AuthService {
     private angularFireAuth: AngularFireAuth,
     private log: LogService
   ) {
+    this.log.debug('AuthService: constructor() -------------');
+
     this.localUser$ = new Subject<UserInfo>();
 
     this.user$ = this.angularFireAuth.authState; // merge(this.angularFireAuth.authState, this.localUser$);
 
     this.user$.pipe(
       // first(),
-      tap((value) => this.log.debug('authState$: ', value)),
+      tap((value) => this.log.debug('AuthService: constructor: authState: -------------', value)),
+      // shareReplay()
     ).subscribe((user) => {
+      this.log.debug('AuthService: constructor: user: -------------', user);
+
       this.authState = user;
     });
   }

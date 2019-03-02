@@ -1,23 +1,31 @@
-<mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="loading"></mat-spinner>
-
-<div class="container" *ngIf="!loading">
+<div class="container">
   <div class="perfil">
-    <div *ngIf="!monstroEstaLogado">
-      <h1 class="mat-headline">Entre para o maior Clube de Monstros de todos os tempos!</h1>
-      <a mat-raised-button color="accent" routerLink="/login" routerLinkActive="active">
-        ENTRAR
-      </a>
-    </div>
+    <ng-container *ngIf="(monstroLogado$ | async) as monstroLogado; else loading">
+      <div>
+        <a mat-raised-button color="accent" routerLink="/{{monstroLogado.id}}">
+          IR PARA MEU PERFIL
+        </a>
 
-    <div *ngIf="monstroLogado$ | async as monstroLogado">
-      <a mat-raised-button color="accent" routerLink="/{{monstroLogado.id}}">
-        IR PARA MEU PERFIL
-      </a>
+        <a mat-icon-button routerLink="/admin" *ngIf="ehAdministrador$ | async">
+          <mat-icon>security</mat-icon>
+        </a>
+      </div>
+    </ng-container>
 
-      <a mat-icon-button routerLink="/admin" *ngIf="ehAdministrador">
-        <mat-icon>security</mat-icon>
-      </a>
-    </div>
-
+    <ng-template #loading>
+      <ng-container *ngIf="ehAnonimo$ | async; else anonimo">
+        <div>
+          <h1 class="mat-headline">Entre para o maior Clube de Monstros de todos os tempos!</h1>
+          <a mat-raised-button color="accent" routerLink="/login" routerLinkActive="active">
+            ENTRAR
+          </a>
+        </div>
+      </ng-container>
+      <ng-template #anonimo>
+        <div>
+          <mat-spinner class="spinner" color="accent" diameter="40" strokeWidth="4"></mat-spinner>
+        </div>
+      </ng-template>
+    </ng-template>
   </div>
 </div>

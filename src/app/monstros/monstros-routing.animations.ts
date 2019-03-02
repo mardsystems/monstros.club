@@ -3,11 +3,10 @@ import {
   transition, animate, style, query
 } from '@angular/animations';
 
-
 // Routable animations
 export const slideInAnimation =
   trigger('routeAnimation', [
-    transition('heroes <=> hero', [
+    transition('monstro <=> medidas', [
       style({ position: 'relative' }),
       query(':enter, :leave', [
         style({

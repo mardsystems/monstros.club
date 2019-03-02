@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { of } from 'rxjs';
-import { catchError, first, switchMap, tap, map } from 'rxjs/operators';
-import { CalculoDeIdade, LogService } from '../../app.services';
+import { catchError, first, switchMap, tap, map, shareReplay } from 'rxjs/operators';
+import { CalculoDeIdade, LogService } from '../../app-common.services';
 import { AuthService } from '../../auth/auth.service';
 import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeMonstro } from './cadastro.application-model';
@@ -30,15 +30,16 @@ export class CadastroComponent implements OnInit {
   ngOnInit() {
     const monstro$ = this.route.paramMap.pipe(
       first(),
-      tap((value) => this.log.debug('paramMap1', value)),
+      // tap((value) => this.log.debug('CadastroDeMonstrosComponent: paramMap1', value)),
       map(params => params.get('monstroId')),
-      tap((value) => this.log.debug('paramMap2', value)),
-      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId)),
+      // tap((value) => this.log.debug('CadastroDeMonstrosComponent: paramMap2', value)),
+      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId).pipe(first())),
       catchError((error) => {
         console.log(`Não foi possível montar o perfil do monstro.\nRazão:\n${error}`);
 
         return of(null);
-      })
+      }),
+      shareReplay()
     );
 
     monstro$.pipe(

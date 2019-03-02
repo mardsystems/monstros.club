@@ -23,37 +23,44 @@
       <mat-icon class="red-icon">favorite</mat-icon>
     </a>
     <!-- <a [routerLink]="[{ outlets: { popup: ['compose'] } }]">Contato</a> -->
-    <a mat-icon-button routerLink="/login" *ngIf="!monstroEstaLogado">
-      <mat-icon>person</mat-icon>
-    </a>
     <!-- <a mat-icon-button routerLink="/admin">
       <mat-icon>star_border</mat-icon>
     </a> -->
     <!-- <mat-icon>favorite</mat-icon>
       <mat-icon>delete</mat-icon> -->
-    <span *ngIf="monstroLogado$ | async as monstroLogado">
-      <a mat-icon-button *ngIf="monstroEstaLogado" [matMenuTriggerFor]="appMenu">
+    <ng-container *ngIf="(monstroLogado$ | async) as monstroLogado; else loading">
+      <button mat-icon-button [matMenuTriggerFor]="appMenu">
         <img class="avatar" src="{{monstroLogado.photoURL}}" alt="Foto do Monstro">
         <!-- <mat-icon matListIcon>person</mat-icon> -->
         <!-- <p matLine>
-          <span> Este é o início </span>
-          <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
-        </p> -->
-      </a>
+                            <span> Este é o início </span>
+                            <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
+                          </p> -->
+      </button>
       <!-- <a mat-icon-button routerLink="/{{monstroLogado.id}}"
-        [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroEstaLogado"> -->
+                          [routerLinkActiveOptions]="{ exact: true }" *ngIf="monstroEstaLogado"> -->
       <!-- <img matListAvatar src="{{monstroLogado.photoURL}}" alt="Foto do Monstro"> -->
       <!-- <mat-icon matListIcon>person</mat-icon> -->
       <!-- <h3 matLine>{{ monstroLogado.email }}</h3> -->
       <!-- <button mat-icon-button (click)="logout()">
-              <mat-icon>exit_to_app</mat-icon>
-            </button> -->
+                                <mat-icon>exit_to_app</mat-icon>
+                              </button> -->
       <!-- <p matLine>
-                <span> Este é o início </span>
-                <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
-              </p> -->
+                                  <span> Este é o início </span>
+                                  <span class="demo-2"> -- açslkd jf çlasj dklçf jças dfj  </span>
+                                </p> -->
       <!-- </a> -->
-    </span>
+    </ng-container>
+    <ng-template #loading>
+      <ng-container *ngIf="ehAnonimo$ | async; else anonimo">
+        <a mat-icon-button routerLink="/login">
+          <mat-icon>person</mat-icon>
+        </a>
+      </ng-container>
+      <ng-template #anonimo>
+        <mat-spinner class="mat-icon-button spinner" color="accent" diameter="40" strokeWidth="4"></mat-spinner>
+      </ng-template>
+    </ng-template>
   </mat-toolbar-row>
 </mat-toolbar>
 
@@ -87,8 +94,10 @@
   <!-- <button mat-menu-item>Configurações</button>
   <button mat-menu-item>Ajuda</button>
   <mat-divider></mat-divider> -->
-  <button mat-menu-item *ngIf="monstroLogado$ | async as monstroLogado" routerLink="/{{monstroLogado.id}}">
-    Meu Perfil
-  </button>
-  <button mat-menu-item (click)="logout()">Sair</button>
+  <ng-container *ngIf="(monstroLogado$ | async) as monstroLogado">
+    <button mat-menu-item routerLink="/{{monstroLogado.id}}">
+      Meu Perfil
+    </button>
+    <button mat-menu-item (click)="logout()">Sair</button>
+  </ng-container>
 </mat-menu>

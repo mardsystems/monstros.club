@@ -10,7 +10,7 @@ import { CadastroComponent } from './cadastro/cadastro.component';
 import { CadastroDeSerieViewModel } from './cadastro/cadastro.presentation-model';
 import { Serie } from './series.domain-model';
 import { SeriesService } from './series.service';
-import { LogService } from 'src/app/app.services';
+import { LogService } from 'src/app/app-common.services';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -61,7 +61,7 @@ export class SeriesComponent implements OnInit {
       tap((value) => this.log.debug('paramMap1', value)),
       map(params => params.get('monstroId')),
       tap((value) => this.log.debug('paramMap2', value)),
-      switchMap((monstroId) => this.monstrosService.obtemMonstroObservavel(monstroId)),
+      switchMap((monstroId) => this.monstrosService.obtemMonstroObservavel(monstroId).pipe(first())),
       catchError((error, source$) => {
         console.log(`Não foi possível montar as medidas do monstro.\nRazão:\n${error}`);
 

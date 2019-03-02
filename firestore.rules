@@ -20,6 +20,10 @@ service cloud.firestore {
       return ('monstros/' + request.auth.uid) == request.resource.data.monstroId;
     }
 
+    function ehSeuRecursoRef() {
+      return request.auth.uid == get(request.resource.data.monstroRef).id;
+    }
+
     function ehProprietario() {
       return ('monstros/' + request.auth.uid) == resource.data.monstroId;
     }
@@ -43,8 +47,8 @@ service cloud.firestore {
     }
 
     match /rankings/{ranking} {
-      allow create: if ehSeuRecurso() || ehAdministrador();
-      allow update, delete: if ehProprietario() || ehAdministrador();
+      allow create: if ehSeuRecursoRef() || ehAdministrador();
+      allow update, delete: if ehSeuRecursoRef() || ehAdministrador();
     }
 
     match /rankings-participacoes/{rankingParticipacoes} {

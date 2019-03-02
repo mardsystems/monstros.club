@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
+import * as monstros from './cadastro/cadastro.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { MedidasComponent } from './medidas/medidas.component';
-import * as monstros from './cadastro/cadastro.component';
+import { MonstrosResolverService } from './monstros-resolver.service';
 import { MonstrosComponent } from './monstros.component';
+import { RankingComponent } from './rankings/ranking.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
-import { RankingComponent } from './rankings/ranking.component';
 
 const monstrosRoutes: Routes = [
   // { path: 'heroes', redirectTo: '/superheroes' },
@@ -17,18 +18,21 @@ const monstrosRoutes: Routes = [
     path: '',
     component: MonstrosComponent,
     canActivate: [AuthGuard],
+    resolve: {
+      monstro: MonstrosResolverService
+    },
     children: [
       {
         path: '',
         canActivateChild: [AuthGuard],
         children: [
-          { path: 'series', component: SeriesComponent },
-          { path: 'treinos', component: TreinosComponent },
-          { path: 'medidas', component: MedidasComponent },
-          { path: 'rankings', component: RankingsComponent },
-          { path: 'rankings/:rankingId', component: RankingComponent },
-          { path: 'configuracoes', component: ConfiguracoesComponent },
-          { path: '', component: monstros.CadastroComponent }
+          { path: 'series', component: SeriesComponent, data: { animation: 'series' } },
+          { path: 'treinos', component: TreinosComponent, data: { animation: 'treinos' } },
+          { path: 'medidas', component: MedidasComponent, data: { animation: 'medidas' } },
+          { path: 'rankings', component: RankingsComponent, data: { animation: 'rankings' } },
+          { path: 'rankings/:rankingId', component: RankingComponent, data: { animation: 'ranking' } },
+          { path: 'configuracoes', component: ConfiguracoesComponent, data: { animation: 'configuracoes' } },
+          { path: '', component: monstros.CadastroComponent, data: { animation: 'monstro' } }
         ]
       }
     ]

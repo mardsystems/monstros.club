@@ -8,7 +8,7 @@ import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeMedida } from './cadastro/cadastro.application-model';
 import { Medida, TipoDeBalanca } from './medidas.domain-model';
 import * as _ from 'lodash';
-import { LogService } from 'src/app/app.services';
+import { LogService } from 'src/app/app-common.services';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +36,7 @@ export class MedidasService {
             const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
 
             const medidaComMonstro$ = this.monstrosService.obtemMonstroObservavel(monstroId).pipe(
+              // first(),
               map(monstro => this.mapMedida(value, monstro))
             );
 
@@ -83,7 +84,7 @@ export class MedidasService {
       });
 
       const medidas1$ = collection1.valueChanges().pipe(
-        first(),
+        // first(),
         map(values => {
           return values.map((value, index) => {
             this.log.debug('monstro: ' + monstro.nome + '; data: ' + value.data);
@@ -103,7 +104,7 @@ export class MedidasService {
       });
 
       const medidas2$ = collection2.valueChanges().pipe(
-        first(),
+        // first(),
         map(values => {
           return values.map((value, index) => {
             this.log.debug('monstro: ' + monstro.nome + '; gordura: ' + value.gordura);
@@ -123,7 +124,7 @@ export class MedidasService {
       });
 
       const medidas3$ = collection3.valueChanges().pipe(
-        first(),
+        // first(),
         map(values => {
           return values.map((value, index) => {
             this.log.debug('monstro: ' + monstro.nome + '; musculo: ' + value.musculo);
@@ -143,7 +144,7 @@ export class MedidasService {
       });
 
       const medidas4$ = collection4.valueChanges().pipe(
-        first(),
+        // first(),
         map(values => {
           return values.map((value, index) => {
             this.log.debug('monstro: ' + monstro.nome + '; indiceDeMassaCorporal: ' + value.indiceDeMassaCorporal);
@@ -265,7 +266,9 @@ export class MedidasService {
 
   cadastraMedida(solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.monstrosService.obtemMonstroObservavel(solicitacao.monstroId).pipe(first()).subscribe(monstro => {
+      this.monstrosService.obtemMonstroObservavel(solicitacao.monstroId).pipe(
+        first()
+      ).subscribe(monstro => {
         const medidaId = this.db.createId();
 
         const medida = new Medida(
@@ -304,7 +307,9 @@ export class MedidasService {
 
   atualizaMedida(medidaId: string, solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.obtemMedidaObservavel(medidaId).pipe(first()).subscribe(medida => {
+      this.obtemMedidaObservavel(medidaId).pipe(
+        first()
+      ).subscribe(medida => {
         medida.defineData(solicitacao.data.toDate());
 
         medida.defineTipoDeBalanca(solicitacao.feitaCom);
