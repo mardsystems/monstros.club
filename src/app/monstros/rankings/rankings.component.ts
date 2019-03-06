@@ -55,10 +55,8 @@ export class RankingsComponent implements OnInit {
   ngOnInit() {
     const monstro$ = this.route.paramMap.pipe(
       // first(),
-      // tap((value) => this.log.debug('RankingsComponent: paramMap: ', value)),
       map(params => params.get('monstroId')),
-      tap((value) => this.log.debug('RankingsComponent: monstroId', value)),
-      // distinctUntilChanged(),
+      tap((value) => this.log.debug('RankingsComponent: constructor: monstroId', value)),
       switchMap((monstroId) => this.monstrosService.obtemMonstroObservavel(monstroId).pipe(first())),
       catchError((error, source$) => {
         console.log(`Não foi possível montar os rankings do monstro.\nRazão:\n${error}`);
@@ -70,7 +68,7 @@ export class RankingsComponent implements OnInit {
 
     this.rankings$ = monstro$.pipe(
       // first(),
-      // tap((value) => this.log.debug('RankingsComponent.ngOnInit', value)),
+      tap((value) => this.log.debug('RankingsComponent: constructor: monstro', value)),
       switchMap(monstro => {
         this.monstro = monstro;
 

@@ -22,15 +22,13 @@ export class MonstrosService {
     private calculoDeIdade: CalculoDeIdade,
     private log: LogService
   ) {
-    this.log.debug('MonstrosService: constructor()');
-
     this.monstroLogado$ = this.authService.user$.pipe(
       // first(),
       tap((value) => this.log.debug('MonstrosService: constructor: user: ', value)),
       switchMap(user => {
         if (user) {
           const monstro$ = this.obtemMonstroObservavel(user.uid).pipe(
-            first(), // TODO: Evita depedência cíclica com a atualização posterior do mostro.
+            // first(), // TODO: Evita depedência cíclica com a atualização posterior do mostro.
             catchError((error, source$) => {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
                 isEdit: false,
@@ -63,8 +61,6 @@ export class MonstrosService {
               return monstroCadastrado$;
             }),
             map(monstro => {
-              this.log.debug('MonstrosService: constructor: monstro: ', monstro);
-
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
                 isEdit: true,
                 id: monstro.id,
@@ -80,60 +76,10 @@ export class MonstrosService {
                 dataDoUltimoLogin: moment()
               };
 
-              this.atualizaMonstro(user.uid, solicitacao);
+              // this.atualizaMonstro(user.uid, solicitacao);
 
               return monstro;
             }),
-            // tap(monstro => {
-            //   this.log.debug('MonstrosService: constructor: monstro: ', monstro);
-
-            //   const solicitacao: SolicitacaoDeCadastroDeMonstro = {
-            //     isEdit: true,
-            //     id: monstro.id,
-            //     admin: monstro.admin,
-            //     displayName: user.displayName,
-            //     email: user.email,
-            //     photoURL: user.photoURL,
-            //     nome: monstro.nome,
-            //     usuario: monstro.usuario,
-            //     genero: monstro.genero,
-            //     altura: monstro.altura,
-            //     dataDeNascimento: (monstro.dataDeNascimento ? moment(monstro.dataDeNascimento) : null),
-            //     dataDoUltimoLogin: moment()
-            //   };
-
-            //   this.atualizaMonstro(user.uid, solicitacao);
-            // }),
-            // catchError((error, source$) => {
-            //   const solicitacao: SolicitacaoDeCadastroDeMonstro = {
-            //     isEdit: false,
-            //     id: user.uid,
-            //     admin: false,
-            //     displayName: user.displayName,
-            //     email: user.email,
-            //     photoURL: user.photoURL,
-            //     nome: user.displayName || user.email,
-            //     usuario: user.uid,
-            //     genero: null,
-            //     altura: null,
-            //     dataDeNascimento: null,
-            //     dataDoUltimoLogin: moment()
-            //   };
-
-            //   this.cadastraMonstro(solicitacao);
-
-            //   const monstroCadastrado$ = this.obtemMonstroObservavel(user.uid).pipe(
-            //     // first(),
-            //     catchError((error2, source2$) => {
-            //       // this.log.debug(`Retornando nenhum monstro após o cadastro do mesmo.\nRazão:\n${error2}`);
-            //       console.log(`Retornando nenhum monstro após o cadastro do mesmo.\nRazão:\n${error2}`);
-
-            //       return source2$;
-            //     })
-            //   );
-
-            //   return monstroCadastrado$;
-            // })
           );
 
           return monstro$;

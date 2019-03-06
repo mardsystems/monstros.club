@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import * as _ from 'lodash';
-import { combineLatest, merge, Observable, empty, EMPTY, forkJoin } from 'rxjs';
+import { combineLatest, merge, Observable, empty, EMPTY, forkJoin, of } from 'rxjs';
 import { first, map, mergeMap, switchMap, toArray, tap, shareReplay, catchError } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
@@ -64,14 +64,15 @@ export class RankingsService
     //   })
     // );
 
-    // const rankings$ = merge(rankingsProprietarios$, rankingsPorParticipantes$).pipe(
-    //   first(),
-    //   tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicao', value)),
-    //   // mergeMap(flat => flat),
-    //   // toArray()
-    // );
+    const rankings$ = merge(rankingsProprietarios$, rankingsPorParticipantes$).pipe(
+      // first(),
+      tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicao', value)),
+      // mergeMap(flat => flat),
+      // toArray()
+      // shareReplay()
+    );
 
-    const rankings$ = rankingsProprietarios$;
+    // const rankings$ = rankingsProprietarios$;
 
     // const rankings$ = rankingsPorParticipantes$;
 
@@ -98,18 +99,28 @@ export class RankingsService
   }
 
   private mapRankingsObservaveis(proprietario: Monstro, values: RankingDocument[]): Observable<Ranking[]> {
-    const rankings$Array = values.map((value) => this.mapRankingObservavel(proprietario, value));
+    this.log.debug('mapRankingsObservaveis', values);
 
-    const rankings$ = combineLatest(rankings$Array);
+    const rankings$Array = values.map(value => this.mapRankingObservavel(proprietario, value));
 
-    return rankings$;
+    if (values.length === 0) {
+      return of([]);
+    } else {
+      return combineLatest(rankings$Array);
+    }
+
+    // const rankings$ = combineLatest(rankings$Array);
+
+    // return rankings$;
   }
 
   private mapRankingObservavel(proprietario: Monstro, value: RankingDocument): Observable<Ranking> {
+    this.log.debug('mapRankingObservavel', value);
+
     const rankings$ = this.mapParticipacoesObservaveis(value).pipe(
       // first(),
       map(participantes => this.mapRanking(value, proprietario, participantes)),
-      // shareReplay()
+      shareReplay()
     );
 
     return rankings$;
@@ -119,7 +130,7 @@ export class RankingsService
     const participacoes$Array = value.participantes.map(participacaoValue => {
       const monstro$ = this.monstrosService.obtemMonstroObservavel(participacaoValue.participanteId.id).pipe(
         // first(),
-        tap((value2) => this.log.debug('mapParticipacoesObservaveis', value2)),
+        // tap((value2) => this.log.debug('mapParticipacoesObservaveis', value2)),
         map(monstro => {
           const participacao = new Participacao(
             monstro,
@@ -161,7 +172,7 @@ export class RankingsService
 
         return ranking$;
       }),
-      // shareReplay()
+      shareReplay()
     );
 
     // const rankings$ = collection.valueChanges().pipe(
@@ -210,7 +221,7 @@ export class RankingsService
 
         return rankingComProprietario$;
       }),
-      // shareReplay()
+      shareReplay()
     );
 
     return ranking$;
@@ -468,6 +479,7 @@ export class RankingsService
     const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
       return reference
         .where('participanteId', '==', monstroRef);
+        // .where('ehProprietario', '==', false);
       // .orderBy('data', 'desc');
     });
 
@@ -485,10 +497,13 @@ export class RankingsService
 
         const participanteRef = this.monstrosService.obtemMonstroRef(participacao.participante.id);
 
+        // const ehProprietario = (participacao.participante === ranking.proprietario);
+
         const doc: RankingParticipacaoDocument = {
           id: rankingParticipacaoId,
           participanteId: participanteRef,
-          rankingId: rankingRef
+          rankingId: rankingRef,
+          // ehProprietario: ehProprietario
         };
 
         const result = this.addRankingParticipacao(doc);
@@ -523,10 +538,13 @@ export class RankingsService
 
           const participanteRef = this.monstrosService.obtemMonstroRef(participanteAindaNaoCadastrado.participante.id);
 
+          // const ehProprietario = (participanteAindaNaoCadastrado.participante === ranking.proprietario);
+
           const doc: RankingParticipacaoDocument = {
             id: rankingParticipacaoId,
             participanteId: participanteRef,
-            rankingId: rankingRef
+            rankingId: rankingRef,
+            // ehProprietario: ehProprietario
           };
 
           const result = this.addRankingParticipacao(doc);
@@ -644,4 +662,5 @@ interface RankingParticipacaoDocument {
   id: string;
   participanteId: firebase.firestore.DocumentReference;
   rankingId: firebase.firestore.DocumentReference;
+  // ehProprietario: boolean;
 }

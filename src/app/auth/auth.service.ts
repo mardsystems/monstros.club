@@ -21,19 +21,13 @@ export class AuthService {
     private angularFireAuth: AngularFireAuth,
     private log: LogService
   ) {
-    this.log.debug('AuthService: constructor() -------------');
-
     this.localUser$ = new Subject<UserInfo>();
 
     this.user$ = this.angularFireAuth.authState; // merge(this.angularFireAuth.authState, this.localUser$);
 
     this.user$.pipe(
-      // first(),
-      tap((value) => this.log.debug('AuthService: constructor: authState: -------------', value)),
-      // shareReplay()
+      tap((value) => this.log.debug('AuthService: constructor: authState: ', value)),
     ).subscribe((user) => {
-      this.log.debug('AuthService: constructor: user: -------------', user);
-
       this.authState = user;
     });
   }
