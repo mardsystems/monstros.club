@@ -14,6 +14,8 @@ import {
   SolicitacaoDeParticipacaoDeRanking
 } from './cadastro/cadastro.application-model';
 import { Participacao, Ranking } from './rankings.domain-model';
+import { PosicaoDeMedida } from './rankings.application-model';
+import { MedidasService } from '../medidas/medidas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +28,7 @@ export class RankingsService
   constructor(
     private db: AngularFirestore,
     private monstrosService: MonstrosService,
+    private medidasService: MedidasService,
     private log: LogService
   ) { }
 
@@ -242,6 +245,96 @@ export class RankingsService
       value.dataDeCriacao.toDate(),
       participantes
     );
+  }
+
+  obtemPosicoesDeMedidasObservaveisParaExibicaoPorRanking(ranking: Ranking): Observable<PosicaoDeMedida[]> {
+    // let mergeCount = 0;
+
+    const participantes = ranking.participantes.map(participacao => participacao.participante);
+
+    const melhoresMedidasPorParticipante$Array = participantes.map(participante => {
+      const ultimaMedida$ = this.medidasService.obtemUltimaMedidaObservavel(participante);
+
+      const menorMedidaDeGordura$ = this.medidasService.obtemMenorMedidaDeGorduraObservavel(participante);
+
+      const maiorMedidaDeMusculo$ = this.medidasService.obtemMaiorMedidaDeMusculoObservavel(participante);
+
+      const menorMedidaDeIndiceDeMassaCorporal$ = this.medidasService.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(participante);
+
+      //
+
+      const melhoresMedidas$ =
+        combineLatest([ultimaMedida$, menorMedidaDeGordura$, maiorMedidaDeMusculo$, menorMedidaDeIndiceDeMassaCorporal$]);
+
+      // const melhoresMedidas$ =
+      //   merge(ultimaMedida$, menorMedidaDeGordura$, maiorMedidaDeMusculo$, menorMedidaDeIndiceDeMassaCorporal$).pipe(
+      //     // first(),
+      //     // mergeMap(flat => flat),
+      //     // toArray(),
+      //     // tap(medidas2 => {
+      //     //   this.log.debug('monstro: ' + monstro.nome + '; merge-count: ' + ++mergeCount + '; medidas.length: ' + medidas2.length);
+      //     // })
+      //   );
+
+      return melhoresMedidas$;
+    });
+
+    const melhoresMedidasPorParticipante$ = combineLatest(melhoresMedidasPorParticipante$Array);
+
+    let combineCount = 0;
+
+    const medidasPorMonstrosUnificado$ = melhoresMedidasPorParticipante$.pipe(
+      map(melhoresMedidasPorParticipante => {
+        this.log.debug(
+          'combine: ' + '' + '; combine-count: ' + ++combineCount + '; arrayDeArray.length: ' + melhoresMedidasPorParticipante.length,
+          melhoresMedidasPorParticipante);
+
+        const posicoes: PosicaoDeMedida[] = [];
+
+        melhoresMedidasPorParticipante.forEach(melhoresMedidas => melhoresMedidas.forEach(melhorMedida => {
+          // this.log.debug(melhorMedida);
+
+          const melhorPosicaoDeMedida = PosicaoDeMedida.fromMedida(melhorMedida);
+
+          posicoes.push(melhorPosicaoDeMedida);
+        }));
+
+        const posicoesSemRepeticaoDeMedida = _.uniqBy(posicoes, 'medidaId');
+
+        _(posicoesSemRepeticaoDeMedida)
+          .groupBy(posicao => posicao.monstroId)
+          .map((posicoesPorMonstro, monstroId) => {
+            // this.log.debug('groupBy', posicoesPorMonstro);
+
+            _(posicoesPorMonstro)
+              // .filter(['monstroId', monstroId])
+              .orderBy(['data'], ['desc'])
+              .map((posicao, index) => {
+                // this.log.debug('orderBy', posicao);
+
+                posicao.ehUltimaMedida = index === 0;
+              })
+              .value();
+          })
+          .value();
+
+        // _.orderBy(posicoesSemRepeticaoDeMedida, ['monstroId', 'data'], ['desc'])
+        //   .map((posicao, index) => posicao.ehUltimaMedida = index === 0);
+
+        _.orderBy(posicoesSemRepeticaoDeMedida, ['gordura'], ['asc'])
+          .map((posicao, index) => posicao.posicaoDeMenorGordura = index + 1);
+
+        _.orderBy(posicoesSemRepeticaoDeMedida, ['musculo'], ['desc'])
+          .map((posicao, index) => posicao.posicaoDeMaiorMusculo = index + 1);
+
+        _.orderBy(posicoesSemRepeticaoDeMedida, ['indiceDeMassaCorporal'], ['asc'])
+          .map((posicao, index) => posicao.posicaoDeMenorIndiceDeMassaCorporal = index + 1);
+
+        return posicoesSemRepeticaoDeMedida;
+      })
+    );
+
+    return medidasPorMonstrosUnificado$;
   }
 
   importaRankings() {
@@ -479,7 +572,7 @@ export class RankingsService
     const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
       return reference
         .where('participanteId', '==', monstroRef);
-        // .where('ehProprietario', '==', false);
+      // .where('ehProprietario', '==', false);
       // .orderBy('data', 'desc');
     });
 

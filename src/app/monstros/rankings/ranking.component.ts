@@ -1,11 +1,11 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { catchError, first, switchMap, map } from 'rxjs/operators';
-import { Balanca, Medida, OmronHBF214 } from '../../monstros/medidas/medidas.domain-model';
-import { MedidasService } from '../../monstros/medidas/medidas.service';
+import { ActivatedRoute } from '@angular/router';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import { Balanca, OmronHBF214 } from '../../monstros/medidas/medidas.domain-model';
+import { PosicaoDeMedida } from './rankings.application-model';
 import { Ranking } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
 
@@ -28,11 +28,13 @@ const columnDefinitions = [
 })
 export class RankingComponent implements OnInit {
   ranking: Ranking;
-  medidas$: Observable<Medida[]>;
+
+  posicoes$: Observable<PosicaoDeMedida[]>;
+
   balanca: Balanca;
-  loading = true;
 
   dataSource: any;
+
   @ViewChild(MatSort) sort: MatSort;
 
   desktopQuery: MediaQueryList;
@@ -40,7 +42,6 @@ export class RankingComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private rankingsService: RankingsService,
-    private medidasService: MedidasService,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -56,26 +57,22 @@ export class RankingComponent implements OnInit {
       catchError((error, source$) => {
         console.log(`Não foi possível montar o ranking.\nRazão:\n${error}`);
 
-        return of(null); // Observable.throw(e);
-      })
+        return EMPTY; // Observable.throw(e);
+      }),
+      // shareReplay()
     );
 
-    this.medidas$ = ranking$.pipe(
+    this.posicoes$ = ranking$.pipe(
       switchMap(ranking => {
         this.ranking = ranking;
 
-        const participantes = ranking.participantes.map(participacao => participacao.participante);
-
-        return this.medidasService.obtemMedidasObservaveisParaExibicaoPorMonstros(participantes);
-      })
+        return this.rankingsService.obtemPosicoesDeMedidasObservaveisParaExibicaoPorRanking(ranking);
+      }),
+      shareReplay()
     );
 
-    this.medidas$.pipe(
-      first()
-    ).subscribe(() => this.loading = false);
-
-    this.medidas$.subscribe(medidas => {
-      this.dataSource = new MatTableDataSource(medidas);
+    this.posicoes$.subscribe(posicoes => {
+      this.dataSource = new MatTableDataSource(posicoes);
 
       this.dataSource.sort = this.sort;
     });

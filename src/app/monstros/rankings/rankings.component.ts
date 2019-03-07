@@ -2,7 +2,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, EMPTY } from 'rxjs';
 import { catchError, first, switchMap, map, tap, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
@@ -28,13 +28,16 @@ const columnDefinitions = [
   styleUrls: ['./rankings.component.scss']
 })
 export class RankingsComponent implements OnInit {
-  rankings$: Observable<Ranking[]>;
   monstro: Monstro;
+
+  rankings$: Observable<Ranking[]>;
+
   balanca: Balanca;
-  loading = true;
-  disabledWrite: boolean;
+
+  disabledWrite$: Observable<boolean>;
 
   dataSource: any;
+
   @ViewChild(MatSort) sort: MatSort;
 
   desktopQuery: MediaQueryList;
@@ -56,19 +59,16 @@ export class RankingsComponent implements OnInit {
     const monstro$ = this.route.paramMap.pipe(
       // first(),
       map(params => params.get('monstroId')),
-      tap((value) => this.log.debug('RankingsComponent: constructor: monstroId', value)),
       switchMap((monstroId) => this.monstrosService.obtemMonstroObservavel(monstroId).pipe(first())),
       catchError((error, source$) => {
         console.log(`Não foi possível montar os rankings do monstro.\nRazão:\n${error}`);
 
-        return of(null);
+        return EMPTY; // Observable.throw(e);
       }),
       shareReplay()
     );
 
     this.rankings$ = monstro$.pipe(
-      // first(),
-      tap((value) => this.log.debug('RankingsComponent: constructor: monstro', value)),
       switchMap(monstro => {
         this.monstro = monstro;
 
@@ -77,18 +77,14 @@ export class RankingsComponent implements OnInit {
       shareReplay()
     );
 
-    this.rankings$.pipe(
-      first()
-    ).subscribe(() => this.loading = false);
-
     this.rankings$.subscribe(rankings => {
       this.dataSource = new MatTableDataSource(rankings);
 
       this.dataSource.sort = this.sort;
     });
 
-    monstro$.pipe(
-      first(),
+    this.disabledWrite$ = monstro$.pipe(
+      // first(),
       switchMap(monstro => {
         return this.monstrosService.ehVoceMesmo(monstro.id);
       }),
@@ -98,10 +94,10 @@ export class RankingsComponent implements OnInit {
         } else {
           return this.monstrosService.ehAdministrador();
         }
-      })
-    ).subscribe(value => {
-      this.disabledWrite = !value;
-    });
+      }),
+      map(value => !value),
+      shareReplay()
+    );
   }
 
   get isDesktop(): boolean {

@@ -18,6 +18,8 @@ import { ParticipacaoComponent as ParticipacaoNoRankingComponent } from './ranki
 import { RankingComponent } from './rankings/ranking.component';
 import { ParticipantesComponent } from './rankings/participantes.component';
 import { CadastroComponent as CadastroDeSeriesComponent } from './series/cadastro/cadastro.component';
+import { PosicaoComponent } from './rankings/posicao/posicao.component';
+import { AssiduidadeComponent } from './rankings/assiduidade/assiduidade.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,8 @@ import { CadastroComponent as CadastroDeSeriesComponent } from './series/cadastr
     RankingComponent,
     ParticipantesComponent,
     CadastroDeSeriesComponent,
+    PosicaoComponent,
+    AssiduidadeComponent,
   ],
   imports: [
     CommonModule,

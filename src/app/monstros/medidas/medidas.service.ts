@@ -72,122 +72,210 @@ export class MedidasService {
     return medidas$;
   }
 
-  obtemMedidasObservaveisParaExibicaoPorMonstros(monstros: Monstro[]): Observable<Medida[]> {
-    let mergeCount = 0;
-
-    const medidasPorMonstros$Array = monstros.map(monstro => {
-      const collection1 = this.db.collection<MedidaDocument>(this.PATH, reference => {
-        return reference
-          .where('monstroId', '==', `monstros/${monstro.id}`)
-          .orderBy('data', 'desc')
-          .limit(1);
-      });
-
-      const medidas1$ = collection1.valueChanges().pipe(
-        // first(),
-        map(values => {
-          return values.map((value, index) => {
-            this.log.debug('monstro: ' + monstro.nome + '; data: ' + value.data);
-
-            return this.mapMedida(value, monstro);
-          });
-        })
-      );
-
-      //
-
-      const collection2 = this.db.collection<MedidaDocument>(this.PATH, reference => {
-        return reference
-          .where('monstroId', '==', `monstros/${monstro.id}`)
-          .orderBy('gordura', 'asc')
-          .limit(1);
-      });
-
-      const medidas2$ = collection2.valueChanges().pipe(
-        // first(),
-        map(values => {
-          return values.map((value, index) => {
-            this.log.debug('monstro: ' + monstro.nome + '; gordura: ' + value.gordura);
-
-            return this.mapMedida(value, monstro);
-          });
-        })
-      );
-
-      //
-
-      const collection3 = this.db.collection<MedidaDocument>(this.PATH, reference => {
-        return reference
-          .where('monstroId', '==', `monstros/${monstro.id}`)
-          .orderBy('musculo', 'desc')
-          .limit(1);
-      });
-
-      const medidas3$ = collection3.valueChanges().pipe(
-        // first(),
-        map(values => {
-          return values.map((value, index) => {
-            this.log.debug('monstro: ' + monstro.nome + '; musculo: ' + value.musculo);
-
-            return this.mapMedida(value, monstro);
-          });
-        })
-      );
-
-      //
-
-      const collection4 = this.db.collection<MedidaDocument>(this.PATH, reference => {
-        return reference
-          .where('monstroId', '==', `monstros/${monstro.id}`)
-          .orderBy('indiceDeMassaCorporal', 'asc')
-          .limit(1);
-      });
-
-      const medidas4$ = collection4.valueChanges().pipe(
-        // first(),
-        map(values => {
-          return values.map((value, index) => {
-            this.log.debug('monstro: ' + monstro.nome + '; indiceDeMassaCorporal: ' + value.indiceDeMassaCorporal);
-
-            return this.mapMedida(value, monstro);
-          });
-        })
-      );
-
-      //
-
-      const medidas$ = merge(...[medidas1$, medidas2$, medidas3$, medidas4$]).pipe(
-        // first(),
-        mergeMap(flat => flat),
-        toArray(),
-        tap(medidas2 => {
-          this.log.debug('monstro: ' + monstro.nome + '; merge-count: ' + ++mergeCount + '; medidas.length: ' + medidas2.length);
-        })
-      );
-
-      return medidas$;
+  obtemUltimaMedidaObservavel(monstro: Monstro): Observable<Medida> {
+    const collection1 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      return reference
+        .where('monstroId', '==', `monstros/${monstro.id}`)
+        .orderBy('data', 'desc')
+        .limit(1);
     });
 
-    const medidasPorMonstros$ = combineLatest(medidasPorMonstros$Array);
+    const medidas1$ = collection1.valueChanges().pipe(
+      // first(),
+      map(values => {
+        const medida = values[0];
 
-    let combineCount = 0;
+        this.log.debug('monstro: ' + monstro.nome + '; data: ' + medida.data);
 
-    const medidasPorMonstrosUnificado$ = medidasPorMonstros$.pipe(
-      map(arrayDeArray => {
-        this.log.debug('combine: ' + '' + '; combine-count: ' + ++combineCount + '; arrayDeArray.length: ' + arrayDeArray.length);
-
-        const medidas: Medida[] = [];
-
-        arrayDeArray.forEach(array => array.forEach(medida => medidas.push(medida)));
-
-        const medidasSemRepeticao = _.uniqBy(medidas, 'id');
-
-        return medidasSemRepeticao;
+        return this.mapMedida(medida, monstro);
       })
     );
 
-    return medidasPorMonstrosUnificado$;
+    return medidas1$;
   }
+
+  obtemMenorMedidaDeGorduraObservavel(monstro: Monstro): Observable<Medida> {
+    const collection2 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      return reference
+        .where('monstroId', '==', `monstros/${monstro.id}`)
+        .orderBy('gordura', 'asc')
+        .limit(1);
+    });
+
+    const medidas2$ = collection2.valueChanges().pipe(
+      // first(),
+      map(values => {
+        const medida = values[0];
+
+        this.log.debug('monstro: ' + monstro.nome + '; gordura: ' + medida.gordura);
+
+        return this.mapMedida(medida, monstro);
+      })
+    );
+
+    return medidas2$;
+  }
+
+  obtemMaiorMedidaDeMusculoObservavel(monstro: Monstro): Observable<Medida> {
+    const collection3 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      return reference
+        .where('monstroId', '==', `monstros/${monstro.id}`)
+        .orderBy('musculo', 'desc')
+        .limit(1);
+    });
+
+    const medidas3$ = collection3.valueChanges().pipe(
+      // first(),
+      map(values => {
+        const medida = values[0];
+
+        this.log.debug('monstro: ' + monstro.nome + '; musculo: ' + medida.musculo);
+
+        return this.mapMedida(medida, monstro);
+      })
+    );
+
+    return medidas3$;
+  }
+
+  obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(monstro: Monstro): Observable<Medida> {
+    const collection4 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+      return reference
+        .where('monstroId', '==', `monstros/${monstro.id}`)
+        .orderBy('indiceDeMassaCorporal', 'asc')
+        .limit(1);
+    });
+
+    const medidas4$ = collection4.valueChanges().pipe(
+      // first(),
+      map(values => {
+        const medida = values[0];
+
+        this.log.debug('monstro: ' + monstro.nome + '; indiceDeMassaCorporal: ' + medida.indiceDeMassaCorporal);
+
+        return this.mapMedida(medida, monstro);
+      })
+    );
+
+    return medidas4$;
+  }
+
+  // obtemMedidasObservaveisParaExibicaoPorMonstros(monstros: Monstro[]): Observable<Medida[]> {
+  //   // let mergeCount = 0;
+
+  //   const medidasPorMonstros$Array = monstros.map(monstro => {
+  //     const collection1 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+  //       return reference
+  //         .where('monstroId', '==', `monstros/${monstro.id}`)
+  //         .orderBy('data', 'desc')
+  //         .limit(1);
+  //     });
+
+  //     const medidas1$ = collection1.valueChanges().pipe(
+  //       // first(),
+  //       map(values => {
+  //         return values.map((value, index) => {
+  //           this.log.debug('monstro: ' + monstro.nome + '; data: ' + value.data);
+
+  //           return this.mapMedida(value, monstro);
+  //         });
+  //       })
+  //     );
+
+  //     //
+
+  //     const collection2 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+  //       return reference
+  //         .where('monstroId', '==', `monstros/${monstro.id}`)
+  //         .orderBy('gordura', 'asc')
+  //         .limit(1);
+  //     });
+
+  //     const medidas2$ = collection2.valueChanges().pipe(
+  //       // first(),
+  //       map(values => {
+  //         return values.map((value, index) => {
+  //           this.log.debug('monstro: ' + monstro.nome + '; gordura: ' + value.gordura);
+
+  //           return this.mapMedida(value, monstro);
+  //         });
+  //       })
+  //     );
+
+  //     //
+
+  //     const collection3 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+  //       return reference
+  //         .where('monstroId', '==', `monstros/${monstro.id}`)
+  //         .orderBy('musculo', 'desc')
+  //         .limit(1);
+  //     });
+
+  //     const medidas3$ = collection3.valueChanges().pipe(
+  //       // first(),
+  //       map(values => {
+  //         return values.map((value, index) => {
+  //           this.log.debug('monstro: ' + monstro.nome + '; musculo: ' + value.musculo);
+
+  //           return this.mapMedida(value, monstro);
+  //         });
+  //       })
+  //     );
+
+  //     //
+
+  //     const collection4 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+  //       return reference
+  //         .where('monstroId', '==', `monstros/${monstro.id}`)
+  //         .orderBy('indiceDeMassaCorporal', 'asc')
+  //         .limit(1);
+  //     });
+
+  //     const medidas4$ = collection4.valueChanges().pipe(
+  //       // first(),
+  //       map(values => {
+  //         return values.map((value, index) => {
+  //           this.log.debug('monstro: ' + monstro.nome + '; indiceDeMassaCorporal: ' + value.indiceDeMassaCorporal);
+
+  //           return this.mapMedida(value, monstro);
+  //         });
+  //       })
+  //     );
+
+  //     //
+
+  //     const medidas$ = merge(medidas1$, medidas2$, medidas3$, medidas4$).pipe(
+  //       // first(),
+  //       // mergeMap(flat => flat),
+  //       // toArray(),
+  //       // tap(medidas2 => {
+  //       //   this.log.debug('monstro: ' + monstro.nome + '; merge-count: ' + ++mergeCount + '; medidas.length: ' + medidas2.length);
+  //       // })
+  //     );
+
+  //     return medidas$;
+  //   });
+
+  //   const medidasPorMonstros$ = combineLatest(medidasPorMonstros$Array);
+
+  //   let combineCount = 0;
+
+  //   const medidasPorMonstrosUnificado$ = medidasPorMonstros$.pipe(
+  //     map(arrayDeArray => {
+  //       this.log.debug('combine: ' + '' + '; combine-count: ' + ++combineCount + '; arrayDeArray.length: ' + arrayDeArray.length);
+
+  //       const medidas: Medida[] = [];
+
+  //       arrayDeArray.forEach(array => array.forEach(medida => medidas.push(medida)));
+
+  //       const medidasSemRepeticao = _.uniqBy(medidas, 'id');
+
+  //       return medidasSemRepeticao;
+  //     })
+  //   );
+
+  //   return medidasPorMonstrosUnificado$;
+  // }
 
   obtemMedidaObservavel(id: string): Observable<Medida> {
     const collection = this.db.collection<MedidaDocument>(this.PATH);

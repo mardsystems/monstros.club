@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import * as moment from 'moment';
-import { Observable, of, combineLatest, Subject } from 'rxjs';
+import { Observable, of, combineLatest, Subject, EMPTY } from 'rxjs';
 import { catchError, first, map, switchMap, tap, shareReplay } from 'rxjs/operators';
 import { CalculoDeIdade, LogService } from '../app-common.services';
 import { AuthService } from '../auth/auth.service';
@@ -84,7 +84,7 @@ export class MonstrosService {
 
           return monstro$;
         } else {
-          return of(null);
+          return EMPTY; // Observable.throw(e);
         }
       }),
       shareReplay()

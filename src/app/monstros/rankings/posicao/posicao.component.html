@@ -1,0 +1,9 @@
+<ng-container [ngSwitch]="posicao">
+  <span *ngSwitchCase="1" class="primeiro-lugar">1</span>
+  <span *ngSwitchCase="2" class="segundo-lugar">2</span>
+  <span *ngSwitchCase="3" class="terceiro-lugar">3</span>
+  <span *ngSwitchDefault class="demais-posicoes">{{posicao}}</span>
+  <!-- <mat-icon *ngSwitchCase="-99"></mat-icon>
+  <mat-icon *ngSwitchCase="+99" class="warning">waring</mat-icon>
+  <mat-icon *ngSwitchDefault class="error">error</mat-icon> -->
+</ng-container>

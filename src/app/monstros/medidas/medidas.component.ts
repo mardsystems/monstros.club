@@ -1,5 +1,5 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';

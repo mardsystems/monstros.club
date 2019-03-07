@@ -2,7 +2,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, EMPTY } from 'rxjs';
 import { catchError, first, switchMap, tap, map } from 'rxjs/operators';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
@@ -65,7 +65,7 @@ export class SeriesComponent implements OnInit {
       catchError((error, source$) => {
         console.log(`Não foi possível montar as medidas do monstro.\nRazão:\n${error}`);
 
-        return of(null);
+        return EMPTY; // Observable.throw(e);
       })
     );
 

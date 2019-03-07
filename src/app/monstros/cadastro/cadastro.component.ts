@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { of } from 'rxjs';
+import { of, EMPTY } from 'rxjs';
 import { catchError, first, switchMap, tap, map, shareReplay } from 'rxjs/operators';
 import { CalculoDeIdade, LogService } from '../../app-common.services';
 import { AuthService } from '../../auth/auth.service';
@@ -37,7 +37,7 @@ export class CadastroComponent implements OnInit {
       catchError((error) => {
         console.log(`Não foi possível montar o perfil do monstro.\nRazão:\n${error}`);
 
-        return of(null);
+        return EMPTY; // Observable.throw(e);
       }),
       shareReplay()
     );
