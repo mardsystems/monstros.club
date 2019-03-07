@@ -12,7 +12,7 @@ import { RankingsService } from './rankings.service';
 const columnDefinitions = [
   { showMobile: true, def: 'monstro' },
   { showMobile: true, def: 'data' },
-  { showMobile: true, def: 'peso' },
+  { showMobile: false, def: 'peso' },
   { showMobile: true, def: 'gordura' },
   { showMobile: false, def: 'gorduraVisceral' },
   { showMobile: true, def: 'musculo' },
