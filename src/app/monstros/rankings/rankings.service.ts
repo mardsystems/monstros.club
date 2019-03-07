@@ -248,6 +248,129 @@ export class RankingsService
   }
 
   obtemPosicoesDeMedidasObservaveisParaExibicaoPorRanking(ranking: Ranking): Observable<PosicaoDeMedida[]> {
+    const participantes = ranking.participantes.map(participacao => participacao.participante);
+
+    const melhoresMedidasPorParticipante$Array = participantes.map(participante => {
+      const ultimaMedida$ = this.medidasService.obtemUltimaMedidaObservavel(participante).pipe(
+        map(ultimaMedida => PosicaoDeMedida.fromMedida(ultimaMedida, true))
+      );
+
+      const menorMedidaDeGordura$ = this.medidasService.obtemMenorMedidaDeGorduraObservavel(participante).pipe(
+        map(menorMedidaDeGordura => PosicaoDeMedida.fromMedida(menorMedidaDeGordura, false, true))
+      );
+
+      const maiorMedidaDeMusculo$ = this.medidasService.obtemMaiorMedidaDeMusculoObservavel(participante).pipe(
+        map(maiorMedidaDeMusculo => PosicaoDeMedida.fromMedida(maiorMedidaDeMusculo, false, false, true))
+      );
+
+      const menorMedidaDeIndiceDeMassaCorporal$ = this.medidasService.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(participante).pipe(
+        map(menorMedidaDeIndiceDeMassaCorporal => PosicaoDeMedida.fromMedida(menorMedidaDeIndiceDeMassaCorporal, false, false, false, true))
+      );
+
+      //
+
+      const melhoresMedidas$ =
+        combineLatest([ultimaMedida$, menorMedidaDeGordura$, maiorMedidaDeMusculo$, menorMedidaDeIndiceDeMassaCorporal$]);
+
+      return melhoresMedidas$;
+    });
+
+    const melhoresMedidasPorParticipante$ = combineLatest(melhoresMedidasPorParticipante$Array);
+
+    let combineCount = 0;
+
+    const medidasPorMonstrosUnificado$ = melhoresMedidasPorParticipante$.pipe(
+      map(melhoresMedidasPorParticipante => {
+        this.log.debug(
+          'combine: ' + '' + '; combine-count: ' + ++combineCount + '; arrayDeArray.length: ' + melhoresMedidasPorParticipante.length,
+          melhoresMedidasPorParticipante);
+
+        const posicoes: PosicaoDeMedida[] = [];
+
+        melhoresMedidasPorParticipante.forEach(melhoresMedidas => melhoresMedidas.forEach(melhorMedida => {
+          // this.log.debug(melhorMedida);
+
+          // const melhorPosicaoDeMedida = PosicaoDeMedida.fromMedida(melhorMedida);
+
+          posicoes.push(melhorMedida);
+        }));
+
+
+        _(posicoes)
+          .groupBy(posicao => posicao.medidaId)
+          .map(posicoesPorMedida => {
+            let ehUltimaMedida = false;
+
+            let ehMenorMedidaDeGordura = false;
+
+            let ehMaiorMedidaDeMusculo = false;
+
+            let ehMenorMedidaDeIndiceDeMassaCorporal = false;
+
+            posicoesPorMedida.map(posicaoPorMedida => {
+              ehUltimaMedida = ehUltimaMedida || posicaoPorMedida.ehUltimaMedida;
+
+              ehMenorMedidaDeGordura = ehMenorMedidaDeGordura || posicaoPorMedida.ehMenorMedidaDeGordura;
+
+              ehMaiorMedidaDeMusculo = ehMaiorMedidaDeMusculo || posicaoPorMedida.ehMaiorMedidaDeMusculo;
+
+              ehMenorMedidaDeIndiceDeMassaCorporal =
+                ehMenorMedidaDeIndiceDeMassaCorporal || posicaoPorMedida.ehMenorMedidaDeIndiceDeMassaCorporal;
+            });
+
+            posicoesPorMedida.map(posicaoPorMedida => {
+              posicaoPorMedida.ehUltimaMedida = ehUltimaMedida;
+
+              posicaoPorMedida.ehMenorMedidaDeGordura = ehMenorMedidaDeGordura;
+
+              posicaoPorMedida.ehMaiorMedidaDeMusculo = ehMaiorMedidaDeMusculo;
+
+              posicaoPorMedida.ehMenorMedidaDeIndiceDeMassaCorporal = ehMenorMedidaDeIndiceDeMassaCorporal;
+            });
+          })
+          .value();
+
+        _(posicoes)
+          .filter(['ehMaiorMedidaDeMusculo', true])
+          .orderBy(['musculo'], ['desc'])
+          .map((posicao, index) => posicao.posicaoDeMaiorMusculo = index + 1)
+          .value();
+
+        _(posicoes)
+          .filter(['ehMenorMedidaDeIndiceDeMassaCorporal', true])
+          .orderBy(['indiceDeMassaCorporal'], ['asc'])
+          .map((posicao, index) => posicao.posicaoDeMenorIndiceDeMassaCorporal = index + 1)
+          .value();
+
+
+        const posicoesSemRepeticaoDeMedida = _.uniqBy(posicoes, 'medidaId');
+
+        _(posicoesSemRepeticaoDeMedida)
+          .filter(['ehMenorMedidaDeGordura', true])
+          .orderBy(['gordura'], ['asc'])
+          .map((posicao, index) => posicao.posicaoDeMenorGordura = index + 1)
+          .value();
+
+        _(posicoesSemRepeticaoDeMedida)
+          .filter(['ehMaiorMedidaDeMusculo', true])
+          .orderBy(['musculo'], ['desc'])
+          .map((posicao, index) => posicao.posicaoDeMaiorMusculo = index + 1)
+          .value();
+
+        _(posicoesSemRepeticaoDeMedida)
+          .filter(['ehMenorMedidaDeIndiceDeMassaCorporal', true])
+          .orderBy(['indiceDeMassaCorporal'], ['asc'])
+          .map((posicao, index) => posicao.posicaoDeMenorIndiceDeMassaCorporal = index + 1)
+          .value();
+
+        return posicoesSemRepeticaoDeMedida;
+      })
+    );
+
+    return medidasPorMonstrosUnificado$;
+  }
+
+  obtemPosicoesDeMedidasObservaveisParaExibicaoPorRankingGeral(ranking: Ranking): Observable<PosicaoDeMedida[]> {
     // let mergeCount = 0;
 
     const participantes = ranking.participantes.map(participacao => participacao.participante);

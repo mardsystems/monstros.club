@@ -18,34 +18,84 @@ export class PosicaoDeMedida
   data: moment.Moment;
   feitaCom: TipoDeBalanca;
   peso?: number;
-  posicaoDeMenorGordura: number;
+  ehMenorMedidaDeGordura: boolean;
+  posicaoDeMenorGordura?: number;
   gordura?: number;
   gorduraVisceral?: number;
-  posicaoDeMaiorMusculo: number;
+  ehMaiorMedidaDeMusculo: boolean;
+  posicaoDeMaiorMusculo?: number;
   musculo?: number;
   idadeCorporal?: number;
   metabolismoBasal?: number;
-  posicaoDeMenorIndiceDeMassaCorporal: number;
+  ehMenorMedidaDeIndiceDeMassaCorporal: boolean;
+  posicaoDeMenorIndiceDeMassaCorporal?: number;
   indiceDeMassaCorporal?: number;
 
-  static fromMedida(medida: Medida): PosicaoDeMedida {
-    return {
-      medidaId: medida.id,
-      monstroId: medida.monstro.id,
-      monstro: medida.monstro,
-      ehUltimaMedida: false,
-      data: moment(medida.data),
-      feitaCom: medida.feitaCom,
-      peso: medida.peso,
-      posicaoDeMenorGordura: 0,
-      gordura: medida.gordura,
-      gorduraVisceral: medida.gorduraVisceral,
-      posicaoDeMaiorMusculo: 0,
-      musculo: medida.musculo,
-      idadeCorporal: medida.idadeCorporal,
-      metabolismoBasal: medida.metabolismoBasal,
-      posicaoDeMenorIndiceDeMassaCorporal: 0,
-      indiceDeMassaCorporal: medida.indiceDeMassaCorporal,
-    };
+  get posicaoDeMenorGorduraRelativa(): number {
+    if (this.ehMenorMedidaDeGordura) {
+      return this.posicaoDeMenorGordura;
+    } else {
+      return null;
+    }
+  }
+
+  // set posicaoDeMenorGorduraRelativa(value: number) {
+
+  // }
+
+  get posicaoDeMaiorMusculoRelativa(): number {
+    if (this.ehMaiorMedidaDeMusculo) {
+      return this.posicaoDeMaiorMusculo;
+    } else {
+      return null;
+    }
+  }
+
+  // set posicaoDeMaiorMusculoRelativa(value: number) {
+
+  // }
+
+  get posicaoDeMenorIndiceDeMassaCorporalRelativa(): number {
+    if (this.ehMenorMedidaDeIndiceDeMassaCorporal) {
+      return this.posicaoDeMenorIndiceDeMassaCorporal;
+    } else {
+      return null;
+    }
+  }
+
+  // set posicaoDeMenorIndiceDeMassaCorporalRelativa(value: number) {
+
+  // }
+
+  static fromMedida(
+    medida: Medida,
+    ehUltimaMedida = false,
+    ehMenorMedidaDeGordura = false,
+    ehMaiorMedidaDeMusculo = false,
+    ehMenorMedidaDeIndiceDeMassaCorporal = false
+  ): PosicaoDeMedida {
+    const model = new PosicaoDeMedida();
+
+    model.medidaId = medida.id;
+    model.monstroId = medida.monstro.id;
+    model.monstro = medida.monstro;
+    model.ehUltimaMedida = ehUltimaMedida;
+    model.data = moment(medida.data);
+    model.feitaCom = medida.feitaCom;
+    model.peso = medida.peso;
+    model.ehMenorMedidaDeGordura = ehMenorMedidaDeGordura;
+    // posicaoDeMenorGordura = 0;
+    model.gordura = medida.gordura;
+    model.gorduraVisceral = medida.gorduraVisceral;
+    model.ehMaiorMedidaDeMusculo = ehMaiorMedidaDeMusculo;
+    // posicaoDeMaiorMusculo = 0;
+    model.musculo = medida.musculo;
+    model.idadeCorporal = medida.idadeCorporal;
+    model.metabolismoBasal = medida.metabolismoBasal;
+    model.ehMenorMedidaDeIndiceDeMassaCorporal = ehMenorMedidaDeIndiceDeMassaCorporal;
+    // posicaoDeMenorIndiceDeMassaCorporal = 0;
+    model.indiceDeMassaCorporal = medida.indiceDeMassaCorporal;
+
+    return model;
   }
 }

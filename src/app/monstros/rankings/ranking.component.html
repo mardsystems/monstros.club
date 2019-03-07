@@ -18,13 +18,15 @@
 
   <ng-container matColumnDef="peso">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="peso"> Peso </th>
-    <td mat-cell *matCellDef="let posicao"> {{posicao.peso}} </td>
+    <td mat-cell *matCellDef="let posicao">
+      {{posicao.peso}}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="gordura">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gordura"> Gordura </th>
     <td mat-cell *matCellDef="let posicao">
-      <posicao-no-ranking [posicao]="posicao.posicaoDeMenorGordura"></posicao-no-ranking>
+      <posicao-no-ranking [posicao]="posicao.posicaoDeMenorGorduraRelativa"></posicao-no-ranking>
       {{posicao.gordura}}
       <indicador-de-gordura [medida]="posicao" [balanca]="balanca"></indicador-de-gordura>
     </td>
@@ -40,7 +42,7 @@
   <ng-container matColumnDef="musculo">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="musculo"> Músculo </th>
     <td mat-cell *matCellDef="let posicao">
-      <posicao-no-ranking [posicao]="posicao.posicaoDeMaiorMusculo"></posicao-no-ranking>
+      <posicao-no-ranking [posicao]="posicao.posicaoDeMaiorMusculoRelativa"></posicao-no-ranking>
       {{posicao.musculo}}
       <indicador-de-musculo [medida]="posicao" [balanca]="balanca"></indicador-de-musculo>
     </td>
@@ -48,19 +50,24 @@
 
   <ng-container matColumnDef="idadeCorporal">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="idadeCorporal"> Idade Corporal </th>
-    <td mat-cell *matCellDef="let posicao"> {{posicao.idadeCorporal}} </td>
+    <td mat-cell *matCellDef="let posicao">
+      {{posicao.idadeCorporal}}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="metabolismoBasal">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="metabolismoBasal"> Metabolismo Basal </th>
-    <td mat-cell *matCellDef="let posicao"> {{posicao.metabolismoBasal}} </td>
+    <td mat-cell *matCellDef="let posicao">
+      {{posicao.metabolismoBasal}}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="indiceDeMassaCorporal">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="imc"> IMC </th>
     <td mat-cell *matCellDef="let posicao">
-      <posicao-no-ranking [posicao]="posicao.posicaoDeMenorIndiceDeMassaCorporal"></posicao-no-ranking>
-      {{posicao.indiceDeMassaCorporal}}<indicador-de-indice-de-massa-corporal [medida]="posicao" [balanca]="balanca">
+      <posicao-no-ranking [posicao]="posicao.posicaoDeMenorIndiceDeMassaCorporalRelativa"></posicao-no-ranking>
+      {{posicao.indiceDeMassaCorporal}}
+      <indicador-de-indice-de-massa-corporal [medida]="posicao" [balanca]="balanca">
       </indicador-de-indice-de-massa-corporal>
     </td>
   </ng-container>
