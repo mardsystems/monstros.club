@@ -11,8 +11,8 @@
   <ng-container matColumnDef="data">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="data"> Data </th>
     <td mat-cell *matCellDef="let posicao">
+      <span class="indicador-de-assiduidade-de-medidas">&nbsp;</span>
       {{posicao.data | date:'dd/MMM' | uppercase}}
-      <assiduidade-de-medidas [ehUltimaMedida]="posicao.ehUltimaMedida"></assiduidade-de-medidas>
     </td>
   </ng-container>
 
@@ -73,7 +73,9 @@
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="this.getDisplayedColumns(); sticky: true;"></tr>
-  <tr mat-row *matRowDef="let row; columns: this.getDisplayedColumns();"></tr>
+  <tr mat-row *matRowDef="let row; columns: this.getDisplayedColumns();"
+    [ngClass]="{good: row.ultimaMedidaEstaEvoluindo, normal: !row.ehUltimaMedida, bad: row.ultimaMedidaEstaFicandoPraTraz}">
+  </tr>
 </table>
 
 <mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="!dataSource"></mat-spinner>

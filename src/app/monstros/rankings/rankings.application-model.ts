@@ -39,10 +39,6 @@ export class PosicaoDeMedida
     }
   }
 
-  // set posicaoDeMenorGorduraRelativa(value: number) {
-
-  // }
-
   get posicaoDeMaiorMusculoRelativa(): number {
     if (this.ehMaiorMedidaDeMusculo) {
       return this.posicaoDeMaiorMusculo;
@@ -50,10 +46,6 @@ export class PosicaoDeMedida
       return null;
     }
   }
-
-  // set posicaoDeMaiorMusculoRelativa(value: number) {
-
-  // }
 
   get posicaoDeMenorIndiceDeMassaCorporalRelativa(): number {
     if (this.ehMenorMedidaDeIndiceDeMassaCorporal) {
@@ -63,9 +55,21 @@ export class PosicaoDeMedida
     }
   }
 
-  // set posicaoDeMenorIndiceDeMassaCorporalRelativa(value: number) {
+  get ultimaMedidaEstaEvoluindo(): boolean {
+    if (this.ehUltimaMedida) {
+      return this.ehMenorMedidaDeGordura || this.ehMaiorMedidaDeMusculo || this.ehMenorMedidaDeIndiceDeMassaCorporal;
+    } else {
+      return false;
+    }
+  }
 
-  // }
+  get ultimaMedidaEstaFicandoPraTraz(): boolean {
+    if (this.ehUltimaMedida) {
+      return !this.ehMenorMedidaDeGordura && !this.ehMaiorMedidaDeMusculo && !this.ehMenorMedidaDeIndiceDeMassaCorporal;
+    } else {
+      return false;
+    }
+  }
 
   static fromMedida(
     medida: Medida,

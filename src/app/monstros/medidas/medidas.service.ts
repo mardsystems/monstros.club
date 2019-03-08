@@ -99,6 +99,7 @@ export class MedidasService {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('gordura', 'asc')
+        .orderBy('data', 'desc')
         .limit(1);
     });
 
@@ -121,6 +122,7 @@ export class MedidasService {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('musculo', 'desc')
+        .orderBy('data', 'desc')
         .limit(1);
     });
 
@@ -143,6 +145,7 @@ export class MedidasService {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('indiceDeMassaCorporal', 'asc')
+        .orderBy('data', 'desc')
         .limit(1);
     });
 
