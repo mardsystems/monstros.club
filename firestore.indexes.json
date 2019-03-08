@@ -37,8 +37,62 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "musculo",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "data",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "medidas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "monstroId",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "gordura",
           "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "data",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "medidas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "monstroId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "gordura",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "medidas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "monstroId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "indiceDeMassaCorporal",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "data",
+          "order": "DESCENDING"
         }
       ]
     },

@@ -9,10 +9,13 @@ th.mat-header-cell {
 td.mat-cell:first-of-type,
 td.mat-footer-cell:first-of-type,
 th.mat-header-cell:first-of-type {
-  padding-top: 3px;
   padding-left: 16px;
-  min-width: 52px;
-  max-width: 52px;
+  min-width: 64px;
+}
+
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type {
+  padding-top: 3px;
 }
 
 // td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
@@ -20,7 +23,7 @@ th.mat-header-cell:first-of-type {
 // }
 
 th.data {
-  min-width: 70px;
+  min-width: 75px;
 }
 
 th.peso {
@@ -28,33 +31,27 @@ th.peso {
 }
 
 th.gordura {
-  min-width: 70px;
+  min-width: 75px;
 }
 
 th.gorduraVisceral {
-  min-width: 80px;
-}
-
-.mat-column-gorduraVisceral,
-.mat-column-idadeCorporal,
-.mat-column-metabolismoBasal {
-  text-align: center;
+  min-width: 70px;
 }
 
 th.musculo {
-  min-width: 70px;
+  min-width: 80px;
 }
 
 th.idadeCorporal {
-  min-width: 67px;
+  min-width: 60px;
 }
 
 th.metabolismoBasal {
-  min-width: 89px;
+  min-width: 80px;
 }
 
 th.imc {
-  min-width: 70px;
+  min-width: 80px;
 }
 
 td.mat-cell:last-of-type,
@@ -87,4 +84,12 @@ th.mat-header-cell:last-of-type {
 
 .bad .indicador-de-assiduidade-de-medidas {
   background-color: red;
+}
+
+@media (max-width: 1200px) {
+  .mat-column-gorduraVisceral,
+  .mat-column-idadeCorporal,
+  .mat-column-metabolismoBasal {
+    text-align: center;
+  }
 }
