@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+
+<mat-dialog-content class="container">
+  <mat-form-field>
+    <input type="text" placeholder="Desde" matInput [matDatepicker]="desdePicker">
+    <mat-datepicker-toggle matSuffix [for]="desdePicker"></mat-datepicker-toggle>
+    <mat-datepicker #desdePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="text" placeholder="Até" matInput [matDatepicker]="atePicker">
+    <mat-datepicker-toggle matSuffix [for]="atePicker"></mat-datepicker-toggle>
+    <mat-datepicker #atePicker></mat-datepicker>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>FECHAR</button>
+  <button mat-button (click)="onFilter()">FILTRAR</button>
+</mat-dialog-actions>

@@ -20,6 +20,7 @@ import { ParticipantesComponent } from './rankings/participantes.component';
 import { CadastroComponent as CadastroDeSeriesComponent } from './series/cadastro/cadastro.component';
 import { PosicaoComponent } from './rankings/posicao/posicao.component';
 import { AssiduidadeComponent } from './rankings/assiduidade/assiduidade.component';
+import { FiltroComponent as FiltroDoRanking } from './rankings/filtro/filtro.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { AssiduidadeComponent } from './rankings/assiduidade/assiduidade.compone
     CadastroDeSeriesComponent,
     PosicaoComponent,
     AssiduidadeComponent,
+    FiltroDoRanking,
   ],
   imports: [
     CommonModule,
@@ -50,6 +52,7 @@ import { AssiduidadeComponent } from './rankings/assiduidade/assiduidade.compone
     CadastroDeMedidasComponent,
     CadastroDeRankingsComponent,
     ParticipacaoNoRankingComponent,
+    FiltroDoRanking
   ],
   providers: [
     MedidasService

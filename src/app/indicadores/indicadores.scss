@@ -1,21 +1,21 @@
 .indicador-base {
   // font-size: 11px;
   // font-weight: bold;
-  color: green;
+  color: #4caf50; // green, 500
 }
 
 .bad {
-  color: red;
+  color: #f44336; // red, 500
 }
 
 .good {
-  color: blue;
+  color: #304ffe; // indigo, a700
 }
 
 .warning {
-  color: orange;
+  color: #ffab00; // amber, a700
 }
 
 .error {
-  color: red;
+  color: #f44336; // red, 500
 }

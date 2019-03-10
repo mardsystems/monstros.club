@@ -1,3 +1,16 @@
+@import "../../../variables.scss";
+
+mat-toolbar {
+  color: map-get($app-foreground, lighter);
+  background-color: map-get($app-primary, lighter);
+}
+
+.app-fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
 table {
   width: 100%;
 }
@@ -62,11 +75,11 @@ th.mat-header-cell:last-of-type {
 }
 
 .good {
-  background-color: #f0fff0;
+  background-color: #e8f5e9; // green, 50
 }
 
 .bad {
-  background-color: #fff0f0;
+  background-color: #ffebee; // red, 50
 }
 
 .indicador-de-assiduidade-de-medidas {
@@ -79,11 +92,11 @@ th.mat-header-cell:last-of-type {
 }
 
 .good .indicador-de-assiduidade-de-medidas {
-  background-color: green;
+  background-color: #4caf50; // green, 500
 }
 
 .bad .indicador-de-assiduidade-de-medidas {
-  background-color: red;
+  background-color: #f44336; // red, 500
 }
 
 @media (max-width: 1200px) {

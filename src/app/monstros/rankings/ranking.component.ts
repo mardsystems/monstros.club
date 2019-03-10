@@ -1,6 +1,6 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatDialog, MatDialogConfig } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { Balanca, OmronHBF214 } from '../../monstros/medidas/medidas.domain-mode
 import { PosicaoDeMedida } from './rankings.application-model';
 import { Ranking } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
+import { FiltroComponent } from './filtro/filtro.component';
 
 const columnDefinitions = [
   { showMobile: true, def: 'monstro' },
@@ -40,6 +41,7 @@ export class RankingComponent implements OnInit {
   desktopQuery: MediaQueryList;
 
   constructor(
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private rankingsService: RankingsService,
     media: MediaMatcher
@@ -90,5 +92,13 @@ export class RankingComponent implements OnInit {
       .map(cd => cd.def);
 
     return displayedColumns;
+  }
+
+  onFilter(): void {
+    const model = {}; // CadastroDeMedidaViewModel.toAddViewModel(this.monstro);
+
+    const config: MatDialogConfig<any> = { data: model };
+
+    this.dialog.open(FiltroComponent, config);
   }
 }

@@ -84,7 +84,7 @@ export class MonstrosService {
 
           return monstro$;
         } else {
-          return EMPTY; // Observable.throw(e);
+          return of(null); // EMPTY; Observable.throw(e); // TODO: Test.
         }
       }),
       shareReplay()

@@ -1,3 +1,5 @@
+@import "../../variables.scss";
+
 body {
   font-family: Roboto, Arial, sans-serif;
   margin: 0;
@@ -58,7 +60,10 @@ h1.app-name {
 }
 
 .mat-nav-list a.active {
-  background: #ede7f6;
+  // color: white;
+  // background-color: #616161;
+  // background-color: #e0e0e0; // grey, 300
+  background-color: map-get($app-active, default);
 }
 
 // .active-list-item {

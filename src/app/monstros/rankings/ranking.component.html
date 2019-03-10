@@ -1,3 +1,10 @@
+<mat-toolbar>
+  <span>Ranking Global</span>
+  <span class="app-fill-remaining-space"></span>
+  <button mat-icon-button (click)="onFilter()">
+    <mat-icon>filter_list</mat-icon>
+  </button>
+</mat-toolbar>
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
   <ng-container matColumnDef="monstro">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Monstro </th>
@@ -77,5 +84,9 @@
     [ngClass]="{good: row.ultimaMedidaEstaEvoluindo, normal: !row.ehUltimaMedida, bad: row.ultimaMedidaEstaFicandoPraTraz}">
   </tr>
 </table>
+
+<button mat-fab class="fab-bottom-right" (click)="onFilter()">
+  <mat-icon>filter_list</mat-icon>
+</button>
 
 <mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="!dataSource"></mat-spinner>
