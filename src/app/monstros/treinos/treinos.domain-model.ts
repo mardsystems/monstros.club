@@ -7,15 +7,12 @@ export class Modalidade {
   nome: string;
 }
 
-export abstract class Treino {
+export class TreinoBase {
   id: string;
   data: Date;
   modalidade: Modalidade;
-  blocos: string;
+  // blocos: string;
   duracao: Tempo;
-}
-
-export class TreinoBase extends Treino {
   ativo: boolean;
 
   ativa(): void {
@@ -27,7 +24,11 @@ export class TreinoBase extends Treino {
   }
 }
 
-export class ExecucaoDeTreino extends Treino {
+export class Treino {
+  id: string;
+  data: Date;
+  // blocos: string;
+  duracao: Tempo;
   base: TreinoBase;
 
   diferencaExecutada(): number {
