@@ -1,6 +1,10 @@
+export class ExercicioId {
+
+}
+
 export class Exercicio {
   public constructor(
-    private _id: string,
+    private _id: ExercicioId,
     private _nome: string,
     private _musculatura: string,
     private _maquina: string,

@@ -1,101 +1,107 @@
-import { Monstro } from '../monstros.domain-model';
-import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
+import { Exercicio, ExercicioId } from 'src/app/cadastro/exercicios/exercicios.domain-model';
+import { Tempo } from 'src/app/app-common.domain-model';
 
 export class Serie {
   public constructor(
     private _id: string,
-    private _exercicio: Exercicio,
-    private _exercicioId: string,
-    private _monstro: Monstro,
-    private _monstroId: string,
+    private _nome: string,
+    private _ativa: string,
+    private _cor: string,
     private _data: Date,
-    // private _tipo: TipoDeSerie,
-    private _quantidade: number,
-    private _gordura: number,
-    private _gorduraVisceral: number,
-    private _musculo: number,
-    private _idadeCorporal: number,
-    private _metabolismoBasal: number,
-    private _indiceDeMassaCorporal: number
+    private _exercicios?: SerieDeExercicio[],
   ) {
 
   }
 
   public get id() { return this._id; }
 
-  public get exercicio() { return this._exercicio; }
+  public get nome() { return this._nome; }
 
-  public get exercicioId() { return this._exercicioId; }
+  public get ativa() { return this._ativa; }
 
-  public get monstro() { return this._monstro; }
-
-  public get monstroId() { return this._monstroId; }
+  public get cor() { return this._cor; }
 
   public get data() { return this._data; }
 
-  // public get tipo() { return this._tipo; }
+  public get exercicios() { return this._exercicios; }
+
+  public defineNome(nome: string) {
+    this._nome = nome;
+  }
+}
+
+export class SerieDeExercicio {
+  public constructor(
+    private _id: ExercicioId,
+    // private _serie: Serie,
+    private _exercicio: Exercicio,
+    // private _data: Date,
+    private _quantidade: number,
+    private _repeticoes: number,
+    private _carga: number,
+    private _assento: string,
+    // private _execucoes?: ExecucaoDeSerie[],
+  ) {
+
+  }
+
+  public get id() { return this._id; }
+
+  // public get serie() { return this._serie; }
+
+  public get exercicio() { return this._exercicio; }
+
+  // public get data() { return this._data; }
 
   public get quantidade() { return this._quantidade; }
 
-  public get gordura() { return this._gordura; }
+  public get repeticoes() { return this._repeticoes; }
 
-  public get gorduraVisceral() { return this._gorduraVisceral; }
+  public get carga() { return this._carga; }
 
-  public get musculo() { return this._musculo; }
+  public get assento() { return this._assento; }
 
-  public get idadeCorporal() { return this._idadeCorporal; }
+  // public get execucoes() { return this._execucoes; }
 
-  public get metabolismoBasal() { return this._metabolismoBasal; }
-
-  public get indiceDeMassaCorporal() { return this._indiceDeMassaCorporal; }
-
-  // public defineData(data: Date) {
-  //   this._data = data;
-  // }
-
-  // public defineTipoDeBalanca(tipoDeBalanca: TipoDeSerie) {
-  //   this._tipo = tipoDeBalanca;
-  // }
-
-  public definePeso(peso: number) {
-    this._quantidade = peso;
-  }
-
-  public defineGordura(gordura: number) {
-    this._gordura = gordura;
-  }
-
-  public defineGorduraVisceral(gorduraVisceral: number) {
-    this._gorduraVisceral = gorduraVisceral;
-  }
-
-  public defineMusculo(musculo: number) {
-    this._musculo = musculo;
-  }
-
-  public defineIdadeCorporal(idadeCorporal: number) {
-    this._idadeCorporal = idadeCorporal;
-  }
-
-  public defineMetabolismoBasal(metabolismoBasal: number) {
-    this._metabolismoBasal = metabolismoBasal;
-  }
-
-  public defineIndiceDeMassaCorporal(indiceDeMassaCorporal: number) {
-    this._indiceDeMassaCorporal = indiceDeMassaCorporal;
+  public defineQuantidade(quantidade: number) {
+    this._quantidade = quantidade;
   }
 }
 
-export enum NomeDaSerie {
-  A = 'A',
-  B = 'B',
-  C = 'C',
-  D = 'D',
-  E = 'E',
-  F = 'F'
-}
+export class ExecucaoDeSerie {
+  public constructor(
+    private _id: string,
+    private _referencia: SerieDeExercicio,
+    private _data: Date,
+    private _repeticoes: number,
+    private _carga: number,
+    private _assento: string,
+    private _sequencia: number,
+    private _duracao: Tempo,
+    private _academia?: string,
+  ) {
 
-export enum TipoDeSerie {
-  Original = 'Original',
-  Executada = 'Executada'
+  }
+
+  public get id() { return this._id; }
+
+  public get referencia() { return this._referencia; }
+
+  public get data() { return this._data; }
+
+  public get repeticoes() { return this._repeticoes; }
+
+  public get carga() { return this._carga; }
+
+  public get assento() { return this._assento; }
+
+  public get sequencia() { return this._sequencia; }
+
+  public get duracao() { return this._duracao; }
+
+  public get academia() { return this._academia; }
+
+  public defineData(data: Date) {
+    this._data = data;
+  }
 }

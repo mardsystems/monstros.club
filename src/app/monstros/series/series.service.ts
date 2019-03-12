@@ -6,7 +6,7 @@ import { first, map, switchMap, combineAll, mergeAll, tap, mergeMap, toArray } f
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeSerie } from './cadastro/cadastro.application-model';
-import { Serie, TipoDeSerie } from './series.domain-model';
+import { Serie } from './series.domain-model';
 import * as _ from 'lodash';
 import { LogService } from 'src/app/app-common.services';
 
@@ -87,7 +87,7 @@ export class SeriesService {
         first(),
         map(values => {
           return values.map((value, index) => {
-            this.log.debug('monstro: ' + monstro.nome + '; data: ' + value.data);
+            // this.log.debug('monstro: ' + monstro.nome + '; data: ' + value.data);
 
             return this.mapMedida(value, monstro);
           });
@@ -107,7 +107,7 @@ export class SeriesService {
         first(),
         map(values => {
           return values.map((value, index) => {
-            this.log.debug('monstro: ' + monstro.nome + '; gordura: ' + value.gordura);
+            // this.log.debug('monstro: ' + monstro.nome + '; gordura: ' + value.gordura);
 
             return this.mapMedida(value, monstro);
           });
@@ -127,7 +127,7 @@ export class SeriesService {
         first(),
         map(values => {
           return values.map((value, index) => {
-            this.log.debug('monstro: ' + monstro.nome + '; musculo: ' + value.musculo);
+            // this.log.debug('monstro: ' + monstro.nome + '; musculo: ' + value.musculo);
 
             return this.mapMedida(value, monstro);
           });
@@ -147,7 +147,7 @@ export class SeriesService {
         first(),
         map(values => {
           return values.map((value, index) => {
-            this.log.debug('monstro: ' + monstro.nome + '; indiceDeMassaCorporal: ' + value.indiceDeMassaCorporal);
+            // this.log.debug('monstro: ' + monstro.nome + '; indiceDeMassaCorporal: ' + value.indiceDeMassaCorporal);
 
             return this.mapMedida(value, monstro);
           });
@@ -228,22 +228,24 @@ export class SeriesService {
   private mapMedida(value: SerieDocument, monstro: Monstro): Serie {
     const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
 
-    return new Serie(
-      value.id,
-      null,
-      null,
-      monstro,
-      monstroId,
-      value.data.toDate(),
-      // value.feitaCom as TipoDeSerie,
-      value.peso,
-      value.gordura,
-      value.gorduraVisceral,
-      value.musculo,
-      value.idadeCorporal,
-      value.metabolismoBasal,
-      value.indiceDeMassaCorporal
-    );
+    return null;
+
+    // return new Serie(
+    //   value.id,
+    //   null,
+    //   null,
+    //   monstro,
+    //   monstroId,
+    //   value.data.toDate(),
+    //   // value.feitaCom as TipoDeSerie,
+    //   value.peso,
+    //   value.gordura,
+    //   value.gorduraVisceral,
+    //   value.musculo,
+    //   value.idadeCorporal,
+    //   value.metabolismoBasal,
+    //   value.indiceDeMassaCorporal
+    // );
   }
 
   importaMedidas() {
@@ -271,26 +273,24 @@ export class SeriesService {
       this.monstrosService.obtemMonstroObservavel(solicitacao.monstroId).pipe(first()).subscribe(monstro => {
         const serieId = this.db.createId();
 
-        const serie = new Serie(
-          serieId,
-          null,
-          null,
-          monstro,
-          solicitacao.monstroId,
-          solicitacao.data.toDate(),
-          // solicitacao.feitaCom,
-          solicitacao.peso,
-          solicitacao.gordura,
-          solicitacao.gorduraVisceral,
-          solicitacao.musculo,
-          solicitacao.idadeCorporal,
-          solicitacao.metabolismoBasal,
-          solicitacao.indiceDeMassaCorporal
-        );
+        // const serie = new Serie(
+        //   serieId,
+        //   monstro,
+        //   solicitacao.monstroId,
+        //   solicitacao.data.toDate(),
+        //   // solicitacao.feitaCom,
+        //   solicitacao.peso,
+        //   solicitacao.gordura,
+        //   solicitacao.gorduraVisceral,
+        //   solicitacao.musculo,
+        //   solicitacao.idadeCorporal,
+        //   solicitacao.metabolismoBasal,
+        //   solicitacao.indiceDeMassaCorporal
+        // );
 
-        const result = this.add(serie);
+        // const result = this.add(serie);
 
-        resolve(result);
+        // resolve(result);
       });
     });
   }
@@ -314,19 +314,19 @@ export class SeriesService {
 
         // serie.defineTipoDeBalanca(solicitacao.feitaCom);
 
-        serie.definePeso(solicitacao.peso);
+        // serie.definePeso(solicitacao.peso);
 
-        serie.defineGordura(solicitacao.gordura);
+        // serie.defineGordura(solicitacao.gordura);
 
-        serie.defineGorduraVisceral(solicitacao.gorduraVisceral);
+        // serie.defineGorduraVisceral(solicitacao.gorduraVisceral);
 
-        serie.defineMusculo(solicitacao.musculo);
+        // serie.defineMusculo(solicitacao.musculo);
 
-        serie.defineIdadeCorporal(solicitacao.idadeCorporal);
+        // serie.defineIdadeCorporal(solicitacao.idadeCorporal);
 
-        serie.defineMetabolismoBasal(solicitacao.metabolismoBasal);
+        // serie.defineMetabolismoBasal(solicitacao.metabolismoBasal);
 
-        serie.defineIndiceDeMassaCorporal(solicitacao.indiceDeMassaCorporal);
+        // serie.defineIndiceDeMassaCorporal(solicitacao.indiceDeMassaCorporal);
 
         const result = this.update(serie);
 
@@ -348,22 +348,24 @@ export class SeriesService {
   }
 
   private mapTo(serie: Serie): SerieDocument {
-    const doc: SerieDocument = {
-      id: serie.id,
-      // monstroId: `monstros/${serie.monstro.id}`,
-      monstroId: `monstros/${serie.monstroId}`,
-      data: firebase.firestore.Timestamp.fromDate(serie.data),
-      // feitaCom: serie.tipo,
-      peso: serie.quantidade,
-      gordura: serie.gordura,
-      gorduraVisceral: serie.gorduraVisceral,
-      musculo: serie.musculo,
-      idadeCorporal: serie.idadeCorporal,
-      metabolismoBasal: serie.metabolismoBasal,
-      indiceDeMassaCorporal: serie.indiceDeMassaCorporal
-    };
+    // const doc: SerieDocument = {
+    //   id: serie.id,
+    //   // monstroId: `monstros/${serie.monstro.id}`,
+    //   // monstroId: `monstros/${serie.monstroId}`,
+    //   // data: firebase.firestore.Timestamp.fromDate(serie.data),
+    //   // // feitaCom: serie.tipo,
+    //   // peso: serie.quantidade,
+    //   // gordura: serie.gordura,
+    //   // gorduraVisceral: serie.gorduraVisceral,
+    //   // musculo: serie.musculo,
+    //   // idadeCorporal: serie.idadeCorporal,
+    //   // metabolismoBasal: serie.metabolismoBasal,
+    //   // indiceDeMassaCorporal: serie.indiceDeMassaCorporal
+    // };
 
-    return doc;
+    // return doc;
+
+    return null;
   }
 
   excluiMedida(medidaId: string): Promise<void> {
@@ -380,13 +382,13 @@ export class SeriesService {
 interface SerieDocument {
   id: string;
   monstroId: string;
-  data: firebase.firestore.Timestamp;
-  // feitaCom: string;
-  peso: number;
-  gordura: number;
-  gorduraVisceral: number;
-  musculo: number;
-  idadeCorporal: number;
-  metabolismoBasal: number;
-  indiceDeMassaCorporal: number;
+  // data: firebase.firestore.Timestamp;
+  // // feitaCom: string;
+  // peso: number;
+  // gordura: number;
+  // gorduraVisceral: number;
+  // musculo: number;
+  // idadeCorporal: number;
+  // metabolismoBasal: number;
+  // indiceDeMassaCorporal: number;
 }

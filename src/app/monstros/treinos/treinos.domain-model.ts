@@ -1,13 +1,11 @@
-export class Tempo {
-  valor: number;
-}
+import { Tempo } from 'src/app/app-common.domain-model';
 
 export class Modalidade {
   id: string;
   nome: string;
 }
 
-export class TreinoBase {
+export class Treino {
   id: string;
   data: Date;
   modalidade: Modalidade;
@@ -24,14 +22,14 @@ export class TreinoBase {
   }
 }
 
-export class Treino {
+export class ExecucaoDeTreino {
   id: string;
   data: Date;
   // blocos: string;
   duracao: Tempo;
-  base: TreinoBase;
+  referencia: Treino;
 
   diferencaExecutada(): number {
-    return this.duracao.valor - this.base.duracao.valor;
+    return this.duracao.total - this.referencia.duracao.total;
   }
 }

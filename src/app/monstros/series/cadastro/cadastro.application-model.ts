@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Serie, TipoDeSerie } from '../series.domain-model';
+import { Serie } from '../series.domain-model';
 
 export class SolicitacaoDeCadastroDeSerie {
   monstroId: string;
@@ -29,17 +29,19 @@ export class SolicitacaoDeCadastroDeSerie {
   }
 
   static toEdit(medida: Serie): SolicitacaoDeCadastroDeSerie {
-    return {
-      monstroId: medida.monstroId,
-      data: moment(medida.data),
-      // feitaCom: medida.tipo,
-      peso: medida.quantidade,
-      gordura: medida.gordura,
-      gorduraVisceral: medida.gorduraVisceral,
-      musculo: medida.musculo,
-      idadeCorporal: medida.idadeCorporal,
-      metabolismoBasal: medida.metabolismoBasal,
-      indiceDeMassaCorporal: medida.indiceDeMassaCorporal
-    };
+    return null;
+
+    // return {
+    //   monstroId: medida.monstroId,
+    //   data: moment(medida.data),
+    //   // feitaCom: medida.tipo,
+    //   peso: medida.quantidade,
+    //   gordura: medida.gordura,
+    //   gorduraVisceral: medida.gorduraVisceral,
+    //   musculo: medida.musculo,
+    //   idadeCorporal: medida.idadeCorporal,
+    //   metabolismoBasal: medida.metabolismoBasal,
+    //   indiceDeMassaCorporal: medida.indiceDeMassaCorporal
+    // };
   }
 }
