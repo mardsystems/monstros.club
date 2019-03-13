@@ -34,7 +34,7 @@ A execução de série é a melhor.
 
 ## Quinta versão
 ### Séries 2
-![monstros.club-domínio-5-series-2](doc/monstros.club-domínio-5-series-2.png)
+![monstros.club-domínio-5-séries-2](doc/monstros.club-domínio-5-séries-2.png)
 
 ## Configurar o ambiente de desenvolvimento
 * npm install -g angular/cli
