@@ -1,0 +1,44 @@
+<mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="loading"></mat-spinner>
+
+<div class="container" *ngIf="!loading">
+  <table mat-table [dataSource]="dataSource" matSort class="monstros mat-elevation-z8">
+    <ng-container matColumnDef="foto">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let monstro">
+        <!-- <mat-icon matListIcon>person</mat-icon> -->
+        <a routerLink="/{{monstro.id}}">
+          <img class="foto" src="{{monstro.photoURL}}">
+        </a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="nome"> Nome </th>
+      <td mat-cell *matCellDef="let monstro"> {{monstro.nome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="idade">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="idade"> Idade </th>
+      <td mat-cell *matCellDef="let monstro"> {{monstro.idade}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="genero">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="genero"> Gênero </th>
+      <td mat-cell *matCellDef="let monstro"> {{monstro.genero}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="altura">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="nome"> Altura </th>
+      <td mat-cell *matCellDef="let monstro"> {{monstro.altura}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dataDoUltimoLogin">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="dataDoUltimoLogin"> Data do Último Login </th>
+      <td mat-cell *matCellDef="let monstro"> {{monstro.dataDoUltimoLogin | date:'dd/MM/yyyy hh:mm:ss' | uppercase}}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="this.getDisplayedColumns(); sticky: true;"></tr>
+    <tr mat-row *matRowDef="let row; columns: this.getDisplayedColumns();"></tr>
+  </table>
+</div>

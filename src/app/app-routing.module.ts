@@ -16,7 +16,9 @@ const appRoutes: Routes = [
     path: 'admin',
     loadChildren: './admin/admin.module#AdminModule',
     canLoad: [AdminGuard],
-    data: { animation: 'admin' }
+    data: {
+      animation: 'admin'
+    }
   },
   // { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: '404', component: PageNotFoundComponent },

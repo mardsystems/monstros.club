@@ -1,66 +1,71 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { Component } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { AuthService } from '../../auth/auth.service';
 import { Monstro } from '../../monstros/monstros.domain-model';
 import { MonstrosService } from '../../monstros/monstros.service';
-
-const columnDefinitions = [
-  { showMobile: true, def: 'foto' },
-  { showMobile: true, def: 'nome' },
-  { showMobile: true, def: 'idade' },
-  { showMobile: true, def: 'genero' },
-  { showMobile: true, def: 'altura' },
-  { showMobile: false, def: 'dataDoUltimoLogin' },
-];
+import { LogService } from '../../app-common.services';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'admin-monstros',
   templateUrl: './monstros.component.html',
   styleUrls: ['./monstros.component.scss']
 })
-export class MonstrosComponent implements OnInit {
-  loading = true;
-  monstros$: Observable<Monstro[]>;
+export class MonstrosComponent {
+  monstroLogado$: Observable<Monstro>;
+  monstroEstaLogado = false;
 
-  dataSource: any;
-  @ViewChild(MatSort) sort: MatSort;
+  monstroId: string;
+  monstro$: Observable<Monstro>;
 
   desktopQuery: MediaQueryList;
 
+  links = [
+    // { title: 'Listagem', path: '/admin/dashboard', icon: 'dashboard' },
+    { title: 'Listagem', path: '/admin/monstros/listagem', icon: 'supervised_user_circle' },
+    { title: 'Medidas', path: '/admin/monstros/medidas', icon: 'group_work' },
+  ];
+  activePath: string;
+
   constructor(
     private monstrosService: MonstrosService,
+    private authService: AuthService,
+    private router: Router,
+    private log: LogService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
-  }
 
-  ngOnInit() {
-    this.monstros$ = this.monstrosService.obtemMonstrosObservaveisParaAdministracao();
+    this.activePath = this.router.url;
 
-    this.monstros$.pipe(
-      first(),
-    ).subscribe(() => this.loading = false);
+    this.monstroLogado$ = this.monstrosService.monstroLogado$;
 
-    this.monstros$.subscribe(monstros => {
-      this.dataSource = new MatTableDataSource(monstros);
-
-      this.dataSource.sort = this.sort;
+    this.monstroLogado$.pipe(
+      tap((value) => this.log.debug('AdminComponent: constructor: monstroLogado: ', value))
+    ).subscribe((monstroLogado) => {
+      if (monstroLogado) {
+        this.monstroEstaLogado = true;
+      } else {
+        this.monstroEstaLogado = false;
+      }
     });
+
+    this.monstro$ = this.monstroLogado$;
+
+    // this.snav.
   }
 
-  get isDesktop(): boolean {
-    return this.desktopQuery.matches;
+  get isMobile(): boolean {
+    return !this.desktopQuery.matches;
   }
 
-  getDisplayedColumns(): string[] {
-    const isDesktop = this.desktopQuery.matches;
+  public logout() {
+    const result = this.authService.logout();
 
-    const displayedColumns = columnDefinitions
-      .filter(cd => isDesktop || cd.showMobile)
-      .map(cd => cd.def);
-
-    return displayedColumns;
+    result.then(() => {
+      // this.router.navigate(['/']);
+    });
   }
 }

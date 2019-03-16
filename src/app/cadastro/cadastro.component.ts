@@ -9,11 +9,11 @@ import { LogService } from '../app-common.services';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+  selector: 'app-cadastro',
+  templateUrl: './cadastro.component.html',
+  styleUrls: ['./cadastro.component.scss']
 })
-export class AdminComponent {
+export class CadastroComponent {
   monstroLogado$: Observable<Monstro>;
   monstroEstaLogado = false;
 
@@ -23,9 +23,9 @@ export class AdminComponent {
   desktopQuery: MediaQueryList;
 
   links = [
-    { title: 'Dashboard', path: '/admin/dashboard', icon: 'dashboard' },
-    { title: 'Monstros', path: '/admin/monstros', icon: 'supervised_user_circle' },
-    { title: 'Cadastro', path: '/admin/cadastro', icon: 'group_work' },
+    { title: 'Academias', path: '/admin/cadastro/academias', icon: 'supervised_user_circle' },
+    { title: 'Exercícios', path: '/admin/cadastro/exercicios', icon: 'group_work' },
+    { title: 'Aparelhos', path: '/admin/cadastro/aparelhos', icon: 'dashboard' },
   ];
   activePath: string;
 

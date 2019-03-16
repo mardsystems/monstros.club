@@ -3,8 +3,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { Balanca, Medida, OmronHBF214 } from '../../monstros/medidas/medidas.domain-model';
-import { MedidasService } from '../../monstros/medidas/medidas.service';
+import { Balanca, Medida, OmronHBF214 } from '../../../monstros/medidas/medidas.domain-model';
+import { MedidasService } from '../../../monstros/medidas/medidas.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -19,7 +19,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'admin-medidas',
+  selector: 'admin-monstros-medidas',
   templateUrl: './medidas.component.html',
   styleUrls: ['./medidas.component.scss']
 })
