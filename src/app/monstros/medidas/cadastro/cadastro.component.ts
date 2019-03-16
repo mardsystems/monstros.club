@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatSelectChange } from '@angular/materia
 import { MedidasService } from '../medidas.service';
 import { CadastroDeMedidaViewModel } from './cadastro.presentation-model';
 import { Balanca, TipoDeBalanca, OmronHBF214, BalancaComum } from '../medidas.domain-model';
+import { CalculoDeIdade } from 'src/app/app-common.services';
 
 @Component({
   selector: 'monstros-medidas-cadastro',
@@ -19,6 +20,7 @@ export class CadastroComponent implements OnInit, OnChanges {
     private dialogRef: MatDialogRef<CadastroComponent>,
     private medidasService: MedidasService,
     private changeDetectorRef: ChangeDetectorRef,
+    private calculoDeIdade: CalculoDeIdade
   ) {
     this.balanca = new OmronHBF214();
   }
@@ -27,6 +29,16 @@ export class CadastroComponent implements OnInit, OnChanges {
     if (this.model.isEdit) {
       this.dialogTitle = 'Atualiza Medida';
     }
+  }
+
+  public get idade(): Number {
+    if (!this.model.monstro.dataDeNascimento) {
+      return 0;
+    }
+
+    const idade = this.calculoDeIdade.calculaIdade(this.model.monstro.dataDeNascimento, this.model.data.toDate());
+
+    return idade;
   }
 
   ngOnChanges(changes: SimpleChanges) {

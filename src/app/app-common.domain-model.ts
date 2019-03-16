@@ -1,5 +1,5 @@
 export interface ICalculoDeIdade {
-  calculaIdade(data: Date): number;
+  calculaIdade(data: Date, dataFim?: Date): number;
 }
 
 export class Tempo {

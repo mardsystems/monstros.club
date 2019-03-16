@@ -146,12 +146,16 @@ export class PromptUpdateService {
   providedIn: 'root'
 })
 export class CalculoDeIdade implements ICalculoDeIdade {
-  calculaIdade(data: Date): number {
-    const now = new Date(Date.now());
+  calculaIdade(data: Date, dataFim?: Date): number {
+    if (!dataFim) {
+      const now = new Date(Date.now());
 
-    const calculateYear = now.getFullYear();
-    const calculateMonth = now.getMonth();
-    const calculateDay = now.getDate();
+      dataFim = now;
+    }
+
+    const calculateYear = dataFim.getFullYear();
+    const calculateMonth = dataFim.getMonth();
+    const calculateDay = dataFim.getDate();
 
     const birthYear = data.getFullYear();
     const birthMonth = data.getMonth();
