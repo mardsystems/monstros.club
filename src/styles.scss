@@ -31,6 +31,14 @@ body {
   object-fit: cover;
 }
 
+.logo {
+  flex-shrink: 0;
+  width: 39px;
+  height: 40px;
+  // border-radius: 50%;
+  object-fit: cover;
+}
+
 @media only screen and (max-width: 600px) {
   .fab-bottom-right {
     right: 15px;

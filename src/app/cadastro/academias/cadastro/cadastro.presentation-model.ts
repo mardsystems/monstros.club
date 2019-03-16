@@ -12,7 +12,7 @@ export class CadastroDeAcademiaViewModel extends SolicitacaoDeCadastroDeAcademia
       isEdit: false,
       id: null,
       nome: solicitacao.nome,
-      logo: solicitacao.logo,
+      logoURL: solicitacao.logoURL,
     };
   }
 
@@ -23,7 +23,7 @@ export class CadastroDeAcademiaViewModel extends SolicitacaoDeCadastroDeAcademia
       isEdit: true,
       id: academia.id,
       nome: solicitacao.nome,
-      logo: solicitacao.logo,
+      logoURL: solicitacao.logoURL,
     };
   }
 }

@@ -13,7 +13,7 @@ export class CadastroComponent implements OnInit {
   dialogTitle = 'Nova Academia';
   cadastroForm = this.formBuilder.group({
     nome: [this.model.nome],
-    logo: [this.model.logo],
+    logoURL: [this.model.logoURL],
   });
 
   constructor(
@@ -35,7 +35,7 @@ export class CadastroComponent implements OnInit {
   onSave(): void {
     this.model.nome = this.cadastroForm.value.nome;
 
-    this.model.logo = this.cadastroForm.value.logo;
+    this.model.logoURL = this.cadastroForm.value.logoURL;
 
     const operation: Promise<void> =
       (this.model.isEdit)

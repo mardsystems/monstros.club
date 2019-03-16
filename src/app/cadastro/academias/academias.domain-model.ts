@@ -2,7 +2,7 @@ export class Academia {
   public constructor(
     private _id: string,
     private _nome: string,
-    private _logo: string,
+    private _logoURL: string,
   ) {
 
   }
@@ -11,13 +11,13 @@ export class Academia {
 
   public get nome() { return this._nome; }
 
-  public get logo() { return this._logo; }
+  public get logoURL() { return this._logoURL; }
 
   public defineNome(nome: string) {
     this._nome = nome;
   }
 
-  public defineLogo(logo: string) {
-    this._logo = logo;
+  public definelogoURL(logoURL: string) {
+    this._logoURL = logoURL;
   }
 }

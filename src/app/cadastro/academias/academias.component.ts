@@ -10,8 +10,8 @@ import { CadastroComponent } from './cadastro/cadastro.component';
 import { CadastroDeAcademiaViewModel } from './cadastro/cadastro.presentation-model';
 
 const columnDefinitions = [
-  { showMobile: true, def: 'nome' },
   { showMobile: true, def: 'logo' },
+  { showMobile: true, def: 'nome' },
   { showMobile: true, def: 'menu' },
 ];
 

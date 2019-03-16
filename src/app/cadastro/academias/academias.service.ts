@@ -59,7 +59,7 @@ export class AcademiasService {
     return new Academia(
       value.id,
       value.nome,
-      value.logo,
+      value.logoURL,
     );
   }
 
@@ -70,7 +70,7 @@ export class AcademiasService {
       const academia = new Academia(
         academiaId,
         solicitacao.nome,
-        solicitacao.logo,
+        solicitacao.logoURL,
       );
 
       const result = this.add(academia);
@@ -98,7 +98,7 @@ export class AcademiasService {
       ).subscribe(academia => {
         academia.defineNome(solicitacao.nome);
 
-        academia.defineLogo(solicitacao.logo);
+        academia.definelogoURL(solicitacao.logoURL);
 
         const result = this.update(academia);
 
@@ -123,7 +123,7 @@ export class AcademiasService {
     const doc: AcademiaDocument = {
       id: academia.id,
       nome: academia.nome,
-      logo: academia.logo,
+      logoURL: academia.logoURL,
     };
 
     return doc;
@@ -143,5 +143,5 @@ export class AcademiasService {
 interface AcademiaDocument {
   id: string;
   nome: string;
-  logo: string;
+  logoURL: string;
 }
