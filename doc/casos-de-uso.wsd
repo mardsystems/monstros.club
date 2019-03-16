@@ -1,0 +1,15 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+actor Monstro
+' actor clerk
+rectangle "Monstros Club" {
+  Monstro -- (Cria Perfil)
+  Monstro -- (Cadastra Séries)
+  Monstro -- (Executa Série)
+  Monstro -- (Cadastra Medidas)
+  ' (checkout) .> (payment) : include
+  ' (help) .> (checkout) : extends
+  ' (checkout) -- clerk
+}
+@enduml

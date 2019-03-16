@@ -1,0 +1,38 @@
+@startuml
+scale 750 width
+skinparam packageStyle rectangle
+' !includeurl https://raw.githubusercontent.com/ebbypeter/Archimate-PlantUML/master/Archimate.puml
+' title Domínio de Monstros Club
+
+left to right direction
+' allowmixing
+
+package Cadastro as cadastro {
+  package Academias
+  package Exercícios
+  package Monstros
+}
+
+package Monstros as monstros {
+  package Rankings
+  package Treinos
+  package Séries
+  package Medidas
+
+  Rankings ..> Treinos : de
+  Rankings .> Séries : de
+  Rankings ..> Medidas : de
+  Treinos .> Academias : feitas nas
+  Séries .> Academias : feitas nas
+  Séries .> Exercícios : de
+}
+
+package Administração as administracao {
+  package Dashboard
+  package Monstros
+}
+administracao .down.> monstros : dos
+
+administracao .right.> cadastro : do
+
+@enduml
