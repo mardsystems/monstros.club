@@ -55,5 +55,20 @@ service cloud.firestore {
       allow create: if true;
       allow update, delete: if true;
     }
+
+    match /academias/{academia} {
+      allow create: if ehAdministrador();
+      allow update, delete: if ehAdministrador();
+    }
+
+    match /exercicios/{exercicio} {
+      allow create: if ehAdministrador();
+      allow update, delete: if ehAdministrador();
+    }
+
+    match /aparelhos/{aparelho} {
+      allow create: if ehAdministrador();
+      allow update, delete: if ehAdministrador();
+    }
   }
 }
