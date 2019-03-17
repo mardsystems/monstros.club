@@ -1,0 +1,35 @@
+table {
+  width: 100%;
+}
+
+th.mat-header-cell {
+  text-align: left;
+}
+
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type,
+th.mat-header-cell:first-of-type {
+  padding-top: 3px;
+  padding-left: 16px;
+  min-width: 50px;
+  max-width: 50px;
+}
+
+// td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+//   text-align: right;
+// }
+
+th.nome {
+  width: 60%;
+}
+
+th.musculatura {
+  width: 40%;
+}
+
+td.mat-cell:last-of-type,
+td.mat-footer-cell:last-of-type,
+th.mat-header-cell:last-of-type {
+  text-align: right;
+  padding-right: 17px;
+}

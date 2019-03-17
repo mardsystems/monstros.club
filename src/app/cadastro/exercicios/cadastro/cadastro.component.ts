@@ -1,26 +1,27 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { AcademiasService } from '../academias.service';
-import { CadastroDeAcademiaViewModel } from './cadastro.presentation-model';
+import { ExerciciosService } from '../exercicios.service';
+import { CadastroDeExercicioViewModel } from './cadastro.presentation-model';
 
 @Component({
-  selector: 'cadastro-de-academia',
+  selector: 'cadastro-de-exercicio',
   templateUrl: './cadastro.component.html',
   styleUrls: ['./cadastro.component.scss']
 })
 export class CadastroComponent implements OnInit {
-  dialogTitle = 'Nova Academia';
+  dialogTitle = 'Novo Exercício';
   cadastroForm = this.formBuilder.group({
     nome: [this.model.nome],
-    logoURL: [this.model.logoURL],
+    musculatura: [this.model.musculatura],
+    imagemURL: [this.model.imagemURL],
   });
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public model: CadastroDeAcademiaViewModel,
+    public model: CadastroDeExercicioViewModel,
     private dialogRef: MatDialogRef<CadastroComponent>,
-    private academiasService: AcademiasService,
+    private exerciciosService: ExerciciosService,
     private formBuilder: FormBuilder,
   ) {
 
@@ -28,19 +29,21 @@ export class CadastroComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.model.isEdit) {
-      this.dialogTitle = 'Atualiza Academia';
+      this.dialogTitle = 'Atualiza Exercício';
     }
   }
 
   onSave(): void {
     this.model.nome = this.cadastroForm.value.nome;
 
-    this.model.logoURL = this.cadastroForm.value.logoURL;
+    this.model.musculatura = this.cadastroForm.value.musculatura;
+
+    this.model.imagemURL = this.cadastroForm.value.imagemURL;
 
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.academiasService.atualizaAcademia(this.model.id, this.model)
-        : this.academiasService.cadastraAcademia(this.model);
+        ? this.exerciciosService.atualizaExercicio(this.model.id, this.model)
+        : this.exerciciosService.cadastraExercicio(this.model);
 
     operation.then(() => {
       this.dialogRef.close();

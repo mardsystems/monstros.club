@@ -19,36 +19,8 @@ th.mat-header-cell:first-of-type {
 //   text-align: right;
 // }
 
-th.data {
-  min-width: 60px;
-}
-
-th.peso {
-  min-width: 50px;
-}
-
-th.gordura {
-  min-width: 62px;
-}
-
-th.gorduraVisceral {
-  min-width: 62px;
-}
-
-th.musculo {
-  min-width: 65px;
-}
-
-th.idadeCorporal {
-  min-width: 65px;
-}
-
-th.metabolismoBasal {
-  min-width: 89px;
-}
-
-th.imc {
-  min-width: 40px;
+th.nome {
+  width: 90%;
 }
 
 td.mat-cell:last-of-type,

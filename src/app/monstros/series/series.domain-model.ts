@@ -1,4 +1,4 @@
-import { Exercicio, ExercicioId } from 'src/app/cadastro/exercicios/exercicios.domain-model';
+import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
 import { Tempo } from 'src/app/app-common.domain-model';
 
 export class Serie {
@@ -32,7 +32,7 @@ export class Serie {
 
 export class SerieDeExercicio {
   public constructor(
-    private _id: ExercicioId,
+    private _id: string, // ExercicioId
     // private _serie: Serie,
     private _exercicio: Exercicio,
     // private _data: Date,

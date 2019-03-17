@@ -1,13 +1,9 @@
-export class ExercicioId {
-
-}
-
 export class Exercicio {
   public constructor(
-    private _id: ExercicioId,
+    private _id: string,  // ExercicioId
     private _nome: string,
-    private _musculatura: string,
-    private _maquina: string,
+    private _musculatura: Musculatura,
+    private _imagemURL: string,
   ) {
 
   }
@@ -18,17 +14,27 @@ export class Exercicio {
 
   public get musculatura() { return this._musculatura; }
 
-  public get maquina() { return this._maquina; }
+  public get imagemURL() { return this._imagemURL; }
 
-  public defineNome(nome: string) {
+  public corrigeNome(nome: string) {
     this._nome = nome;
   }
 
-  public defineMusculatura(musculatura: string) {
+  public corrigeMusculatura(musculatura: Musculatura) {
     this._musculatura = musculatura;
   }
 
-  public defineMaquina(maquina: string) {
-    this._maquina = maquina;
+  public alteraImagemURL(imagemURL: string) {
+    this._imagemURL = imagemURL;
   }
+}
+
+export enum Musculatura {
+  Dorsais = 'Dorsais',
+  Biceps = 'Bíceps',
+  Triceps = 'Tríceps',
+  Peitorais = 'Peitorais',
+  MembrosInferiores = 'Membros Inferiores',
+  Ombros = 'Ombros',
+  AbdomenLombar = 'Abdômen/Lombar',
 }

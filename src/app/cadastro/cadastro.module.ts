@@ -5,9 +5,11 @@ import { AppCommonModule } from '../app-common.module';
 import { AcademiasComponent } from './academias/academias.component';
 import { CadastroComponent as CadastroDeAcademiasComponent } from './academias/cadastro/cadastro.component';
 import { AparelhosComponent } from './aparelhos/aparelhos.component';
+import { CadastroComponent as CadastroDeAparelhosComponent } from './aparelhos/cadastro/cadastro.component';
 import { CadastroMaterialModule } from './cadastro-material.module';
 import { CadastroRoutingModule } from './cadastro-routing.module';
 import { CadastroComponent } from './cadastro.component';
+import { CadastroComponent as CadastroDeExerciciosComponent } from './exercicios/cadastro/cadastro.component';
 import { ExerciciosComponent } from './exercicios/exercicios.component';
 
 @NgModule({
@@ -16,7 +18,9 @@ import { ExerciciosComponent } from './exercicios/exercicios.component';
     AcademiasComponent,
     CadastroDeAcademiasComponent,
     ExerciciosComponent,
+    CadastroDeExerciciosComponent,
     AparelhosComponent,
+    CadastroDeAparelhosComponent,
     CadastroComponent,
   ],
   imports: [
@@ -28,6 +32,8 @@ import { ExerciciosComponent } from './exercicios/exercicios.component';
   ],
   entryComponents: [
     CadastroDeAcademiasComponent,
+    CadastroDeExerciciosComponent,
+    CadastroDeAparelhosComponent,
   ],
 })
 export class CadastroModule { }

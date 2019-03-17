@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+
+<form [formGroup]="cadastroForm">
+  <mat-dialog-content class="container">
+    <mat-form-field>
+      <input type="text" placeholder="Nome" matInput formControlName="nome">
+    </mat-form-field>
+
+    <mat-form-field hideRequiredMarker>
+      <mat-select placeholder="Musculatura" formControlName="musculatura" required>
+        <mat-option value="Dorsais">Dorsais</mat-option>
+        <mat-option value="Bíceps">Bíceps</mat-option>
+        <mat-option value="Tríceps">Tríceps</mat-option>
+        <mat-option value="Peitorais">Peitorais</mat-option>
+        <mat-option value="Membros Inferiores">Membros Inferiores</mat-option>
+        <mat-option value="Ombros">Ombros</mat-option>
+        <mat-option value="Abdômen/Lombar">Abdômen/Lombar</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="text" placeholder="Imagem URL" matInput formControlName="imagemURL">
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>CANCELAR</button>
+    <button mat-button [disabled]="cadastroForm.invalid" (click)="onSave()">SALVAR</button>
+  </mat-dialog-actions>
+</form>
