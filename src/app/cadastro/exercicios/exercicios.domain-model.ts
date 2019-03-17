@@ -1,6 +1,7 @@
 export class Exercicio {
   public constructor(
     private _id: string,  // ExercicioId
+    private _codigo: string,
     private _nome: string,
     private _musculatura: Musculatura,
     private _imagemURL: string,
@@ -10,11 +11,17 @@ export class Exercicio {
 
   public get id() { return this._id; }
 
+  public get codigo() { return this._codigo; }
+
   public get nome() { return this._nome; }
 
   public get musculatura() { return this._musculatura; }
 
   public get imagemURL() { return this._imagemURL; }
+
+  public ajustaCodigo(codigo: string) {
+    this._codigo = codigo;
+  }
 
   public corrigeNome(nome: string) {
     this._nome = nome;

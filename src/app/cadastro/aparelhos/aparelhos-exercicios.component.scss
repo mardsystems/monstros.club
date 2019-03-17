@@ -1,0 +1,16 @@
+a.exercicio {
+  background-color: #ffc400; // amber, a400
+  margin-left: 2px;
+}
+
+a.exercicio:first-child {
+  margin-left: 0;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}

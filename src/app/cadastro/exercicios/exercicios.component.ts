@@ -11,6 +11,7 @@ import { CadastroDeExercicioViewModel } from './cadastro/cadastro.presentation-m
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },
+  { showMobile: true, def: 'codigo' },
   { showMobile: true, def: 'nome' },
   { showMobile: true, def: 'musculatura' },
   { showMobile: true, def: 'menu' },

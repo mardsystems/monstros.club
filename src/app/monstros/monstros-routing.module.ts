@@ -6,7 +6,7 @@ import { ConfiguracoesComponent } from './configuracoes/configuracoes.component'
 import { MedidasComponent } from './medidas/medidas.component';
 import { MonstrosResolverService } from './monstros-resolver.service';
 import { MonstrosComponent } from './monstros.component';
-import { RankingComponent } from './rankings/ranking.component';
+import { RankingsItemComponent } from './rankings/rankings-item.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
@@ -30,7 +30,7 @@ const monstrosRoutes: Routes = [
           { path: 'treinos', component: TreinosComponent, data: { animation: 'treinos' } },
           { path: 'medidas', component: MedidasComponent, data: { animation: 'medidas' } },
           { path: 'rankings', component: RankingsComponent, data: { animation: 'rankings' } },
-          { path: 'rankings/:rankingId', component: RankingComponent, data: { animation: 'ranking' } },
+          { path: 'rankings/:rankingId', component: RankingsItemComponent, data: { animation: 'ranking' } },
           { path: 'configuracoes', component: ConfiguracoesComponent, data: { animation: 'configuracoes' } },
           { path: '', component: monstros.CadastroComponent, data: { animation: 'monstro' } }
         ]

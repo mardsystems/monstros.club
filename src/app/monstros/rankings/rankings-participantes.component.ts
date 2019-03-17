@@ -1,14 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { ParticipacaoComponent } from './cadastro/participacao.component';
-import { ParticipacaoViewModel } from './cadastro/participacao.presentation-model';
+import { ParticipacaoComponent } from './participacao/participacao.component';
+import { ParticipacaoViewModel } from './participacao/participacao.presentation-model';
 import { Ranking, Participacao } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
 
 @Component({
   selector: 'monstros-rankings-participantes',
-  templateUrl: './participantes.component.html',
-  styleUrls: ['./participantes.component.scss']
+  templateUrl: './rankings-participantes.component.html',
+  styleUrls: ['./rankings-participantes.component.scss']
 })
 export class ParticipantesComponent implements OnInit {
   @Input() ranking: Ranking;

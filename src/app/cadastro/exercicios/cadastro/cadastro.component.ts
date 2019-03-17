@@ -12,6 +12,7 @@ import { CadastroDeExercicioViewModel } from './cadastro.presentation-model';
 export class CadastroComponent implements OnInit {
   dialogTitle = 'Novo Exercício';
   cadastroForm = this.formBuilder.group({
+    codigo: [this.model.codigo],
     nome: [this.model.nome],
     musculatura: [this.model.musculatura],
     imagemURL: [this.model.imagemURL],
@@ -34,6 +35,8 @@ export class CadastroComponent implements OnInit {
   }
 
   onSave(): void {
+    this.model.codigo = this.cadastroForm.value.codigo;
+
     this.model.nome = this.cadastroForm.value.nome;
 
     this.model.musculatura = this.cadastroForm.value.musculatura;

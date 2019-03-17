@@ -1,15 +1,16 @@
-import { Academia } from '../../academias/academias.domain-model';
 import { Aparelho } from '../aparelhos.domain-model';
 
 export class SolicitacaoDeCadastroDeAparelho {
   codigo: string;
-  academia: Academia;
+  academia: string;
+  exercicios: string[];
   imagemURL: string;
 
   static toAdd(): SolicitacaoDeCadastroDeAparelho {
     return {
       codigo: null,
       academia: null,
+      exercicios: [],
       imagemURL: null,
     };
   }
@@ -17,20 +18,10 @@ export class SolicitacaoDeCadastroDeAparelho {
   static toEdit(aparelho: Aparelho): SolicitacaoDeCadastroDeAparelho {
     return {
       codigo: aparelho.codigo,
-      academia: aparelho.academia,
+      academia: aparelho.academia.id,
+      exercicios: aparelho.exercicios.map(exercicio => exercicio.id),
       imagemURL: aparelho.imagemURL,
     };
   }
 }
 
-export class SolicitacaoDeAdicaoDeExercicio {
-  aparelhoId: string;
-  exercicioId: string;
-
-  static create(aparelhoId: string): SolicitacaoDeAdicaoDeExercicio {
-    return {
-      aparelhoId: aparelhoId,
-      exercicioId: null,
-    };
-  }
-}

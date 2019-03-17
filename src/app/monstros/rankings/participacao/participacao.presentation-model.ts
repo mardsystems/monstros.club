@@ -1,5 +1,5 @@
 import { Ranking } from '../rankings.domain-model';
-import { SolicitacaoDeParticipacaoDeRanking } from './cadastro.application-model';
+import { SolicitacaoDeParticipacaoDeRanking } from '../cadastro/cadastro.application-model';
 
 export class ParticipacaoViewModel extends SolicitacaoDeParticipacaoDeRanking {
   ranking: Ranking;

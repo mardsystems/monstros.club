@@ -4,7 +4,6 @@ import { SolicitacaoDeCadastroDeAparelho } from './cadastro.application-model';
 export class CadastroDeAparelhoViewModel extends SolicitacaoDeCadastroDeAparelho {
   isEdit: boolean;
   id?: string; // Usado apenas na edição.
-  timestamp?: number; // Usado apenas na edição.
 
   static toAddViewModel(): CadastroDeAparelhoViewModel {
     const solicitacao = SolicitacaoDeCadastroDeAparelho.toAdd();
@@ -14,8 +13,8 @@ export class CadastroDeAparelhoViewModel extends SolicitacaoDeCadastroDeAparelho
       id: null,
       codigo: solicitacao.codigo,
       academia: solicitacao.academia,
+      exercicios: solicitacao.exercicios,
       imagemURL: solicitacao.imagemURL,
-      timestamp: null
     };
   }
 
@@ -27,8 +26,8 @@ export class CadastroDeAparelhoViewModel extends SolicitacaoDeCadastroDeAparelho
       id: aparelho.id,
       codigo: solicitacao.codigo,
       academia: solicitacao.academia,
+      exercicios: solicitacao.exercicios,
       imagemURL: solicitacao.imagemURL,
-      timestamp: aparelho.timestamp
     };
   }
 }

@@ -11,6 +11,7 @@ import { CadastroRoutingModule } from './cadastro-routing.module';
 import { CadastroComponent } from './cadastro.component';
 import { CadastroComponent as CadastroDeExerciciosComponent } from './exercicios/cadastro/cadastro.component';
 import { ExerciciosComponent } from './exercicios/exercicios.component';
+import { AparelhosExerciciosComponent } from './aparelhos/aparelhos-exercicios.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { ExerciciosComponent } from './exercicios/exercicios.component';
     CadastroDeExerciciosComponent,
     AparelhosComponent,
     CadastroDeAparelhosComponent,
-    CadastroComponent,
+    AparelhosExerciciosComponent,
   ],
   imports: [
     CommonModule,

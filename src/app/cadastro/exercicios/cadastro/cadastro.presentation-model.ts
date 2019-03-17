@@ -11,6 +11,7 @@ export class CadastroDeExercicioViewModel extends SolicitacaoDeCadastroDeExercic
     return {
       isEdit: false,
       id: null,
+      codigo: solicitacao.codigo,
       nome: solicitacao.nome,
       musculatura: solicitacao.musculatura,
       imagemURL: solicitacao.imagemURL,
@@ -23,6 +24,7 @@ export class CadastroDeExercicioViewModel extends SolicitacaoDeCadastroDeExercic
     return {
       isEdit: true,
       id: exercicio.id,
+      codigo: solicitacao.codigo,
       nome: solicitacao.nome,
       musculatura: solicitacao.musculatura,
       imagemURL: solicitacao.imagemURL,

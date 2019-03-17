@@ -64,6 +64,7 @@ export class ExerciciosService {
   private mapExercicio(value: ExercicioDocument): Exercicio {
     return new Exercicio(
       value.id,
+      value.codigo,
       value.nome,
       value.musculatura as Musculatura,
       value.imagemURL,
@@ -76,6 +77,7 @@ export class ExerciciosService {
 
       const exercicio = new Exercicio(
         exercicioId,
+        solicitacao.codigo,
         solicitacao.nome,
         solicitacao.musculatura,
         solicitacao.imagemURL,
@@ -104,6 +106,8 @@ export class ExerciciosService {
       this.obtemExercicioObservavel(exercicioId).pipe(
         first()
       ).subscribe(exercicio => {
+        exercicio.ajustaCodigo(solicitacao.codigo);
+
         exercicio.corrigeNome(solicitacao.nome);
 
         exercicio.corrigeMusculatura(solicitacao.musculatura);
@@ -132,6 +136,7 @@ export class ExerciciosService {
   private mapTo(exercicio: Exercicio): ExercicioDocument {
     const doc: ExercicioDocument = {
       id: exercicio.id,
+      codigo: exercicio.codigo,
       nome: exercicio.nome,
       musculatura: exercicio.musculatura,
       imagemURL: exercicio.imagemURL,
@@ -153,6 +158,7 @@ export class ExerciciosService {
 
 interface ExercicioDocument {
   id: string;
+  codigo: string;
   nome: string;
   musculatura: string;
   imagemURL: string;

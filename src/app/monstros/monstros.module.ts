@@ -14,14 +14,13 @@ import { CadastroComponent as CadastroDeRankingsComponent } from './rankings/cad
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
-import { ParticipacaoComponent as ParticipacaoNoRankingComponent } from './rankings/cadastro/participacao.component';
-import { RankingComponent } from './rankings/ranking.component';
-import { ParticipantesComponent } from './rankings/participantes.component';
+import { ParticipacaoComponent as ParticipacaoNoRankingComponent } from './rankings/participacao/participacao.component';
+import { RankingsItemComponent } from './rankings/rankings-item.component';
+import { ParticipantesComponent } from './rankings/rankings-participantes.component';
 import { CadastroComponent as CadastroDeSeriesComponent } from './series/cadastro/cadastro.component';
 import { PosicaoComponent } from './rankings/posicao/posicao.component';
 import { AssiduidadeComponent } from './rankings/assiduidade/assiduidade.component';
 import { FiltroComponent as FiltroDoRanking } from './rankings/filtro/filtro.component';
-
 @NgModule({
   declarations: [
     MonstrosComponent,
@@ -34,7 +33,7 @@ import { FiltroComponent as FiltroDoRanking } from './rankings/filtro/filtro.com
     RankingsComponent,
     ConfiguracoesComponent,
     ParticipacaoNoRankingComponent,
-    RankingComponent,
+    RankingsItemComponent,
     ParticipantesComponent,
     CadastroDeSeriesComponent,
     PosicaoComponent,

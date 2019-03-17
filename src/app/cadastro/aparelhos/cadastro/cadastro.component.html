@@ -8,7 +8,13 @@
 
     <mat-form-field hideRequiredMarker>
       <mat-select placeholder="Academia" formControlName="academia" required>
-        <mat-option *ngFor="let academia of academias$ | async" [value]="academia">{{academia.nome}}</mat-option>
+        <mat-option *ngFor="let academia of academias$ | async" [value]="academia.id">{{academia.nome}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field hideRequiredMarker>
+      <mat-select placeholder="Exercícios" formControlName="exercicios" multiple required>
+        <mat-option *ngFor="let exercicio of exercicios$ | async" [value]="exercicio.id">{{exercicio.nome}}</mat-option>
       </mat-select>
     </mat-form-field>
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { Observable, combineLatest, of } from 'rxjs';
+import { first, map, switchMap } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { Aparelho } from './aparelhos.domain-model';
 import { SolicitacaoDeCadastroDeAparelho } from './cadastro/cadastro.application-model';
@@ -9,6 +9,8 @@ import * as firebase from 'firebase/app';
 import * as _ from 'lodash';
 import { AcademiasService } from '../academias/academias.service';
 import { Academia } from '../academias/academias.domain-model';
+import { Exercicio } from '../exercicios/exercicios.domain-model';
+import { ExerciciosService } from '../exercicios/exercicios.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,7 @@ export class AparelhosService {
   constructor(
     private db: AngularFirestore,
     private academiasService: AcademiasService,
+    private exerciciosService: ExerciciosService,
     private log: LogService
   ) { }
 
@@ -28,20 +31,19 @@ export class AparelhosService {
         .orderBy('codigo', 'asc');
     });
 
-    const aparelhos$ = collection.valueChanges().pipe(
-      map(values => {
-        const aparelhos = values
-          .map((value) => {
-            const aparelho = this.mapAparelho(value);
+    return collection.valueChanges().pipe(
+      switchMap(values => {
+        let aparelhos$: Observable<Aparelho[]>;
 
-            return aparelho;
-          });
+        if (values.length === 0) {
+          aparelhos$ = of([]);
+        } else {
+          aparelhos$ = combineLatest(values.map(value => this.mapAparelhoObservavel(value)));
+        }
 
-        return aparelhos;
+        return aparelhos$;
       })
     );
-
-    return aparelhos$;
   }
 
   obtemAparelhoObservavel(id: string): Observable<Aparelho> {
@@ -50,39 +52,81 @@ export class AparelhosService {
     const document = collection.doc<AparelhoDocument>(id);
 
     const aparelho$ = document.valueChanges().pipe(
-      map(value => {
-        return this.mapAparelho(value);
-      })
+      switchMap(value => this.mapAparelhoObservavel(value))
     );
 
     return aparelho$;
   }
 
-  private mapAparelho(value: AparelhoDocument): Aparelho {
+  private mapAparelhoObservavel(value: AparelhoDocument): Observable<Aparelho> {
+    return this.academiasService.obtemAcademiaObservavel(value.academia.id).pipe(
+      switchMap(academia => {
+        let exercicios$: Observable<Exercicio[]>;
+
+        if (value.exercicios.length === 0) {
+          exercicios$ = of([]);
+        } else {
+          exercicios$ = combineLatest(
+            value.exercicios.map(exercicioRef => this.exerciciosService.obtemExercicioObservavel(exercicioRef.id))
+          );
+        }
+
+        return exercicios$.pipe(
+          map(exercicios => this.mapAparelho(value, academia, exercicios))
+        );
+      })
+    );
+  }
+
+  private mapAparelho(value: AparelhoDocument, academia: Academia, exercicios: Exercicio[]): Aparelho {
     return new Aparelho(
       value.id,
       value.codigo,
-      new Academia('teste', 'teste', 'teste'), // value.academia as Academia,
+      academia,
+      exercicios,
       value.imagemURL,
-      0,
-      []
     );
   }
 
   cadastraAparelho(solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const aparelhoId = this.db.createId();
+      this.academiasService.obtemAcademiaObservavel(solicitacao.academia).pipe(
+        first()
+      ).subscribe(solicitacao_academia => {
+        let exercicios$: Observable<Exercicio[]>;
 
-      const aparelho = new Aparelho(
-        aparelhoId,
-        solicitacao.codigo,
-        solicitacao.academia,
-        solicitacao.imagemURL,
-      );
+        if (solicitacao.exercicios.length === 0) {
+          exercicios$ = of([]);
+        } else {
+          exercicios$ = combineLatest(
+            solicitacao.exercicios.map(exercicio =>
+              this.exerciciosService.obtemExercicioObservavel(exercicio).pipe(
+                first()
+              )
+            )
+          ).pipe(
+            first()
+          );
+        }
 
-      const result = this.add(aparelho);
+        exercicios$.pipe(
+          first()
+        ).subscribe(solicitacao_exercicios => {
+          const aparelhoId = this.db.createId();
 
-      resolve(result);
+          const aparelho = new Aparelho(
+            aparelhoId,
+            solicitacao.codigo,
+            solicitacao_academia,
+            solicitacao_exercicios,
+            solicitacao.imagemURL,
+          );
+
+          const result = this.add(aparelho);
+
+          resolve(result);
+        });
+      });
     });
   }
 
@@ -100,18 +144,44 @@ export class AparelhosService {
 
   atualizaAparelho(aparelhoId: string, solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.obtemAparelhoObservavel(aparelhoId).pipe(
+      this.academiasService.obtemAcademiaObservavel(solicitacao.academia).pipe(
         first()
-      ).subscribe(aparelho => {
-        aparelho.alteraCodigo(solicitacao.codigo);
+      ).subscribe(solicitacao_academia => {
+        let exercicios$: Observable<Exercicio[]>;
 
-        aparelho.corrigeAcademia(solicitacao.academia);
+        if (solicitacao.exercicios.length === 0) {
+          exercicios$ = of([]);
+        } else {
+          exercicios$ = combineLatest(
+            solicitacao.exercicios.map(exercicio =>
+              this.exerciciosService.obtemExercicioObservavel(exercicio).pipe(
+                first()
+              )
+            )
+          ).pipe(
+            first()
+          );
+        }
 
-        aparelho.alteraImagemURL(solicitacao.imagemURL);
+        exercicios$.pipe(
+          first()
+        ).subscribe(solicitacao_exercicios => {
+          this.obtemAparelhoObservavel(aparelhoId).pipe(
+            first()
+          ).subscribe(aparelho => {
+            aparelho.alteraCodigo(solicitacao.codigo);
 
-        const result = this.update(aparelho);
+            aparelho.corrigeAcademia(solicitacao_academia);
 
-        resolve(result);
+            aparelho.alteraExercicios(solicitacao_exercicios);
+
+            aparelho.alteraImagemURL(solicitacao.imagemURL);
+
+            const result = this.update(aparelho);
+
+            resolve(result);
+          });
+        });
       });
     });
   }
@@ -135,12 +205,12 @@ export class AparelhosService {
       id: aparelho.id,
       codigo: aparelho.codigo,
       academia: academiaRef,
-      imagemURL: aparelho.imagemURL,
       exercicios: aparelho.exercicios.map(exercicio => {
-        const exercicioRef = this.academiasService.ref(exercicio.id);
+        const exercicioRef = this.exerciciosService.ref(exercicio.id);
 
         return exercicioRef;
-      })
+      }),
+      imagemURL: aparelho.imagemURL,
     };
 
     return doc;
@@ -161,6 +231,6 @@ interface AparelhoDocument {
   id: string;
   codigo: string;
   academia: firebase.firestore.DocumentReference;
-  imagemURL: string;
   exercicios: firebase.firestore.DocumentReference[];
+  imagemURL: string;
 }

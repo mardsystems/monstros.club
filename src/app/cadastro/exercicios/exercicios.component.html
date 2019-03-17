@@ -9,6 +9,12 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="codigo">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="codigo"> Código </th>
+    <td mat-cell *matCellDef="let exercicio"> {{exercicio.codigo}}
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="nome">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="nome"> Nome </th>
     <td mat-cell *matCellDef="let exercicio"> {{exercicio.nome}}

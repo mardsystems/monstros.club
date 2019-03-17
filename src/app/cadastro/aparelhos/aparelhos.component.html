@@ -22,8 +22,10 @@
   </ng-container>
 
   <ng-container matColumnDef="exercicios">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="exercicios"> Excercícios </th>
-    <td mat-cell *matCellDef="let aparelho"> {{aparelho.exercicios.length}}
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="exercicios"> Exercícios </th>
+    <td mat-cell *matCellDef="let aparelho">
+      <cadastro-de-aparelhos-exercicios [aparelho]="aparelho">
+      </cadastro-de-aparelhos-exercicios>
     </td>
   </ng-container>
 

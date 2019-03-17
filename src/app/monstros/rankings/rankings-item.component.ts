@@ -4,7 +4,7 @@ import { MatSort, MatTableDataSource, MatDialog, MatDialogConfig } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { Balanca, OmronHBF214 } from '../../monstros/medidas/medidas.domain-model';
+import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
 import { PosicaoDeMedida } from './rankings.application-model';
 import { Ranking } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
@@ -23,11 +23,11 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'monstros-ranking',
-  templateUrl: './ranking.component.html',
-  styleUrls: ['./ranking.component.scss']
+  selector: 'monstros-rankings-item',
+  templateUrl: './rankings-item.component.html',
+  styleUrls: ['./rankings-item.component.scss']
 })
-export class RankingComponent implements OnInit {
+export class RankingsItemComponent implements OnInit {
   ranking: Ranking;
 
   posicoes$: Observable<PosicaoDeMedida[]>;
