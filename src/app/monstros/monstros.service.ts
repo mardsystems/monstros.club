@@ -91,6 +91,14 @@ export class MonstrosService {
     );
   }
 
+  ref(id: string): DocumentReference {
+    const collection = this.db.collection<MonstroDocument>(this.PATH);
+
+    const document = collection.doc<MonstroDocument>(id);
+
+    return document.ref;
+  }
+
   public estaAutenticado(): Observable<boolean> {
     return this.monstroLogado$.pipe(
       map(monstroLogado => monstroLogado != null)
@@ -168,14 +176,6 @@ export class MonstrosService {
     const todosOsMonstros$ = combineLatest(arrayDeMonstrosObservaveis);
 
     return todosOsMonstros$;
-  }
-
-  obtemMonstroRef(id: string): DocumentReference {
-    const collection = this.db.collection<MonstroDocument>('/monstros');
-
-    const document = collection.doc<MonstroDocument>(id);
-
-    return document.ref;
   }
 
   private mapMonstro(value: MonstroDocument): Monstro {

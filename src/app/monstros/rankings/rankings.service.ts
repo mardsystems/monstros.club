@@ -83,7 +83,7 @@ export class RankingsService
   }
 
   obtemRankingsObservaveisParaExibicaoPorProprietario(proprietario: Monstro): Observable<Ranking[]> {
-    const monstroRef = this.monstrosService.obtemMonstroRef(proprietario.id);
+    const monstroRef = this.monstrosService.ref(proprietario.id);
 
     const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
       return reference
@@ -639,7 +639,7 @@ export class RankingsService
   }
 
   private mapTo(ranking: Ranking): RankingDocument {
-    const monstroRef = this.monstrosService.obtemMonstroRef(ranking.proprietarioId);
+    const monstroRef = this.monstrosService.ref(ranking.proprietarioId);
 
     const doc: RankingDocument = {
       id: ranking.id,
@@ -650,7 +650,7 @@ export class RankingsService
       dataDeCriacao: firebase.firestore.Timestamp.fromDate(ranking.dataDeCriacao),
       feitoCom: ranking.feitoCom,
       participantes: ranking.participantes.map(participacao => {
-        const participanteRef = this.monstrosService.obtemMonstroRef(participacao.participante.id);
+        const participanteRef = this.monstrosService.ref(participacao.participante.id);
 
         const participacaoDocument: ParticipacaoDocument = {
           participanteId: participanteRef,
@@ -690,7 +690,7 @@ export class RankingsService
   // Rankings - Participações.
 
   obtemRankingParticipacoes(participante: Monstro): Observable<RankingParticipacaoDocument[]> {
-    const monstroRef = this.monstrosService.obtemMonstroRef(participante.id);
+    const monstroRef = this.monstrosService.ref(participante.id);
 
     const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
       return reference
@@ -711,7 +711,7 @@ export class RankingsService
       const participanteResults = ranking.participantes.map(participacao => {
         const rankingParticipacaoId = this.db.createId();
 
-        const participanteRef = this.monstrosService.obtemMonstroRef(participacao.participante.id);
+        const participanteRef = this.monstrosService.ref(participacao.participante.id);
 
         // const ehProprietario = (participacao.participante === ranking.proprietario);
 
@@ -752,7 +752,7 @@ export class RankingsService
         const participantesAindaNaoCadastradosResult = participantesAindaNaoCadastrados.map(participanteAindaNaoCadastrado => {
           const rankingParticipacaoId = this.db.createId();
 
-          const participanteRef = this.monstrosService.obtemMonstroRef(participanteAindaNaoCadastrado.participante.id);
+          const participanteRef = this.monstrosService.ref(participanteAindaNaoCadastrado.participante.id);
 
           // const ehProprietario = (participanteAindaNaoCadastrado.participante === ranking.proprietario);
 
@@ -830,7 +830,7 @@ export class RankingsService
 
   excluiRankingsParticicacoesPorParticipante(participanteId: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const monstroRef = this.monstrosService.obtemMonstroRef(participanteId);
+      const monstroRef = this.monstrosService.ref(participanteId);
 
       const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
         return reference

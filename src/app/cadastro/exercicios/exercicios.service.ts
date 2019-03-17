@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
-import { Exercicio, Musculatura } from './exercicios.domain-model';
 import { SolicitacaoDeCadastroDeExercicio } from './cadastro/cadastro.application-model';
-import * as firebase from 'firebase/app';
-import * as _ from 'lodash';
+import { Exercicio, Musculatura } from './exercicios.domain-model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +16,14 @@ export class ExerciciosService {
     private db: AngularFirestore,
     private log: LogService
   ) { }
+
+  ref(id: string): DocumentReference {
+    const collection = this.db.collection<ExercicioDocument>(this.PATH);
+
+    const document = collection.doc<ExercicioDocument>(id);
+
+    return document.ref;
+  }
 
   obtemExerciciosObservaveisParaAdministracao(): Observable<Exercicio[]> {
     const collection = this.db.collection<ExercicioDocument>(this.PATH, reference => {

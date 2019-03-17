@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { Academia } from './academias.domain-model';
 import { SolicitacaoDeCadastroDeAcademia } from './cadastro/cadastro.application-model';
-import * as firebase from 'firebase/app';
-import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +16,14 @@ export class AcademiasService {
     private db: AngularFirestore,
     private log: LogService
   ) { }
+
+  ref(id: string): DocumentReference {
+    const collection = this.db.collection<AcademiaDocument>(this.PATH);
+
+    const document = collection.doc<AcademiaDocument>(id);
+
+    return document.ref;
+  }
 
   obtemAcademiasObservaveisParaAdministracao(): Observable<Academia[]> {
     const collection = this.db.collection<AcademiaDocument>(this.PATH, reference => {
