@@ -1,3 +1,18 @@
-<p>
-  cadastro works!
-</p>
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+
+<form [formGroup]="cadastroForm">
+  <mat-dialog-content class="container">
+    <mat-form-field>
+      <input type="text" placeholder="Nome" matInput formControlName="nome">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="text" placeholder="Cor" matInput formControlName="cor">
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>CANCELAR</button>
+    <button mat-button [disabled]="cadastroForm.invalid" (click)="onSave()">SALVAR</button>
+  </mat-dialog-actions>
+</form>

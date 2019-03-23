@@ -15,37 +15,27 @@ export class CadastroDeSerieViewModel extends SolicitacaoDeCadastroDeSerie {
     return {
       isEdit: false,
       id: null,
+      nome: solicitacao.nome,
+      cor: solicitacao.cor,
+      ativa: solicitacao.ativa,
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       data: solicitacao.data,
-      // feitaCom: solicitacao.feitaCom,
-      peso: solicitacao.peso,
-      gordura: solicitacao.gordura,
-      gorduraVisceral: solicitacao.gorduraVisceral,
-      musculo: solicitacao.musculo,
-      idadeCorporal: solicitacao.idadeCorporal,
-      metabolismoBasal: solicitacao.metabolismoBasal,
-      indiceDeMassaCorporal: solicitacao.indiceDeMassaCorporal
     };
   }
 
   static toEditViewModel(monstro: Monstro, medida: Serie): CadastroDeSerieViewModel {
-    const solicitacao = SolicitacaoDeCadastroDeSerie.toEdit(medida);
+    const solicitacao = SolicitacaoDeCadastroDeSerie.toEdit(monstro.id, medida);
 
     return {
       isEdit: true,
       id: medida.id,
+      nome: solicitacao.nome,
+      cor: solicitacao.cor,
+      ativa: solicitacao.ativa,
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       data: solicitacao.data,
-      // feitaCom: solicitacao.feitaCom,
-      peso: solicitacao.peso,
-      gordura: solicitacao.gordura,
-      gorduraVisceral: solicitacao.gorduraVisceral,
-      musculo: solicitacao.musculo,
-      idadeCorporal: solicitacao.idadeCorporal,
-      metabolismoBasal: solicitacao.metabolismoBasal,
-      indiceDeMassaCorporal: solicitacao.indiceDeMassaCorporal
     };
   }
 }

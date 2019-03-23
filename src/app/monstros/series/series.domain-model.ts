@@ -1,13 +1,15 @@
-import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
 import { Tempo } from 'src/app/app-common.domain-model';
+import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
+import { Aparelho } from 'src/app/cadastro/aparelhos/aparelhos.domain-model';
+import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
 
 export class Serie {
   public constructor(
     private _id: string,
     private _nome: string,
-    private _ativa: string,
     private _cor: string,
-    private _data: Date,
+    private _ativa?: boolean,
+    private _data?: Date,
     private _exercicios?: SerieDeExercicio[],
   ) {
 
@@ -17,16 +19,32 @@ export class Serie {
 
   public get nome() { return this._nome; }
 
-  public get ativa() { return this._ativa; }
-
   public get cor() { return this._cor; }
+
+  public get ativa() { return this._ativa; }
 
   public get data() { return this._data; }
 
   public get exercicios() { return this._exercicios; }
 
-  public defineNome(nome: string) {
+  public corrigeNome(nome: string) {
     this._nome = nome;
+  }
+
+  public corrigeCor(cor: string) {
+    this._cor = cor;
+  }
+
+  public reativa() {
+    this._ativa = true;
+  }
+
+  public desativa() {
+    this._ativa = false;
+  }
+
+  public corrigeData(data: Date) {
+    this._data = data;
   }
 }
 
@@ -35,7 +53,6 @@ export class SerieDeExercicio {
     private _id: string, // ExercicioId
     // private _serie: Serie,
     private _exercicio: Exercicio,
-    // private _data: Date,
     private _quantidade: number,
     private _repeticoes: number,
     private _carga: number,
@@ -51,8 +68,6 @@ export class SerieDeExercicio {
 
   public get exercicio() { return this._exercicio; }
 
-  // public get data() { return this._data; }
-
   public get quantidade() { return this._quantidade; }
 
   public get repeticoes() { return this._repeticoes; }
@@ -63,12 +78,43 @@ export class SerieDeExercicio {
 
   // public get execucoes() { return this._execucoes; }
 
-  public defineQuantidade(quantidade: number) {
+  public corrigeQuantidade(quantidade: number) {
     this._quantidade = quantidade;
   }
 }
 
 export class ExecucaoDeSerie {
+  public constructor(
+    private _id: string,
+    private _serie: Serie,
+    private _dia: Date,
+    private _numero: number,
+    private _feitaNa?: Academia,
+    private _exercicios?: ExecucaoDeExercicio[],
+  ) {
+
+  }
+
+  public get id() { return this._id; }
+
+  public get serie() { return this._serie; }
+
+  public get dia() { return this._dia; }
+
+  public get numero() { return this._numero; }
+
+  public get duracao() { return null; }
+
+  public get feitaNa() { return this._feitaNa; }
+
+  public get exercicios() { return this._exercicios; }
+
+  public corrigeDia(dia: Date) {
+    this._dia = dia;
+  }
+}
+
+export class ExecucaoDeExercicio {
   public constructor(
     private _id: string,
     private _referencia: SerieDeExercicio,
@@ -78,7 +124,7 @@ export class ExecucaoDeSerie {
     private _assento: string,
     private _sequencia: number,
     private _duracao: Tempo,
-    private _academia?: string,
+    private _feitoCom?: Aparelho,
   ) {
 
   }
@@ -86,8 +132,6 @@ export class ExecucaoDeSerie {
   public get id() { return this._id; }
 
   public get referencia() { return this._referencia; }
-
-  public get data() { return this._data; }
 
   public get repeticoes() { return this._repeticoes; }
 
@@ -99,9 +143,13 @@ export class ExecucaoDeSerie {
 
   public get duracao() { return this._duracao; }
 
-  public get academia() { return this._academia; }
+  public get feitoCom() { return this._feitoCom; }
 
-  public defineData(data: Date) {
-    this._data = data;
+  public inicia() {
+
+  }
+
+  public finaliza() {
+    this._repeticoes++;
   }
 }

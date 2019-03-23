@@ -39,6 +39,11 @@ service cloud.firestore {
     match /monstros/{monstro} {
       allow update, delete: if (ehVoceMesmo() && naoEstaTentandoSerOAdministrador()) || ehAdministrador();
       allow create: if (estaAutenticado() && naoEstaTentandoSerOAdministrador());
+
+      match /series/{serie} {
+        allow create: if true;
+        allow update, delete: if true;
+      }
     }
 
     match /medidas/{medida} {
