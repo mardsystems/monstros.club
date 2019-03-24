@@ -1,0 +1,25 @@
+<a mat-icon-button class="serieDeExercicio" *ngFor="let serieDeExercicio of serie.exercicios"
+  [matMenuTriggerFor]="serieDeExercicioMenu" [matMenuTriggerData]="{serieDeExercicio2: serieDeExercicio}">
+  <mat-icon matListIcon>fitness_center</mat-icon>
+  <!-- <img class="avatar" src="{{serieDeExercicio.exercicio.imagemURL}}" alt="{{serieDeExercicio.exercicio.id}}"> -->
+</a>
+<button mat-icon-button (click)="onAdd()">
+  <mat-icon>add</mat-icon>
+</button>
+
+<mat-menu #serieDeExercicioMenu="matMenu" overlapTrigger="false">
+  <ng-template matMenuContent let-serieDeExercicio="serieDeExercicio2">
+    <!-- <button mat-menu-item routerLink="../../admin/cadastro/exercicios/{{serieDeExercicio.exercicio.id}}">
+      <mat-icon>info</mat-icon>
+      <span>Visualizar Exercício</span>
+    </button> -->
+    <button mat-menu-item (click)="onEdit(serieDeExercicio)" [disabled]="disabledWrite">
+      <mat-icon>edit</mat-icon>
+      <span>Editar Série de Exercício</span>
+    </button>
+    <button mat-menu-item (click)="onDelete(serieDeExercicio)" [disabled]="disabledWrite">
+      <mat-icon>delete</mat-icon>
+      <span>Remover Série de Exercício</span>
+    </button>
+  </ng-template>
+</mat-menu>

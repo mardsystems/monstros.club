@@ -17,6 +17,7 @@ import {
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 
@@ -35,6 +36,7 @@ import { MatTableModule } from '@angular/material/table';
     MatListModule,
     MatMenuModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     MatSortModule,
     MatSidenavModule,
     MatSlideToggleModule,
@@ -54,6 +56,7 @@ import { MatTableModule } from '@angular/material/table';
     MatListModule,
     MatMenuModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     MatSortModule,
     MatSidenavModule,
     MatSlideToggleModule,

@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { combineLatest, Observable, of, merge, forkJoin } from 'rxjs';
-import { first, map, switchMap, combineAll, mergeAll, tap, mergeMap, toArray } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { CONST_TIMESTAMP_FALSO } from 'src/app/app-common.domain-model';
+import { LogService } from 'src/app/app-common.services';
+import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { SolicitacaoDeCadastroDeSerie } from './cadastro/cadastro.application-model';
-import { Serie } from './series.domain-model';
-import * as _ from 'lodash';
-import { LogService } from 'src/app/app-common.services';
+import { SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './cadastro/cadastro.application-model';
+import { Serie, SerieDeExercicio } from './series.domain-model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,58 +20,113 @@ export class SeriesService {
   constructor(
     private db: AngularFirestore,
     private monstrosService: MonstrosService,
+    private exerciciosService: ExerciciosService,
     private log: LogService
   ) { }
 
-  // obtemSeriesObservaveisParaAdministracao(): Observable<Serie[]> {
-  //   const collection = this.db.collection<SerieDocument>(this.PATH, reference => {
-  //     return reference
-  //       .orderBy('data', 'desc');
-  //   });
+  obtemSeriesObservaveisParaExibicao_(monstro: Monstro): Observable<Serie[]> {
+    const path = `${this.monstrosService.PATH}/${monstro.id}${this.PATH}`;
 
-  //   const series$ = collection.valueChanges().pipe(
-  //     switchMap(values => {
-  //       const arrayDeSeriesObservaveis = values
-  //         .map((value) => {
-  //           const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
+    const collection = this.db.collection<SerieDocument>(path, reference => {
+      return reference
+        // .where('monstroId', '==', `monstros/${monstro.id}`)
+        .orderBy('nome', 'asc');
+    });
 
-  //           const serieComMonstro$ = this.monstrosService.obtemMonstroObservavel(monstroId).pipe(
-  //             first(),
-  //             map(monstro => this.mapSerie(value, monstro))
-  //           );
+    const series$ = collection.valueChanges().pipe(
+      switchMap(values => this.mapSeriesObservaveis_(values)),
+      // map(values => {
+      //   return values.map((value, index) => {
+      //     return this.mapSerie(value, null);
+      //   });
+      // })
+    );
 
-  //           return serieComMonstro$;
-  //         });
+    return series$;
+  }
 
-  //       const todasAsSeries$ = combineLatest(arrayDeSeriesObservaveis);
+  private mapSeriesObservaveis_(values: SerieDocument[]): Observable<Serie[]> {
+    const series$Array = values.map(value => this.mapSerieObservavel_(value));
 
-  //       return todasAsSeries$;
-  //     })
-  //   );
+    if (values.length === 0) {
+      return of([]);
+    } else {
+      return combineLatest(series$Array);
+    }
+  }
 
-  //   // return merge(series$, new Observable<Serie[]>(() => [])); // TODO: Problema quando não tem series.
+  private mapSerieObservavel_(value: SerieDocument): Observable<Serie> {
+    const series$ = this.mapSerieDeExerciciosObservaveis_(value).pipe(
+      map(exercicios => this.mapSerie(value, exercicios)),
+      shareReplay()
+    );
 
-  //   return series$;
-  // }
+    return series$;
+  }
+
+  private mapSerieDeExerciciosObservaveis_(value: SerieDocument): Observable<SerieDeExercicio[]> {
+    const serieDeExercicios$Array = value.exercicios.map(serieDeExercicioValue => {
+      const exercicio$ = this.exerciciosService.obtemExercicioObservavel(serieDeExercicioValue.exercicioId.id).pipe(
+        map(exercicio => {
+          const serieDeExercicio = new SerieDeExercicio(
+            exercicio.id,
+            exercicio,
+            serieDeExercicioValue.quantidade,
+            serieDeExercicioValue.repeticoes,
+            serieDeExercicioValue.carga,
+            serieDeExercicioValue.assento
+          );
+
+          return serieDeExercicio;
+        }),
+        shareReplay()
+      );
+
+      return exercicio$;
+    });
+
+    const serieDeExercicios$ = combineLatest(serieDeExercicios$Array);
+
+    return serieDeExercicios$;
+  }
+
+  obtemSerieObservavel_(monstroId: string, id: string): Observable<Serie> {
+    const path = `${this.monstrosService.PATH}/${monstroId}${this.PATH}`;
+
+    const collection = this.db.collection<SerieDocument>(path);
+
+    const document = collection.doc<SerieDocument>(id);
+
+    const serie$ = document.valueChanges().pipe(
+      // first(),
+      switchMap(value => this.mapSerieObservavel_(value)),
+      shareReplay()
+    );
+
+    return serie$;
+  }
 
   obtemSeriesObservaveisParaExibicao(monstro: Monstro): Observable<Serie[]> {
     const path = `${this.monstrosService.PATH}/${monstro.id}${this.PATH}`;
 
     const collection = this.db.collection<SerieDocument>(path, reference => {
       return reference
-        // .where('monstroId', '==', `monstros/${monstro.id}`)
-        .orderBy('data', 'desc');
+        .orderBy('nome', 'asc');
     });
 
-    const series$ = collection.valueChanges().pipe(
-      map(values => {
-        return values.map((value, index) => {
-          return this.mapSerie(value);
-        });
+    return collection.valueChanges().pipe(
+      switchMap(values => {
+        let series$: Observable<Serie[]>;
+
+        if (values.length === 0) {
+          series$ = of([]);
+        } else {
+          series$ = combineLatest(values.map(value => this.mapSerieObservavel(value)));
+        }
+
+        return series$;
       })
     );
-
-    return series$;
   }
 
   obtemSerieObservavel(monstroId: string, id: string): Observable<Serie> {
@@ -81,22 +137,55 @@ export class SeriesService {
     const document = collection.doc<SerieDocument>(id);
 
     const serie$ = document.valueChanges().pipe(
-      map(value => {
-        return this.mapSerie(value);
-      })
+      switchMap(value => this.mapSerieObservavel(value))
     );
 
     return serie$;
   }
 
-  private mapSerie(value: SerieDocument): Serie {
+  private mapSerieObservavel(value: SerieDocument): Observable<Serie> {
+    let exercicios$: Observable<SerieDeExercicio[]>;
+
+    if (value.exercicios.length === 0) {
+      exercicios$ = of([]);
+    } else {
+      exercicios$ = combineLatest(
+        value.exercicios.map(serieDeExercicioValue => {
+          const exercicio$ = this.exerciciosService.obtemExercicioObservavel(serieDeExercicioValue.exercicioId.id).pipe(
+            map(exercicio => {
+              const serieDeExercicio = new SerieDeExercicio(
+                exercicio.id,
+                exercicio,
+                serieDeExercicioValue.quantidade,
+                serieDeExercicioValue.repeticoes,
+                serieDeExercicioValue.carga,
+                serieDeExercicioValue.assento
+              );
+
+              return serieDeExercicio;
+            }),
+            shareReplay()
+          );
+
+          return exercicio$;
+        })
+      );
+    }
+
+    return exercicios$.pipe(
+      map(exercicios => this.mapSerie(value, exercicios))
+    );
+  }
+
+  private mapSerie(value: SerieDocument, exercicios: SerieDeExercicio[]): Serie {
     return new Serie(
       value.id,
       value.nome,
       value.cor,
       value.ativa,
       value.data.toDate(),
-      null
+      CONST_TIMESTAMP_FALSO,
+      exercicios
     );
   }
 
@@ -122,21 +211,19 @@ export class SeriesService {
 
   cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.monstrosService.obtemMonstroObservavel(solicitacao.monstroId).pipe(first()).subscribe(monstro => {
-        const serieId = this.db.createId();
+      const serieId = this.db.createId();
 
-        const serie = new Serie(
-          serieId,
-          solicitacao.nome,
-          solicitacao.cor,
-          solicitacao.ativa,
-          solicitacao.data.toDate(),
-        );
+      const serie = new Serie(
+        serieId,
+        solicitacao.nome,
+        solicitacao.cor,
+        solicitacao.ativa,
+        solicitacao.data.toDate(),
+      );
 
-        const result = this.add(solicitacao.monstroId, serie);
+      const result = this.add(solicitacao.monstroId, serie);
 
-        resolve(result);
-      });
+      resolve(result);
     });
   }
 
@@ -168,6 +255,54 @@ export class SeriesService {
     });
   }
 
+  adicionaExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
+        first()
+      ).subscribe(serie => {
+        this.exerciciosService.obtemExercicioObservavel(solicitacao.exercicioId).pipe(
+          first()
+        ).subscribe(exercicio => {
+          serie.adicionaExercicio(exercicio, solicitacao.quantidade, solicitacao.repeticoes, solicitacao.carga, solicitacao.assento);
+
+          const result = this.update(solicitacao.monstroId, serie);
+
+          resolve(result);
+        });
+      });
+    });
+  }
+
+  atualizaExercicio(serieId: string, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
+        first()
+      ).subscribe(serie => {
+        const serieDeExercicio = serie.obtemExercicio(solicitacao.exercicioId);
+
+        serieDeExercicio.corrigeQuantidade(solicitacao.quantidade);
+
+        const result = this.update(solicitacao.monstroId, serie);
+
+        resolve(result);
+      });
+    });
+  }
+
+  removeExercicio(monstroId: string, serieId: string, exercicioId: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.obtemSerieObservavel(monstroId, serieId).pipe(
+        first()
+      ).subscribe(serie => {
+        serie.removeExercicio(exercicioId);
+
+        const result = this.update(monstroId, serie);
+
+        resolve(result);
+      });
+    });
+  }
+
   private update(monstroId: string, serie: Serie): Promise<void> {
     const path = `${this.monstrosService.PATH}/${monstroId}${this.PATH}`;
 
@@ -189,6 +324,19 @@ export class SeriesService {
       cor: serie.cor,
       ativa: serie.ativa,
       data: firebase.firestore.Timestamp.fromDate(serie.data),
+      exercicios: serie.exercicios.map(serieDeExercicio => {
+        const exercicioRef = this.exerciciosService.ref(serieDeExercicio.exercicio.id);
+
+        const serieDeExercicioDocument: SerieDeExercicioDocument = {
+          exercicioId: exercicioRef,
+          quantidade: serieDeExercicio.quantidade,
+          repeticoes: serieDeExercicio.repeticoes,
+          carga: serieDeExercicio.carga,
+          assento: serieDeExercicio.assento
+        };
+
+        return serieDeExercicioDocument;
+      })
     };
 
     return doc;
@@ -213,4 +361,13 @@ interface SerieDocument {
   cor: string;
   ativa: boolean;
   data: firebase.firestore.Timestamp;
+  exercicios: SerieDeExercicioDocument[];
+}
+
+interface SerieDeExercicioDocument {
+  exercicioId: firebase.firestore.DocumentReference;
+  quantidade: number;
+  repeticoes: number;
+  carga: number;
+  assento: string;
 }

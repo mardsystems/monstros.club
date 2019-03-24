@@ -1,8 +1,8 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { Monstro } from '../monstros.domain-model';
@@ -42,6 +42,7 @@ export class SeriesComponent implements OnInit {
     private route: ActivatedRoute,
     private seriesService: SeriesService,
     private monstrosService: MonstrosService,
+    private snackBar: MatSnackBar,
     private log: LogService,
     media: MediaMatcher
   ) {
@@ -66,6 +67,15 @@ export class SeriesComponent implements OnInit {
         this.monstro = monstro;
 
         return this.seriesService.obtemSeriesObservaveisParaExibicao(monstro);
+      }),
+      catchError((error, source$) => {
+        const message = error.message;
+
+        this.snackBar.open(message, 'FECHAR', {
+          duration: 5000,
+        });
+
+        return EMPTY;
       }),
       shareReplay()
     );

@@ -2,17 +2,31 @@ import { Tempo } from 'src/app/app-common.domain-model';
 import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
 import { Aparelho } from 'src/app/cadastro/aparelhos/aparelhos.domain-model';
 import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
+import * as _ from 'lodash';
 
 export class Serie {
+  private _exercicios?: SerieDeExercicio[];
+
   public constructor(
     private _id: string,
     private _nome: string,
     private _cor: string,
-    private _ativa?: boolean,
-    private _data?: Date,
-    private _exercicios?: SerieDeExercicio[],
+    private _ativa: boolean,
+    private _data: Date,
+    private _timestamp?: number,
+    exercicios?: SerieDeExercicio[],
   ) {
+    if (_timestamp) {
+      this._exercicios = exercicios;
+    } else {
+      const agora = new Date(Date.now());
 
+      this._ativa = true;
+
+      this._data = agora;
+
+      this._exercicios = [];
+    }
   }
 
   public get id() { return this._id; }
@@ -26,6 +40,8 @@ export class Serie {
   public get data() { return this._data; }
 
   public get exercicios() { return this._exercicios; }
+
+  public get timestamp() { return this._timestamp; }
 
   public corrigeNome(nome: string) {
     this._nome = nome;
@@ -46,6 +62,29 @@ export class Serie {
   public corrigeData(data: Date) {
     this._data = data;
   }
+
+  public adicionaExercicio(exercicio: Exercicio, quantidade: number, repeticoes: number, carga: number, assento: string) {
+    const serieDeExercicio = new SerieDeExercicio(
+      exercicio.id,
+      exercicio,
+      quantidade,
+      repeticoes,
+      carga,
+      assento
+    );
+
+    this._exercicios.push(serieDeExercicio);
+  }
+
+  public obtemExercicio(exercicioId: string): SerieDeExercicio {
+    const serieDeExercicio = _.find(this._exercicios, { id: exercicioId });
+
+    return serieDeExercicio;
+  }
+
+  public removeExercicio(exercicioId: string) {
+    _.remove(this._exercicios, serieDeExercicio => serieDeExercicio.exercicio.id === exercicioId);
+  }
 }
 
 export class SerieDeExercicio {
@@ -62,9 +101,9 @@ export class SerieDeExercicio {
 
   }
 
-  public get id() { return this._id; }
-
   // public get serie() { return this._serie; }
+
+  public get id() { return this._id; }
 
   public get exercicio() { return this._exercicio; }
 

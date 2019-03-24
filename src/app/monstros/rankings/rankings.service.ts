@@ -16,6 +16,7 @@ import {
 import { Participacao, Ranking } from './rankings.domain-model';
 import { PosicaoDeMedida } from './rankings.application-model';
 import { MedidasService } from '../medidas/medidas.service';
+import { CONST_TIMESTAMP_FALSO } from 'src/app/app-common.domain-model';
 
 @Injectable({
   providedIn: 'root'
@@ -232,8 +233,6 @@ export class RankingsService
 
   private mapRanking(value: RankingDocument, proprietario: Monstro, participantes: Participacao[]): Ranking {
     const monstroId = value.monstroRef.id;
-
-    const CONST_TIMESTAMP_FALSO = 1;
 
     return new Ranking(
       value.id,

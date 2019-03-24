@@ -10,7 +10,7 @@ import { RankingsService } from './rankings.service';
   templateUrl: './rankings-participantes.component.html',
   styleUrls: ['./rankings-participantes.component.scss']
 })
-export class ParticipantesComponent implements OnInit {
+export class RankingsParticipantesComponent implements OnInit {
   @Input() ranking: Ranking;
 
   @Input() disabledWrite: boolean;

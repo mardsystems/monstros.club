@@ -7,3 +7,5 @@ export class Tempo {
   fim: Date;
   total: number;
 }
+
+export const CONST_TIMESTAMP_FALSO = 1;

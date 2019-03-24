@@ -17,6 +17,8 @@
   <ng-container matColumnDef="exercicios">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="exercicios"> Exercícios </th>
     <td mat-cell *matCellDef="let serie">
+      <series-exercicios [monstro]="monstro" [serie]="serie">
+      </series-exercicios>
     </td>
   </ng-container>
 
