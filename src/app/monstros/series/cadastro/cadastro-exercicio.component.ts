@@ -18,11 +18,12 @@ export class CadastroExercicioComponent implements OnInit {
   exercicios$: Observable<Exercicio[]>;
 
   cadastroForm = this.formBuilder.group({
+    sequencia: [this.model.sequencia],
     exercicioId: [this.model.exercicioId],
     quantidade: [this.model.quantidade],
     repeticoes: [this.model.repeticoes],
     carga: [this.model.carga],
-    assento: [this.model.assento],
+    nota: [this.model.nota],
   });
 
   constructor(
@@ -43,6 +44,8 @@ export class CadastroExercicioComponent implements OnInit {
   }
 
   onSave(): void {
+    this.model.sequencia = this.cadastroForm.value.sequencia;
+
     this.model.exercicioId = this.cadastroForm.value.exercicioId;
 
     this.model.quantidade = this.cadastroForm.value.quantidade;
@@ -51,11 +54,11 @@ export class CadastroExercicioComponent implements OnInit {
 
     this.model.carga = this.cadastroForm.value.carga;
 
-    this.model.assento = this.cadastroForm.value.assento;
+    this.model.nota = this.cadastroForm.value.nota;
 
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.seriesService.atualizaExercicio(this.model.serie.id, this.model)
+        ? this.seriesService.atualizaExercicio(this.model.id, this.model)
         : this.seriesService.adicionaExercicio(this.model);
 
     operation.then(() => {

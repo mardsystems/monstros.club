@@ -15,6 +15,8 @@ export class CadastroComponent implements OnInit {
   cadastroForm = this.formBuilder.group({
     nome: [this.model.nome],
     cor: [this.model.cor],
+    ativa: [this.model.ativa],
+    data: [this.model.data],
   });
 
   constructor(
@@ -37,6 +39,10 @@ export class CadastroComponent implements OnInit {
     this.model.nome = this.cadastroForm.value.nome;
 
     this.model.cor = this.cadastroForm.value.cor;
+
+    this.model.ativa = this.cadastroForm.value.ativa;
+
+    this.model.data = this.cadastroForm.value.data;
 
     const operation: Promise<void> =
       (this.model.isEdit)

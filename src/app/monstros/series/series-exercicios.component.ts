@@ -40,6 +40,6 @@ export class SeriesExerciciosComponent {
   }
 
   onDelete(serieDeExercicio: SerieDeExercicio): void {
-    this.seriesService.removeExercicio(this.monstro.id, this.serie.id, serieDeExercicio.exercicio.id);
+    this.seriesService.removeExercicio(this.monstro.id, this.serie.id, serieDeExercicio.id);
   }
 }

@@ -47,16 +47,16 @@ export class Serie {
     this._nome = nome;
   }
 
-  public corrigeCor(cor: string) {
+  public ajustaCor(cor: string) {
     this._cor = cor;
-  }
-
-  public reativa() {
-    this._ativa = true;
   }
 
   public desativa() {
     this._ativa = false;
+  }
+
+  public reativa() {
+    this._ativa = true;
   }
 
   public corrigeData(data: Date) {
@@ -64,8 +64,19 @@ export class Serie {
   }
 
   public adicionaExercicio(exercicio: Exercicio, quantidade: number, repeticoes: number, carga: number, assento: string) {
+    const maxById = _.maxBy(this._exercicios, 'id');
+
+    let nextId: number;
+
+    if (maxById === undefined) {
+      nextId = 1;
+    } else {
+      nextId = maxById.id + 1;
+    }
+
     const serieDeExercicio = new SerieDeExercicio(
-      exercicio.id,
+      nextId,
+      nextId,
       exercicio,
       quantidade,
       repeticoes,
@@ -76,34 +87,33 @@ export class Serie {
     this._exercicios.push(serieDeExercicio);
   }
 
-  public obtemExercicio(exercicioId: string): SerieDeExercicio {
-    const serieDeExercicio = _.find(this._exercicios, { id: exercicioId });
+  public obtemSerieDeExercicio(id: number): SerieDeExercicio {
+    const serieDeExercicio = _.find(this._exercicios, { id: id });
 
     return serieDeExercicio;
   }
 
-  public removeExercicio(exercicioId: string) {
-    _.remove(this._exercicios, serieDeExercicio => serieDeExercicio.exercicio.id === exercicioId);
+  public removeSerieDeExercicio(id: number) {
+    _.remove(this._exercicios, serieDeExercicio => serieDeExercicio.id === id);
   }
 }
 
 export class SerieDeExercicio {
   public constructor(
-    private _id: string, // ExercicioId
-    // private _serie: Serie,
+    private _id: number,
+    private _sequencia: number,
     private _exercicio: Exercicio,
     private _quantidade: number,
     private _repeticoes: number,
     private _carga: number,
-    private _assento: string,
-    // private _execucoes?: ExecucaoDeSerie[],
+    private _nota: string,
   ) {
 
   }
 
-  // public get serie() { return this._serie; }
-
   public get id() { return this._id; }
+
+  public get sequencia() { return this._sequencia; }
 
   public get exercicio() { return this._exercicio; }
 
@@ -113,12 +123,30 @@ export class SerieDeExercicio {
 
   public get carga() { return this._carga; }
 
-  public get assento() { return this._assento; }
+  public get nota() { return this._nota; }
 
-  // public get execucoes() { return this._execucoes; }
+  public alteraSequencia(sequencia: number) {
+    this._sequencia = sequencia;
+  }
+
+  public acertaExercicio(exercicio: Exercicio) {
+    this._exercicio = exercicio;
+  }
 
   public corrigeQuantidade(quantidade: number) {
     this._quantidade = quantidade;
+  }
+
+  public ajustaRepeticoes(repeticoes: number) {
+    this._repeticoes = repeticoes;
+  }
+
+  public ajustaCarga(carga: number) {
+    this._carga = carga;
+  }
+
+  public atualizaNota(nota: string) {
+    this._nota = nota;
   }
 }
 

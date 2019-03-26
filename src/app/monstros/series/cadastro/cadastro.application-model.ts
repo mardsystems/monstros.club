@@ -31,34 +31,37 @@ export class SolicitacaoDeCadastroDeSerie {
 
 export class SolicitacaoDeCadastroDeExercicio {
   monstroId: string;
+  sequencia: number;
   serieId: string;
   exercicioId: string;
   quantidade: number;
   repeticoes: number;
   carga: number;
-  assento: string;
+  nota: string;
 
   static toAdd(monstroId: string, serieId: string): SolicitacaoDeCadastroDeExercicio {
     return {
       monstroId: monstroId,
+      sequencia: null,
       serieId: serieId,
       exercicioId: null,
       quantidade: null,
       repeticoes: null,
       carga: null,
-      assento: null,
+      nota: null,
     };
   }
 
   static toEdit(monstroId: string, serieId: string, serieDeExercicio: SerieDeExercicio): SolicitacaoDeCadastroDeExercicio {
     return {
       monstroId: monstroId,
+      sequencia: serieDeExercicio.sequencia,
       serieId: serieId,
       exercicioId: serieDeExercicio.exercicio.id,
       quantidade: serieDeExercicio.quantidade,
       repeticoes: serieDeExercicio.repeticoes,
       carga: serieDeExercicio.carga,
-      assento: serieDeExercicio.assento,
+      nota: serieDeExercicio.nota,
     };
   }
 }

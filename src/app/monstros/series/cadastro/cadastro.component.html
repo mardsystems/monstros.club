@@ -9,6 +9,17 @@
     <mat-form-field>
       <input type="text" placeholder="Cor" matInput formControlName="cor">
     </mat-form-field>
+
+    <section>
+      <mat-checkbox color="primary" formControlName="ativa">Ativa</mat-checkbox>
+    </section>
+
+    <mat-form-field>
+      <input type="text" placeholder="Data de Nascimento" matInput required [matDatepicker]="dataPicker"
+        formControlName="data">
+      <mat-datepicker-toggle matSuffix [for]="dataPicker"></mat-datepicker-toggle>
+      <mat-datepicker #dataPicker></mat-datepicker>
+    </mat-form-field>
   </mat-dialog-content>
 
   <mat-dialog-actions>

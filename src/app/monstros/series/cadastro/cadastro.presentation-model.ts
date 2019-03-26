@@ -40,6 +40,7 @@ export class CadastroDeSerieViewModel extends SolicitacaoDeCadastroDeSerie {
 
 export class CadastroDeExercicioViewModel extends SolicitacaoDeCadastroDeExercicio {
   isEdit: boolean;
+  id?: number;
   monstro: Monstro;
   serie: Serie;
 
@@ -48,15 +49,17 @@ export class CadastroDeExercicioViewModel extends SolicitacaoDeCadastroDeExercic
 
     return {
       isEdit: false,
+      id: null,
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       serie: serie,
       serieId: solicitacao.serieId,
+      sequencia: solicitacao.sequencia,
       exercicioId: solicitacao.exercicioId,
       quantidade: solicitacao.quantidade,
       repeticoes: solicitacao.repeticoes,
       carga: solicitacao.carga,
-      assento: solicitacao.assento,
+      nota: solicitacao.nota,
     };
   }
 
@@ -65,15 +68,17 @@ export class CadastroDeExercicioViewModel extends SolicitacaoDeCadastroDeExercic
 
     return {
       isEdit: true,
+      id: serieDeExercicio.id,
       monstro: monstro,
       monstroId: solicitacao.monstroId,
       serie: serie,
       serieId: solicitacao.serieId,
+      sequencia: solicitacao.sequencia,
       exercicioId: solicitacao.exercicioId,
       quantidade: solicitacao.quantidade,
       repeticoes: solicitacao.repeticoes,
       carga: solicitacao.carga,
-      assento: solicitacao.assento,
+      nota: solicitacao.nota,
     };
   }
 }

@@ -2,8 +2,12 @@
 
 <form [formGroup]="cadastroForm">
   <mat-dialog-content class="container">
+    <mat-form-field>
+      <input type="number" placeholder="Sequência" matInput formControlName="sequencia">
+    </mat-form-field>
+
     <mat-form-field hideRequiredMarker>
-      <mat-select placeholder="Exercícios" formControlName="exercicioId" required>
+      <mat-select placeholder="Exercício" formControlName="exercicioId" required>
         <mat-option *ngFor="let exercicio of exercicios$ | async" [value]="exercicio.id">{{exercicio.nome}}</mat-option>
       </mat-select>
     </mat-form-field>
@@ -21,7 +25,7 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input type="text" placeholder="Assento" matInput formControlName="assento">
+      <input type="text" placeholder="Nota" matInput formControlName="nota">
     </mat-form-field>
   </mat-dialog-content>
 

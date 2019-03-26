@@ -66,15 +66,16 @@ export class SeriesService {
 
   private mapSerieDeExerciciosObservaveis_(value: SerieDocument): Observable<SerieDeExercicio[]> {
     const serieDeExercicios$Array = value.exercicios.map(serieDeExercicioValue => {
-      const exercicio$ = this.exerciciosService.obtemExercicioObservavel(serieDeExercicioValue.exercicioId.id).pipe(
+      const exercicio$ = this.exerciciosService.obtemExercicioObservavel(serieDeExercicioValue.exercicioRef.id).pipe(
         map(exercicio => {
           const serieDeExercicio = new SerieDeExercicio(
-            exercicio.id,
+            serieDeExercicioValue.id,
+            serieDeExercicioValue.sequencia,
             exercicio,
             serieDeExercicioValue.quantidade,
             serieDeExercicioValue.repeticoes,
             serieDeExercicioValue.carga,
-            serieDeExercicioValue.assento
+            serieDeExercicioValue.nota
           );
 
           return serieDeExercicio;
@@ -151,15 +152,16 @@ export class SeriesService {
     } else {
       exercicios$ = combineLatest(
         value.exercicios.map(serieDeExercicioValue => {
-          const exercicio$ = this.exerciciosService.obtemExercicioObservavel(serieDeExercicioValue.exercicioId.id).pipe(
+          const exercicio$ = this.exerciciosService.obtemExercicioObservavel(serieDeExercicioValue.exercicioRef.id).pipe(
             map(exercicio => {
               const serieDeExercicio = new SerieDeExercicio(
-                exercicio.id,
+                serieDeExercicioValue.id,
+                serieDeExercicioValue.sequencia,
                 exercicio,
                 serieDeExercicioValue.quantidade,
                 serieDeExercicioValue.repeticoes,
                 serieDeExercicioValue.carga,
-                serieDeExercicioValue.assento
+                serieDeExercicioValue.nota
               );
 
               return serieDeExercicio;
@@ -246,7 +248,17 @@ export class SeriesService {
       this.obtemSerieObservavel(solicitacao.monstroId, serieId).pipe(first()).subscribe(serie => {
         serie.corrigeNome(solicitacao.nome);
 
-        // serie.corrigeNome(solicitacao.data.toDate());
+        serie.ajustaCor(solicitacao.cor);
+
+        if (serie.ativa && !solicitacao.ativa) {
+          serie.desativa();
+        }
+
+        if (!serie.ativa && solicitacao.ativa) {
+          serie.reativa();
+        }
+
+        serie.corrigeData(solicitacao.data.toDate());
 
         const result = this.update(solicitacao.monstroId, serie);
 
@@ -263,7 +275,7 @@ export class SeriesService {
         this.exerciciosService.obtemExercicioObservavel(solicitacao.exercicioId).pipe(
           first()
         ).subscribe(exercicio => {
-          serie.adicionaExercicio(exercicio, solicitacao.quantidade, solicitacao.repeticoes, solicitacao.carga, solicitacao.assento);
+          serie.adicionaExercicio(exercicio, solicitacao.quantidade, solicitacao.repeticoes, solicitacao.carga, solicitacao.nota);
 
           const result = this.update(solicitacao.monstroId, serie);
 
@@ -273,14 +285,24 @@ export class SeriesService {
     });
   }
 
-  atualizaExercicio(serieId: string, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
+  atualizaExercicio(serieDeExercicioId: number, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
         first()
       ).subscribe(serie => {
-        const serieDeExercicio = serie.obtemExercicio(solicitacao.exercicioId);
+        const serieDeExercicio = serie.obtemSerieDeExercicio(serieDeExercicioId);
+
+        serieDeExercicio.alteraSequencia(solicitacao.sequencia);
+
+        // serieDeExercicio.acertaExercicio(solicitacao.exercicio);
 
         serieDeExercicio.corrigeQuantidade(solicitacao.quantidade);
+
+        serieDeExercicio.ajustaRepeticoes(solicitacao.repeticoes);
+
+        serieDeExercicio.ajustaCarga(solicitacao.carga);
+
+        serieDeExercicio.atualizaNota(solicitacao.nota);
 
         const result = this.update(solicitacao.monstroId, serie);
 
@@ -289,12 +311,12 @@ export class SeriesService {
     });
   }
 
-  removeExercicio(monstroId: string, serieId: string, exercicioId: string): Promise<void> {
+  removeExercicio(monstroId: string, serieId: string, serieDeExercicioId: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.obtemSerieObservavel(monstroId, serieId).pipe(
         first()
       ).subscribe(serie => {
-        serie.removeExercicio(exercicioId);
+        serie.removeSerieDeExercicio(serieDeExercicioId);
 
         const result = this.update(monstroId, serie);
 
@@ -328,11 +350,13 @@ export class SeriesService {
         const exercicioRef = this.exerciciosService.ref(serieDeExercicio.exercicio.id);
 
         const serieDeExercicioDocument: SerieDeExercicioDocument = {
-          exercicioId: exercicioRef,
+          id: serieDeExercicio.id,
+          sequencia: serieDeExercicio.sequencia,
+          exercicioRef: exercicioRef,
           quantidade: serieDeExercicio.quantidade,
           repeticoes: serieDeExercicio.repeticoes,
           carga: serieDeExercicio.carga,
-          assento: serieDeExercicio.assento
+          nota: serieDeExercicio.nota
         };
 
         return serieDeExercicioDocument;
@@ -365,9 +389,11 @@ interface SerieDocument {
 }
 
 interface SerieDeExercicioDocument {
-  exercicioId: firebase.firestore.DocumentReference;
+  id: number;
+  sequencia: number;
+  exercicioRef: firebase.firestore.DocumentReference;
   quantidade: number;
   repeticoes: number;
   carga: number;
-  assento: string;
+  nota: string;
 }
