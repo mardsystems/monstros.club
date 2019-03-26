@@ -4,6 +4,8 @@ import { AuthGuard } from './auth/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AdminGuard } from './auth/admin.guard.';
+import { TermosDeUsoComponent } from './termos-de-uso/termos-de-uso.component';
+import { PoliticaDePrivacidadeComponent } from './politica-de-privacidade/politica-de-privacidade.component';
 // import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
 
 const appRoutes: Routes = [
@@ -22,6 +24,8 @@ const appRoutes: Routes = [
   },
   // { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: '404', component: PageNotFoundComponent },
+  { path: 'termos-de-uso', component: TermosDeUsoComponent },
+  { path: 'politica-de-privacidade', component: PoliticaDePrivacidadeComponent },
   {
     path: ':monstroId',
     loadChildren: './monstros/monstros.module#MonstrosModule',

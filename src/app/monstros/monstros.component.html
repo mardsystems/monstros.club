@@ -95,13 +95,22 @@
           <mat-icon matListIcon>help</mat-icon>
           <h3 matLine>Ajuda</h3>
         </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item href="termos-de-uso">
+          <mat-icon matListIcon></mat-icon>
+          <h3 matLine>Termos de Uso</h3>
+        </a>
+        <a mat-list-item href="politica-de-privacidade">
+          <mat-icon matListIcon></mat-icon>
+          <h3 matLine>Política de Privacidade</h3>
+        </a>
       </mat-nav-list>
     </mat-sidenav>
 
-    <mat-sidenav-content>
-      <div [@routeAnimation]="getAnimationData(routerOutlet)">
+    <mat-sidenav-content class="page-wrap">
+      <main [@routeAnimation]="getAnimationData(routerOutlet)" class="content">
         <router-outlet #routerOutlet="outlet"></router-outlet>
-      </div>
+      </main>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

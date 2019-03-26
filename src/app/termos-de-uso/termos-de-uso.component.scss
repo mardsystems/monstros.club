@@ -1,0 +1,25 @@
+h1,
+p,
+ul.mat-body > li {
+  margin: 30px;
+}
+
+ul {
+  list-style: none;
+}
+
+ul.mat-body > li {
+  margin: 10px;
+  margin-bottom: 30px;
+}
+
+ul > li > b.capital {
+  margin-right: 5px;
+}
+
+b.sistema,
+b.usuario,
+b.mantenedor,
+b.destaque {
+  font-weight: 500;
+}

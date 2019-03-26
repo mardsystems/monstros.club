@@ -1,11 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 // @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import "theme.scss";
-
 html,
 body {
   margin: 0;
+  // height: 100%; /* needed for proper layout */
 }
+
+// body {
+//   overflow: hidden;
+// }
 
 .fab-bottom-right-2 {
   position: fixed !important;

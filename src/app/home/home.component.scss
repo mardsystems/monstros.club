@@ -1,5 +1,12 @@
 .container {
-  height: 84vh;
+  // height: 30vh;
+
+  // display: flex;
+  // height: 100%;
+  // min-height: 100%;
+  // flex-direction: column;
+
+  // height: 84vh;
   // height: 400px;
   // overflow: auto;
   // display: flex;
@@ -8,18 +15,35 @@
 }
 
 div.perfil {
+  // flex: 1 1 auto;
+  // position: relative; /* need this to position inner content */
+  // overflow-y: auto;
   width: 100%;
   margin: 10px auto 12px;
   text-align: center;
 }
 
-@media only screen and (min-width: 750px) {
-  .container {
-    height: 60vh;
-  }
+// @media only screen and (min-width: 750px) {
+//   .container {
+//     height: 60vh;
+//   }
 
-  div.perfil {
-    width: 50%;
-    margin: 28px auto 30px;
-  }
+//   div.perfil {
+//     width: 50%;
+//     margin: 28px auto 30px;
+//   }
+// }
+
+footer {
+  // flex: 0 0 auto;
+  position: fixed;
+  height: 50px;
+  // width: 500px;
+  // background-color: white;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  margin: 0 auto;
+  margin-bottom: 0px;
+  text-align: center;
 }
