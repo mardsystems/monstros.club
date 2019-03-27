@@ -1,40 +1,35 @@
 # Monstros Club
 
-Monstros Club é uma aplicação que permite os monstros cadastrarem suas medidas (para monitoramento da saúde) e executar suas séries (previamente cadastradas).
+Monstros Club é uma aplicação que permite as pessoas monitorarem sua saúde através de um jeito diferente.
 
 # Funcionalidades
 
 ## Problemas
 
-Sem um ... é difícil saber ...
-Numa academia ou ... é difícil saber o que ...
+Sem um acompanhamento das nossas atividades saudáveis é difícil de saber se estamos nos desenvolvendo ou não.
 
 ## Objetivos
 
-[Permitir o] Monitoramento da saúde.
-[Permitir a] Execução de séries.
+Monitoramento da saúde através do monitoramento de medidas, séries e treinos.
+Compartilhamento de resultados.
 
 ## Motivação
 
-O monitoramento de saúde é compartilhado.
-A execução de série é a melhor.
+Execução de séries da maneira mais prática possível.
+Competição consigo mesmo e com demais monstros.
 
 # Casos de uso
 ![monstros.club-casos-de-uso](doc/monstros.club-casos-de-uso.png)
 
-# Modelos de domínio
-## Primeira versão
-![monstros.club-domínio-1](doc/monstros.club-domínio-1.png)
+# Modelos
+## De domínio
+![monstros.club-domínio](doc/monstros.club-domínio.png)
 
-## Terceira versão
-![monstros.club-domínio-3](doc/monstros.club-domínio-3.png)
+### De domínio de medidas
+![monstros.club-domínio-medidas](doc/monstros.club-domínio-medidas.png)
 
-## Quarta versão
-![monstros.club-domínio-4](doc/monstros.club-domínio-4.png)
-
-## Quinta versão
-### Séries 2
-![monstros.club-domínio-5-séries-2](doc/monstros.club-domínio-5-séries-2.png)
+### De domínio de séries
+![monstros.club-domínio-séries](doc/monstros.club-domínio-séries.png)
 
 ## Configurar o ambiente de desenvolvimento
 * npm install -g angular/cli
@@ -52,7 +47,7 @@ A execução de série é a melhor.
 * firebase init
 * firebase deploy
 
-## Compilação e Publicação
+## Compilação e publicação
 * npm run deploy
 
 ## Development server
