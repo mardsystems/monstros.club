@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AppCommonModule } from '../app-common.module';
 import { CadastroComponent as CadastroDeMonstrosComponent } from './cadastro/cadastro.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
@@ -48,6 +49,7 @@ import { CadastroExercicioComponent as CadastroDeSerieDeExercicioComponent } fro
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    NgxChartsModule,
     MonstrosMaterialModule,
     MonstrosRoutingModule,
     AppCommonModule,

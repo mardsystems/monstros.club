@@ -1,3 +1,15 @@
+<div class="charts">
+  <ngx-charts-line-chart class="chart" [view]="view" [scheme]="colorScheme" [results]="pesos" [gradient]=true
+    [xAxis]=true [yAxis]=true [legend]=false [showXAxisLabel]=true [showYAxisLabel]=true xAxisLabel="Peso"
+    yAxisLabel="Kg" [autoScale]=true [timeline]=true>
+  </ngx-charts-line-chart>
+
+  <ngx-charts-line-chart class="chart" [view]="view" [scheme]="colorScheme2" [results]="percentuais" [gradient]=false
+    [xAxis]=true [yAxis]=true [legend]=false [showXAxisLabel]=true [showYAxisLabel]=true xAxisLabel="Músculo"
+    yAxisLabel="%" [autoScale]=true [timeline]=true>
+  </ngx-charts-line-chart>
+</div>
+
 <!-- <ng-container *ngIf="(medidas$ | async) as medidas; else loading"> -->
 <!-- <div class="app-container mat-elevation-z8"> -->
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">

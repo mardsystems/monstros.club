@@ -11,6 +11,7 @@ import { CadastroComponent } from './cadastro/cadastro.component';
 import { CadastroDeMedidaViewModel } from './cadastro/cadastro.presentation-model';
 import { Balanca, Medida, OmronHBF214 } from './medidas.domain-model';
 import { MedidasService } from './medidas.service';
+import * as _ from 'lodash';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -44,6 +45,20 @@ export class MedidasComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   desktopQuery: MediaQueryList;
+
+  pesos: any[];
+
+  percentuais: any[];
+
+  view: any[] = [800, 400];
+
+  colorScheme = {
+    domain: ['#C7B42C', '#A10A28', '#C7B42C', '#AAAAAA']
+  };
+
+  colorScheme2 = {
+    domain: ['#5AA454', '#5AA454', '#C7B42C', '#AAAAAA']
+  };
 
   constructor(
     private dialog: MatDialog,
@@ -84,6 +99,48 @@ export class MedidasComponent implements OnInit {
       this.dataSource = new MatTableDataSource(medidas);
 
       this.dataSource.sort = this.sort;
+
+      this.pesos = [
+        {
+          name: 'Peso',
+          series: medidas.map(medida => {
+            return {
+              name: medida.data,
+              value: medida.peso
+            }
+          })
+        },
+        // {
+        //   name: 'IMC',
+        //   series: medidas.map(medida => {
+        //     return {
+        //       name: medida.data,
+        //       value: medida.indiceDeMassaCorporal
+        //     }
+        //   })
+        // }
+      ];
+
+      this.percentuais = [
+        // {
+        //   name: 'Gordura',
+        //   series: medidas.map(medida => {
+        //     return {
+        //       name: medida.data,
+        //       value: medida.gordura
+        //     }
+        //   })
+        // },
+        {
+          name: 'Músculo',
+          series: medidas.map(medida => {
+            return {
+              name: medida.data,
+              value: medida.musculo
+            }
+          })
+        },
+      ];
     });
 
     this.disabledWrite$ = monstro$.pipe(
