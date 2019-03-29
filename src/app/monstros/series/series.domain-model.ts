@@ -63,7 +63,7 @@ export class Serie {
     this._data = data;
   }
 
-  public adicionaExercicio(exercicio: Exercicio, quantidade: number, repeticoes: number, carga: number, assento: string) {
+  public adicionaExercicio(exercicio: Exercicio, quantidade: number, repeticoes: number, carga: number, nota: string) {
     const maxById = _.maxBy(this._exercicios, 'id');
 
     let nextId: number;
@@ -81,7 +81,7 @@ export class Serie {
       quantidade,
       repeticoes,
       carga,
-      assento
+      nota
     );
 
     this._exercicios.push(serieDeExercicio);
@@ -151,15 +151,22 @@ export class SerieDeExercicio {
 }
 
 export class ExecucaoDeSerie {
+  private _exercicios?: ExecucaoDeExercicio[];
+
   public constructor(
     private _id: string,
     private _serie: Serie,
     private _dia: Date,
     private _numero: number,
     private _feitaNa?: Academia,
-    private _exercicios?: ExecucaoDeExercicio[],
+    private _timestamp?: number,
+    exercicios?: ExecucaoDeExercicio[],
   ) {
-
+    if (_timestamp) {
+      this._exercicios = exercicios;
+    } else {
+      this._exercicios = [];
+    }
   }
 
   public get id() { return this._id; }
@@ -176,27 +183,69 @@ export class ExecucaoDeSerie {
 
   public get exercicios() { return this._exercicios; }
 
+  public get timestamp() { return this._timestamp; }
+
   public corrigeDia(dia: Date) {
     this._dia = dia;
+  }
+
+  public alteraNumero(numero: number) {
+    this._numero = numero;
+  }
+
+  public adicionaExercicio(referencia: SerieDeExercicio, repeticoes: number, carga: number, nota: string) {
+    const maxById = _.maxBy(this._exercicios, 'id');
+
+    let nextId: number;
+
+    if (maxById === undefined) {
+      nextId = 1;
+    } else {
+      nextId = maxById.id + 1;
+    }
+
+    const execucaoDeExercicio = new ExecucaoDeExercicio(
+      nextId,
+      nextId,
+      referencia,
+      repeticoes,
+      carga,
+      nota
+    );
+
+    this._exercicios.push(execucaoDeExercicio);
+  }
+
+  public obtemExecucaoDeExercicio(id: number): ExecucaoDeExercicio {
+    const execucaoDeExercicio = _.find(this._exercicios, { id: id });
+
+    return execucaoDeExercicio;
+  }
+
+  public removeExecucaoDeExercicio(id: number) {
+    _.remove(this._exercicios, execucaoDeExercicio => execucaoDeExercicio.id === id);
   }
 }
 
 export class ExecucaoDeExercicio {
   public constructor(
-    private _id: string,
+    private _id: number,
+    private _sequencia: number,
     private _referencia: SerieDeExercicio,
-    private _data: Date,
     private _repeticoes: number,
     private _carga: number,
-    private _assento: string,
-    private _sequencia: number,
-    private _duracao: Tempo,
+    private _nota: string,
     private _feitoCom?: Aparelho,
+    private _duracao?: Tempo,
   ) {
-
+    if (!_duracao) {
+      this._duracao = new Tempo();
+    }
   }
 
   public get id() { return this._id; }
+
+  public get sequencia() { return this._sequencia; }
 
   public get referencia() { return this._referencia; }
 
@@ -204,19 +253,37 @@ export class ExecucaoDeExercicio {
 
   public get carga() { return this._carga; }
 
-  public get assento() { return this._assento; }
-
-  public get sequencia() { return this._sequencia; }
+  public get nota() { return this._nota; }
 
   public get duracao() { return this._duracao; }
 
   public get feitoCom() { return this._feitoCom; }
 
-  public inicia() {
+  public alteraSequencia(sequencia: number) {
+    this._sequencia = sequencia;
+  }
 
+  public ajustaRepeticoes(repeticoes: number) {
+    this._repeticoes = repeticoes;
+  }
+
+  public ajustaCarga(carga: number) {
+    this._carga = carga;
+  }
+
+  public atualizaNota(nota: string) {
+    this._nota = nota;
+  }
+
+  public inicia() {
+    const agora = new Date(Date.now());
+
+    this._duracao.inicio = agora;
   }
 
   public finaliza() {
-    this._repeticoes++;
+    const agora = new Date(Date.now());
+
+    this._duracao.fim = agora;
   }
 }

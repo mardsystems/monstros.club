@@ -21,15 +21,26 @@ import { RankingsParticipantesComponent } from './rankings/rankings-participante
 import { RankingsComponent } from './rankings/rankings.component';
 import { CadastroComponent as CadastroDeSeriesComponent } from './series/cadastro/cadastro.component';
 import { SeriesComponent } from './series/series.component';
-import { TreinosComponent } from './treinos/treinos.component';
+import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesExerciciosComponent } from './series/series-exercicios.component';
+import { SeriesExecucoesComponent } from './series/series-execucoes.component';
 import { CadastroExercicioComponent as CadastroDeSerieDeExercicioComponent } from './series/cadastro/cadastro-exercicio.component';
+import { ExecucoesComponent as ExecucoesDeSerieComponent } from './series/execucoes/execucoes.component';
+import { ExecucoesItemComponent as ExecucoesDeSerieItemComponent } from './series/execucoes/execucoes-item.component';
+import { CadastroComponent as CadastroDeExecucaoDeSerieComponent } from './series/execucoes/cadastro/cadastro.component';
+import {
+  CadastroExercicioComponent as CadastroDeExecucaoDeSerieDeExercicioComponent
+} from './series/execucoes/cadastro/cadastro-exercicio.component';
+import { TreinosComponent } from './treinos/treinos.component';
+
 @NgModule({
   declarations: [
     MonstrosComponent,
     CadastroDeMonstrosComponent,
     SeriesComponent,
+    SeriesItemComponent,
     SeriesExerciciosComponent,
+    SeriesExecucoesComponent,
     TreinosComponent,
     CadastroDeMedidasComponent,
     MedidasComponent,
@@ -44,6 +55,10 @@ import { CadastroExercicioComponent as CadastroDeSerieDeExercicioComponent } fro
     PosicaoComponent,
     AssiduidadeComponent,
     FiltroDoRanking,
+    ExecucoesDeSerieComponent,
+    ExecucoesDeSerieItemComponent,
+    CadastroDeExecucaoDeSerieComponent,
+    CadastroDeExecucaoDeSerieDeExercicioComponent,
   ],
   imports: [
     CommonModule,
@@ -59,9 +74,10 @@ import { CadastroExercicioComponent as CadastroDeSerieDeExercicioComponent } fro
     CadastroDeRankingsComponent,
     ParticipacaoNoRankingComponent,
     CadastroDeSeriesComponent,
-    SeriesExerciciosComponent,
     CadastroDeSerieDeExercicioComponent,
     FiltroDoRanking,
+    CadastroDeExecucaoDeSerieComponent,
+    CadastroDeExecucaoDeSerieDeExercicioComponent,
   ],
   providers: [
     MedidasService

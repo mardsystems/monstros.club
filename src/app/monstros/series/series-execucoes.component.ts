@@ -7,11 +7,11 @@ import { CadastroExercicioComponent } from './cadastro/cadastro-exercicio.compon
 import { Monstro } from '../monstros.domain-model';
 
 @Component({
-  selector: 'monstros-series-exercicios',
-  templateUrl: './series-exercicios.component.html',
-  styleUrls: ['./series-exercicios.component.scss']
+  selector: 'monstros-series-execucoes-widget',
+  templateUrl: './series-execucoes.component.html',
+  styleUrls: ['./series-execucoes.component.scss']
 })
-export class SeriesExerciciosComponent {
+export class SeriesExecucoesComponent {
   @Input() monstroId: string;
 
   @Input() serie: Serie;

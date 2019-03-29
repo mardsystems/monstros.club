@@ -1,0 +1,96 @@
+<mat-toolbar>
+  <span>Série</span>
+  &nbsp;
+  <span>A</span>
+  <span class="app-fill-remaining-space"></span>
+  <button mat-icon-button (click)="onAddExercicio()">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-toolbar>
+<table mat-table [dataSource]="exerciciosDataSource" matSort class="mat-elevation-z8">
+  <ng-container matColumnDef="icone">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+    <td mat-cell *matCellDef="let serieDeExercicio">
+      <botao-de-exercicio [exercicio]="serieDeExercicio.exercicio" [cor]="serie.cor"></botao-de-exercicio>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="exercicio">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="exercicio"> Exercício </th>
+    <td mat-cell *matCellDef="let serieDeExercicio">
+      {{serieDeExercicio.exercicio.nome}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="sequencia">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="sequencia"> Sequência </th>
+    <td mat-cell *matCellDef="let serieDeExercicio">
+      {{serieDeExercicio.sequencia}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="quantidade">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="quantidade"> Quantidade </th>
+    <td mat-cell *matCellDef="let serieDeExercicio">
+      {{serieDeExercicio.quantidade}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="repeticoes">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="repeticoes"> Repetições </th>
+    <td mat-cell *matCellDef="let serieDeExercicio">
+      {{serieDeExercicio.repeticoes}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="carga">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="carga"> Carga </th>
+    <td mat-cell *matCellDef="let serieDeExercicio">
+      {{serieDeExercicio.carga}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nota">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="nota"> Nota </th>
+    <td mat-cell *matCellDef="let serieDeExercicio">
+      {{serieDeExercicio.nota}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="menu">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let serieDeExercicio">
+      <!-- <button mat-icon-button (click)="onDelete(serieDeExercicio)">
+            <mat-icon>delete</mat-icon>
+          </button> -->
+      <button mat-icon-button [matMenuTriggerFor]="serieDeExercicioMenu"
+        [matMenuTriggerData]="{serieDeExercicioAtualizadaOuExcluida: serieDeExercicio}">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="this.getDisplayedColumns(); sticky: true;"></tr>
+  <tr mat-row *matRowDef="let row; columns: this.getDisplayedColumns();"
+    [ngClass]="{good: row.ultimaMedidaEstaEvoluindo, normal: !row.ehUltimaMedida, bad: row.ultimaMedidaEstaFicandoPraTraz}">
+  </tr>
+</table>
+
+<mat-menu #serieDeExercicioMenu="matMenu" overlapTrigger="false">
+  <ng-template matMenuContent let-serieDeExercicio="serieDeExercicioAtualizadaOuExcluida">
+    <button mat-menu-item (click)="onEditExercicio(serieDeExercicio)" [disabled]="disabledWrite$ | async">
+      <mat-icon>edit</mat-icon>
+      <span>Editar</span>
+    </button>
+    <button mat-menu-item (click)="onDeleteExercicio(serieDeExercicio)" [disabled]="disabledWrite$ | async">
+      <mat-icon>delete</mat-icon>
+      <span>Remover</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<button mat-fab class="fab-bottom-right" (click)="onPlay()">
+  <mat-icon>play_arrow</mat-icon>
+</button>
+
+<mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="!exerciciosDataSource"></mat-spinner>

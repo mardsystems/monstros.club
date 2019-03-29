@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ dialogTitle }}</h1>
 
-<form [formGroup]="cadastroForm">
+<form [formGroup]="cadastroForm" autocomplete="off">
   <mat-dialog-content class="container">
     <mat-form-field>
       <input type="number" placeholder="Sequência" matInput formControlName="sequencia">

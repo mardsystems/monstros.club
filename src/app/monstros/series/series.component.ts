@@ -1,3 +1,4 @@
+import { CadastroComponent as CadastroDeExecucaoDeSerieComponent } from '../series/execucoes/cadastro/cadastro.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
@@ -16,6 +17,7 @@ const columnDefinitions = [
   { showMobile: true, def: 'foto' },
   { showMobile: true, def: 'nome' },
   { showMobile: true, def: 'exercicios' },
+  { showMobile: true, def: 'execucoes' },
   { showMobile: true, def: 'menu' },
 ];
 
@@ -115,6 +117,14 @@ export class SeriesComponent implements OnInit {
       .map(cd => cd.def);
 
     return displayedColumns;
+  }
+
+  onPlay(): void {
+    const model = CadastroDeSerieViewModel.toAddViewModel(this.monstro);
+
+    const config: MatDialogConfig<CadastroDeSerieViewModel> = { data: model };
+
+    this.dialog.open(CadastroDeExecucaoDeSerieComponent, config);
   }
 
   onAdd(): void {

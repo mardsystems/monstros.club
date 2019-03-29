@@ -3,24 +3,30 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { CONST_TIMESTAMP_FALSO } from 'src/app/app-common.domain-model';
+import { CONST_TIMESTAMP_FALSO, Tempo } from 'src/app/app-common.domain-model';
 import { LogService } from 'src/app/app-common.services';
 import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
 import { SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './cadastro/cadastro.application-model';
-import { Serie, SerieDeExercicio } from './series.domain-model';
+import { Serie, SerieDeExercicio, ExecucaoDeSerie, ExecucaoDeExercicio } from './series.domain-model';
+import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
+import { AparelhosService } from 'src/app/cadastro/aparelhos/aparelhos.service';
+import { AcademiasService } from 'src/app/cadastro/academias/academias.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SeriesService {
   PATH = '/series';
+  PATH_EXECUCOES = '/execucoes';
 
   constructor(
     private db: AngularFirestore,
     private monstrosService: MonstrosService,
+    private academiasService: AcademiasService,
     private exerciciosService: ExerciciosService,
+    private aparelhosService: AparelhosService,
     private log: LogService
   ) { }
 
@@ -377,6 +383,86 @@ export class SeriesService {
 
     return result;
   }
+
+  // Execução de Série.
+
+  obtemExecucoesDeSerieObservaveisParaExibicao(monstroId: string, serie: Serie): Observable<ExecucaoDeSerie[]> {
+    const path = `${this.monstrosService.PATH}/${monstroId}${this.PATH}/${serie.id}${this.PATH_EXECUCOES}`;
+
+    const collection = this.db.collection<ExecucaoDeSerieDocument>(path, reference => {
+      return reference
+        .orderBy('nome', 'asc');
+    });
+
+    return collection.valueChanges().pipe(
+      switchMap(values => {
+        let series$: Observable<ExecucaoDeSerie[]>;
+
+        if (values.length === 0) {
+          series$ = of([]);
+        } else {
+          series$ = combineLatest(values.map(value => this.mapExecucaoDeSerieObservavel(value, serie)));
+        }
+
+        return series$;
+      })
+    );
+  }
+
+  private mapExecucaoDeSerieObservavel(value: ExecucaoDeSerieDocument, serie: Serie): Observable<ExecucaoDeSerie> {
+    let exercicios$: Observable<ExecucaoDeExercicio[]>;
+
+    if (value.exercicios.length === 0) {
+      exercicios$ = of([]);
+    } else {
+      exercicios$ = combineLatest(
+        value.exercicios.map(execucaoDeExercicioValue => {
+          const exercicio$ = this.aparelhosService.obtemAparelhoObservavel(execucaoDeExercicioValue.feitoCom.id).pipe(
+            map(aparelho => {
+              const referencia = serie.obtemSerieDeExercicio(execucaoDeExercicioValue.id);
+
+              const execucaoDeExercicio = new ExecucaoDeExercicio(
+                execucaoDeExercicioValue.id,
+                execucaoDeExercicioValue.sequencia,
+                referencia,
+                execucaoDeExercicioValue.repeticoes,
+                execucaoDeExercicioValue.carga,
+                execucaoDeExercicioValue.nota,
+                aparelho,
+                execucaoDeExercicioValue.duracao
+              );
+
+              return execucaoDeExercicio;
+            }),
+            shareReplay()
+          );
+
+          return exercicio$;
+        })
+      );
+    }
+
+    return exercicios$.pipe(
+      map(exercicios => this.mapExecucaoDeSerie(value, serie, null, exercicios))
+    );
+  }
+
+  private mapExecucaoDeSerie(
+    value: ExecucaoDeSerieDocument,
+    serie: Serie,
+    feitaNa: Academia,
+    exercicios: ExecucaoDeExercicio[]
+  ): ExecucaoDeSerie {
+    return new ExecucaoDeSerie(
+      value.id,
+      serie,
+      value.dia.toDate(),
+      value.numero,
+      feitaNa,
+      CONST_TIMESTAMP_FALSO,
+      exercicios
+    );
+  }
 }
 
 interface SerieDocument {
@@ -396,4 +482,24 @@ interface SerieDeExercicioDocument {
   repeticoes: number;
   carga: number;
   nota: string;
+}
+
+interface ExecucaoDeSerieDocument {
+  id: string;
+  serieRef: firebase.firestore.DocumentReference;
+  dia: firebase.firestore.Timestamp;
+  numero: number;
+  feitaNa?: firebase.firestore.DocumentReference;
+  exercicios: ExecucaoDeExercicioDocument[];
+}
+
+interface ExecucaoDeExercicioDocument {
+  id: number;
+  sequencia: number;
+  ref: firebase.firestore.DocumentReference;
+  repeticoes: number;
+  carga: number;
+  nota: string;
+  feitoCom?: firebase.firestore.DocumentReference;
+  duracao: Tempo;
 }

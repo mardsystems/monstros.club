@@ -1,0 +1,165 @@
+import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
+import { EMPTY, Observable, of } from 'rxjs';
+import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import { MonstrosService } from '../monstros.service';
+import { CadastroComponent as CadastroDeExecucaoDeSerieComponent } from '../series/execucoes/cadastro/cadastro.component';
+import { CadastroExercicioComponent } from './cadastro/cadastro-exercicio.component';
+import { CadastroDeExercicioViewModel } from './cadastro/cadastro.presentation-model';
+import { ExecucaoDeSerie, Serie, SerieDeExercicio } from './series.domain-model';
+import { SeriesService } from './series.service';
+
+const columnDefinitions = [
+  { showMobile: true, def: 'icone' },
+  { showMobile: false, def: 'exercicio' },
+  { showMobile: true, def: 'sequencia' },
+  { showMobile: true, def: 'quantidade' },
+  { showMobile: true, def: 'repeticoes' },
+  { showMobile: true, def: 'carga' },
+  { showMobile: true, def: 'nota' },
+  { showMobile: true, def: 'menu' },
+];
+
+@Component({
+  selector: 'monstros-series-item',
+  templateUrl: './series-item.component.html',
+  styleUrls: ['./series-item.component.scss']
+})
+export class SeriesItemComponent implements OnInit {
+  monstroId: string;
+
+  serie: Serie;
+
+  execucoes$: Observable<ExecucaoDeSerie[]>;
+
+  disabledWrite$: Observable<boolean>;
+
+  exerciciosDataSource: any;
+
+  execucoesDataSource: any;
+
+  @ViewChild(MatSort) sort: MatSort;
+
+  desktopQuery: MediaQueryList;
+
+  constructor(
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private seriesService: SeriesService,
+    private monstrosService: MonstrosService,
+    media: MediaMatcher
+  ) {
+    this.desktopQuery = media.matchMedia('(min-width: 600px)');
+  }
+
+  ngOnInit() {
+    const monstro$ = this.route.paramMap.pipe(
+      // first(),
+      map(params => params.get('monstroId')),
+      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId)),
+      catchError((error, source$) => {
+        console.log(`Não foi possível montar as séries do monstro.\nRazão:\n${error}`);
+
+        return source$;
+      }),
+      shareReplay()
+    );
+
+    const serie$ = this.route.paramMap.pipe(
+      // first(),
+      // map(params => params.get('serieId')),
+      switchMap(params => {
+        this.monstroId = params.get('monstroId');
+
+        const serieId = params.get('serieId');
+
+        return this.seriesService.obtemSerieObservavel(this.monstroId, serieId);
+      }),
+      catchError((error, source$) => {
+        console.log(`Não foi possível montar a série.\nRazão:\n${error}`);
+
+        return EMPTY; // Observable.throw(e);
+      }),
+      // shareReplay()
+    );
+
+    this.execucoes$ = serie$.pipe(
+      switchMap(serie => {
+        this.serie = serie;
+
+        this.exerciciosDataSource = new MatTableDataSource(serie.exercicios);
+
+        this.exerciciosDataSource.sort = this.sort;
+
+        return this.seriesService.obtemExecucoesDeSerieObservaveisParaExibicao(this.monstroId, serie);
+      }),
+      shareReplay()
+    );
+
+    this.disabledWrite$ = monstro$.pipe(
+      // first(),
+      switchMap(monstro => {
+        return this.monstrosService.ehVoceMesmo(monstro.id);
+      }),
+      switchMap(value => {
+        if (value) {
+          return of(true);
+        } else {
+          return this.monstrosService.ehAdministrador();
+        }
+      }),
+      map(value => !value),
+      shareReplay()
+    );
+
+    this.execucoes$.subscribe(execucoes => {
+      this.execucoesDataSource = new MatTableDataSource(execucoes);
+
+      this.execucoesDataSource.sort = this.sort;
+    });
+  }
+
+  get isDesktop(): boolean {
+    return this.desktopQuery.matches;
+  }
+
+  getDisplayedColumns(): string[] {
+    const isDesktop = this.isDesktop;
+
+    const displayedColumns = columnDefinitions
+      .filter(cd => isDesktop || cd.showMobile)
+      .map(cd => cd.def);
+
+    return displayedColumns;
+  }
+
+  onPlay(): void {
+    const model = CadastroDeExercicioViewModel.toAddViewModel(this.monstroId, this.serie);
+
+    const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
+
+    this.dialog.open(CadastroDeExecucaoDeSerieComponent, config);
+  }
+
+  onAddExercicio(): void {
+    const model = CadastroDeExercicioViewModel.toAddViewModel(this.monstroId, this.serie);
+
+    const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
+
+    this.dialog.open(CadastroExercicioComponent, config);
+  }
+
+  onEditExercicio(serieDeExercicio: SerieDeExercicio): void {
+    const model = CadastroDeExercicioViewModel.toEditViewModel(this.monstroId, this.serie, serieDeExercicio);
+
+    const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
+
+    this.dialog.open(CadastroExercicioComponent, config);
+  }
+
+  onDeleteExercicio(serieDeExercicio: SerieDeExercicio): void {
+    this.seriesService.removeExercicio(this.monstroId, this.serie.id, serieDeExercicio.id);
+  }
+}

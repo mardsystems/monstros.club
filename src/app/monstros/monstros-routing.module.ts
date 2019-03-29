@@ -10,6 +10,7 @@ import { RankingsItemComponent } from './rankings/rankings-item.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
+import { SeriesItemComponent } from './series/series-item.component';
 
 const monstrosRoutes: Routes = [
   // { path: 'heroes', redirectTo: '/superheroes' },
@@ -27,6 +28,7 @@ const monstrosRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
           { path: 'series', component: SeriesComponent, data: { animation: 'series' } },
+          { path: 'series/:serieId', component: SeriesItemComponent, data: { animation: 'serie' } },
           { path: 'treinos', component: TreinosComponent, data: { animation: 'treinos' } },
           { path: 'medidas', component: MedidasComponent, data: { animation: 'medidas' } },
           { path: 'rankings', component: RankingsComponent, data: { animation: 'rankings' } },

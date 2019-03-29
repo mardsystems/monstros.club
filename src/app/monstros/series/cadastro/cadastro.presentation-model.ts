@@ -41,16 +41,16 @@ export class CadastroDeSerieViewModel extends SolicitacaoDeCadastroDeSerie {
 export class CadastroDeExercicioViewModel extends SolicitacaoDeCadastroDeExercicio {
   isEdit: boolean;
   id?: number;
-  monstro: Monstro;
+  // monstro: Monstro;
   serie: Serie;
 
-  static toAddViewModel(monstro: Monstro, serie: Serie): CadastroDeExercicioViewModel {
-    const solicitacao = SolicitacaoDeCadastroDeExercicio.toAdd(monstro.id, serie.id);
+  static toAddViewModel(monstroId: string, serie: Serie): CadastroDeExercicioViewModel {
+    const solicitacao = SolicitacaoDeCadastroDeExercicio.toAdd(monstroId, serie.id);
 
     return {
       isEdit: false,
       id: null,
-      monstro: monstro,
+      // monstro: monstro,
       monstroId: solicitacao.monstroId,
       serie: serie,
       serieId: solicitacao.serieId,
@@ -63,13 +63,13 @@ export class CadastroDeExercicioViewModel extends SolicitacaoDeCadastroDeExercic
     };
   }
 
-  static toEditViewModel(monstro: Monstro, serie: Serie, serieDeExercicio: SerieDeExercicio): CadastroDeExercicioViewModel {
-    const solicitacao = SolicitacaoDeCadastroDeExercicio.toEdit(monstro.id, serie.id, serieDeExercicio);
+  static toEditViewModel(monstroId: string, serie: Serie, serieDeExercicio: SerieDeExercicio): CadastroDeExercicioViewModel {
+    const solicitacao = SolicitacaoDeCadastroDeExercicio.toEdit(monstroId, serie.id, serieDeExercicio);
 
     return {
       isEdit: true,
       id: serieDeExercicio.id,
-      monstro: monstro,
+      // monstro: monstro,
       monstroId: solicitacao.monstroId,
       serie: serie,
       serieId: solicitacao.serieId,

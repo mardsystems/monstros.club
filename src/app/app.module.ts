@@ -35,7 +35,7 @@ registerLocaleData(localePt);
     HomeComponent,
     SobreComponent,
     TermosDeUsoComponent,
-    PoliticaDePrivacidadeComponent
+    PoliticaDePrivacidadeComponent,
   ],
   imports: [
     BrowserAnimationsModule,
