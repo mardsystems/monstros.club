@@ -3,7 +3,7 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import * as _ from 'lodash';
 import { combineLatest, merge, Observable, empty, EMPTY, forkJoin, of } from 'rxjs';
-import { first, map, mergeMap, switchMap, toArray, tap, shareReplay, catchError } from 'rxjs/operators';
+import { first, map, mergeMap, switchMap, toArray, tap, shareReplay, catchError, concat } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
@@ -68,22 +68,21 @@ export class RankingsService
     //   })
     // );
 
-    const rankings$ = merge(rankingsProprietarios$, rankingsPorParticipantes$).pipe(
+    const rankings$ = combineLatest(rankingsProprietarios$, rankingsPorParticipantes$).pipe(
       // first(),
-      tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicao', value)),
+      tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicao: merge', value)),
+      map(tuplaDeArrayDeRankings => tuplaDeArrayDeRankings.reduce((previous, current) => _.unionBy(previous, current, 'id')))
       // mergeMap(flat => flat),
       // toArray()
       // shareReplay()
     );
 
-    // const rankings$ = rankingsProprietarios$;
-
-    // const rankings$ = rankingsPorParticipantes$;
-
     return rankings$;
   }
 
   obtemRankingsObservaveisParaExibicaoPorProprietario(proprietario: Monstro): Observable<Ranking[]> {
+    this.log.debug('obtemRankingsObservaveisParaExibicaoPorProprietario');
+
     const monstroRef = this.monstrosService.ref(proprietario.id);
 
     const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
@@ -94,7 +93,7 @@ export class RankingsService
 
     const rankings$ = collection.valueChanges().pipe(
       // first(),
-      tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicaoPorProprietario', value)),
+      tap((value) => this.log.debug('obtemRankingsObservaveisParaExibicaoPorProprietario: valueChanges', value)),
       switchMap(values => this.mapRankingsObservaveis(proprietario, values)),
       // shareReplay()
     );
@@ -156,25 +155,31 @@ export class RankingsService
   }
 
   obtemRankingsObservaveisPorParticipante(participante: Monstro): Observable<Ranking[]> {
+    this.log.debug('obtemRankingsObservaveisPorParticipante');
+
     const rankingsPorParticipante$ = this.obtemRankingParticipacoes(participante).pipe(
       // first(),
-      tap((value) => this.log.debug('obtemRankingsObservaveisPorParticipante', value)),
+      tap((value) => this.log.debug('obtemRankingsObservaveisPorParticipante: obtemRankingParticipacoes', value)),
       switchMap(rankingsParticipacoes => {
         const rankings$Array = rankingsParticipacoes.map(rankingParticipacao => {
           return this.obtemRankingObservavel(rankingParticipacao.rankingId.id);
         });
 
-        const ranking$ = combineLatest(rankings$Array).pipe(
-          // first(),
-          tap((value) => this.log.debug('obtemRankingsObservaveisPorParticipante: combined', value)),
-          catchError((error, source$) => {
-            this.log.debug('obtemRankingsObservaveisPorParticipante: error: ', error);
+        if (rankingsParticipacoes.length === 0) {
+          return of([]);
+        } else {
+          const ranking$ = combineLatest(rankings$Array).pipe(
+            // first(),
+            // tap((value) => this.log.debug('obtemRankingsObservaveisPorParticipante: combineLatest', value)),
+            catchError((error, source$) => {
+              this.log.debug('obtemRankingsObservaveisPorParticipante: error: ', error);
 
-            return source$;
-          })
-        );
+              return source$;
+            })
+          );
 
-        return ranking$;
+          return ranking$;
+        }
       }),
       shareReplay()
     );
@@ -203,15 +208,15 @@ export class RankingsService
   }
 
   obtemRankingObservavel(id: string): Observable<Ranking> {
-    const collection = this.db.collection<RankingDocument>(this.PATH);
+    this.log.debug('obtemRankingObservavel');
 
-    this.log.debug('obtemRankingObservavel: id: ', id);
+    const collection = this.db.collection<RankingDocument>(this.PATH);
 
     const document = collection.doc<RankingDocument>(id);
 
     const ranking$ = document.valueChanges().pipe(
       // first(),
-      tap((value) => this.log.debug('obtemRankingObservavel: value: ', value)),
+      tap((value) => this.log.debug('obtemRankingObservavel: valueChanges: ')),
       switchMap(value => {
         const rankingComProprietario$ = this.monstrosService.obtemMonstroObservavel(value.monstroRef.id).pipe(
           // first(),
