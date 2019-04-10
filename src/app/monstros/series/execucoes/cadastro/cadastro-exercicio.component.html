@@ -1,3 +1,36 @@
-<p>
-  cadastro-exercicio works!
-</p>
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+
+<form [formGroup]="cadastroForm" autocomplete="off">
+  <mat-dialog-content class="container">
+    <mat-form-field>
+      <input type="number" placeholder="Sequência" matInput formControlName="sequencia">
+    </mat-form-field>
+
+    <mat-form-field hideRequiredMarker>
+      <mat-select placeholder="Exercício" formControlName="exercicioId" required>
+        <mat-option *ngFor="let exercicio of exercicios$ | async" [value]="exercicio.id">{{exercicio.nome}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="number" placeholder="Quantidade" matInput formControlName="quantidade">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="number" placeholder="Repetições" matInput formControlName="repeticoes">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="number" placeholder="Carga" matInput formControlName="carga">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="text" placeholder="Nota" matInput formControlName="nota">
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>CANCELAR</button>
+    <button mat-button [disabled]="cadastroForm.invalid" (click)="onSave()">SALVAR</button>
+  </mat-dialog-actions>
+</form>

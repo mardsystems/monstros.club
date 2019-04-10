@@ -1,4 +1,35 @@
-<h1 class="mat-headline">Ancioso?</h1>
-<p class="mat-body">
-  A execução de série estará disponível em breve!
-</p>
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+
+<form [formGroup]="cadastroForm" autocomplete="off">
+  <mat-dialog-content class="container">
+    <mat-form-field>
+      <input type="text" placeholder="Nome" matInput formControlName="nome">
+    </mat-form-field>
+
+    <mat-form-field hideRequiredMarker>
+      <mat-select placeholder="Exercício" formControlName="academiaId" required>
+        <mat-option *ngFor="let academia of academias$ | async" [value]="academia.id">{{academia.nome}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="text" placeholder="Cor" matInput formControlName="cor">
+    </mat-form-field>
+
+    <section>
+      <mat-checkbox color="primary" formControlName="ativa">Ativa</mat-checkbox>
+    </section>
+
+    <mat-form-field>
+      <input type="text" placeholder="Data" matInput required [matDatepicker]="dataPicker"
+        formControlName="data">
+      <mat-datepicker-toggle matSuffix [for]="dataPicker"></mat-datepicker-toggle>
+      <mat-datepicker #dataPicker></mat-datepicker>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>CANCELAR</button>
+    <button mat-button [disabled]="cadastroForm.invalid" (click)="onSave()">SALVAR</button>
+  </mat-dialog-actions>
+</form>

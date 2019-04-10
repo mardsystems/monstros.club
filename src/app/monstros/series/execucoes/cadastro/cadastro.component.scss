@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.container > * {
+  width: 100%;
+}
+
+section {
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
