@@ -1,7 +1,7 @@
-import { Monstro } from '../..//../monstros.domain-model';
-import { Serie, SerieDeExercicio, } from '../../series.domain-model';
-import { SolicitacaoDeExecucaoDeSerie, SolicitacaoDeExecucaoDeExercicio } from '../cadastro/cadastro.application-model';
 import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
+import { Monstro } from '../monstros.domain-model';
+import { Serie, SerieDeExercicio } from '../series/series.domain-model';
+import { SolicitacaoDeExecucaoDeExercicio, SolicitacaoDeExecucaoDeSerie } from './series-execucao.application-model';
 
 export class ExecucaoDeSerieViewModel extends SolicitacaoDeExecucaoDeSerie {
   isEdit: boolean;

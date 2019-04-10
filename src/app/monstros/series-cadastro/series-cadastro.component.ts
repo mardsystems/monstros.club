@@ -1,15 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { SeriesService } from '../series.service';
-import { CadastroDeSerieViewModel } from './cadastro.presentation-model';
+import { CadastroDeSerieViewModel } from './series-cadastro.presentation-model';
+import { SeriesCadastroService } from './series-cadastro.service';
 
 @Component({
   selector: 'monstros-series-cadastro',
-  templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss']
+  templateUrl: './series-cadastro.component.html',
+  styleUrls: ['./series-cadastro.component.scss']
 })
-export class CadastroComponent implements OnInit {
+export class SeriesCadastroComponent implements OnInit {
   dialogTitle = 'Nova Série';
 
   cadastroForm = this.formBuilder.group({
@@ -22,8 +22,8 @@ export class CadastroComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeSerieViewModel,
-    private dialogRef: MatDialogRef<CadastroComponent>,
-    private seriesService: SeriesService,
+    private dialogRef: MatDialogRef<SeriesCadastroComponent>,
+    private cadastroDeSeries: SeriesCadastroService,
     private formBuilder: FormBuilder,
   ) {
 
@@ -46,8 +46,8 @@ export class CadastroComponent implements OnInit {
 
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.seriesService.atualizaSerie(this.model.id, this.model)
-        : this.seriesService.cadastraSerie(this.model);
+        ? this.cadastroDeSeries.atualizaSerie(this.model.id, this.model)
+        : this.cadastroDeSeries.cadastraSerie(this.model);
 
     operation.then(() => {
       this.dialogRef.close();

@@ -19,18 +19,16 @@ import { PosicaoComponent } from './rankings/posicao/posicao.component';
 import { RankingsItemComponent } from './rankings/rankings-item.component';
 import { RankingsParticipantesComponent } from './rankings/rankings-participantes.component';
 import { RankingsComponent } from './rankings/rankings.component';
-import { CadastroComponent as CadastroDeSeriesComponent } from './series/cadastro/cadastro.component';
-import { SeriesComponent } from './series/series.component';
-import { SeriesItemComponent } from './series/series-item.component';
-import { SeriesExerciciosComponent } from './series/series-exercicios.component';
-import { SeriesExecucoesComponent } from './series/series-execucoes.component';
-import { CadastroExercicioComponent as CadastroDeSerieDeExercicioComponent } from './series/cadastro/cadastro-exercicio.component';
-import { ExecucoesComponent as ExecucoesDeSerieComponent } from './series/execucoes/execucoes.component';
+import { SeriesCadastroExercicioComponent } from './series-cadastro/series-cadastro-exercicio.component';
+import { SeriesCadastroComponent as CadastroDeSeriesComponent } from './series-cadastro/series-cadastro.component';
+import { SeriesExecucaoExercicioComponent } from './series-execucao/series-execucao-exercicio.component';
+import { SeriesExecucaoComponent } from './series-execucao/series-execucao.component';
 import { ExecucoesItemComponent as ExecucoesDeSerieItemComponent } from './series/execucoes/execucoes-item.component';
-import { CadastroComponent as CadastroDeExecucaoDeSerieComponent } from './series/execucoes/cadastro/cadastro.component';
-import {
-  CadastroExercicioComponent as CadastroDeExecucaoDeSerieDeExercicioComponent
-} from './series/execucoes/cadastro/cadastro-exercicio.component';
+import { ExecucoesComponent as ExecucoesDeSerieComponent } from './series/execucoes/execucoes.component';
+import { SeriesExecucoesComponent } from './series/series-execucoes.component';
+import { SeriesExerciciosComponent } from './series/series-exercicios.component';
+import { SeriesItemComponent } from './series/series-item.component';
+import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
 
 @NgModule({
@@ -51,14 +49,14 @@ import { TreinosComponent } from './treinos/treinos.component';
     RankingsItemComponent,
     RankingsParticipantesComponent,
     CadastroDeSeriesComponent,
-    CadastroDeSerieDeExercicioComponent,
+    SeriesCadastroExercicioComponent,
     PosicaoComponent,
     AssiduidadeComponent,
     FiltroDoRanking,
     ExecucoesDeSerieComponent,
     ExecucoesDeSerieItemComponent,
-    CadastroDeExecucaoDeSerieComponent,
-    CadastroDeExecucaoDeSerieDeExercicioComponent,
+    SeriesExecucaoComponent,
+    SeriesExecucaoExercicioComponent,
   ],
   imports: [
     CommonModule,
@@ -74,10 +72,10 @@ import { TreinosComponent } from './treinos/treinos.component';
     CadastroDeRankingsComponent,
     ParticipacaoNoRankingComponent,
     CadastroDeSeriesComponent,
-    CadastroDeSerieDeExercicioComponent,
+    SeriesCadastroExercicioComponent,
     FiltroDoRanking,
-    CadastroDeExecucaoDeSerieComponent,
-    CadastroDeExecucaoDeSerieDeExercicioComponent,
+    SeriesExecucaoComponent,
+    SeriesExecucaoExercicioComponent,
   ],
   providers: [
     MedidasService

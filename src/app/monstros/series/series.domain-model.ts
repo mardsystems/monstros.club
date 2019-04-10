@@ -1,8 +1,8 @@
+import * as _ from 'lodash';
 import { Tempo } from 'src/app/app-common.domain-model';
 import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
 import { Aparelho } from 'src/app/cadastro/aparelhos/aparelhos.domain-model';
 import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
-import * as _ from 'lodash';
 
 export class Serie {
   private _exercicios?: SerieDeExercicio[];

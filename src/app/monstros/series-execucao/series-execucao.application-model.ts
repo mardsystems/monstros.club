@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Serie, SerieDeExercicio } from '../../series.domain-model';
+import { SerieDeExercicio } from '../series/series.domain-model';
 
 export class SolicitacaoDeExecucaoDeSerie {
   monstroId: string;

@@ -5,9 +5,10 @@ import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { MonstrosService } from '../monstros.service';
-import { CadastroComponent as CadastroDeExecucaoDeSerieComponent } from '../series/execucoes/cadastro/cadastro.component';
-import { CadastroExercicioComponent } from './cadastro/cadastro-exercicio.component';
-import { CadastroDeExercicioViewModel } from './cadastro/cadastro.presentation-model';
+import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
+import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro.presentation-model';
+import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
+import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { ExecucaoDeSerie, Serie, SerieDeExercicio } from './series.domain-model';
 import { SeriesService } from './series.service';
 
@@ -47,7 +48,8 @@ export class SeriesItemComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private seriesService: SeriesService,
+    private repositorioDeSeries: SeriesService,
+    private cadastroDeSeries: SeriesCadastroService,
     private monstrosService: MonstrosService,
     media: MediaMatcher
   ) {
@@ -75,7 +77,7 @@ export class SeriesItemComponent implements OnInit {
 
         const serieId = params.get('serieId');
 
-        return this.seriesService.obtemSerieObservavel(this.monstroId, serieId);
+        return this.repositorioDeSeries.obtemSerieObservavel(this.monstroId, serieId);
       }),
       catchError((error, source$) => {
         console.log(`Não foi possível montar a série.\nRazão:\n${error}`);
@@ -93,7 +95,7 @@ export class SeriesItemComponent implements OnInit {
 
         this.exerciciosDataSource.sort = this.sort;
 
-        return this.seriesService.obtemExecucoesDeSerieObservaveisParaExibicao(this.monstroId, serie);
+        return this.repositorioDeSeries.obtemExecucoesDeSerieObservaveisParaExibicao(this.monstroId, serie);
       }),
       shareReplay()
     );
@@ -140,7 +142,7 @@ export class SeriesItemComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
 
-    this.dialog.open(CadastroDeExecucaoDeSerieComponent, config);
+    this.dialog.open(SeriesExecucaoComponent, config);
   }
 
   onAddExercicio(): void {
@@ -148,7 +150,7 @@ export class SeriesItemComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
 
-    this.dialog.open(CadastroExercicioComponent, config);
+    this.dialog.open(SeriesCadastroExercicioComponent, config);
   }
 
   onEditExercicio(serieDeExercicio: SerieDeExercicio): void {
@@ -156,10 +158,10 @@ export class SeriesItemComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
 
-    this.dialog.open(CadastroExercicioComponent, config);
+    this.dialog.open(SeriesCadastroExercicioComponent, config);
   }
 
   onDeleteExercicio(serieDeExercicio: SerieDeExercicio): void {
-    this.seriesService.removeExercicio(this.monstroId, this.serie.id, serieDeExercicio.id);
+    this.cadastroDeSeries.removeExercicio(this.monstroId, this.serie.id, serieDeExercicio.id);
   }
 }

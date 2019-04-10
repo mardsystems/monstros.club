@@ -1,4 +1,4 @@
-import { CadastroComponent as CadastroDeExecucaoDeSerieComponent } from '../series/execucoes/cadastro/cadastro.component';
+import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
@@ -8,10 +8,11 @@ import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { CadastroComponent } from './cadastro/cadastro.component';
-import { CadastroDeSerieViewModel } from './cadastro/cadastro.presentation-model';
+import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
+import { CadastroDeSerieViewModel } from '../series-cadastro/series-cadastro.presentation-model';
 import { Serie } from './series.domain-model';
 import { SeriesService } from './series.service';
+import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -42,7 +43,8 @@ export class SeriesComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private seriesService: SeriesService,
+    private repositorioDeSeries: SeriesService,
+    private cadastroDeSeries: SeriesCadastroService,
     private monstrosService: MonstrosService,
     private snackBar: MatSnackBar,
     private log: LogService,
@@ -68,7 +70,7 @@ export class SeriesComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.seriesService.obtemSeriesObservaveisParaExibicao(monstro);
+        return this.repositorioDeSeries.obtemSeriesObservaveisParaExibicao(monstro);
       }),
       catchError((error, source$) => {
         const message = error.message;
@@ -124,7 +126,7 @@ export class SeriesComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeSerieViewModel> = { data: model };
 
-    this.dialog.open(CadastroDeExecucaoDeSerieComponent, config);
+    this.dialog.open(SeriesExecucaoComponent, config);
   }
 
   onAdd(): void {
@@ -132,7 +134,7 @@ export class SeriesComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeSerieViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(SeriesCadastroComponent, config);
   }
 
   onEdit(serie: Serie): void {
@@ -140,10 +142,10 @@ export class SeriesComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeSerieViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(SeriesCadastroComponent, config);
   }
 
   onDelete(serie: Serie): void {
-    this.seriesService.excluiSerie(this.monstro.id, serie.id);
+    this.cadastroDeSeries.excluiSerie(this.monstro.id, serie.id);
   }
 }

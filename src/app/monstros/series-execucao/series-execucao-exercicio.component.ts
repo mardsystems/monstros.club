@@ -1,18 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { SeriesService } from '../series.service';
-import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
 import { FormBuilder } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
-import { CadastroDeExercicioViewModel } from './cadastro.presentation-model';
+import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
+import { ExecucaoDeExercicioViewModel } from './series-execucao.presentation-model';
+import { SeriesExecucaoService } from './series-execucao.service';
 
 @Component({
-  selector: 'monstros-series-cadastro-exercicio',
-  templateUrl: './cadastro-exercicio.component.html',
-  styleUrls: ['./cadastro-exercicio.component.scss']
+  selector: 'monstros-series-execucao-exercicio',
+  templateUrl: './series-execucao-exercicio.component.html',
+  styleUrls: ['./series-execucao-exercicio.component.scss']
 })
-export class CadastroExercicioComponent implements OnInit {
+export class SeriesExecucaoExercicioComponent implements OnInit {
   dialogTitle = 'Nova Série de Exercício';
 
   exercicios$: Observable<Exercicio[]>;
@@ -28,9 +28,9 @@ export class CadastroExercicioComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public model: CadastroDeExercicioViewModel,
-    private dialogRef: MatDialogRef<CadastroExercicioComponent>,
-    private seriesService: SeriesService,
+    public model: ExecucaoDeExercicioViewModel,
+    private dialogRef: MatDialogRef<SeriesExecucaoExercicioComponent>,
+    private execucaoDeSeries: SeriesExecucaoService,
     private exerciciosService: ExerciciosService,
     private formBuilder: FormBuilder,
   ) {
@@ -58,8 +58,8 @@ export class CadastroExercicioComponent implements OnInit {
 
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.seriesService.atualizaExercicio(this.model.id, this.model)
-        : this.seriesService.adicionaExercicio(this.model);
+        ? this.execucaoDeSeries.atualizaExercicio(this.model.id, this.model)
+        : this.execucaoDeSeries.adicionaExercicio(this.model);
 
     operation.then(() => {
       this.dialogRef.close();

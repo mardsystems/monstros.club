@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
-import { first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { CONST_TIMESTAMP_FALSO, Tempo } from 'src/app/app-common.domain-model';
 import { LogService } from 'src/app/app-common.services';
+import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
+import { AcademiasService } from 'src/app/cadastro/academias/academias.service';
+import { AparelhosService } from 'src/app/cadastro/aparelhos/aparelhos.service';
 import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './cadastro/cadastro.application-model';
-import { Serie, SerieDeExercicio, ExecucaoDeSerie, ExecucaoDeExercicio } from './series.domain-model';
-import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
-import { AparelhosService } from 'src/app/cadastro/aparelhos/aparelhos.service';
-import { AcademiasService } from 'src/app/cadastro/academias/academias.service';
+import { ExecucaoDeExercicio, ExecucaoDeSerie, Serie, SerieDeExercicio } from './series.domain-model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +28,20 @@ export class SeriesService {
     private aparelhosService: AparelhosService,
     private log: LogService
   ) { }
+
+  createId(): string {
+    const id = this.db.createId();
+
+    return id;
+  }
+
+  ref(id: string): DocumentReference {
+    const collection = this.db.collection<SerieDocument>(this.PATH);
+
+    const document = collection.doc<SerieDocument>(id);
+
+    return document.ref;
+  }
 
   obtemSeriesObservaveisParaExibicao_(monstro: Monstro): Observable<Serie[]> {
     const path = `${this.monstrosService.PATH}/${monstro.id}${this.PATH}`;
@@ -217,25 +230,7 @@ export class SeriesService {
     });
   }
 
-  cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const serieId = this.db.createId();
-
-      const serie = new Serie(
-        serieId,
-        solicitacao.nome,
-        solicitacao.cor,
-        solicitacao.ativa,
-        solicitacao.data.toDate(),
-      );
-
-      const result = this.add(solicitacao.monstroId, serie);
-
-      resolve(result);
-    });
-  }
-
-  private add(monstroId: string, serie: Serie): Promise<void> {
+  add(monstroId: string, serie: Serie): Promise<void> {
     const path = `${this.monstrosService.PATH}/${monstroId}${this.PATH}`;
 
     const collection = this.db.collection<SerieDocument>(path);
@@ -249,89 +244,7 @@ export class SeriesService {
     return result;
   }
 
-  atualizaSerie(serieId: string, solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.obtemSerieObservavel(solicitacao.monstroId, serieId).pipe(first()).subscribe(serie => {
-        serie.corrigeNome(solicitacao.nome);
-
-        serie.ajustaCor(solicitacao.cor);
-
-        if (serie.ativa && !solicitacao.ativa) {
-          serie.desativa();
-        }
-
-        if (!serie.ativa && solicitacao.ativa) {
-          serie.reativa();
-        }
-
-        serie.corrigeData(solicitacao.data.toDate());
-
-        const result = this.update(solicitacao.monstroId, serie);
-
-        resolve(result);
-      });
-    });
-  }
-
-  adicionaExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
-        first()
-      ).subscribe(serie => {
-        this.exerciciosService.obtemExercicioObservavel(solicitacao.exercicioId).pipe(
-          first()
-        ).subscribe(exercicio => {
-          serie.adicionaExercicio(exercicio, solicitacao.quantidade, solicitacao.repeticoes, solicitacao.carga, solicitacao.nota);
-
-          const result = this.update(solicitacao.monstroId, serie);
-
-          resolve(result);
-        });
-      });
-    });
-  }
-
-  atualizaExercicio(serieDeExercicioId: number, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
-        first()
-      ).subscribe(serie => {
-        const serieDeExercicio = serie.obtemSerieDeExercicio(serieDeExercicioId);
-
-        serieDeExercicio.alteraSequencia(solicitacao.sequencia);
-
-        // serieDeExercicio.acertaExercicio(solicitacao.exercicio);
-
-        serieDeExercicio.corrigeQuantidade(solicitacao.quantidade);
-
-        serieDeExercicio.ajustaRepeticoes(solicitacao.repeticoes);
-
-        serieDeExercicio.ajustaCarga(solicitacao.carga);
-
-        serieDeExercicio.atualizaNota(solicitacao.nota);
-
-        const result = this.update(solicitacao.monstroId, serie);
-
-        resolve(result);
-      });
-    });
-  }
-
-  removeExercicio(monstroId: string, serieId: string, serieDeExercicioId: number): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.obtemSerieObservavel(monstroId, serieId).pipe(
-        first()
-      ).subscribe(serie => {
-        serie.removeSerieDeExercicio(serieDeExercicioId);
-
-        const result = this.update(monstroId, serie);
-
-        resolve(result);
-      });
-    });
-  }
-
-  private update(monstroId: string, serie: Serie): Promise<void> {
+  update(monstroId: string, serie: Serie): Promise<void> {
     const path = `${this.monstrosService.PATH}/${monstroId}${this.PATH}`;
 
     const collection = this.db.collection<SerieDocument>(path);
@@ -372,7 +285,7 @@ export class SeriesService {
     return doc;
   }
 
-  excluiSerie(monstroId: string, serieId: string): Promise<void> {
+  remove(monstroId: string, serieId: string): Promise<void> {
     const path = `${this.monstrosService.PATH}/${monstroId}${this.PATH}`;
 
     const collection = this.db.collection<SerieDocument>(path);

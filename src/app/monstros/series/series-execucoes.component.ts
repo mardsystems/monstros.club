@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
+import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
+import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro.presentation-model';
+import { SeriesExecucaoService } from '../series-execucao/series-execucao.service';
 import { Serie, SerieDeExercicio } from './series.domain-model';
-import { SeriesService } from './series.service';
-import { CadastroDeExercicioViewModel } from './cadastro/cadastro.presentation-model';
-import { CadastroExercicioComponent } from './cadastro/cadastro-exercicio.component';
-import { Monstro } from '../monstros.domain-model';
 
 @Component({
   selector: 'monstros-series-execucoes-widget',
@@ -20,7 +19,7 @@ export class SeriesExecucoesComponent {
 
   constructor(
     private dialog: MatDialog,
-    private seriesService: SeriesService
+    private execucaoDeSeries: SeriesExecucaoService
   ) { }
 
   onAdd(): void {
@@ -28,7 +27,7 @@ export class SeriesExecucoesComponent {
 
     const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
 
-    this.dialog.open(CadastroExercicioComponent, config);
+    this.dialog.open(SeriesCadastroExercicioComponent, config);
   }
 
   onEdit(serieDeExercicio: SerieDeExercicio): void {
@@ -36,10 +35,10 @@ export class SeriesExecucoesComponent {
 
     const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
 
-    this.dialog.open(CadastroExercicioComponent, config);
+    this.dialog.open(SeriesCadastroExercicioComponent, config);
   }
 
   onDelete(serieDeExercicio: SerieDeExercicio): void {
-    this.seriesService.removeExercicio(this.monstroId, this.serie.id, serieDeExercicio.id);
+    this.execucaoDeSeries.removeExercicio(this.monstroId, this.serie.id, serieDeExercicio.id);
   }
 }
