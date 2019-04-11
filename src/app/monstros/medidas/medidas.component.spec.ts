@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MedidasComponent } from './medidas.component';
 
 describe('MedidasComponent', () => {
@@ -8,9 +7,9 @@ describe('MedidasComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MedidasComponent ]
+      declarations: [MedidasComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,25 +1,24 @@
-import { Component, Inject, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatSelectChange } from '@angular/material';
-import { MedidasService } from '../medidas.service';
-import { CadastroDeMedidaViewModel } from './cadastro.presentation-model';
-import { Balanca, TipoDeBalanca, OmronHBF214, BalancaComum } from '../medidas.domain-model';
+import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { MatDialogRef, MatSelectChange, MAT_DIALOG_DATA } from '@angular/material';
 import { CalculoDeIdade } from 'src/app/app-common.services';
+import { Balanca, BalancaComum, OmronHBF214, TipoDeBalanca } from '../medidas/medidas.domain-model';
+import { CadastroDeMedidaViewModel } from './medidas-cadastro.presentation-model';
+import { MedidasCadastroService } from './medidas-cadastro.service';
 
 @Component({
-  selector: 'monstros-medidas-cadastro',
-  templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss']
+  selector: 'medidas-cadastro',
+  templateUrl: './medidas-cadastro.component.html',
+  styleUrls: ['./medidas-cadastro.component.scss']
 })
-export class CadastroComponent implements OnInit, OnChanges {
+export class MedidasCadastroComponent implements OnInit, OnChanges {
   dialogTitle = 'Nova Medida';
   balanca: Balanca;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeMedidaViewModel,
-    private dialogRef: MatDialogRef<CadastroComponent>,
-    private medidasService: MedidasService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private dialogRef: MatDialogRef<MedidasCadastroComponent>,
+    private cadastroDeMedidas: MedidasCadastroService,
     private calculoDeIdade: CalculoDeIdade
   ) {
     this.balanca = new OmronHBF214();
@@ -73,8 +72,8 @@ export class CadastroComponent implements OnInit, OnChanges {
   onSave(): void {
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.medidasService.atualizaMedida(this.model.id, this.model)
-        : this.medidasService.cadastraMedida(this.model);
+        ? this.cadastroDeMedidas.atualizaMedida(this.model.id, this.model)
+        : this.cadastroDeMedidas.cadastraMedida(this.model);
 
     operation.then(() => {
       this.dialogRef.close();

@@ -5,7 +5,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AppCommonModule } from '../app-common.module';
 import { CadastroComponent as CadastroDeMonstrosComponent } from './cadastro/cadastro.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
-import { CadastroComponent as CadastroDeMedidasComponent } from './medidas/cadastro/cadastro.component';
+import { MedidasCadastroComponent } from './medidas-cadastro/medidas-cadastro.component';
 import { MedidasComponent } from './medidas/medidas.component';
 import { MedidasService } from './medidas/medidas.service';
 import { MonstrosMaterialModule } from './monstros-material.module';
@@ -40,7 +40,7 @@ import { TreinosComponent } from './treinos/treinos.component';
     SeriesExerciciosComponent,
     SeriesExecucoesComponent,
     TreinosComponent,
-    CadastroDeMedidasComponent,
+    MedidasCadastroComponent,
     MedidasComponent,
     CadastroDeRankingsComponent,
     RankingsComponent,
@@ -68,7 +68,7 @@ import { TreinosComponent } from './treinos/treinos.component';
     AppCommonModule,
   ],
   entryComponents: [
-    CadastroDeMedidasComponent,
+    MedidasCadastroComponent,
     CadastroDeRankingsComponent,
     ParticipacaoNoRankingComponent,
     CadastroDeSeriesComponent,

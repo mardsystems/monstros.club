@@ -1,12 +1,12 @@
-import { Monstro } from '../../monstros.domain-model';
+import { Monstro } from '../monstros.domain-model';
 import {
   IMedidaDeGordura,
   IMedidaDeGorduraVisceral,
   IMedidaDeIndiceDeMassaCorporal,
   IMedidaDeMusculo,
   Medida,
-} from '../medidas.domain-model';
-import { SolicitacaoDeCadastroDeMedida } from './cadastro.application-model';
+} from '../medidas/medidas.domain-model';
+import { SolicitacaoDeCadastroDeMedida } from './medidas-cadastro.application-model';
 
 export class CadastroDeMedidaViewModel extends SolicitacaoDeCadastroDeMedida
   implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {

@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Medida, TipoDeBalanca } from '../medidas.domain-model';
+import { Medida, TipoDeBalanca } from '../medidas/medidas.domain-model';
 
 export class SolicitacaoDeCadastroDeMedida {
   monstroId: string;

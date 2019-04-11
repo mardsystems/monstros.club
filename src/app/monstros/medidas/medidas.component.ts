@@ -1,17 +1,17 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
+import { MedidasCadastroComponent } from '../medidas-cadastro/medidas-cadastro.component';
+import { CadastroDeMedidaViewModel } from '../medidas-cadastro/medidas-cadastro.presentation-model';
+import { MedidasCadastroService } from '../medidas-cadastro/medidas-cadastro.service';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { CadastroComponent } from './cadastro/cadastro.component';
-import { CadastroDeMedidaViewModel } from './cadastro/cadastro.presentation-model';
 import { Balanca, Medida, OmronHBF214 } from './medidas.domain-model';
 import { MedidasService } from './medidas.service';
-import * as _ from 'lodash';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -27,7 +27,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'monstros-medidas',
+  selector: 'medidas',
   templateUrl: './medidas.component.html',
   styleUrls: ['./medidas.component.scss']
 })
@@ -63,8 +63,9 @@ export class MedidasComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private medidasService: MedidasService,
-    private monstrosService: MonstrosService,
+    private repositorioDeMedidas: MedidasService,
+    private cadastroDeMedidas: MedidasCadastroService,
+    private repositorioDeMonstros: MonstrosService,
     private log: LogService,
     media: MediaMatcher
   ) {
@@ -77,7 +78,7 @@ export class MedidasComponent implements OnInit {
     const monstro$ = this.route.paramMap.pipe(
       // first(),
       map(params => params.get('monstroId')),
-      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId)),
+      switchMap(monstroId => this.repositorioDeMonstros.obtemMonstroObservavel(monstroId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar as medidas do monstro.\nRazão:\n${error}`);
 
@@ -90,7 +91,7 @@ export class MedidasComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.medidasService.obtemMedidasObservaveisParaExibicao(monstro);
+        return this.repositorioDeMedidas.obtemMedidasObservaveisParaExibicao(monstro);
       }),
       shareReplay()
     );
@@ -146,13 +147,13 @@ export class MedidasComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.monstrosService.ehVoceMesmo(monstro.id);
+        return this.repositorioDeMonstros.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.monstrosService.ehAdministrador();
+          return this.repositorioDeMonstros.ehAdministrador();
         }
       }),
       map(value => !value),
@@ -179,7 +180,7 @@ export class MedidasComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeMedidaViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(MedidasCadastroComponent, config);
   }
 
   onEdit(medida: Medida): void {
@@ -187,10 +188,10 @@ export class MedidasComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeMedidaViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(MedidasCadastroComponent, config);
   }
 
   onDelete(medida: Medida): void {
-    this.medidasService.excluiMedida(medida.id);
+    this.cadastroDeMedidas.excluiMedida(medida.id);
   }
 }
