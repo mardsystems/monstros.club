@@ -11,16 +11,16 @@ import { MedidasService } from './medidas/medidas.service';
 import { MonstrosMaterialModule } from './monstros-material.module';
 import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
+import { RankingsCadastroComponent } from './rankings-cadastro/rankings-cadastro.component';
+import { RankingsParticipacaoComponent } from './rankings-participacao/rankings-participacao.component';
 import { AssiduidadeComponent } from './rankings/assiduidade/assiduidade.component';
-import { CadastroComponent as CadastroDeRankingsComponent } from './rankings/cadastro/cadastro.component';
 import { FiltroComponent as FiltroDoRanking } from './rankings/filtro/filtro.component';
-import { ParticipacaoComponent as ParticipacaoNoRankingComponent } from './rankings/participacao/participacao.component';
 import { PosicaoComponent } from './rankings/posicao/posicao.component';
 import { RankingsItemComponent } from './rankings/rankings-item.component';
 import { RankingsParticipantesComponent } from './rankings/rankings-participantes.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesCadastroExercicioComponent } from './series-cadastro/series-cadastro-exercicio.component';
-import { SeriesCadastroComponent as CadastroDeSeriesComponent } from './series-cadastro/series-cadastro.component';
+import { SeriesCadastroComponent } from './series-cadastro/series-cadastro.component';
 import { SeriesExecucaoExercicioComponent } from './series-execucao/series-execucao-exercicio.component';
 import { SeriesExecucaoComponent } from './series-execucao/series-execucao.component';
 import { ExecucoesItemComponent as ExecucoesDeSerieItemComponent } from './series/execucoes/execucoes-item.component';
@@ -42,13 +42,13 @@ import { TreinosComponent } from './treinos/treinos.component';
     TreinosComponent,
     MedidasCadastroComponent,
     MedidasComponent,
-    CadastroDeRankingsComponent,
+    RankingsCadastroComponent,
     RankingsComponent,
     ConfiguracoesComponent,
-    ParticipacaoNoRankingComponent,
+    RankingsParticipacaoComponent,
     RankingsItemComponent,
     RankingsParticipantesComponent,
-    CadastroDeSeriesComponent,
+    SeriesCadastroComponent,
     SeriesCadastroExercicioComponent,
     PosicaoComponent,
     AssiduidadeComponent,
@@ -69,9 +69,9 @@ import { TreinosComponent } from './treinos/treinos.component';
   ],
   entryComponents: [
     MedidasCadastroComponent,
-    CadastroDeRankingsComponent,
-    ParticipacaoNoRankingComponent,
-    CadastroDeSeriesComponent,
+    RankingsCadastroComponent,
+    RankingsParticipacaoComponent,
+    SeriesCadastroComponent,
     SeriesCadastroExercicioComponent,
     FiltroDoRanking,
     SeriesExecucaoComponent,

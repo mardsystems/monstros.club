@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { ParticipacaoComponent } from './participacao/participacao.component';
-import { ParticipacaoViewModel } from './participacao/participacao.presentation-model';
-import { Ranking, Participacao } from './rankings.domain-model';
-import { RankingsService } from './rankings.service';
+import { RankingsParticipacaoComponent } from '../rankings-participacao/rankings-participacao.component';
+import { ParticipacaoViewModel } from '../rankings-participacao/rankings-participacao.presentation-model';
+import { RankingsParticipacaoService } from '../rankings-participacao/rankings-participacao.service';
+import { Participacao, Ranking } from './rankings.domain-model';
 
 @Component({
-  selector: 'monstros-rankings-participantes',
+  selector: 'rankings-participantes',
   templateUrl: './rankings-participantes.component.html',
   styleUrls: ['./rankings-participantes.component.scss']
 })
@@ -17,7 +17,7 @@ export class RankingsParticipantesComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private rankingsService: RankingsService
+    private participacaoDeRankings: RankingsParticipacaoService
   ) { }
 
   ngOnInit() {
@@ -28,10 +28,10 @@ export class RankingsParticipantesComponent implements OnInit {
 
     const config: MatDialogConfig<ParticipacaoViewModel> = { data: model };
 
-    this.dialog.open(ParticipacaoComponent, config);
+    this.dialog.open(RankingsParticipacaoComponent, config);
   }
 
   onDelete(participacao: Participacao): void {
-    this.rankingsService.removeParticipante(this.ranking.id, participacao.participante.id);
+    this.participacaoDeRankings.removeParticipante(this.ranking.id, participacao.participante.id);
   }
 }

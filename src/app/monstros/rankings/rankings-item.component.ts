@@ -23,7 +23,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'monstros-rankings-item',
+  selector: 'rankings-item',
   templateUrl: './rankings-item.component.html',
   styleUrls: ['./rankings-item.component.scss']
 })

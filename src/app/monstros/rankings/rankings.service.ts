@@ -2,27 +2,21 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import * as _ from 'lodash';
-import { combineLatest, merge, Observable, empty, EMPTY, forkJoin, of } from 'rxjs';
-import { first, map, mergeMap, switchMap, toArray, tap, shareReplay, catchError, concat } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { catchError, first, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { CONST_TIMESTAMP_FALSO } from 'src/app/app-common.domain-model';
 import { LogService } from 'src/app/app-common.services';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
+import { MedidasService } from '../medidas/medidas.service';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import {
-  ICadastroDeRanking,
-  SolicitacaoDeCadastroDeRanking,
-  SolicitacaoDeParticipacaoDeRanking
-} from './cadastro/cadastro.application-model';
-import { Participacao, Ranking } from './rankings.domain-model';
 import { PosicaoDeMedida } from './rankings.application-model';
-import { MedidasService } from '../medidas/medidas.service';
-import { CONST_TIMESTAMP_FALSO } from 'src/app/app-common.domain-model';
+import { Participacao, Ranking } from './rankings.domain-model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RankingsService
-  implements ICadastroDeRanking {
+export class RankingsService {
   PATH = '/rankings';
   PATH_PARTICIPACOES = this.PATH + '-participacoes';
 
@@ -32,6 +26,12 @@ export class RankingsService
     private medidasService: MedidasService,
     private log: LogService
   ) { }
+
+  createId(): string {
+    const id = this.db.createId();
+
+    return id;
+  }
 
   ref(id: string): DocumentReference {
     const collection = this.db.collection<RankingDocument>(this.PATH);
@@ -484,30 +484,7 @@ export class RankingsService
     });
   }
 
-  cadastraRanking(solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.monstrosService.obtemMonstroObservavel(solicitacao.proprietarioId).pipe(
-        first(),
-        tap((value) => this.log.debug('cadastraRanking: value: ', value)),
-      ).subscribe(monstro => {
-        const rankingId = this.db.createId();
-
-        const ranking = new Ranking(
-          rankingId,
-          solicitacao.nome,
-          monstro,
-          solicitacao.proprietarioId,
-          solicitacao.feitoCom as TipoDeBalanca
-        );
-
-        const result = this.add(ranking);
-
-        return resolve(result);
-      });
-    });
-  }
-
-  private add(ranking: Ranking): Promise<void> {
+  add(ranking: Ranking): Promise<void> {
     const collection = this.db.collection<RankingDocument>(this.PATH);
 
     const document = collection.doc<RankingDocument>(ranking.id);
@@ -530,99 +507,7 @@ export class RankingsService
     return allResult;
   }
 
-  atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.obtemRankingObservavel(rankingId).pipe(
-        first()
-      ).subscribe(ranking => {
-        ranking.defineNome(solicitacao.nome);
-
-        const result = this.update(ranking);
-
-        resolve(result);
-      });
-    });
-  }
-
-  adicionaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      // this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).pipe(
-      //   first(),
-      //   map(monstro => {
-      //     this.obtemRankingObservavel(solicitacao.rankingId).subscribe(ranking => {
-      //       const participante = monstro; // solicitacao.participanteId;
-
-      //       const agora = new Date(Date.now());
-
-      //       ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
-
-      //       const result = this.update(ranking);
-
-      //       resolve(result);
-      //     });
-      //   })
-      // );
-
-      this.obtemRankingObservavel(solicitacao.rankingId).pipe(
-        first()
-      ).subscribe(ranking => {
-        this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).pipe(
-          first()
-        ).subscribe(monstro => {
-          const participante = monstro; // solicitacao.participanteId;
-
-          const agora = new Date(Date.now());
-
-          ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
-
-          const result = this.update(ranking);
-
-          resolve(result);
-        });
-      });
-    });
-  }
-
-  removeParticipante(rankingId: string, participanteId: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      // this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).pipe(
-      //   first(),
-      //   map(monstro => {
-      //     this.obtemRankingObservavel(solicitacao.rankingId).subscribe(ranking => {
-      //       const participante = monstro; // solicitacao.participanteId;
-
-      //       const agora = new Date(Date.now());
-
-      //       ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
-
-      //       const result = this.update(ranking);
-
-      //       resolve(result);
-      //     });
-      //   })
-      // );
-
-      this.obtemRankingObservavel(rankingId).pipe(
-        first()
-      ).subscribe(ranking => {
-        this.monstrosService.obtemMonstroObservavel(participanteId).pipe(
-          first()
-        ).subscribe(monstro => {
-          const participante = monstro; // solicitacao.participanteId;
-
-          const agora = new Date(Date.now());
-
-          ranking.removeParticipante(participante.id);
-
-          const result = this.update(ranking);
-
-          resolve(result);
-        });
-      });
-    });
-  }
-
-  private update(ranking: Ranking): Promise<void> {
+  update(ranking: Ranking): Promise<void> {
     const collection = this.db.collection<RankingDocument>(this.PATH);
 
     const document = collection.doc<RankingDocument>(ranking.id);
@@ -669,7 +554,7 @@ export class RankingsService
     return doc;
   }
 
-  excluiRanking(rankingId: string): Promise<void> {
+  remove(rankingId: string): Promise<void> {
     const collection = this.db.collection<RankingDocument>(this.PATH);
 
     const document = collection.doc<RankingDocument>(rankingId);

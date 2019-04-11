@@ -1,6 +1,6 @@
 import * as moment from 'moment';
-import { TipoDeBalanca } from '../../medidas/medidas.domain-model';
-import { Ranking } from '../rankings.domain-model';
+import { TipoDeBalanca } from '../medidas/medidas.domain-model';
+import { Ranking } from '../rankings/rankings.domain-model';
 
 export class SolicitacaoDeCadastroDeRanking {
   nome: string;
@@ -27,26 +27,10 @@ export class SolicitacaoDeCadastroDeRanking {
   }
 }
 
-export class SolicitacaoDeParticipacaoDeRanking {
-  rankingId: string;
-  participanteId: string;
-  ehAdministrador: boolean;
-
-  static create(rankingId: string): SolicitacaoDeParticipacaoDeRanking {
-    return {
-      rankingId: rankingId,
-      participanteId: null,
-      ehAdministrador: false,
-    };
-  }
-}
-
 export interface ICadastroDeRanking {
   cadastraRanking(solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void>;
 
   atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void>;
-
-  adicionaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void>;
 
   excluiRanking(rankingId: string): Promise<void>;
 }

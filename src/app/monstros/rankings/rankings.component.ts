@@ -1,17 +1,17 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, of, EMPTY } from 'rxjs';
-import { catchError, first, switchMap, map, tap, distinctUntilChanged, shareReplay } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { EMPTY, Observable, of } from 'rxjs';
+import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { LogService } from 'src/app/app-common.services';
 import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { CadastroComponent } from './cadastro/cadastro.component';
-import { RankingViewModel } from './cadastro/cadastro.presentation-model';
+import { RankingsCadastroComponent } from '../rankings-cadastro/rankings-cadastro.component';
+import { RankingViewModel } from '../rankings-cadastro/rankings-cadastro.presentation-model';
 import { Ranking } from './rankings.domain-model';
 import { RankingsService } from './rankings.service';
-import { LogService } from 'src/app/app-common.services';
 
 const columnDefinitions = [
   { showMobile: false, def: 'proprietario' },
@@ -23,7 +23,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'monstros-rankings',
+  selector: 'rankings',
   templateUrl: './rankings.component.html',
   styleUrls: ['./rankings.component.scss']
 })
@@ -119,7 +119,7 @@ export class RankingsComponent implements OnInit {
 
     const config: MatDialogConfig<RankingViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(RankingsCadastroComponent, config);
   }
 
   onEdit(ranking: Ranking): void {
@@ -127,10 +127,10 @@ export class RankingsComponent implements OnInit {
 
     const config: MatDialogConfig<RankingViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(RankingsCadastroComponent, config);
   }
 
   onDelete(ranking: Ranking): void {
-    this.rankingsService.excluiRanking(ranking.id);
+    this.rankingsService.remove(ranking.id);
   }
 }

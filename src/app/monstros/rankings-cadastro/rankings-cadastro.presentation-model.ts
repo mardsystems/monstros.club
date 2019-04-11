@@ -1,6 +1,6 @@
-import { Monstro } from '../../monstros.domain-model';
-import { Ranking } from '../rankings.domain-model';
-import { SolicitacaoDeCadastroDeRanking } from './cadastro.application-model';
+import { Monstro } from '../monstros.domain-model';
+import { Ranking } from '../rankings/rankings.domain-model';
+import { SolicitacaoDeCadastroDeRanking } from './rankings-cadastro.application-model';
 
 export class RankingViewModel extends SolicitacaoDeCadastroDeRanking {
   isEdit: boolean;
