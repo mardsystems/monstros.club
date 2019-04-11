@@ -1,4 +1,4 @@
-import { Aparelho } from '../aparelhos.domain-model';
+import { Aparelho } from '../aparelhos/aparelhos.domain-model';
 
 export class SolicitacaoDeCadastroDeAparelho {
   codigo: string;

@@ -1,5 +1,5 @@
-import { Academia } from '../academias.domain-model';
-import { SolicitacaoDeCadastroDeAcademia } from './cadastro.application-model';
+import { Academia } from '../academias/academias.domain-model';
+import { SolicitacaoDeCadastroDeAcademia } from './cadastro-academias.application-model';
 
 export class CadastroDeAcademiaViewModel extends SolicitacaoDeCadastroDeAcademia {
   isEdit: boolean;

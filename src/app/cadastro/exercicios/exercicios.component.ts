@@ -3,11 +3,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { LogService } from 'src/app/app-common.services';
+import { CadastroExerciciosComponent } from '../cadastro-exercicios/cadastro-exercicios.component';
+import { CadastroDeExercicioViewModel } from '../cadastro-exercicios/cadastro-exercicios.presentation-model';
+import { CadastroExerciciosService } from '../cadastro-exercicios/cadastro-exercicios.service';
 import { Exercicio } from './exercicios.domain-model';
 import { ExerciciosService } from './exercicios.service';
-import { CadastroComponent } from './cadastro/cadastro.component';
-import { CadastroDeExercicioViewModel } from './cadastro/cadastro.presentation-model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },
@@ -18,7 +18,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'cadastro-de-exercicios',
+  selector: 'exercicios',
   templateUrl: './exercicios.component.html',
   styleUrls: ['./exercicios.component.scss']
 })
@@ -36,15 +36,15 @@ export class ExerciciosComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private exerciciosService: ExerciciosService,
-    private log: LogService,
+    private repositorioDeExercicios: ExerciciosService,
+    private cadastroDeExercicios: CadastroExerciciosService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
 
   ngOnInit() {
-    this.exercicios$ = this.exerciciosService.obtemExerciciosObservaveisParaAdministracao();
+    this.exercicios$ = this.repositorioDeExercicios.obtemExerciciosObservaveisParaAdministracao();
 
     this.exercicios$.subscribe(exercicios => {
       this.dataSource = new MatTableDataSource(exercicios);
@@ -72,7 +72,7 @@ export class ExerciciosComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(CadastroExerciciosComponent, config);
   }
 
   onEdit(exercicio: Exercicio): void {
@@ -80,10 +80,10 @@ export class ExerciciosComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(CadastroExerciciosComponent, config);
   }
 
   onDelete(exercicio: Exercicio): void {
-    this.exerciciosService.excluiExercicio(exercicio.id);
+    this.cadastroDeExercicios.excluiExercicio(exercicio.id);
   }
 }

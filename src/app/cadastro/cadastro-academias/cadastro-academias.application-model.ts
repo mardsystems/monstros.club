@@ -1,4 +1,4 @@
-import { Academia } from '../academias.domain-model';
+import { Academia } from '../academias/academias.domain-model';
 
 export class SolicitacaoDeCadastroDeAcademia {
   nome: string;

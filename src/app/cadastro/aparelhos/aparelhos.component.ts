@@ -3,11 +3,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { LogService } from 'src/app/app-common.services';
+import { CadastroAparelhosComponent } from '../cadastro-aparelhos/cadastro-aparelhos.component';
+import { CadastroDeAparelhoViewModel } from '../cadastro-aparelhos/cadastro-aparelhos.presentation-model';
+import { CadastroAparelhosService } from '../cadastro-aparelhos/cadastro-aparelhos.service';
 import { Aparelho } from './aparelhos.domain-model';
 import { AparelhosService } from './aparelhos.service';
-import { CadastroComponent } from './cadastro/cadastro.component';
-import { CadastroDeAparelhoViewModel } from './cadastro/cadastro.presentation-model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },
@@ -18,7 +18,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'cadastro-de-aparelhos',
+  selector: 'aparelhos',
   templateUrl: './aparelhos.component.html',
   styleUrls: ['./aparelhos.component.scss']
 })
@@ -36,15 +36,15 @@ export class AparelhosComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private aparelhosService: AparelhosService,
-    private log: LogService,
+    private repositorioDeAparelhos: AparelhosService,
+    private cadastroDeAparelhos: CadastroAparelhosService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
 
   ngOnInit() {
-    this.aparelhos$ = this.aparelhosService.obtemAparelhosObservaveisParaAdministracao();
+    this.aparelhos$ = this.repositorioDeAparelhos.obtemAparelhosObservaveisParaAdministracao();
 
     this.aparelhos$.subscribe(aparelhos => {
       this.dataSource = new MatTableDataSource(aparelhos);
@@ -72,7 +72,7 @@ export class AparelhosComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeAparelhoViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(CadastroAparelhosComponent, config);
   }
 
   onEdit(aparelho: Aparelho): void {
@@ -80,10 +80,10 @@ export class AparelhosComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeAparelhoViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(CadastroAparelhosComponent, config);
   }
 
   onDelete(aparelho: Aparelho): void {
-    this.aparelhosService.excluiAparelho(aparelho.id);
+    this.cadastroDeAparelhos.excluiAparelho(aparelho.id);
   }
 }

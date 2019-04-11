@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable, combineLatest, of } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-common.services';
-import { Aparelho } from './aparelhos.domain-model';
-import { SolicitacaoDeCadastroDeAparelho } from './cadastro/cadastro.application-model';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import * as _ from 'lodash';
-import { AcademiasService } from '../academias/academias.service';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { Academia } from '../academias/academias.domain-model';
+import { AcademiasService } from '../academias/academias.service';
 import { Exercicio } from '../exercicios/exercicios.domain-model';
 import { ExerciciosService } from '../exercicios/exercicios.service';
+import { Aparelho } from './aparelhos.domain-model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +17,23 @@ export class AparelhosService {
 
   constructor(
     private db: AngularFirestore,
-    private academiasService: AcademiasService,
-    private exerciciosService: ExerciciosService,
-    private log: LogService
+    private repositorioDeAcademias: AcademiasService,
+    private repositorioDeExercicios: ExerciciosService,
   ) { }
+
+  createId(): string {
+    const id = this.db.createId();
+
+    return id;
+  }
+
+  ref(id: string): DocumentReference {
+    const collection = this.db.collection<AparelhoDocument>(this.PATH);
+
+    const document = collection.doc<AparelhoDocument>(id);
+
+    return document.ref;
+  }
 
   obtemAparelhosObservaveisParaAdministracao(): Observable<Aparelho[]> {
     const collection = this.db.collection<AparelhoDocument>(this.PATH, reference => {
@@ -59,7 +69,7 @@ export class AparelhosService {
   }
 
   private mapAparelhoObservavel(value: AparelhoDocument): Observable<Aparelho> {
-    return this.academiasService.obtemAcademiaObservavel(value.academia.id).pipe(
+    return this.repositorioDeAcademias.obtemAcademiaObservavel(value.academia.id).pipe(
       switchMap(academia => {
         let exercicios$: Observable<Exercicio[]>;
 
@@ -67,7 +77,7 @@ export class AparelhosService {
           exercicios$ = of([]);
         } else {
           exercicios$ = combineLatest(
-            value.exercicios.map(exercicioRef => this.exerciciosService.obtemExercicioObservavel(exercicioRef.id))
+            value.exercicios.map(exercicioRef => this.repositorioDeExercicios.obtemExercicioObservavel(exercicioRef.id))
           );
         }
 
@@ -88,49 +98,7 @@ export class AparelhosService {
     );
   }
 
-  cadastraAparelho(solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.academiasService.obtemAcademiaObservavel(solicitacao.academia).pipe(
-        first()
-      ).subscribe(solicitacao_academia => {
-        let exercicios$: Observable<Exercicio[]>;
-
-        if (solicitacao.exercicios.length === 0) {
-          exercicios$ = of([]);
-        } else {
-          exercicios$ = combineLatest(
-            solicitacao.exercicios.map(exercicio =>
-              this.exerciciosService.obtemExercicioObservavel(exercicio).pipe(
-                first()
-              )
-            )
-          ).pipe(
-            first()
-          );
-        }
-
-        exercicios$.pipe(
-          first()
-        ).subscribe(solicitacao_exercicios => {
-          const aparelhoId = this.db.createId();
-
-          const aparelho = new Aparelho(
-            aparelhoId,
-            solicitacao.codigo,
-            solicitacao_academia,
-            solicitacao_exercicios,
-            solicitacao.imagemURL,
-          );
-
-          const result = this.add(aparelho);
-
-          resolve(result);
-        });
-      });
-    });
-  }
-
-  private add(aparelho: Aparelho): Promise<void> {
+  add(aparelho: Aparelho): Promise<void> {
     const collection = this.db.collection<AparelhoDocument>(this.PATH);
 
     const document = collection.doc<AparelhoDocument>(aparelho.id);
@@ -142,51 +110,7 @@ export class AparelhosService {
     return result;
   }
 
-  atualizaAparelho(aparelhoId: string, solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.academiasService.obtemAcademiaObservavel(solicitacao.academia).pipe(
-        first()
-      ).subscribe(solicitacao_academia => {
-        let exercicios$: Observable<Exercicio[]>;
-
-        if (solicitacao.exercicios.length === 0) {
-          exercicios$ = of([]);
-        } else {
-          exercicios$ = combineLatest(
-            solicitacao.exercicios.map(exercicio =>
-              this.exerciciosService.obtemExercicioObservavel(exercicio).pipe(
-                first()
-              )
-            )
-          ).pipe(
-            first()
-          );
-        }
-
-        exercicios$.pipe(
-          first()
-        ).subscribe(solicitacao_exercicios => {
-          this.obtemAparelhoObservavel(aparelhoId).pipe(
-            first()
-          ).subscribe(aparelho => {
-            aparelho.alteraCodigo(solicitacao.codigo);
-
-            aparelho.corrigeAcademia(solicitacao_academia);
-
-            aparelho.alteraExercicios(solicitacao_exercicios);
-
-            aparelho.alteraImagemURL(solicitacao.imagemURL);
-
-            const result = this.update(aparelho);
-
-            resolve(result);
-          });
-        });
-      });
-    });
-  }
-
-  private update(aparelho: Aparelho): Promise<void> {
+  update(aparelho: Aparelho): Promise<void> {
     const collection = this.db.collection<AparelhoDocument>(this.PATH);
 
     const document = collection.doc<AparelhoDocument>(aparelho.id);
@@ -199,14 +123,14 @@ export class AparelhosService {
   }
 
   private mapTo(aparelho: Aparelho): AparelhoDocument {
-    const academiaRef = this.academiasService.ref(aparelho.academia.id);
+    const academiaRef = this.repositorioDeAcademias.ref(aparelho.academia.id);
 
     const doc: AparelhoDocument = {
       id: aparelho.id,
       codigo: aparelho.codigo,
       academia: academiaRef,
       exercicios: aparelho.exercicios.map(exercicio => {
-        const exercicioRef = this.exerciciosService.ref(exercicio.id);
+        const exercicioRef = this.repositorioDeExercicios.ref(exercicio.id);
 
         return exercicioRef;
       }),
@@ -216,7 +140,7 @@ export class AparelhosService {
     return doc;
   }
 
-  excluiAparelho(aparelhoId: string): Promise<void> {
+  remove(aparelhoId: string): Promise<void> {
     const collection = this.db.collection<AparelhoDocument>(this.PATH);
 
     const document = collection.doc<AparelhoDocument>(aparelhoId);

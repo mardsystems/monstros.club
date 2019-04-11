@@ -1,5 +1,5 @@
-import { Exercicio } from '../exercicios.domain-model';
-import { Musculatura } from '../exercicios.domain-model';
+import { Exercicio } from '../exercicios/exercicios.domain-model';
+import { Musculatura } from '../exercicios/exercicios.domain-model';
 
 export class SolicitacaoDeCadastroDeExercicio {
   codigo: string;

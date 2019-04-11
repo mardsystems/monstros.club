@@ -1,15 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { AcademiasService } from '../academias.service';
-import { CadastroDeAcademiaViewModel } from './cadastro.presentation-model';
+import { CadastroDeAcademiaViewModel } from './cadastro-academias.presentation-model';
+import { CadastroAcademiasService } from './cadastro-academias.service';
 
 @Component({
-  selector: 'cadastro-de-academia',
-  templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss']
+  selector: 'cadastro-academias',
+  templateUrl: './cadastro-academias.component.html',
+  styleUrls: ['./cadastro-academias.component.scss']
 })
-export class CadastroComponent implements OnInit {
+export class CadastroAcademiasComponent implements OnInit {
   dialogTitle = 'Nova Academia';
   cadastroForm = this.formBuilder.group({
     nome: [this.model.nome],
@@ -19,8 +19,8 @@ export class CadastroComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeAcademiaViewModel,
-    private dialogRef: MatDialogRef<CadastroComponent>,
-    private academiasService: AcademiasService,
+    private dialogRef: MatDialogRef<CadastroAcademiasComponent>,
+    private cadastroDeAcademias: CadastroAcademiasService,
     private formBuilder: FormBuilder,
   ) {
 
@@ -39,8 +39,8 @@ export class CadastroComponent implements OnInit {
 
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.academiasService.atualizaAcademia(this.model.id, this.model)
-        : this.academiasService.cadastraAcademia(this.model);
+        ? this.cadastroDeAcademias.atualizaAcademia(this.model.id, this.model)
+        : this.cadastroDeAcademias.cadastraAcademia(this.model);
 
     operation.then(() => {
       this.dialogRef.close();

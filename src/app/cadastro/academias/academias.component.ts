@@ -3,11 +3,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { LogService } from 'src/app/app-common.services';
+import { CadastroAcademiasComponent } from '../cadastro-academias/cadastro-academias.component';
+import { CadastroDeAcademiaViewModel } from '../cadastro-academias/cadastro-academias.presentation-model';
+import { CadastroAcademiasService } from '../cadastro-academias/cadastro-academias.service';
 import { Academia } from './academias.domain-model';
 import { AcademiasService } from './academias.service';
-import { CadastroComponent } from './cadastro/cadastro.component';
-import { CadastroDeAcademiaViewModel } from './cadastro/cadastro.presentation-model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'logo' },
@@ -16,7 +16,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'cadastro-de-academias',
+  selector: 'academias',
   templateUrl: './academias.component.html',
   styleUrls: ['./academias.component.scss']
 })
@@ -34,15 +34,15 @@ export class AcademiasComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private academiasService: AcademiasService,
-    private log: LogService,
+    private repositorioDeAcademias: AcademiasService,
+    private cadastroDeAcademias: CadastroAcademiasService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
 
   ngOnInit() {
-    this.academias$ = this.academiasService.obtemAcademiasObservaveisParaAdministracao();
+    this.academias$ = this.repositorioDeAcademias.obtemAcademiasObservaveisParaAdministracao();
 
     this.academias$.subscribe(academias => {
       this.dataSource = new MatTableDataSource(academias);
@@ -70,7 +70,7 @@ export class AcademiasComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeAcademiaViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(CadastroAcademiasComponent, config);
   }
 
   onEdit(academia: Academia): void {
@@ -78,10 +78,10 @@ export class AcademiasComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeAcademiaViewModel> = { data: model };
 
-    this.dialog.open(CadastroComponent, config);
+    this.dialog.open(CadastroAcademiasComponent, config);
   }
 
   onDelete(academia: Academia): void {
-    this.academiasService.excluiAcademia(academia.id);
+    this.cadastroDeAcademias.excluiAcademia(academia.id);
   }
 }

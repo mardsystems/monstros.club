@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
-import { LogService } from 'src/app/app-common.services';
+import { map } from 'rxjs/operators';
 import { Academia } from './academias.domain-model';
-import { SolicitacaoDeCadastroDeAcademia } from './cadastro/cadastro.application-model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +12,13 @@ export class AcademiasService {
 
   constructor(
     private db: AngularFirestore,
-    private log: LogService
   ) { }
+
+  createId(): string {
+    const id = this.db.createId();
+
+    return id;
+  }
 
   ref(id: string): DocumentReference {
     const collection = this.db.collection<AcademiaDocument>(this.PATH);
@@ -69,23 +72,7 @@ export class AcademiasService {
     );
   }
 
-  cadastraAcademia(solicitacao: SolicitacaoDeCadastroDeAcademia): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const academiaId = this.db.createId();
-
-      const academia = new Academia(
-        academiaId,
-        solicitacao.nome,
-        solicitacao.logoURL,
-      );
-
-      const result = this.add(academia);
-
-      resolve(result);
-    });
-  }
-
-  private add(academia: Academia): Promise<void> {
+  add(academia: Academia): Promise<void> {
     const collection = this.db.collection<AcademiaDocument>(this.PATH);
 
     const document = collection.doc<AcademiaDocument>(academia.id);
@@ -97,23 +84,7 @@ export class AcademiasService {
     return result;
   }
 
-  atualizaAcademia(academiaId: string, solicitacao: SolicitacaoDeCadastroDeAcademia): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.obtemAcademiaObservavel(academiaId).pipe(
-        first()
-      ).subscribe(academia => {
-        academia.defineNome(solicitacao.nome);
-
-        academia.definelogoURL(solicitacao.logoURL);
-
-        const result = this.update(academia);
-
-        resolve(result);
-      });
-    });
-  }
-
-  private update(academia: Academia): Promise<void> {
+  update(academia: Academia): Promise<void> {
     const collection = this.db.collection<AcademiaDocument>(this.PATH);
 
     const document = collection.doc<AcademiaDocument>(academia.id);
@@ -135,7 +106,7 @@ export class AcademiasService {
     return doc;
   }
 
-  excluiAcademia(academiaId: string): Promise<void> {
+  remove(academiaId: string): Promise<void> {
     const collection = this.db.collection<AcademiaDocument>(this.PATH);
 
     const document = collection.doc<AcademiaDocument>(academiaId);

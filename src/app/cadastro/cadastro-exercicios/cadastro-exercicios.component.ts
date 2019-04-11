@@ -1,15 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ExerciciosService } from '../exercicios.service';
-import { CadastroDeExercicioViewModel } from './cadastro.presentation-model';
+import { CadastroDeExercicioViewModel } from './cadastro-exercicios.presentation-model';
+import { CadastroExerciciosService } from './cadastro-exercicios.service';
 
 @Component({
-  selector: 'cadastro-de-exercicio',
-  templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss']
+  selector: 'cadastro-exercicios',
+  templateUrl: './cadastro-exercicios.component.html',
+  styleUrls: ['./cadastro-exercicios.component.scss']
 })
-export class CadastroComponent implements OnInit {
+export class CadastroExerciciosComponent implements OnInit {
   dialogTitle = 'Novo Exercício';
   cadastroForm = this.formBuilder.group({
     codigo: [this.model.codigo],
@@ -21,8 +21,8 @@ export class CadastroComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeExercicioViewModel,
-    private dialogRef: MatDialogRef<CadastroComponent>,
-    private exerciciosService: ExerciciosService,
+    private dialogRef: MatDialogRef<CadastroExerciciosComponent>,
+    private repositorioDeExercicios: CadastroExerciciosService,
     private formBuilder: FormBuilder,
   ) {
 
@@ -45,8 +45,8 @@ export class CadastroComponent implements OnInit {
 
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.exerciciosService.atualizaExercicio(this.model.id, this.model)
-        : this.exerciciosService.cadastraExercicio(this.model);
+        ? this.repositorioDeExercicios.atualizaExercicio(this.model.id, this.model)
+        : this.repositorioDeExercicios.cadastraExercicio(this.model);
 
     operation.then(() => {
       this.dialogRef.close();

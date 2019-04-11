@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
-import { LogService } from 'src/app/app-common.services';
-import { SolicitacaoDeCadastroDeExercicio } from './cadastro/cadastro.application-model';
+import { map } from 'rxjs/operators';
 import { Exercicio, Musculatura } from './exercicios.domain-model';
 
 @Injectable({
@@ -14,8 +12,13 @@ export class ExerciciosService {
 
   constructor(
     private db: AngularFirestore,
-    private log: LogService
   ) { }
+
+  createId(): string {
+    const id = this.db.createId();
+
+    return id;
+  }
 
   ref(id: string): DocumentReference {
     const collection = this.db.collection<ExercicioDocument>(this.PATH);
@@ -71,25 +74,7 @@ export class ExerciciosService {
     );
   }
 
-  cadastraExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const exercicioId = this.db.createId();
-
-      const exercicio = new Exercicio(
-        exercicioId,
-        solicitacao.codigo,
-        solicitacao.nome,
-        solicitacao.musculatura,
-        solicitacao.imagemURL,
-      );
-
-      const result = this.add(exercicio);
-
-      resolve(result);
-    });
-  }
-
-  private add(exercicio: Exercicio): Promise<void> {
+  add(exercicio: Exercicio): Promise<void> {
     const collection = this.db.collection<ExercicioDocument>(this.PATH);
 
     const document = collection.doc<ExercicioDocument>(exercicio.id);
@@ -101,27 +86,7 @@ export class ExerciciosService {
     return result;
   }
 
-  atualizaExercicio(exercicioId: string, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.obtemExercicioObservavel(exercicioId).pipe(
-        first()
-      ).subscribe(exercicio => {
-        exercicio.ajustaCodigo(solicitacao.codigo);
-
-        exercicio.corrigeNome(solicitacao.nome);
-
-        exercicio.corrigeMusculatura(solicitacao.musculatura);
-
-        exercicio.alteraImagemURL(solicitacao.imagemURL);
-
-        const result = this.update(exercicio);
-
-        resolve(result);
-      });
-    });
-  }
-
-  private update(exercicio: Exercicio): Promise<void> {
+  update(exercicio: Exercicio): Promise<void> {
     const collection = this.db.collection<ExercicioDocument>(this.PATH);
 
     const document = collection.doc<ExercicioDocument>(exercicio.id);
@@ -145,7 +110,7 @@ export class ExerciciosService {
     return doc;
   }
 
-  excluiExercicio(exercicioId: string): Promise<void> {
+  remove(exercicioId: string): Promise<void> {
     const collection = this.db.collection<ExercicioDocument>(this.PATH);
 
     const document = collection.doc<ExercicioDocument>(exercicioId);
