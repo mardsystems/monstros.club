@@ -23,7 +23,7 @@ export class RankingsParticipacaoComponent implements OnInit {
 
   onSave(): void {
     const operation: Promise<void> =
-      this.participacaoDeRankings.adicionaParticipante(this.model);
+      this.participacaoDeRankings.convidaParticipante(this.model);
 
     operation.then(() => {
       this.dialogRef.close();

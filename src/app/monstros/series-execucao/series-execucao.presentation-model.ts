@@ -11,7 +11,7 @@ export class ExecucaoDeSerieViewModel extends SolicitacaoDeExecucaoDeSerie {
   feitaNa: Academia;
 
   static toViewModel(monstro: Monstro, serie: Serie): ExecucaoDeSerieViewModel {
-    const solicitacao = SolicitacaoDeExecucaoDeSerie.create(monstro.id);
+    const solicitacao = SolicitacaoDeExecucaoDeSerie.create(monstro.id, serie.id);
 
     return {
       isEdit: false,

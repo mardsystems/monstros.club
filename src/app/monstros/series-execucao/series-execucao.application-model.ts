@@ -8,10 +8,10 @@ export class SolicitacaoDeExecucaoDeSerie {
   numero: number;
   feitaNaId: string;
 
-  static create(monstroId: string): SolicitacaoDeExecucaoDeSerie {
+  static create(monstroId: string, serieId: string): SolicitacaoDeExecucaoDeSerie {
     return {
       monstroId: monstroId,
-      serieId: monstroId,
+      serieId: serieId,
       dia: moment(new Date(Date.now())),
       numero: null,
       feitaNaId: null,

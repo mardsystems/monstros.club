@@ -17,13 +17,13 @@ import { Participacao, Ranking } from './rankings.domain-model';
   providedIn: 'root'
 })
 export class RankingsService {
-  PATH = '/rankings';
-  PATH_PARTICIPACOES = this.PATH + '-participacoes';
+  private METANAME = 'rankings';
+  private METANAME_PARTICIPACOES = 'participacoes';
 
   constructor(
     private db: AngularFirestore,
-    private monstrosService: MonstrosService,
-    private medidasService: MedidasService,
+    private repositorioDeMonstros: MonstrosService,
+    private repositorioDeMedidas: MedidasService,
     private log: LogService
   ) { }
 
@@ -33,8 +33,16 @@ export class RankingsService {
     return id;
   }
 
+  path(): string {
+    const path = `/${this.METANAME}`;
+
+    return path;
+  }
+
   ref(id: string): DocumentReference {
-    const collection = this.db.collection<RankingDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<RankingDocument>(path);
 
     const document = collection.doc<RankingDocument>(id);
 
@@ -83,9 +91,11 @@ export class RankingsService {
   obtemRankingsObservaveisParaExibicaoPorProprietario(proprietario: Monstro): Observable<Ranking[]> {
     this.log.debug('obtemRankingsObservaveisParaExibicaoPorProprietario');
 
-    const monstroRef = this.monstrosService.ref(proprietario.id);
+    const monstroRef = this.repositorioDeMonstros.ref(proprietario.id);
 
-    const collection = this.db.collection<RankingDocument>(this.PATH, reference => {
+    const path = this.path();
+
+    const collection = this.db.collection<RankingDocument>(path, reference => {
       return reference
         .where('monstroRef', '==', monstroRef);
       // .orderBy('data', 'desc');
@@ -131,7 +141,7 @@ export class RankingsService {
 
   private mapParticipacoesObservaveis(value: RankingDocument): Observable<Participacao[]> {
     const participacoes$Array = value.participantes.map(participacaoValue => {
-      const monstro$ = this.monstrosService.obtemMonstroObservavel(participacaoValue.participanteId.id).pipe(
+      const monstro$ = this.repositorioDeMonstros.obtemMonstroObservavel(participacaoValue.participanteId.id).pipe(
         // first(),
         // tap((value2) => this.log.debug('mapParticipacoesObservaveis', value2)),
         map(monstro => {
@@ -210,7 +220,9 @@ export class RankingsService {
   obtemRankingObservavel(id: string): Observable<Ranking> {
     this.log.debug('obtemRankingObservavel');
 
-    const collection = this.db.collection<RankingDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<RankingDocument>(path);
 
     const document = collection.doc<RankingDocument>(id);
 
@@ -218,7 +230,7 @@ export class RankingsService {
       // first(),
       tap((value) => this.log.debug('obtemRankingObservavel: valueChanges: ')),
       switchMap(value => {
-        const rankingComProprietario$ = this.monstrosService.obtemMonstroObservavel(value.monstroRef.id).pipe(
+        const rankingComProprietario$ = this.repositorioDeMonstros.obtemMonstroObservavel(value.monstroRef.id).pipe(
           // first(),
           switchMap(monstro => this.mapRankingObservavel(monstro, value)),
           catchError((error, source$) => {
@@ -255,21 +267,24 @@ export class RankingsService {
     const participantes = ranking.participantes.map(participacao => participacao.participante);
 
     const melhoresMedidasPorParticipante$Array = participantes.map(participante => {
-      const ultimaMedida$ = this.medidasService.obtemUltimaMedidaObservavel(participante).pipe(
+      const ultimaMedida$ = this.repositorioDeMedidas.obtemUltimaMedidaObservavel(participante).pipe(
         map(ultimaMedida => PosicaoDeMedida.fromMedida(ultimaMedida, true))
       );
 
-      const menorMedidaDeGordura$ = this.medidasService.obtemMenorMedidaDeGorduraObservavel(participante).pipe(
+      const menorMedidaDeGordura$ = this.repositorioDeMedidas.obtemMenorMedidaDeGorduraObservavel(participante).pipe(
         map(menorMedidaDeGordura => PosicaoDeMedida.fromMedida(menorMedidaDeGordura, false, true))
       );
 
-      const maiorMedidaDeMusculo$ = this.medidasService.obtemMaiorMedidaDeMusculoObservavel(participante).pipe(
+      const maiorMedidaDeMusculo$ = this.repositorioDeMedidas.obtemMaiorMedidaDeMusculoObservavel(participante).pipe(
         map(maiorMedidaDeMusculo => PosicaoDeMedida.fromMedida(maiorMedidaDeMusculo, false, false, true))
       );
 
-      const menorMedidaDeIndiceDeMassaCorporal$ = this.medidasService.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(participante).pipe(
-        map(menorMedidaDeIndiceDeMassaCorporal => PosicaoDeMedida.fromMedida(menorMedidaDeIndiceDeMassaCorporal, false, false, false, true))
-      );
+      const menorMedidaDeIndiceDeMassaCorporal$ =
+        this.repositorioDeMedidas.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(participante).pipe(
+          map(menorMedidaDeIndiceDeMassaCorporal => {
+            return PosicaoDeMedida.fromMedida(menorMedidaDeIndiceDeMassaCorporal, false, false, false, true);
+          })
+        );
 
       //
 
@@ -380,13 +395,13 @@ export class RankingsService {
     const participantes = ranking.participantes.map(participacao => participacao.participante);
 
     const melhoresMedidasPorParticipante$Array = participantes.map(participante => {
-      const ultimaMedida$ = this.medidasService.obtemUltimaMedidaObservavel(participante);
+      const ultimaMedida$ = this.repositorioDeMedidas.obtemUltimaMedidaObservavel(participante);
 
-      const menorMedidaDeGordura$ = this.medidasService.obtemMenorMedidaDeGorduraObservavel(participante);
+      const menorMedidaDeGordura$ = this.repositorioDeMedidas.obtemMenorMedidaDeGorduraObservavel(participante);
 
-      const maiorMedidaDeMusculo$ = this.medidasService.obtemMaiorMedidaDeMusculoObservavel(participante);
+      const maiorMedidaDeMusculo$ = this.repositorioDeMedidas.obtemMaiorMedidaDeMusculoObservavel(participante);
 
-      const menorMedidaDeIndiceDeMassaCorporal$ = this.medidasService.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(participante);
+      const menorMedidaDeIndiceDeMassaCorporal$ = this.repositorioDeMedidas.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(participante);
 
       //
 
@@ -467,7 +482,9 @@ export class RankingsService {
   importaRankings() {
     const idAntigo = 'monstros/FCmLKJPLf4ejTazweTCP';
 
-    const collection = this.db.collection<RankingDocument>(this.PATH, reference =>
+    const path = this.path();
+
+    const collection = this.db.collection<RankingDocument>(path, reference =>
       reference
         .where('monstroId', '==', idAntigo)
       // .orderBy('data', 'desc')
@@ -485,7 +502,9 @@ export class RankingsService {
   }
 
   add(ranking: Ranking): Promise<void> {
-    const collection = this.db.collection<RankingDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<RankingDocument>(path);
 
     const document = collection.doc<RankingDocument>(ranking.id);
 
@@ -508,7 +527,9 @@ export class RankingsService {
   }
 
   update(ranking: Ranking): Promise<void> {
-    const collection = this.db.collection<RankingDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<RankingDocument>(path);
 
     const document = collection.doc<RankingDocument>(ranking.id);
 
@@ -528,7 +549,7 @@ export class RankingsService {
   }
 
   private mapTo(ranking: Ranking): RankingDocument {
-    const monstroRef = this.monstrosService.ref(ranking.proprietarioId);
+    const monstroRef = this.repositorioDeMonstros.ref(ranking.proprietarioId);
 
     const doc: RankingDocument = {
       id: ranking.id,
@@ -539,7 +560,7 @@ export class RankingsService {
       dataDeCriacao: firebase.firestore.Timestamp.fromDate(ranking.dataDeCriacao),
       feitoCom: ranking.feitoCom,
       participantes: ranking.participantes.map(participacao => {
-        const participanteRef = this.monstrosService.ref(participacao.participante.id);
+        const participanteRef = this.repositorioDeMonstros.ref(participacao.participante.id);
 
         const participacaoDocument: ParticipacaoDocument = {
           participanteId: participanteRef,
@@ -555,7 +576,9 @@ export class RankingsService {
   }
 
   remove(rankingId: string): Promise<void> {
-    const collection = this.db.collection<RankingDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<RankingDocument>(path);
 
     const document = collection.doc<RankingDocument>(rankingId);
 
@@ -579,9 +602,11 @@ export class RankingsService {
   // Rankings - Participações.
 
   obtemRankingParticipacoes(participante: Monstro): Observable<RankingParticipacaoDocument[]> {
-    const monstroRef = this.monstrosService.ref(participante.id);
+    const monstroRef = this.repositorioDeMonstros.ref(participante.id);
 
-    const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
+    const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
+
+    const collection = this.db.collection<RankingParticipacaoDocument>(path, reference => {
       return reference
         .where('participanteId', '==', monstroRef);
       // .where('ehProprietario', '==', false);
@@ -600,7 +625,7 @@ export class RankingsService {
       const participanteResults = ranking.participantes.map(participacao => {
         const rankingParticipacaoId = this.db.createId();
 
-        const participanteRef = this.monstrosService.ref(participacao.participante.id);
+        const participanteRef = this.repositorioDeMonstros.ref(participacao.participante.id);
 
         // const ehProprietario = (participacao.participante === ranking.proprietario);
 
@@ -628,7 +653,9 @@ export class RankingsService {
     return new Promise<void>((resolve, reject) => {
       const rankingRef = this.ref(ranking.id);
 
-      const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
+      const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
+
+      const collection = this.db.collection<RankingParticipacaoDocument>(path, reference => {
         return reference
           .where('rankingId', '==', rankingRef);
       });
@@ -641,7 +668,7 @@ export class RankingsService {
         const participantesAindaNaoCadastradosResult = participantesAindaNaoCadastrados.map(participanteAindaNaoCadastrado => {
           const rankingParticipacaoId = this.db.createId();
 
-          const participanteRef = this.monstrosService.ref(participanteAindaNaoCadastrado.participante.id);
+          const participanteRef = this.repositorioDeMonstros.ref(participanteAindaNaoCadastrado.participante.id);
 
           // const ehProprietario = (participanteAindaNaoCadastrado.participante === ranking.proprietario);
 
@@ -679,7 +706,9 @@ export class RankingsService {
   }
 
   addRankingParticipacao(rankingParticipacaoDoc: RankingParticipacaoDocument): Promise<void> {
-    const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES);
+    const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
+
+    const collection = this.db.collection<RankingParticipacaoDocument>(path);
 
     const document = collection.doc<RankingParticipacaoDocument>(rankingParticipacaoDoc.id);
 
@@ -692,7 +721,9 @@ export class RankingsService {
     return new Promise<void>((resolve, reject) => {
       const rankingRef = this.ref(rankingId);
 
-      const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
+      const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
+
+      const collection = this.db.collection<RankingParticipacaoDocument>(path, reference => {
         return reference
           .where('rankingId', '==', rankingRef);
       });
@@ -719,9 +750,11 @@ export class RankingsService {
 
   excluiRankingsParticicacoesPorParticipante(participanteId: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const monstroRef = this.monstrosService.ref(participanteId);
+      const monstroRef = this.repositorioDeMonstros.ref(participanteId);
 
-      const collection = this.db.collection<RankingParticipacaoDocument>(this.PATH_PARTICIPACOES, reference => {
+      const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
+
+      const collection = this.db.collection<RankingParticipacaoDocument>(path, reference => {
         return reference
           .where('participanteId', '==', monstroRef);
       });

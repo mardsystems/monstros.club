@@ -8,7 +8,7 @@ import { Exercicio, Musculatura } from './exercicios.domain-model';
   providedIn: 'root'
 })
 export class ExerciciosService {
-  PATH = '/exercicios';
+  PATH = '/exercicios'; // TODO.
 
   constructor(
     private db: AngularFirestore,

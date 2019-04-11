@@ -12,11 +12,11 @@ import { Medida, TipoDeBalanca } from './medidas.domain-model';
   providedIn: 'root'
 })
 export class MedidasService {
-  PATH = '/medidas';
+  METANAME = 'medidas';
 
   constructor(
     private db: AngularFirestore,
-    private monstrosService: MonstrosService,
+    private repositorioDeMonstros: MonstrosService,
     private log: LogService
   ) { }
 
@@ -26,8 +26,16 @@ export class MedidasService {
     return id;
   }
 
+  path(): string {
+    const path = `/${this.METANAME}`;
+
+    return path;
+  }
+
   ref(id: string): DocumentReference {
-    const collection = this.db.collection<MedidaDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<MedidaDocument>(path);
 
     const document = collection.doc<MedidaDocument>(id);
 
@@ -35,7 +43,9 @@ export class MedidasService {
   }
 
   obtemMedidasObservaveisParaAdministracao(): Observable<Medida[]> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
+    const path = this.path();
+
+    const collection = this.db.collection<MedidaDocument>(path, reference => {
       return reference
         .orderBy('data', 'desc');
     });
@@ -45,9 +55,10 @@ export class MedidasService {
         const arrayDeMedidasObservaveis = values
           .filter(value => value.monstroId !== 'monstros/OJUFB66yLBwIOE2hk8hs')
           .map((value) => {
-            const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
 
-            const medidaComMonstro$ = this.monstrosService.obtemMonstroObservavel(monstroId).pipe(
+            const monstroId = value.monstroId.substring(this.repositorioDeMonstros.path().length, value.monstroId.length);
+
+            const medidaComMonstro$ = this.repositorioDeMonstros.obtemMonstroObservavel(monstroId).pipe(
               // first(),
               map(monstro => this.mapMedida(value, monstro))
             );
@@ -67,7 +78,9 @@ export class MedidasService {
   }
 
   obtemMedidasObservaveisParaExibicao(monstro: Monstro): Observable<Medida[]> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH, reference => {
+    const path = this.path();
+
+    const collection = this.db.collection<MedidaDocument>(path, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('data', 'desc');
@@ -85,7 +98,9 @@ export class MedidasService {
   }
 
   obtemUltimaMedidaObservavel(monstro: Monstro): Observable<Medida> {
-    const collection1 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+    const path = this.path();
+
+    const collection1 = this.db.collection<MedidaDocument>(path, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('data', 'desc')
@@ -107,7 +122,9 @@ export class MedidasService {
   }
 
   obtemMenorMedidaDeGorduraObservavel(monstro: Monstro): Observable<Medida> {
-    const collection2 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+    const path = this.path();
+
+    const collection2 = this.db.collection<MedidaDocument>(path, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('gordura', 'asc')
@@ -130,7 +147,9 @@ export class MedidasService {
   }
 
   obtemMaiorMedidaDeMusculoObservavel(monstro: Monstro): Observable<Medida> {
-    const collection3 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+    const path = this.path();
+
+    const collection3 = this.db.collection<MedidaDocument>(path, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('musculo', 'desc')
@@ -153,7 +172,9 @@ export class MedidasService {
   }
 
   obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(monstro: Monstro): Observable<Medida> {
-    const collection4 = this.db.collection<MedidaDocument>(this.PATH, reference => {
+    const path = this.path();
+
+    const collection4 = this.db.collection<MedidaDocument>(path, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('indiceDeMassaCorporal', 'asc')
@@ -176,7 +197,9 @@ export class MedidasService {
   }
 
   obtemMedidaObservavel(id: string): Observable<Medida> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<MedidaDocument>(path);
 
     const document = collection.doc<MedidaDocument>(id);
 
@@ -192,7 +215,7 @@ export class MedidasService {
   }
 
   private mapMedida(value: MedidaDocument, monstro: Monstro): Medida {
-    const monstroId = value.monstroId.substring(this.monstrosService.PATH.length, value.monstroId.length);
+    const monstroId = value.monstroId.substring(this.repositorioDeMonstros.path().length, value.monstroId.length);
 
     return new Medida(
       value.id,
@@ -213,7 +236,9 @@ export class MedidasService {
   importaMedidas() {
     const idAntigo = 'monstros/FCmLKJPLf4ejTazweTCP';
 
-    const collection = this.db.collection<MedidaDocument>(this.PATH, reference =>
+    const path = this.path();
+
+    const collection = this.db.collection<MedidaDocument>(path, reference =>
       reference
         .where('monstroId', '==', idAntigo)
         .orderBy('data', 'desc')
@@ -231,7 +256,9 @@ export class MedidasService {
   }
 
   add(medida: Medida): Promise<void> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<MedidaDocument>(path);
 
     const document = collection.doc<MedidaDocument>(medida.id);
 
@@ -243,7 +270,9 @@ export class MedidasService {
   }
 
   update(medida: Medida): Promise<void> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<MedidaDocument>(path);
 
     const document = collection.doc<MedidaDocument>(medida.id);
 
@@ -274,7 +303,9 @@ export class MedidasService {
   }
 
   remove(medidaId: string): Promise<void> {
-    const collection = this.db.collection<MedidaDocument>(this.PATH);
+    const path = this.path();
+
+    const collection = this.db.collection<MedidaDocument>(path);
 
     const document = collection.doc<MedidaDocument>(medidaId);
 

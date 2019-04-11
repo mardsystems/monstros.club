@@ -7,13 +7,13 @@ import { Academia } from '../academias/academias.domain-model';
 import { AcademiasService } from '../academias/academias.service';
 import { Exercicio } from '../exercicios/exercicios.domain-model';
 import { ExerciciosService } from '../exercicios/exercicios.service';
-import { Aparelho } from './aparelhos.domain-model';
+import { Aparelho, IRepositorioDeAparelhos } from './aparelhos.domain-model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AparelhosService {
-  PATH = '/aparelhos';
+export class AparelhosService implements IRepositorioDeAparelhos {
+  PATH = '/aparelhos'; // TODO.
 
   constructor(
     private db: AngularFirestore,
@@ -33,6 +33,30 @@ export class AparelhosService {
     const document = collection.doc<AparelhoDocument>(id);
 
     return document.ref;
+  }
+
+  localiza(exercicio: Exercicio, academia: Academia): Observable<Aparelho> {
+    const academiaRef = this.repositorioDeAcademias.ref(academia.id);
+
+    const exercicioRef = this.repositorioDeExercicios.ref(exercicio.id);
+
+    const collection = this.db.collection<AparelhoDocument>(this.PATH, reference => {
+      return reference
+        .where('academia', '==', academiaRef)
+        .where('exercicios', 'array-contains', exercicioRef)
+    });
+
+    const aparelho$ = collection.valueChanges().pipe(
+      switchMap(values => {
+        return this.mapAparelhoObservavel(values[0]);
+
+        // return values.map((value, index) => {
+
+        // });
+      })
+    );
+
+    return aparelho$;
   }
 
   obtemAparelhosObservaveisParaAdministracao(): Observable<Aparelho[]> {
@@ -154,7 +178,7 @@ export class AparelhosService {
 interface AparelhoDocument {
   id: string;
   codigo: string;
-  academia: firebase.firestore.DocumentReference;
+  academia: firebase.firestore.DocumentReference; // TODO: corrigir nome.
   exercicios: firebase.firestore.DocumentReference[];
   imagemURL: string;
 }

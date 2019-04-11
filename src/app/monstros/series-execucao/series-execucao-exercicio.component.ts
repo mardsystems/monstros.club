@@ -56,13 +56,13 @@ export class SeriesExecucaoExercicioComponent implements OnInit {
 
     this.model.nota = this.cadastroForm.value.nota;
 
-    const operation: Promise<void> =
-      (this.model.isEdit)
-        ? this.execucaoDeSeries.atualizaExercicio(this.model.id, this.model)
-        : this.execucaoDeSeries.adicionaExercicio(this.model);
+    // const operation: Promise<void> =
+    //   (this.model.isEdit)
+    //     ? this.execucaoDeSeries.atualizaExercicio(this.model.id, this.model)
+    //     : this.execucaoDeSeries.iniciaExecucao(this.model);
 
-    operation.then(() => {
-      this.dialogRef.close();
-    });
+    // operation.then(() => {
+    //   this.dialogRef.close();
+    // });
   }
 }

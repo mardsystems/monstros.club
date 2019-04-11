@@ -39,6 +39,6 @@ export class SeriesExecucoesComponent {
   }
 
   onDelete(serieDeExercicio: SerieDeExercicio): void {
-    this.execucaoDeSeries.removeExercicio(this.monstroId, this.serie.id, serieDeExercicio.id);
+    // this.execucaoDeSeries.removeExercicio(this.monstroId, this.serie.id, serieDeExercicio.id);
   }
 }

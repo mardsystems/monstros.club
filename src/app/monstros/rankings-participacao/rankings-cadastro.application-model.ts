@@ -14,5 +14,5 @@ export class SolicitacaoDeParticipacaoDeRanking {
 }
 
 export interface IParticipacaoDeRanking {
-  adicionaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void>;
+  convidaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void>;
 }

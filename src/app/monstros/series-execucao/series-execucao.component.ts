@@ -48,13 +48,10 @@ export class SeriesExecucaoComponent implements OnInit {
 
     this.model.feitaNaId = this.cadastroForm.value.feitaNaId;
 
-    // const operation: Promise<void> =
-    //   (this.model.isEdit)
-    //     ? this.execucaoDeSeries.atualizaSerie(this.model.id, this.model)
-    //     : this.execucaoDeSeries.cadastraSerie(this.model);
+    const operation: Promise<void> = this.execucaoDeSeries.iniciaExecucao(this.model);
 
-    // operation.then(() => {
-    //   this.dialogRef.close();
-    // });
+    operation.then(() => {
+      this.dialogRef.close();
+    });
   }
 }

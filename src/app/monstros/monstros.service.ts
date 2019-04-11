@@ -14,7 +14,8 @@ import { Genero, Monstro } from './monstros.domain-model';
 })
 export class MonstrosService {
   monstroLogado$: Observable<Monstro>;
-  PATH = '/monstros';
+
+  private METANAME = 'monstros';
 
   constructor(
     private db: AngularFirestore,
@@ -91,8 +92,20 @@ export class MonstrosService {
     );
   }
 
+  createId(): string {
+    const id = this.db.createId();
+
+    return id;
+  }
+
+  path(): string {
+    const path = `/${this.METANAME}`;
+
+    return path;
+  }
+
   ref(id: string): DocumentReference {
-    const collection = this.db.collection<MonstroDocument>(this.PATH);
+    const collection = this.db.collection<MonstroDocument>(this.path());
 
     const document = collection.doc<MonstroDocument>(id);
 
@@ -130,7 +143,7 @@ export class MonstrosService {
   }
 
   obtemMonstrosObservaveisParaAdministracao(): Observable<Monstro[]> {
-    const collection = this.db.collection<MonstroDocument>(this.PATH, reference => {
+    const collection = this.db.collection<MonstroDocument>(this.path(), reference => {
       return reference
         .orderBy('dataDoUltimoLogin', 'desc');
     });
@@ -147,7 +160,7 @@ export class MonstrosService {
   }
 
   obtemMonstroObservavel(id: string): Observable<Monstro> {
-    const collection = this.db.collection<MonstroDocument>(this.PATH);
+    const collection = this.db.collection<MonstroDocument>(this.path());
 
     const document = collection.doc<MonstroDocument>(id);
 
@@ -219,7 +232,7 @@ export class MonstrosService {
   }
 
   private add(monstro: Monstro): Promise<void> {
-    const collection = this.db.collection<MonstroDocument>(this.PATH);
+    const collection = this.db.collection<MonstroDocument>(this.path());
 
     const document = collection.doc<MonstroDocument>(monstro.id);
 
@@ -265,7 +278,7 @@ export class MonstrosService {
   }
 
   private update(monstro: Monstro): Promise<void> {
-    const collection = this.db.collection<MonstroDocument>(this.PATH);
+    const collection = this.db.collection<MonstroDocument>(this.path());
 
     const document = collection.doc<MonstroDocument>(monstro.id);
 
@@ -295,7 +308,7 @@ export class MonstrosService {
   }
 
   excluiMonstro(monstroId: string): Promise<void> {
-    const collection = this.db.collection<MonstroDocument>(this.PATH);
+    const collection = this.db.collection<MonstroDocument>(this.path());
 
     const document = collection.doc<MonstroDocument>(monstroId);
 

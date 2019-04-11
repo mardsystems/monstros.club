@@ -1,5 +1,6 @@
 import { Academia } from '../academias/academias.domain-model';
 import { Exercicio } from '../exercicios/exercicios.domain-model';
+import { Observable } from 'rxjs';
 
 export class Aparelho {
   public constructor(
@@ -37,4 +38,8 @@ export class Aparelho {
   public alteraImagemURL(imagemURL: string) {
     this._imagemURL = imagemURL;
   }
+}
+
+export interface IRepositorioDeAparelhos {
+  localiza(exercicio: Exercicio, academia: Academia): Observable<Aparelho>;
 }

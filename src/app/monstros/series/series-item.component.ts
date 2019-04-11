@@ -9,8 +9,10 @@ import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cada
 import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro.presentation-model';
 import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
-import { ExecucaoDeSerie, Serie, SerieDeExercicio } from './series.domain-model';
+import { Serie, SerieDeExercicio } from './series.domain-model';
 import { SeriesService } from './series.service';
+import { ExecucaoDeSerie } from './execucoes/execucoes.domain-model';
+import { ExecucoesService } from './execucoes/execucoes.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'icone' },
@@ -24,7 +26,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'monstros-series-item',
+  selector: 'series-item',
   templateUrl: './series-item.component.html',
   styleUrls: ['./series-item.component.scss']
 })
@@ -49,6 +51,7 @@ export class SeriesItemComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private repositorioDeSeries: SeriesService,
+    private repositorioDeExecucoes: ExecucoesService,
     private cadastroDeSeries: SeriesCadastroService,
     private monstrosService: MonstrosService,
     media: MediaMatcher
@@ -95,7 +98,7 @@ export class SeriesItemComponent implements OnInit {
 
         this.exerciciosDataSource.sort = this.sort;
 
-        return this.repositorioDeSeries.obtemExecucoesDeSerieObservaveisParaExibicao(this.monstroId, serie);
+        return this.repositorioDeExecucoes.obtemExecucoesDeSerieObservaveisParaExibicao(this.monstroId, serie);
       }),
       shareReplay()
     );

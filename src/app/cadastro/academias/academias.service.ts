@@ -8,7 +8,7 @@ import { Academia } from './academias.domain-model';
   providedIn: 'root'
 })
 export class AcademiasService {
-  PATH = '/academias';
+  PATH = '/academias'; // TODO.
 
   constructor(
     private db: AngularFirestore,

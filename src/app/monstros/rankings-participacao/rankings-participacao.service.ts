@@ -15,7 +15,7 @@ export class RankingsParticipacaoService
     private repositorioDeRankings: RankingsService,
   ) { }
 
-  adicionaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void> {
+  convidaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       // this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).pipe(
       //   first(),

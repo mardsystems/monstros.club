@@ -43,6 +43,11 @@ service cloud.firestore {
       match /series/{serie} {
         allow create: if true;
         allow update, delete: if true;
+
+        match /execucoes/{execucao} {
+          allow create: if true;
+          allow update, delete: if true;
+        }
       }
     }
 
