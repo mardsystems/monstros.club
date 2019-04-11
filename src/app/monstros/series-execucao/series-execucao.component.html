@@ -3,29 +3,29 @@
 <form [formGroup]="cadastroForm" autocomplete="off">
   <mat-dialog-content class="container">
     <mat-form-field>
-      <input type="text" placeholder="Nome" matInput formControlName="nome">
-    </mat-form-field>
-
-    <mat-form-field hideRequiredMarker>
-      <mat-select placeholder="Exercício" formControlName="academiaId" required>
-        <mat-option *ngFor="let academia of academias$ | async" [value]="academia.id">{{academia.nome}}</mat-option>
-      </mat-select>
+      <input type="text" placeholder="Série" matInput [(ngModel)]="model.serie.nome" readonly
+        [ngModelOptions]="{standalone: true}">
     </mat-form-field>
 
     <mat-form-field>
-      <input type="text" placeholder="Cor" matInput formControlName="cor">
-    </mat-form-field>
-
-    <section>
-      <mat-checkbox color="primary" formControlName="ativa">Ativa</mat-checkbox>
-    </section>
-
-    <mat-form-field>
-      <input type="text" placeholder="Data" matInput required [matDatepicker]="dataPicker"
-        formControlName="data">
+      <input type="text" placeholder="Dia" matInput required [matDatepicker]="dataPicker" formControlName="dia">
       <mat-datepicker-toggle matSuffix [for]="dataPicker"></mat-datepicker-toggle>
       <mat-datepicker #dataPicker></mat-datepicker>
     </mat-form-field>
+
+    <mat-form-field>
+      <input type="text" placeholder="Número" matInput formControlName="numero" readonly>
+    </mat-form-field>
+
+    <mat-form-field hideRequiredMarker>
+      <mat-select placeholder="Feita na" formControlName="feitaNaId">
+        <mat-option *ngFor="let academia of academias$ | async" [value]="academia.id">{{academia.nome}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!--
+    <section>
+      <mat-checkbox color="primary" formControlName="ativa">Ativa</mat-checkbox>
+    </section> -->
   </mat-dialog-content>
 
   <mat-dialog-actions>

@@ -10,7 +10,7 @@ export class ExecucaoDeSerieViewModel extends SolicitacaoDeExecucaoDeSerie {
   serie: Serie;
   feitaNa: Academia;
 
-  static toViewModel(monstro: Monstro, serie: Serie, feitaNa: Academia): ExecucaoDeSerieViewModel {
+  static toViewModel(monstro: Monstro, serie: Serie): ExecucaoDeSerieViewModel {
     const solicitacao = SolicitacaoDeExecucaoDeSerie.create(monstro.id);
 
     return {
@@ -20,7 +20,7 @@ export class ExecucaoDeSerieViewModel extends SolicitacaoDeExecucaoDeSerie {
       monstroId: solicitacao.monstroId,
       serie: serie,
       serieId: solicitacao.serieId,
-      feitaNa: feitaNa,
+      feitaNa: null,
       feitaNaId: solicitacao.feitaNaId,
       dia: solicitacao.dia,
       numero: solicitacao.numero,

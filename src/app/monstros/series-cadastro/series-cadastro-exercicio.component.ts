@@ -8,7 +8,7 @@ import { CadastroDeExercicioViewModel } from './series-cadastro.presentation-mod
 import { SeriesCadastroService } from './series-cadastro.service';
 
 @Component({
-  selector: 'monstros-series-cadastro-exercicio',
+  selector: 'series-cadastro-exercicio',
   templateUrl: './series-cadastro-exercicio.component.html',
   styleUrls: ['./series-cadastro-exercicio.component.scss']
 })

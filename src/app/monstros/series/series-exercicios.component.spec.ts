@@ -1,16 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SeriesExerciciosComponent } from './series-exercicios.component';
 
-describe('ExerciciosComponent', () => {
+describe('SeriesExerciciosComponent', () => {
   let component: SeriesExerciciosComponent;
   let fixture: ComponentFixture<SeriesExerciciosComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SeriesExerciciosComponent ]
+      declarations: [SeriesExerciciosComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

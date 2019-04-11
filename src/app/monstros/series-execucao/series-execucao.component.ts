@@ -5,31 +5,34 @@ import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
 import { SeriesService } from '../series/series.service';
 import { ExecucaoDeSerieViewModel } from './series-execucao.presentation-model';
 import { Observable } from 'rxjs';
+import { SeriesExecucaoService } from './series-execucao.service';
+import { AcademiasService } from 'src/app/cadastro/academias/academias.service';
 
 @Component({
-  selector: 'monstros-series-execucao',
+  selector: 'series-execucao',
   templateUrl: './series-execucao.component.html',
   styleUrls: ['./series-execucao.component.scss']
 })
 export class SeriesExecucaoComponent implements OnInit {
-  dialogTitle = 'Nova Série';
+  dialogTitle = 'Nova Execução';
 
   academias$: Observable<Academia[]>;
 
   cadastroForm = this.formBuilder.group({
     dia: [this.model.dia],
     numero: [this.model.numero],
-    feitaNa: [this.model.feitaNa],
+    feitaNaId: [this.model.feitaNaId],
   });
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public model: ExecucaoDeSerieViewModel,
     private dialogRef: MatDialogRef<SeriesExecucaoComponent>,
-    private seriesService: SeriesService,
+    private repositorioDeAcademias: AcademiasService,
+    private execucaoDeSeries: SeriesExecucaoService,
     private formBuilder: FormBuilder,
   ) {
-
+    this.academias$ = this.repositorioDeAcademias.obtemAcademiasObservaveisParaAdministracao();
   }
 
   ngOnInit(): void {
@@ -43,12 +46,12 @@ export class SeriesExecucaoComponent implements OnInit {
 
     this.model.numero = this.cadastroForm.value.numero;
 
-    this.model.feitaNa = this.cadastroForm.value.feitaNa;
+    this.model.feitaNaId = this.cadastroForm.value.feitaNaId;
 
     // const operation: Promise<void> =
     //   (this.model.isEdit)
-    //     ? this.seriesService.atualizaSerie(this.model.id, this.model)
-    //     : this.seriesService.cadastraSerie(this.model);
+    //     ? this.execucaoDeSeries.atualizaSerie(this.model.id, this.model)
+    //     : this.execucaoDeSeries.cadastraSerie(this.model);
 
     // operation.then(() => {
     //   this.dialogRef.close();

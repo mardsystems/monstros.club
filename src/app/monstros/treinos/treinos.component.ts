@@ -4,7 +4,7 @@ import { delay, tap } from 'rxjs/operators';
 import { Treino } from './treinos.domain-model';
 
 @Component({
-  selector: 'monstros-treinos',
+  selector: 'treinos',
   templateUrl: './treinos.component.html',
   styleUrls: ['./treinos.component.scss']
 })

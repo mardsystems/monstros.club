@@ -5,7 +5,7 @@ import { CadastroDeSerieViewModel } from './series-cadastro.presentation-model';
 import { SeriesCadastroService } from './series-cadastro.service';
 
 @Component({
-  selector: 'monstros-series-cadastro',
+  selector: 'series-cadastro',
   templateUrl: './series-cadastro.component.html',
   styleUrls: ['./series-cadastro.component.scss']
 })

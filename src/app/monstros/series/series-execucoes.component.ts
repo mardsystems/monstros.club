@@ -6,7 +6,7 @@ import { SeriesExecucaoService } from '../series-execucao/series-execucao.servic
 import { Serie, SerieDeExercicio } from './series.domain-model';
 
 @Component({
-  selector: 'monstros-series-execucoes-widget',
+  selector: 'series-execucoes-widget',
   templateUrl: './series-execucoes.component.html',
   styleUrls: ['./series-execucoes.component.scss']
 })

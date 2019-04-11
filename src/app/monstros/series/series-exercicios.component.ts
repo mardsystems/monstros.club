@@ -6,7 +6,7 @@ import { SeriesCadastroService } from '../series-cadastro/series-cadastro.servic
 import { Serie, SerieDeExercicio } from './series.domain-model';
 
 @Component({
-  selector: 'monstros-series-exercicios',
+  selector: 'series-exercicios',
   templateUrl: './series-exercicios.component.html',
   styleUrls: ['./series-exercicios.component.scss']
 })

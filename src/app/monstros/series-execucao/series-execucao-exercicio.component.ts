@@ -8,7 +8,7 @@ import { ExecucaoDeExercicioViewModel } from './series-execucao.presentation-mod
 import { SeriesExecucaoService } from './series-execucao.service';
 
 @Component({
-  selector: 'monstros-series-execucao-exercicio',
+  selector: 'series-execucao-exercicio',
   templateUrl: './series-execucao-exercicio.component.html',
   styleUrls: ['./series-execucao-exercicio.component.scss']
 })

@@ -13,6 +13,7 @@ import { CadastroDeSerieViewModel } from '../series-cadastro/series-cadastro.pre
 import { Serie } from './series.domain-model';
 import { SeriesService } from './series.service';
 import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
+import { ExecucaoDeSerieViewModel } from '../series-execucao/series-execucao.presentation-model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -23,7 +24,7 @@ const columnDefinitions = [
 ];
 
 @Component({
-  selector: 'monstros-series',
+  selector: 'series',
   templateUrl: './series.component.html',
   styleUrls: ['./series.component.scss']
 })
@@ -121,10 +122,10 @@ export class SeriesComponent implements OnInit {
     return displayedColumns;
   }
 
-  onPlay(): void {
-    const model = CadastroDeSerieViewModel.toAddViewModel(this.monstro);
+  onPlay(serie: Serie): void {
+    const model = ExecucaoDeSerieViewModel.toViewModel(this.monstro, serie);
 
-    const config: MatDialogConfig<CadastroDeSerieViewModel> = { data: model };
+    const config: MatDialogConfig<ExecucaoDeSerieViewModel> = { data: model };
 
     this.dialog.open(SeriesExecucaoComponent, config);
   }
