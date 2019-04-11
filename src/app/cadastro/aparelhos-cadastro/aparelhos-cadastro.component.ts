@@ -6,15 +6,15 @@ import { Academia } from '../academias/academias.domain-model';
 import { AcademiasService } from '../academias/academias.service';
 import { Exercicio } from '../exercicios/exercicios.domain-model';
 import { ExerciciosService } from '../exercicios/exercicios.service';
-import { CadastroDeAparelhoViewModel } from './cadastro-aparelhos.presentation-model';
-import { CadastroAparelhosService } from './cadastro-aparelhos.service';
+import { CadastroDeAparelhoViewModel } from './aparelhos-cadastro.presentation-model';
+import { AparelhosCadastroService } from './aparelhos-cadastro.service';
 
 @Component({
-  selector: 'cadastro-aparelhos',
-  templateUrl: './cadastro-aparelhos.component.html',
-  styleUrls: ['./cadastro-aparelhos.component.scss']
+  selector: 'aparelhos-cadastro',
+  templateUrl: './aparelhos-cadastro.component.html',
+  styleUrls: ['./aparelhos-cadastro.component.scss']
 })
-export class CadastroAparelhosComponent implements OnInit {
+export class AparelhosCadastroComponent implements OnInit {
   dialogTitle = 'Novo Aparelho';
 
   academias$: Observable<Academia[]>;
@@ -31,8 +31,8 @@ export class CadastroAparelhosComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeAparelhoViewModel,
-    private dialogRef: MatDialogRef<CadastroAparelhosComponent>,
-    private cadastroDeAparelhos: CadastroAparelhosService,
+    private dialogRef: MatDialogRef<AparelhosCadastroComponent>,
+    private cadastroDeAparelhos: AparelhosCadastroService,
     private repositorioDeAcademias: AcademiasService,
     private repositorioDeExercicios: ExerciciosService,
     private formBuilder: FormBuilder,

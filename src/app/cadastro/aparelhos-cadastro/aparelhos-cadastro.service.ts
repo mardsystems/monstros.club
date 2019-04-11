@@ -6,12 +6,12 @@ import { Aparelho } from '../aparelhos/aparelhos.domain-model';
 import { AparelhosService } from '../aparelhos/aparelhos.service';
 import { Exercicio } from '../exercicios/exercicios.domain-model';
 import { ExerciciosService } from '../exercicios/exercicios.service';
-import { SolicitacaoDeCadastroDeAparelho } from './cadastro-aparelhos.application-model';
+import { SolicitacaoDeCadastroDeAparelho } from './aparelhos-cadastro.application-model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CadastroAparelhosService {
+export class AparelhosCadastroService {
   constructor(
     private repositorioDeAparelhos: AparelhosService,
     private repositorioDeAcademias: AcademiasService,

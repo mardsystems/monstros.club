@@ -3,9 +3,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { CadastroAcademiasComponent } from '../cadastro-academias/cadastro-academias.component';
-import { CadastroDeAcademiaViewModel } from '../cadastro-academias/cadastro-academias.presentation-model';
-import { CadastroAcademiasService } from '../cadastro-academias/cadastro-academias.service';
+import { AcademiasCadastroComponent } from '../academias-cadastro/academias-cadastro.component';
+import { CadastroDeAcademiaViewModel } from '../academias-cadastro/academias-cadastro.presentation-model';
+import { AcademiasCadastroService } from '../academias-cadastro/academias-cadastro.service';
 import { Academia } from './academias.domain-model';
 import { AcademiasService } from './academias.service';
 
@@ -35,7 +35,7 @@ export class AcademiasComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private repositorioDeAcademias: AcademiasService,
-    private cadastroDeAcademias: CadastroAcademiasService,
+    private cadastroDeAcademias: AcademiasCadastroService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
@@ -70,7 +70,7 @@ export class AcademiasComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeAcademiaViewModel> = { data: model };
 
-    this.dialog.open(CadastroAcademiasComponent, config);
+    this.dialog.open(AcademiasCadastroComponent, config);
   }
 
   onEdit(academia: Academia): void {
@@ -78,7 +78,7 @@ export class AcademiasComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeAcademiaViewModel> = { data: model };
 
-    this.dialog.open(CadastroAcademiasComponent, config);
+    this.dialog.open(AcademiasCadastroComponent, config);
   }
 
   onDelete(academia: Academia): void {

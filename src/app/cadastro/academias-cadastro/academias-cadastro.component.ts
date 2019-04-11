@@ -1,15 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { CadastroDeAcademiaViewModel } from './cadastro-academias.presentation-model';
-import { CadastroAcademiasService } from './cadastro-academias.service';
+import { CadastroDeAcademiaViewModel } from './academias-cadastro.presentation-model';
+import { AcademiasCadastroService } from './academias-cadastro.service';
 
 @Component({
-  selector: 'cadastro-academias',
-  templateUrl: './cadastro-academias.component.html',
-  styleUrls: ['./cadastro-academias.component.scss']
+  selector: 'academias-cadastro',
+  templateUrl: './academias-cadastro.component.html',
+  styleUrls: ['./academias-cadastro.component.scss']
 })
-export class CadastroAcademiasComponent implements OnInit {
+export class AcademiasCadastroComponent implements OnInit {
   dialogTitle = 'Nova Academia';
   cadastroForm = this.formBuilder.group({
     nome: [this.model.nome],
@@ -19,8 +19,8 @@ export class CadastroAcademiasComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeAcademiaViewModel,
-    private dialogRef: MatDialogRef<CadastroAcademiasComponent>,
-    private cadastroDeAcademias: CadastroAcademiasService,
+    private dialogRef: MatDialogRef<AcademiasCadastroComponent>,
+    private cadastroDeAcademias: AcademiasCadastroService,
     private formBuilder: FormBuilder,
   ) {
 

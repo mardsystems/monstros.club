@@ -1,5 +1,5 @@
 import { Exercicio } from '../exercicios/exercicios.domain-model';
-import { SolicitacaoDeCadastroDeExercicio } from './cadastro-exercicios.application-model';
+import { SolicitacaoDeCadastroDeExercicio } from './exercicios-cadastro.application-model';
 
 export class CadastroDeExercicioViewModel extends SolicitacaoDeCadastroDeExercicio {
   isEdit: boolean;

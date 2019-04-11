@@ -1,5 +1,5 @@
 import { Aparelho } from '../aparelhos/aparelhos.domain-model';
-import { SolicitacaoDeCadastroDeAparelho } from './cadastro-aparelhos.application-model';
+import { SolicitacaoDeCadastroDeAparelho } from './aparelhos-cadastro.application-model';
 
 export class CadastroDeAparelhoViewModel extends SolicitacaoDeCadastroDeAparelho {
   isEdit: boolean;

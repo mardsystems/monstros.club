@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Exercicio } from '../exercicios/exercicios.domain-model';
 import { ExerciciosService } from '../exercicios/exercicios.service';
-import { SolicitacaoDeCadastroDeExercicio } from './cadastro-exercicios.application-model';
+import { SolicitacaoDeCadastroDeExercicio } from './exercicios-cadastro.application-model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CadastroExerciciosService {
+export class ExerciciosCadastroService {
   constructor(
     private repositorioDeExercicios: ExerciciosService,
   ) { }

@@ -3,9 +3,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { CadastroExerciciosComponent } from '../cadastro-exercicios/cadastro-exercicios.component';
-import { CadastroDeExercicioViewModel } from '../cadastro-exercicios/cadastro-exercicios.presentation-model';
-import { CadastroExerciciosService } from '../cadastro-exercicios/cadastro-exercicios.service';
+import { ExerciciosCadastroComponent } from '../exercicios-cadastro/exercicios-cadastro.component';
+import { CadastroDeExercicioViewModel } from '../exercicios-cadastro/exercicios-cadastro.presentation-model';
+import { ExerciciosCadastroService } from '../exercicios-cadastro/exercicios-cadastro.service';
 import { Exercicio } from './exercicios.domain-model';
 import { ExerciciosService } from './exercicios.service';
 
@@ -37,7 +37,7 @@ export class ExerciciosComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private repositorioDeExercicios: ExerciciosService,
-    private cadastroDeExercicios: CadastroExerciciosService,
+    private cadastroDeExercicios: ExerciciosCadastroService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
@@ -72,7 +72,7 @@ export class ExerciciosComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
 
-    this.dialog.open(CadastroExerciciosComponent, config);
+    this.dialog.open(ExerciciosCadastroComponent, config);
   }
 
   onEdit(exercicio: Exercicio): void {
@@ -80,7 +80,7 @@ export class ExerciciosComponent implements OnInit {
 
     const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
 
-    this.dialog.open(CadastroExerciciosComponent, config);
+    this.dialog.open(ExerciciosCadastroComponent, config);
   }
 
   onDelete(exercicio: Exercicio): void {
