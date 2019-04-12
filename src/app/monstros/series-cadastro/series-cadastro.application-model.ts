@@ -1,5 +1,18 @@
 import * as moment from 'moment';
 import { Serie, SerieDeExercicio } from '../series/series.domain-model';
+import { InjectionToken } from '@angular/core';
+
+export const CadastroDeSeries = new InjectionToken<ICadastroDeSeries>('CadastroDeSeries');
+
+export interface ICadastroDeSeries {
+  cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void>;
+
+  atualizaSerie(serieId: string, solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void>;
+
+  adicionaExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void>;
+
+  excluiSerie(monstroId: string, serieId: string): Promise<void>;
+}
 
 export class SolicitacaoDeCadastroDeSerie {
   monstroId: string;
@@ -64,14 +77,4 @@ export class SolicitacaoDeCadastroDeExercicio {
       nota: serieDeExercicio.nota,
     };
   }
-}
-
-export interface ICadastroDeSerie {
-  cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void>;
-
-  atualizaSerie(serieId: string, solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void>;
-
-  adicionaExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void>;
-
-  excluiSerie(serieId: string): Promise<void>;
 }

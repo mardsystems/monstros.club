@@ -1,24 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
-import { Serie } from '../series/series.domain-model';
-import { SeriesService } from '../series/series.service';
-import { SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './series-cadastro.application-model';
+import { IRepositorioDeSeries, RepositorioDeSeries, Serie } from '../series/series.domain-model';
+import { SeriesFirestoreService } from '../series/series.firestore-service';
+import { ICadastroDeSeries, SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './series-cadastro.application-model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class SeriesCadastroService {
+@Injectable()
+export class SeriesCadastroService implements ICadastroDeSeries {
   constructor(
-    private repositorioDeSeries: SeriesService,
+    @Inject(RepositorioDeSeries)
+    private repositorioDeSeries: IRepositorioDeSeries,
+    private seriesFirestoreService: SeriesFirestoreService,
     private exerciciosService: ExerciciosService,
     private log: LogService
   ) { }
 
   cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const serieId = this.repositorioDeSeries.createId();
+      const serieId = this.seriesFirestoreService.createId();
 
       const serie = new Serie(
         serieId,
@@ -36,7 +36,7 @@ export class SeriesCadastroService {
 
   atualizaSerie(serieId: string, solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.repositorioDeSeries.obtemSerieObservavel(solicitacao.monstroId, serieId).pipe(first()).subscribe(serie => {
+      this.seriesFirestoreService.obtemSerieObservavel(solicitacao.monstroId, serieId).pipe(first()).subscribe(serie => {
         serie.corrigeNome(solicitacao.nome);
 
         serie.ajustaCor(solicitacao.cor);
@@ -60,7 +60,7 @@ export class SeriesCadastroService {
 
   adicionaExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.repositorioDeSeries.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
+      this.seriesFirestoreService.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
         first()
       ).subscribe(serie => {
         this.exerciciosService.obtemExercicioObservavel(solicitacao.exercicioId).pipe(
@@ -78,7 +78,7 @@ export class SeriesCadastroService {
 
   atualizaExercicio(serieDeExercicioId: number, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.repositorioDeSeries.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
+      this.seriesFirestoreService.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
         first()
       ).subscribe(serie => {
         const serieDeExercicio = serie.obtemSerieDeExercicio(serieDeExercicioId);
@@ -104,7 +104,7 @@ export class SeriesCadastroService {
 
   removeExercicio(monstroId: string, serieId: string, serieDeExercicioId: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.repositorioDeSeries.obtemSerieObservavel(monstroId, serieId).pipe(
+      this.seriesFirestoreService.obtemSerieObservavel(monstroId, serieId).pipe(
         first()
       ).subscribe(serie => {
         serie.removeSerieDeExercicio(serieDeExercicioId);

@@ -11,7 +11,7 @@ import { MonstrosService } from '../monstros.service';
 import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
 import { CadastroDeSerieViewModel } from '../series-cadastro/series-cadastro.presentation-model';
 import { Serie } from './series.domain-model';
-import { SeriesService } from './series.service';
+import { SeriesFirestoreService } from './series.firestore-service';
 import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
 import { ExecucaoDeSerieViewModel } from '../series-execucao/series-execucao.presentation-model';
 
@@ -44,7 +44,7 @@ export class SeriesComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private repositorioDeSeries: SeriesService,
+    private repositorioDeSeries: SeriesFirestoreService,
     private cadastroDeSeries: SeriesCadastroService,
     private monstrosService: MonstrosService,
     private snackBar: MatSnackBar,

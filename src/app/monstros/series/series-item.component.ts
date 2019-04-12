@@ -10,7 +10,7 @@ import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro
 import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { Serie, SerieDeExercicio } from './series.domain-model';
-import { SeriesService } from './series.service';
+import { SeriesFirestoreService } from './series.firestore-service';
 import { ExecucaoDeSerie } from './execucoes/execucoes.domain-model';
 import { ExecucoesService } from './execucoes/execucoes.service';
 
@@ -50,7 +50,7 @@ export class SeriesItemComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private repositorioDeSeries: SeriesService,
+    private repositorioDeSeries: SeriesFirestoreService,
     private repositorioDeExecucoes: ExecucoesService,
     private cadastroDeSeries: SeriesCadastroService,
     private monstrosService: MonstrosService,

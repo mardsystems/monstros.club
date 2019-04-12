@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
-import { SeriesService } from '../series/series.service';
+import { SeriesFirestoreService } from '../series/series.firestore-service';
 import { ExecucaoDeSerieViewModel } from './series-execucao.presentation-model';
 import { Observable } from 'rxjs';
 import { SeriesExecucaoService } from './series-execucao.service';

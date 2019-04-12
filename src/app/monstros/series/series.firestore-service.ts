@@ -7,12 +7,10 @@ import { CONST_TIMESTAMP_FALSO } from 'src/app/app-common.domain-model';
 import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosService } from '../monstros.service';
-import { Serie, SerieDeExercicio } from './series.domain-model';
+import { IRepositorioDeSeries, Serie, SerieDeExercicio } from './series.domain-model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class SeriesService {
+@Injectable()
+export class SeriesFirestoreService implements IRepositorioDeSeries {
   private METANAME = 'series';
 
   constructor(

@@ -7,7 +7,7 @@ import { CONST_TIMESTAMP_FALSO, Tempo } from 'src/app/app-common.domain-model';
 import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
 import { AparelhosService } from 'src/app/cadastro/aparelhos/aparelhos.service';
 import { Serie } from '../series.domain-model';
-import { SeriesService } from '../series.service';
+import { SeriesFirestoreService } from '../series.firestore-service';
 import { ExecucaoDeExercicio, ExecucaoDeSerie } from './execucoes.domain-model';
 import { AcademiasService } from 'src/app/cadastro/academias/academias.service';
 
@@ -19,7 +19,7 @@ export class ExecucoesService {
 
   constructor(
     private db: AngularFirestore,
-    private repositorioDeSeries: SeriesService,
+    private repositorioDeSeries: SeriesFirestoreService,
     private repositorioDeAparelhos: AparelhosService,
     private repositorioDeAcademias: AcademiasService,
   ) { }

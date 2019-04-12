@@ -1,22 +1,17 @@
 import { Injectable } from '@angular/core';
-import { first, map } from 'rxjs/operators';
-import { LogService } from 'src/app/app-common.services';
-import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
-import { Serie } from '../series/series.domain-model';
-import { SeriesService } from '../series/series.service';
-import { SolicitacaoDeExecucaoDeExercicio, SolicitacaoDeExecucaoDeSerie } from './series-execucao.application-model';
-import { ExecucaoDeSerie } from '../series/execucoes/execucoes.domain-model';
-import { ExecucoesService } from '../series/execucoes/execucoes.service';
-import { CONST_TIMESTAMP_FALSO } from 'src/app/app-common.domain-model';
+import { first } from 'rxjs/operators';
 import { AcademiasService } from 'src/app/cadastro/academias/academias.service';
 import { AparelhosService } from 'src/app/cadastro/aparelhos/aparelhos.service';
+import { ExecucaoDeSerie } from '../series/execucoes/execucoes.domain-model';
+import { ExecucoesService } from '../series/execucoes/execucoes.service';
+import { SeriesFirestoreService } from '../series/series.firestore-service';
+import { IExecucaoDeSeries, SolicitacaoDeExecucaoDeSerie } from './series-execucao.application-model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class SeriesExecucaoService {
+@Injectable()
+export class SeriesExecucaoService
+  implements IExecucaoDeSeries {
   constructor(
-    private repositorioDeSeries: SeriesService,
+    private repositorioDeSeries: SeriesFirestoreService,
     private repositorioDeExecucoes: ExecucoesService,
     private repositorioDeAcademias: AcademiasService,
     private repositorioDeAparelhos: AparelhosService,

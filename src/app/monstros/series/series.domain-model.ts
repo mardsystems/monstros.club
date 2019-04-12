@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
+import { InjectionToken } from '@angular/core';
 
 export class Serie {
   private _exercicios?: SerieDeExercicio[];
@@ -145,4 +146,14 @@ export class SerieDeExercicio {
   public atualizaNota(nota: string) {
     this._nota = nota;
   }
+}
+
+export const RepositorioDeSeries = new InjectionToken<IRepositorioDeSeries>('RepositorioDeSeries');
+
+export interface IRepositorioDeSeries {
+  add(monstroId: string, serie: Serie): Promise<void>;
+
+  update(monstroId: string, serie: Serie): Promise<void>;
+
+  remove(monstroId: string, serieId: string): Promise<void>;
 }

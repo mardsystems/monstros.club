@@ -1,5 +1,18 @@
+import { InjectionToken } from '@angular/core';
 import * as moment from 'moment';
 import { SerieDeExercicio } from '../series/series.domain-model';
+
+export const ExecucaoDeSeries = new InjectionToken<IExecucaoDeSeries>('ExecucaoDeSeries');
+
+export interface IExecucaoDeSeries {
+  iniciaExecucao(solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void>;
+
+  // atualizaSerie(serieId: string, solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void>;
+
+  // adicionaExercicio(solicitacao: SolicitacaoDeExecucaoDeExercicio): Promise<void>;
+
+  // excluiSerie(serieId: string): Promise<void>;
+}
 
 export class SolicitacaoDeExecucaoDeSerie {
   monstroId: string;
@@ -54,14 +67,4 @@ export class SolicitacaoDeExecucaoDeExercicio {
       nota: serieDeExercicio.nota,
     };
   }
-}
-
-export interface IExecucaoDeSerie {
-  cadastraSerie(solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void>;
-
-  atualizaSerie(serieId: string, solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void>;
-
-  adicionaExercicio(solicitacao: SolicitacaoDeExecucaoDeExercicio): Promise<void>;
-
-  excluiSerie(serieId: string): Promise<void>;
 }

@@ -20,9 +20,13 @@ import { RankingsItemComponent } from './rankings/rankings-item.component';
 import { RankingsParticipantesComponent } from './rankings/rankings-participantes.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesCadastroExercicioComponent } from './series-cadastro/series-cadastro-exercicio.component';
+import { CadastroDeSeries } from './series-cadastro/series-cadastro.application-model';
 import { SeriesCadastroComponent } from './series-cadastro/series-cadastro.component';
+import { SeriesCadastroService } from './series-cadastro/series-cadastro.service';
 import { SeriesExecucaoExercicioComponent } from './series-execucao/series-execucao-exercicio.component';
+import { ExecucaoDeSeries } from './series-execucao/series-execucao.application-model';
 import { SeriesExecucaoComponent } from './series-execucao/series-execucao.component';
+import { SeriesExecucaoService } from './series-execucao/series-execucao.service';
 import { ExecucoesItemComponent as ExecucoesDeSerieItemComponent } from './series/execucoes/execucoes-item.component';
 import { ExecucoesComponent as ExecucoesDeSerieComponent } from './series/execucoes/execucoes.component';
 import { SeriesExecucoesComponent } from './series/series-execucoes.component';
@@ -30,15 +34,13 @@ import { SeriesExerciciosComponent } from './series/series-exercicios.component'
 import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
+import { RepositorioDeSeries } from './series/series.domain-model';
+import { SeriesFirestoreService } from './series/series.firestore-service';
 
 @NgModule({
   declarations: [
     MonstrosComponent,
     CadastroDeMonstrosComponent,
-    SeriesComponent,
-    SeriesItemComponent,
-    SeriesExerciciosComponent,
-    SeriesExecucoesComponent,
     TreinosComponent,
     MedidasCadastroComponent,
     MedidasComponent,
@@ -48,13 +50,17 @@ import { TreinosComponent } from './treinos/treinos.component';
     RankingsParticipacaoComponent,
     RankingsItemComponent,
     RankingsParticipantesComponent,
-    SeriesCadastroComponent,
-    SeriesCadastroExercicioComponent,
     PosicaoComponent,
     AssiduidadeComponent,
     FiltroDoRanking,
     ExecucoesDeSerieComponent,
     ExecucoesDeSerieItemComponent,
+    SeriesCadastroComponent,
+    SeriesCadastroExercicioComponent,
+    SeriesComponent,
+    SeriesItemComponent,
+    SeriesExerciciosComponent,
+    SeriesExecucoesComponent,
     SeriesExecucaoComponent,
     SeriesExecucaoExercicioComponent,
   ],
@@ -78,7 +84,10 @@ import { TreinosComponent } from './treinos/treinos.component';
     SeriesExecucaoExercicioComponent,
   ],
   providers: [
-    MedidasService
+    MedidasService,
+    { provide: RepositorioDeSeries, useClass: SeriesFirestoreService },
+    { provide: CadastroDeSeries, useClass: SeriesCadastroService },
+    { provide: ExecucaoDeSeries, useClass: SeriesExecucaoService }
   ]
 })
 export class MonstrosModule { }
