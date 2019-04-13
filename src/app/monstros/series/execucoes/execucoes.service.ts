@@ -89,7 +89,7 @@ export class ExecucoesService {
                 execucaoDeExercicioValue.carga,
                 execucaoDeExercicioValue.nota,
                 aparelho,
-                execucaoDeExercicioValue.duracao
+                null
               );
 
               return execucaoDeExercicio;

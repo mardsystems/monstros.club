@@ -4,7 +4,7 @@ import { ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot, Router } f
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Monstro } from '../monstros/monstros.domain-model';
-import { MonstrosService } from '../monstros/monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros/monstros.firecloud-repository';
 import { LogService } from '../app-common.services';
 import { tap } from 'rxjs/operators';
 
@@ -30,7 +30,7 @@ export class CadastroComponent {
   activePath: string;
 
   constructor(
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private authService: AuthService,
     private router: Router,
     private log: LogService,

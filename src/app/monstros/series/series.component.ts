@@ -7,7 +7,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { Monstro } from '../monstros.domain-model';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
 import { CadastroDeSerieViewModel } from '../series-cadastro/series-cadastro.presentation-model';
 import { Serie } from './series.domain-model';
@@ -46,7 +46,7 @@ export class SeriesComponent implements OnInit {
     private route: ActivatedRoute,
     private repositorioDeSeries: SeriesFirestoreService,
     private cadastroDeSeries: SeriesCadastroService,
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private snackBar: MatSnackBar,
     private log: LogService,
     media: MediaMatcher

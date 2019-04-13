@@ -7,7 +7,7 @@ import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
 import { Monstro } from '../monstros.domain-model';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { RankingsCadastroComponent } from '../rankings-cadastro/rankings-cadastro.component';
 import { RankingViewModel } from '../rankings-cadastro/rankings-cadastro.presentation-model';
 import { Ranking } from './rankings.domain-model';
@@ -46,7 +46,7 @@ export class RankingsComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private rankingsService: RankingsService,
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private log: LogService,
     media: MediaMatcher
   ) {

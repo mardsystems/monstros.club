@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { first, tap } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { Ranking } from '../rankings/rankings.domain-model';
 import { RankingsService } from '../rankings/rankings.service';
 import { ICadastroDeRanking, SolicitacaoDeCadastroDeRanking } from './rankings-cadastro.application-model';
@@ -14,7 +14,7 @@ export class RankingsCadastroService
   implements ICadastroDeRanking {
 
   constructor(
-    private repositorioDeMonstros: MonstrosService,
+    private repositorioDeMonstros: MonstrosFirecloudRepository,
     private repositorioDeRankings: RankingsService,
     private log: LogService
   ) { }

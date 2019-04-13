@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { MedidasService } from './medidas.service';
 
-describe('MedidasService', () => {
+import { MonstrosService } from './monstros-cadastro.service';
+
+describe('MonstrosService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: MedidasService = TestBed.get(MedidasService);
+    const service: MonstrosService = TestBed.get(MonstrosService);
     expect(service).toBeTruthy();
   });
 });

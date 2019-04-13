@@ -4,7 +4,7 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { Balanca, Medida, OmronHBF214 } from '../../../monstros/medidas/medidas.domain-model';
-import { MedidasService } from '../../../monstros/medidas/medidas.service';
+import { MedidasFirecloudRepository } from '../../../monstros/medidas/medidas.domain-model-firecloud';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -36,7 +36,7 @@ export class MedidasComponent implements OnInit {
   desktopQuery: MediaQueryList;
 
   constructor(
-    private medidasService: MedidasService,
+    private medidasService: MedidasFirecloudRepository,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();

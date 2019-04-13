@@ -1,4 +1,5 @@
-import { ICalculoDeIdade } from '../app-common.domain-model';
+import { InjectionToken } from '@angular/core';
+import { ICalculoDeIdade, IRepository } from 'src/app/app-common.domain-model';
 
 export class Monstro {
   public constructor(
@@ -92,6 +93,14 @@ export enum Genero {
   Feminino = 'Feminino'
 }
 
-export class AdaptadorParaUserInfo {
+export const RepositorioDeMonstros = new InjectionToken<IRepositorioDeMonstros>('RepositorioDeMonstros');
 
+export interface IRepositorioDeMonstros extends IRepository {
+  obtemMonstro(id: string): Promise<Monstro>;
+
+  add(monstro: Monstro): Promise<void>;
+
+  update(monstro: Monstro): Promise<void>;
+
+  remove(monstro: Monstro): Promise<void>;
 }

@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
 import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro.presentation-model';
 import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
@@ -53,7 +53,7 @@ export class SeriesItemComponent implements OnInit {
     private repositorioDeSeries: SeriesFirestoreService,
     private repositorioDeExecucoes: ExecucoesService,
     private cadastroDeSeries: SeriesCadastroService,
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');

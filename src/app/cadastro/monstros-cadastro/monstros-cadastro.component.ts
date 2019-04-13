@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { of, EMPTY } from 'rxjs';
-import { catchError, first, switchMap, tap, map, shareReplay } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { EMPTY, of } from 'rxjs';
+import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { CalculoDeIdade, LogService } from '../../app-common.services';
 import { AuthService } from '../../auth/auth.service';
-import { MonstrosService } from '../monstros.service';
-import { SolicitacaoDeCadastroDeMonstro } from './cadastro.application-model';
+import { MonstrosFirecloudRepository } from '../../monstros/monstros.firecloud-repository';
+import { SolicitacaoDeCadastroDeMonstro } from './monstro-cadastro.application-model';
 
 @Component({
   selector: 'monstros-cadastro',
@@ -22,7 +22,7 @@ export class CadastroComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public authService: AuthService,
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private calculoDeIdade: CalculoDeIdade,
     private log: LogService,
   ) { }

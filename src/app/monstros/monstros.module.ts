@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AppCommonModule } from '../app-common.module';
-import { CadastroComponent as CadastroDeMonstrosComponent } from './cadastro/cadastro.component';
+import { CadastroComponent as CadastroDeMonstrosComponent } from '../cadastro/monstros-cadastro/monstros-cadastro.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { MedidasCadastroComponent } from './medidas-cadastro/medidas-cadastro.component';
 import { MedidasComponent } from './medidas/medidas.component';
-import { MedidasService } from './medidas/medidas.service';
+import { MedidasFirecloudRepository } from './medidas/medidas.domain-model-firecloud';
 import { MonstrosMaterialModule } from './monstros-material.module';
 import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
@@ -84,7 +84,7 @@ import { SeriesFirestoreService } from './series/series.firestore-service';
     SeriesExecucaoExercicioComponent,
   ],
   providers: [
-    MedidasService,
+    MedidasFirecloudRepository,
     { provide: RepositorioDeSeries, useClass: SeriesFirestoreService },
     { provide: CadastroDeSeries, useClass: SeriesCadastroService },
     { provide: ExecucaoDeSeries, useClass: SeriesExecucaoService }

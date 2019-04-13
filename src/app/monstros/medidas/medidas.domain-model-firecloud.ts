@@ -1,45 +1,23 @@
-import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { LogService } from 'src/app/app-common.services';
-import { Monstro } from '../monstros.domain-model';
-import { MonstrosService } from '../monstros.service';
-import { Medida, TipoDeBalanca } from './medidas.domain-model';
+import { Medida, TipoDeBalanca, IRepositorioDeMedidas } from './medidas.domain-model';
+import { FirecloudRepository } from 'src/app/app-common.domain-model-firecloud';
+import { Inject } from '@angular/core';
+import { RepositorioDeMonstros, IRepositorioDeMonstros, Monstro } from 'src/app/cadastro/monstros/monstros.domain-model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class MedidasService {
-  METANAME = 'medidas';
-
+export class MedidasFirecloudRepository
+  extends FirecloudRepository<MedidaDocument>
+  implements IRepositorioDeMedidas {
   constructor(
     private db: AngularFirestore,
-    private repositorioDeMonstros: MonstrosService,
+    @Inject(RepositorioDeMonstros)
+    private repositorioDeMonstros: IRepositorioDeMonstros,
     private log: LogService
-  ) { }
-
-  createId(): string {
-    const id = this.db.createId();
-
-    return id;
-  }
-
-  path(): string {
-    const path = `/${this.METANAME}`;
-
-    return path;
-  }
-
-  ref(id: string): DocumentReference {
-    const path = this.path();
-
-    const collection = this.db.collection<MedidaDocument>(path);
-
-    const document = collection.doc<MedidaDocument>(id);
-
-    return document.ref;
+  ) {
+    super('medidas', db);
   }
 
   obtemMedidasObservaveisParaAdministracao(): Observable<Medida[]> {
@@ -255,7 +233,7 @@ export class MedidasService {
     });
   }
 
-  add(medida: Medida): Promise<void> {
+  async add(medida: Medida): Promise<void> {
     const path = this.path();
 
     const collection = this.db.collection<MedidaDocument>(path);
@@ -269,7 +247,7 @@ export class MedidasService {
     return result;
   }
 
-  update(medida: Medida): Promise<void> {
+  async update(medida: Medida): Promise<void> {
     const path = this.path();
 
     const collection = this.db.collection<MedidaDocument>(path);
@@ -302,12 +280,12 @@ export class MedidasService {
     return doc;
   }
 
-  remove(medidaId: string): Promise<void> {
+  async remove(medida: Medida): Promise<void> {
     const path = this.path();
 
     const collection = this.db.collection<MedidaDocument>(path);
 
-    const document = collection.doc<MedidaDocument>(medidaId);
+    const document = collection.doc<MedidaDocument>(medida.id);
 
     const result = document.delete();
 

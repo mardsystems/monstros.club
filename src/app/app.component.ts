@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth/auth.service';
 import { Monstro } from './monstros/monstros.domain-model';
-import { MonstrosService } from './monstros/monstros.service';
+import { MonstrosFirecloudRepository } from './monstros/monstros.firecloud-repository';
 import { SobreComponent } from './sobre/sobre.component';
 import { RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './app-routing.animations';
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private dialog: MatDialog,
-    private monstrosService: MonstrosService
+    private monstrosService: MonstrosFirecloudRepository
   ) {
     this.ehAnonimo$ = this.monstrosService.ehAnonimo();
 

@@ -6,7 +6,7 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { CONST_TIMESTAMP_FALSO } from 'src/app/app-common.domain-model';
 import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
 import { Monstro } from '../monstros.domain-model';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { IRepositorioDeSeries, Serie, SerieDeExercicio } from './series.domain-model';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class SeriesFirestoreService implements IRepositorioDeSeries {
 
   constructor(
     private db: AngularFirestore,
-    private repositorioDeMonstros: MonstrosService,
+    private repositorioDeMonstros: MonstrosFirecloudRepository,
     private repositorioDeExercicios: ExerciciosService,
   ) { }
 

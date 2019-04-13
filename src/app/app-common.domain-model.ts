@@ -9,3 +9,7 @@ export class Tempo {
 }
 
 export const CONST_TIMESTAMP_FALSO = 1;
+
+export interface IRepository {
+  createId(): string;
+}

@@ -7,9 +7,9 @@ import { catchError, first, map, shareReplay, switchMap, tap } from 'rxjs/operat
 import { CONST_TIMESTAMP_FALSO } from 'src/app/app-common.domain-model';
 import { LogService } from 'src/app/app-common.services';
 import { TipoDeBalanca } from '../medidas/medidas.domain-model';
-import { MedidasService } from '../medidas/medidas.service';
+import { MedidasFirecloudRepository } from '../medidas/medidas.domain-model-firecloud';
 import { Monstro } from '../monstros.domain-model';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { PosicaoDeMedida } from './rankings.application-model';
 import { Participacao, Ranking } from './rankings.domain-model';
 
@@ -22,8 +22,8 @@ export class RankingsService {
 
   constructor(
     private db: AngularFirestore,
-    private repositorioDeMonstros: MonstrosService,
-    private repositorioDeMedidas: MedidasService,
+    private repositorioDeMonstros: MonstrosFirecloudRepository,
+    private repositorioDeMedidas: MedidasFirecloudRepository,
     private log: LogService
   ) { }
 

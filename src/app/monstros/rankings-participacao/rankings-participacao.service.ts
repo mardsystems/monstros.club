@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { RankingsService } from '../rankings/rankings.service';
 import { IParticipacaoDeRanking, SolicitacaoDeParticipacaoDeRanking } from './rankings-cadastro.application-model';
 
@@ -11,7 +11,7 @@ export class RankingsParticipacaoService
   implements IParticipacaoDeRanking {
 
   constructor(
-    private repositorioDeMonstros: MonstrosService,
+    private repositorioDeMonstros: MonstrosFirecloudRepository,
     private repositorioDeRankings: RankingsService,
   ) { }
 

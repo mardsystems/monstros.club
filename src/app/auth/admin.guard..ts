@@ -13,14 +13,14 @@ import { Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { LogService } from '../app-common.services';
-import { MonstrosService } from '../monstros/monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros/monstros.firecloud-repository';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminGuard implements CanActivate, CanActivateChild, CanLoad {
   constructor(
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private router: Router,
     private log: LogService
   ) { }

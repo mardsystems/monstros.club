@@ -9,9 +9,9 @@ import { MedidasCadastroComponent } from '../medidas-cadastro/medidas-cadastro.c
 import { CadastroDeMedidaViewModel } from '../medidas-cadastro/medidas-cadastro.presentation-model';
 import { MedidasCadastroService } from '../medidas-cadastro/medidas-cadastro.service';
 import { Monstro } from '../monstros.domain-model';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { Balanca, Medida, OmronHBF214 } from './medidas.domain-model';
-import { MedidasService } from './medidas.service';
+import { MedidasFirecloudRepository } from './medidas.domain-model-firecloud';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -63,9 +63,9 @@ export class MedidasComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private repositorioDeMedidas: MedidasService,
+    private repositorioDeMedidas: MedidasFirecloudRepository,
     private cadastroDeMedidas: MedidasCadastroService,
-    private repositorioDeMonstros: MonstrosService,
+    private repositorioDeMonstros: MonstrosFirecloudRepository,
     private log: LogService,
     media: MediaMatcher
   ) {

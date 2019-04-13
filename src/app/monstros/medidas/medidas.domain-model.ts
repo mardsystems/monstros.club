@@ -1,4 +1,6 @@
 import { Genero, Monstro } from '../monstros.domain-model';
+import { InjectionToken } from '@angular/core';
+import { IRepository } from 'src/app/app-common.domain-model';
 
 export class Medida
   implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {
@@ -389,4 +391,16 @@ export class OmronHBF214 extends Balanca {
 
     return classificacao;
   }
+}
+
+export const RepositorioDeMedidas = new InjectionToken<IRepositorioDeMedidas>('RepositorioDeMedidas');
+
+export interface IRepositorioDeMedidas extends IRepository {
+  obtemMedida(id: string): Promise<Medida>;
+
+  add(medida: Medida): Promise<void>;
+
+  update(medida: Medida): Promise<void>;
+
+  remove(medida: Medida): Promise<void>;
 }

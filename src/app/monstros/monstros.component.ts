@@ -8,7 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
 import { slideInAnimation } from './monstros-routing.animations';
 import { Monstro } from './monstros.domain-model';
-import { MonstrosService } from './monstros.service';
+import { MonstrosFirecloudRepository } from './monstros.firecloud-repository';
 
 @Component({
   selector: 'app-monstros',
@@ -29,7 +29,7 @@ export class MonstrosComponent {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private authService: AuthService,
     private storageService: StorageService,
     private log: LogService,

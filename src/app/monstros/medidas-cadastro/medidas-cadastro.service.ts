@@ -1,79 +1,115 @@
-import { Injectable } from '@angular/core';
-import { first } from 'rxjs/operators';
-import { Medida } from '../medidas/medidas.domain-model';
-import { MedidasService } from '../medidas/medidas.service';
-import { MonstrosService } from '../monstros.service';
+import { Inject } from '@angular/core';
+import { IRepositorioDeMonstros, RepositorioDeMonstros } from 'src/app/cadastro/monstros/monstros.domain-model';
+import { IRepositorioDeMedidas, Medida, RepositorioDeMedidas } from '../medidas/medidas.domain-model';
 import { SolicitacaoDeCadastroDeMedida } from './medidas-cadastro.application-model';
+import { UNIT_OF_WORK, UnitOfWork } from 'src/app/app-common.model';
 
-@Injectable({
-  providedIn: 'root'
-})
 export class MedidasCadastroService {
   constructor(
-    private repositorioDeMonstros: MonstrosService,
-    private repositorioDeMedidas: MedidasService,
+    @Inject(UNIT_OF_WORK)
+    private unitOfWork: UnitOfWork,
+    @Inject(RepositorioDeMedidas)
+    private repositorioDeMedidas: IRepositorioDeMedidas,
+    @Inject(RepositorioDeMonstros)
+    private repositorioDeMonstros: IRepositorioDeMonstros,
   ) { }
 
-  cadastraMedida(solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.repositorioDeMonstros.obtemMonstroObservavel(solicitacao.monstroId).pipe(
-        first()
-      ).subscribe(monstro => {
-        const medidaId = this.repositorioDeMedidas.createId();
+  async cadastraMedida(solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
+    this.unitOfWork.beginTransaction();
 
-        const medida = new Medida(
-          medidaId,
-          monstro,
-          solicitacao.monstroId,
-          solicitacao.data.toDate(),
-          solicitacao.feitaCom,
-          solicitacao.peso,
-          solicitacao.gordura,
-          solicitacao.gorduraVisceral,
-          solicitacao.musculo,
-          solicitacao.idadeCorporal,
-          solicitacao.metabolismoBasal,
-          solicitacao.indiceDeMassaCorporal
-        );
+    try {
+      const medidaId = this.repositorioDeMedidas.createId();
 
-        const result = this.repositorioDeMedidas.add(medida);
+      const monstro = await this.repositorioDeMonstros.obtemMonstro(solicitacao.monstroId);
 
-        resolve(result);
-      });
-    });
+      //
+
+      const medida = new Medida(
+        medidaId,
+        monstro,
+        solicitacao.monstroId,
+        solicitacao.data.toDate(),
+        solicitacao.feitaCom,
+        solicitacao.peso,
+        solicitacao.gordura,
+        solicitacao.gorduraVisceral,
+        solicitacao.musculo,
+        solicitacao.idadeCorporal,
+        solicitacao.metabolismoBasal,
+        solicitacao.indiceDeMassaCorporal
+      );
+
+      //
+
+      await this.repositorioDeMedidas.add(medida);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
-  atualizaMedida(medidaId: string, solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.repositorioDeMedidas.obtemMedidaObservavel(medidaId).pipe(
-        first()
-      ).subscribe(medida => {
-        medida.defineData(solicitacao.data.toDate());
+  async atualizaMedida(medidaId: string, solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
+    this.unitOfWork.beginTransaction();
 
-        medida.defineTipoDeBalanca(solicitacao.feitaCom);
+    try {
+      const medida = await this.repositorioDeMedidas.obtemMedida(medidaId);
 
-        medida.definePeso(solicitacao.peso);
+      //
 
-        medida.defineGordura(solicitacao.gordura);
+      medida.defineData(solicitacao.data.toDate());
 
-        medida.defineGorduraVisceral(solicitacao.gorduraVisceral);
+      medida.defineTipoDeBalanca(solicitacao.feitaCom);
 
-        medida.defineMusculo(solicitacao.musculo);
+      medida.definePeso(solicitacao.peso);
 
-        medida.defineIdadeCorporal(solicitacao.idadeCorporal);
+      medida.defineGordura(solicitacao.gordura);
 
-        medida.defineMetabolismoBasal(solicitacao.metabolismoBasal);
+      medida.defineGorduraVisceral(solicitacao.gorduraVisceral);
 
-        medida.defineIndiceDeMassaCorporal(solicitacao.indiceDeMassaCorporal);
+      medida.defineMusculo(solicitacao.musculo);
 
-        const result = this.repositorioDeMedidas.update(medida);
+      medida.defineIdadeCorporal(solicitacao.idadeCorporal);
 
-        resolve(result);
-      });
-    });
+      medida.defineMetabolismoBasal(solicitacao.metabolismoBasal);
+
+      medida.defineIndiceDeMassaCorporal(solicitacao.indiceDeMassaCorporal);
+
+      //
+
+      await this.repositorioDeMedidas.update(medida);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
   async excluiMedida(medidaId: string): Promise<void> {
-    return await this.repositorioDeMedidas.remove(medidaId);
+    this.unitOfWork.beginTransaction();
+
+    try {
+      const medida = await this.repositorioDeMedidas.obtemMedida(medidaId);
+
+      //
+
+      await this.repositorioDeMedidas.remove(medida);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 }
