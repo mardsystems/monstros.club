@@ -4,10 +4,10 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AparelhosCadastroComponent } from '../aparelhos-cadastro/aparelhos-cadastro.component';
-import { CadastroDeAparelhoViewModel } from '../aparelhos-cadastro/aparelhos-cadastro.presentation-model';
-import { AparelhosCadastroService } from '../aparelhos-cadastro/aparelhos-cadastro.service';
-import { Aparelho } from './aparelhos.domain-model';
-import { AparelhosService } from './aparelhos.service';
+import { CadastroDeAparelhoViewModel } from '../aparelhos-cadastro/aparelhos-cadastro-@presentation.model';
+import { AparelhosCadastroService } from '../aparelhos-cadastro/aparelhos-cadastro-@.service';
+import { Aparelho } from './aparelhos-@domain.model';
+import { AparelhosService } from './aparelhos-@firebase.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },
@@ -44,7 +44,7 @@ export class AparelhosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.aparelhos$ = this.repositorioDeAparelhos.obtemAparelhosObservaveisParaAdministracao();
+    this.aparelhos$ = this.repositorioDeAparelhos.obtemAparelhosParaAdministracao();
 
     this.aparelhos$.subscribe(aparelhos => {
       this.dataSource = new MatTableDataSource(aparelhos);

@@ -6,8 +6,8 @@ import { Academia } from '../academias/academias.domain-model';
 import { AcademiasService } from '../academias/academias.service';
 import { Exercicio } from '../exercicios/exercicios.domain-model';
 import { ExerciciosService } from '../exercicios/exercicios.service';
-import { CadastroDeAparelhoViewModel } from './aparelhos-cadastro.presentation-model';
-import { AparelhosCadastroService } from './aparelhos-cadastro.service';
+import { CadastroDeAparelhoViewModel } from './aparelhos-cadastro-@presentation.model';
+import { AparelhosCadastroService } from './aparelhos-cadastro-@.service';
 
 @Component({
   selector: 'aparelhos-cadastro',
@@ -37,9 +37,9 @@ export class AparelhosCadastroComponent implements OnInit {
     private repositorioDeExercicios: ExerciciosService,
     private formBuilder: FormBuilder,
   ) {
-    this.academias$ = this.repositorioDeAcademias.obtemAcademiasObservaveisParaAdministracao(); // TODO: Exibição.
+    this.academias$ = this.repositorioDeAcademias.obtemAcademiasParaAdministracao(); // TODO: Exibição.
 
-    this.exercicios$ = this.repositorioDeExercicios.obtemExerciciosObservaveisParaAdministracao(); // TODO: Exibição.
+    this.exercicios$ = this.repositorioDeExercicios.obtemExerciciosParaAdministracao(); // TODO: Exibição.
   }
 
   ngOnInit(): void {

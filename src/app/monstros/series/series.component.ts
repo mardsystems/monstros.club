@@ -5,15 +5,15 @@ import { MatDialog, MatDialogConfig, MatSnackBar, MatSort, MatTableDataSource } 
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-common.services';
+import { LogService } from 'src/app/app-@shared.services';
 import { Monstro } from '../monstros.domain-model';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
-import { CadastroDeSerieViewModel } from '../series-cadastro/series-cadastro.presentation-model';
-import { Serie } from './series.domain-model';
-import { SeriesFirestoreService } from './series.firestore-service';
-import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
-import { ExecucaoDeSerieViewModel } from '../series-execucao/series-execucao.presentation-model';
+import { CadastroDeSerieViewModel } from '../series-cadastro/series-cadastro-@presentation.model';
+import { Serie } from './series-@domain.model';
+import { SeriesFirebaseService } from './series-@firebase.service';
+import { SeriesCadastroService } from '../series-cadastro/series-cadastro-@.service';
+import { ExecucaoDeSerieViewModel } from '../series-execucao/series-execucao-@presentation.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -44,9 +44,9 @@ export class SeriesComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private repositorioDeSeries: SeriesFirestoreService,
+    private repositorioDeSeries: SeriesFirebaseService,
     private cadastroDeSeries: SeriesCadastroService,
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private snackBar: MatSnackBar,
     private log: LogService,
     media: MediaMatcher
@@ -71,7 +71,7 @@ export class SeriesComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.repositorioDeSeries.obtemSeriesObservaveisParaExibicao(monstro);
+        return this.repositorioDeSeries.obtemSeriesParaExibicao(monstro);
       }),
       catchError((error, source$) => {
         const message = error.message;

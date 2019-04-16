@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
-import * as monstros from './cadastro/cadastro.component';
+import * as monstros from '../cadastro/monstros-cadastro/monstros-cadastro.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { MedidasComponent } from './medidas/medidas.component';
 import { MonstrosResolverService } from './monstros-resolver.service';

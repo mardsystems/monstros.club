@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Monstro } from '../monstros/monstros.domain-model';
-import { MonstrosService } from '../monstros/monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros/monstros.firecloud-repository';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   ehAdministrador$: Observable<boolean>;
 
   constructor(
-    private monstrosService: MonstrosService
+    private monstrosService: MonstrosFirecloudRepository
   ) {
     this.ehAnonimo$ = this.monstrosService.ehAnonimo();
 

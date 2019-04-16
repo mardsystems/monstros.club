@@ -4,15 +4,15 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
-import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro.presentation-model';
-import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
+import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro-@presentation.model';
+import { SeriesCadastroService } from '../series-cadastro/series-cadastro-@.service';
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
-import { Serie, SerieDeExercicio } from './series.domain-model';
-import { SeriesFirestoreService } from './series.firestore-service';
-import { ExecucaoDeSerie } from './execucoes/execucoes.domain-model';
-import { ExecucoesService } from './execucoes/execucoes.service';
+import { Serie, SerieDeExercicio } from './series-@domain.model';
+import { SeriesFirebaseService } from './series-@firebase.service';
+import { ExecucaoDeSerie } from './execucoes/execucoes-@domain.model';
+import { ExecucoesFirebaseService } from './execucoes/execucoes-@firebase.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'icone' },
@@ -50,10 +50,10 @@ export class SeriesItemComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private repositorioDeSeries: SeriesFirestoreService,
-    private repositorioDeExecucoes: ExecucoesService,
+    private repositorioDeSeries: SeriesFirebaseService,
+    private repositorioDeExecucoes: ExecucoesFirebaseService,
     private cadastroDeSeries: SeriesCadastroService,
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
@@ -98,7 +98,7 @@ export class SeriesItemComponent implements OnInit {
 
         this.exerciciosDataSource.sort = this.sort;
 
-        return this.repositorioDeExecucoes.obtemExecucoesDeSerieObservaveisParaExibicao(this.monstroId, serie);
+        return this.repositorioDeExecucoes.obtemExecucoesDeSerieParaExibicao(this.monstroId, serie);
       }),
       shareReplay()
     );

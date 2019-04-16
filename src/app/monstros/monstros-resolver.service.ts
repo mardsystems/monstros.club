@@ -3,14 +3,14 @@ import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@a
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, first, mergeMap } from 'rxjs/operators';
 import { Monstro } from './monstros.domain-model';
-import { MonstrosService } from './monstros.service';
+import { MonstrosFirecloudRepository } from './monstros.firecloud-repository';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MonstrosResolverService implements Resolve<Monstro> {
   constructor(
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private router: Router
   ) { }
 

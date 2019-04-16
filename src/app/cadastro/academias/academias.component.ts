@@ -1,13 +1,12 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { CadastroDeAcademias, CADASTRO_DE_ACADEMIAS } from '../academias-cadastro/academias-cadastro-@application.model';
+import { CadastroDeAcademiaViewModel } from '../academias-cadastro/academias-cadastro-@presentation.model';
 import { AcademiasCadastroComponent } from '../academias-cadastro/academias-cadastro.component';
-import { CadastroDeAcademiaViewModel } from '../academias-cadastro/academias-cadastro.presentation-model';
-import { AcademiasCadastroService } from '../academias-cadastro/academias-cadastro.service';
-import { Academia } from './academias.domain-model';
-import { AcademiasService } from './academias.service';
+import { ConsultaDeAcademias, CONSULTA_DE_ACADEMIAS } from './academias-@application.model';
+import { Academia } from './academias-@domain.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'logo' },
@@ -33,16 +32,17 @@ export class AcademiasComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private repositorioDeAcademias: AcademiasService,
-    private cadastroDeAcademias: AcademiasCadastroService,
+    @Inject(CONSULTA_DE_ACADEMIAS)
+    private consultaDeAcademias: ConsultaDeAcademias,
+    @Inject(CADASTRO_DE_ACADEMIAS)
+    private cadastroDeAcademias: CadastroDeAcademias,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
 
   ngOnInit() {
-    this.academias$ = this.repositorioDeAcademias.obtemAcademiasObservaveisParaAdministracao();
+    this.academias$ = this.consultaDeAcademias.obtemAcademiasParaAdministracao();
 
     this.academias$.subscribe(academias => {
       this.dataSource = new MatTableDataSource(academias);

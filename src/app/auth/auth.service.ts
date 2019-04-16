@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { NavigationExtras, Router } from '@angular/router';
 import { auth, UserInfo } from 'firebase/app';
-import { merge, Observable, of, Subject } from 'rxjs';
-import { delay, tap, first, shareReplay } from 'rxjs/operators';
-import { Router, NavigationExtras } from '@angular/router';
-import { LogService } from '../app-common.services';
+import { Observable, of, Subject } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
+import { LogService } from '../app-@shared.services';
 
 @Injectable({
   providedIn: 'root',
@@ -33,32 +33,32 @@ export class AuthService {
   }
 
   // Returns true if user is logged in
-  get authenticated(): boolean {
+  authenticated(): boolean {
     return this.authState !== null;
   }
 
   // Returns current user data
-  get currentUser(): any {
+  currentUser(): any {
     return this.authenticated ? this.authState : null;
   }
 
   // Returns
-  get currentUserObservable(): any {
+  currentUserObservable(): any {
     return this.angularFireAuth.authState;
   }
 
   // Returns current user UID
-  get currentUserId(): string {
+  currentUserId(): string {
     return this.authenticated ? this.authState.uid : '';
   }
 
   // Anonymous User
-  get currentUserAnonymous(): boolean {
+  currentUserAnonymous(): boolean {
     return this.authenticated ? this.authState.isAnonymous : false;
   }
 
   // Returns current user display name or Guest
-  get currentUserDisplayName(): string {
+  currentUserDisplayName(): string {
     if (!this.authState) {
       return 'Guest';
     } else if (this.currentUserAnonymous) {
@@ -70,8 +70,8 @@ export class AuthService {
 
   //// Custom login ////
 
-  login(user: string, password: string): Observable<boolean> {
-    return of(true).pipe(
+  async login(user: string, password: string): Promise<boolean> {
+    return await of(true).pipe(
       delay(1000),
       tap(val => {
         if (user === 'marcelo' && password === 'admin') {
@@ -89,110 +89,137 @@ export class AuthService {
           this.localUser$.next(userInfo);
         }
       })
-    );
+    ).toPromise();
   }
 
   //// Social Auth ////
 
-  googleLogin() {
+  async googleLogin(): Promise<void> {
     const provider = new auth.GoogleAuthProvider();
 
-    return this.socialSignIn(provider);
+    await this.socialSignIn(provider);
   }
 
-  facebookLogin() {
+  async facebookLogin(): Promise<void> {
     const provider = new auth.FacebookAuthProvider();
 
-    return this.socialSignIn(provider);
+    await this.socialSignIn(provider);
   }
 
-  twitterLogin() {
+  async twitterLogin(): Promise<void> {
     const provider = new auth.TwitterAuthProvider();
 
-    return this.socialSignIn(provider);
+    await this.socialSignIn(provider);
   }
 
-  githubLogin() {
+  async githubLogin(): Promise<void> {
     const provider = new auth.GithubAuthProvider();
 
-    return this.socialSignIn(provider);
+    await this.socialSignIn(provider);
   }
 
-  private socialSignIn(provider) {
-    return this.angularFireAuth.auth.signInWithPopup(provider)
-      .then((userCredential) => {
-        this.log.debug('signInWithPopup: ', (userCredential !== null ? userCredential.user.uid : 'nulo') + '"');
+  private async socialSignIn(provider): Promise<void> {
+    try {
+      const userCredential = await this.angularFireAuth.auth.signInWithPopup(provider)
 
-        // this.isLoggedIn = true;
+      this.log.debug('signInWithPopup: ', (userCredential !== null ? userCredential.user.uid : 'nulo') + '"');
 
-        // this.authState = userCredential.user;
+      // this.isLoggedIn = true;
 
-        // this.updateUserData()
+      // this.authState = userCredential.user;
 
-        // const redirectUrl = this.authService.redirectUrl; // ''; // `${monstroLogado.id}`;
+      // this.updateUserData()
 
-        const navigationExtras: NavigationExtras = {
-          queryParamsHandling: 'preserve',
-          preserveFragment: true
-        };
+      // const redirectUrl = this.authService.redirectUrl; // ''; // `${monstroLogado.id}`;
 
-        this.router.navigate([this.redirectUrl], navigationExtras);
-      })
-      .catch(error => console.log(error));
+      const navigationExtras: NavigationExtras = {
+        queryParamsHandling: 'preserve',
+        preserveFragment: true
+      };
+
+      await this.router.navigate([this.redirectUrl], navigationExtras);
+    } catch (e) {
+      this.log.debug(e);
+
+      throw e;
+    }
   }
 
   //// Anonymous Auth ////
 
-  anonymousLogin() {
-    return this.angularFireAuth.auth.signInAnonymously()
-      .then((user) => {
-        // this.authState = user;
-        // this.updateUserData()
-      })
-      .catch(error => console.log(error));
+  async anonymousLogin(): Promise<void> {
+    try {
+      const user = await this.angularFireAuth.auth.signInAnonymously();
+
+      // this.authState = user;
+
+      // this.updateUserData()
+    } catch (e) {
+      this.log.debug(e);
+
+      throw e;
+    }
   }
 
   //// Email/Password Auth ////
 
-  emailSignUp(email: string, password: string) {
-    return this.angularFireAuth.auth.createUserWithEmailAndPassword(email, password)
-      .then((user) => {
-        // this.authState = user;
-        // this.updateUserData()
-      })
-      .catch(error => console.log(error));
+  async emailSignUp(email: string, password: string): Promise<void> {
+    try {
+      const user = await this.angularFireAuth.auth.createUserWithEmailAndPassword(email, password);
+
+      // this.authState = user;
+
+      // this.updateUserData()
+    } catch (e) {
+      this.log.debug(e);
+
+      throw e;
+    }
   }
 
-  emailLogin(email: string, password: string) {
-    return this.angularFireAuth.auth.signInWithEmailAndPassword(email, password)
-      .then((user) => {
-        // this.authState = user;
-        // this.updateUserData()
-      })
-      .catch(error => console.log(error));
+  async emailLogin(email: string, password: string): Promise<void> {
+    try {
+      const user = await this.angularFireAuth.auth.signInWithEmailAndPassword(email, password);
+
+      // this.authState = user;
+
+      // this.updateUserData()
+    } catch (e) {
+      this.log.debug(e);
+
+      throw e;
+    }
   }
 
-  resetPassword(email: string) {
-    const authFirebase = auth();
+  async resetPassword(email: string): Promise<void> {
+    try {
+      const authFirebase = auth();
 
-    return authFirebase.sendPasswordResetEmail(email)
-      .then(() => console.log('email sent'))
-      .catch((error) => console.log(error));
+      await authFirebase.sendPasswordResetEmail(email);
+
+      this.log.debug('email sent');
+    } catch (e) {
+      this.log.debug(e);
+
+      throw e;
+    }
   }
 
   //// Sign Out ////
 
-  logout(): Promise<void> {
-    const result = this.angularFireAuth.auth.signOut();
+  async logout(): Promise<void> {
+    try {
+      await this.angularFireAuth.auth.signOut();
 
-    result.then(() => {
       // this.isLoggedIn = false;
 
       this.localUser$.next(null);
 
-      this.router.navigate(['/']);
-    });
+      await this.router.navigate(['/']);
+    } catch (e) {
+      this.log.debug(e);
 
-    return result;
+      throw e;
+    }
   }
 }

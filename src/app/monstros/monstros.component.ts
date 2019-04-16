@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
-import { LogService, StorageService } from '../app-common.services';
+import { LogService, StorageService } from '../app-@shared.services';
 import { AuthService } from '../auth/auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
 import { slideInAnimation } from './monstros-routing.animations';
 import { Monstro } from './monstros.domain-model';
-import { MonstrosService } from './monstros.service';
+import { MonstrosFirecloudRepository } from './monstros.firecloud-repository';
 
 @Component({
   selector: 'app-monstros',
@@ -29,7 +29,7 @@ export class MonstrosComponent {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private authService: AuthService,
     private storageService: StorageService,
     private log: LogService,

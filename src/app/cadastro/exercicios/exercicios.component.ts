@@ -4,8 +4,8 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ExerciciosCadastroComponent } from '../exercicios-cadastro/exercicios-cadastro.component';
-import { CadastroDeExercicioViewModel } from '../exercicios-cadastro/exercicios-cadastro.presentation-model';
-import { ExerciciosCadastroService } from '../exercicios-cadastro/exercicios-cadastro.service';
+import { CadastroDeExercicioViewModel } from '../exercicios-cadastro/exercicios-cadastro-@presentation.model';
+import { ExerciciosCadastroService } from '../exercicios-cadastro/exercicios-cadastro-@.service';
 import { Exercicio } from './exercicios.domain-model';
 import { ExerciciosService } from './exercicios.service';
 
@@ -44,7 +44,7 @@ export class ExerciciosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.exercicios$ = this.repositorioDeExercicios.obtemExerciciosObservaveisParaAdministracao();
+    this.exercicios$ = this.repositorioDeExercicios.obtemExerciciosParaAdministracao();
 
     this.exercicios$.subscribe(exercicios => {
       this.dataSource = new MatTableDataSource(exercicios);

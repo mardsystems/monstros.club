@@ -4,14 +4,14 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-common.services';
-import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
+import { LogService } from 'src/app/app-@shared.services';
+import { Balanca, OmronHBF214 } from '../medidas/medidas-@domain.model';
 import { Monstro } from '../monstros.domain-model';
-import { MonstrosService } from '../monstros.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { RankingsCadastroComponent } from '../rankings-cadastro/rankings-cadastro.component';
-import { RankingViewModel } from '../rankings-cadastro/rankings-cadastro.presentation-model';
-import { Ranking } from './rankings.domain-model';
-import { RankingsService } from './rankings.service';
+import { RankingViewModel } from '../rankings-cadastro/rankings-cadastro-@presentation.model';
+import { Ranking } from './rankings-@domain.model';
+import { RankingsService } from './rankings-@firebase.service';
 
 const columnDefinitions = [
   { showMobile: false, def: 'proprietario' },
@@ -46,7 +46,7 @@ export class RankingsComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private rankingsService: RankingsService,
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     private log: LogService,
     media: MediaMatcher
   ) {
@@ -72,7 +72,7 @@ export class RankingsComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.rankingsService.obtemRankingsObservaveisParaExibicao(monstro);
+        return this.rankingsService.obtemRankingsParaExibicao(monstro);
       }),
       shareReplay()
     );

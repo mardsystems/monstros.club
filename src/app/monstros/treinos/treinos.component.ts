@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
-import { Treino } from './treinos.domain-model';
+import { Treino } from './treinos-@domain.model';
 
 @Component({
   selector: 'treinos',

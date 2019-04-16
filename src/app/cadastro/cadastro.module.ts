@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppCommonModule } from '../app-common.module';
+import { AppCommonModule } from '../app-@common.module';
 import { AcademiasCadastroComponent } from './academias-cadastro/academias-cadastro.component';
 import { AcademiasComponent } from './academias/academias.component';
 import { AparelhosCadastroComponent } from './aparelhos-cadastro/aparelhos-cadastro.component';

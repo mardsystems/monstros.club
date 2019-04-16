@@ -12,7 +12,7 @@ import {
 import { Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-import { LogService } from '../app-common.services';
+import { LogService } from '../app-@shared.services';
 
 @Injectable({
   providedIn: 'root',

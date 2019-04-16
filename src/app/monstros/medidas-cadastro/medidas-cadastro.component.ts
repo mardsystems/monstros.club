@@ -1,9 +1,9 @@
 import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialogRef, MatSelectChange, MAT_DIALOG_DATA } from '@angular/material';
-import { CalculoDeIdade } from 'src/app/app-common.services';
-import { Balanca, BalancaComum, OmronHBF214, TipoDeBalanca } from '../medidas/medidas.domain-model';
-import { CadastroDeMedidaViewModel } from './medidas-cadastro.presentation-model';
-import { MedidasCadastroService } from './medidas-cadastro.service';
+import { CalculoDeIdade } from 'src/app/app-@shared.services';
+import { Balanca, BalancaComum, OmronHBF214, TipoDeBalanca } from '../medidas/medidas-@domain.model';
+import { CadastroDeMedidaViewModel } from './medidas-cadastro-@.presentation.model';
+import { MedidasCadastroService } from './medidas-cadastro-@.service';
 
 @Component({
   selector: 'medidas-cadastro',

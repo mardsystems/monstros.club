@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { RankingsParticipacaoComponent } from '../rankings-participacao/rankings-participacao.component';
-import { ParticipacaoViewModel } from '../rankings-participacao/rankings-participacao.presentation-model';
-import { RankingsParticipacaoService } from '../rankings-participacao/rankings-participacao.service';
-import { Participacao, Ranking } from './rankings.domain-model';
+import { ParticipacaoViewModel } from '../rankings-participacao/rankings-participacao-@presentation.model';
+import { RankingsParticipacaoService } from '../rankings-participacao/rankings-participacao-@.service';
+import { Participacao, Ranking } from './rankings-@domain.model';
 
 @Component({
   selector: 'rankings-participantes',

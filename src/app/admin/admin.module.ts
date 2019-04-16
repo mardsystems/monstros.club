@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AppCommonModule } from '../app-common.module';
+import { AppCommonModule } from '../app-@common.module';
 import { AdminMaterialModule } from './admin-material.module';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';

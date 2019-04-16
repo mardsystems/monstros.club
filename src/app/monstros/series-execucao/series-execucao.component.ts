@@ -2,10 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
-import { SeriesFirestoreService } from '../series/series.firestore-service';
-import { ExecucaoDeSerieViewModel } from './series-execucao.presentation-model';
+import { SeriesFirebaseService } from '../series/series-@firebase.service';
+import { ExecucaoDeSerieViewModel } from './series-execucao-@presentation.model';
 import { Observable } from 'rxjs';
-import { SeriesExecucaoService } from './series-execucao.service';
+import { SeriesExecucaoService } from './series-execucao-@.service';
 import { AcademiasService } from 'src/app/cadastro/academias/academias.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class SeriesExecucaoComponent implements OnInit {
     private execucaoDeSeries: SeriesExecucaoService,
     private formBuilder: FormBuilder,
   ) {
-    this.academias$ = this.repositorioDeAcademias.obtemAcademiasObservaveisParaAdministracao();
+    this.academias$ = this.repositorioDeAcademias.obtemAcademiasParaAdministracao();
   }
 
   ngOnInit(): void {

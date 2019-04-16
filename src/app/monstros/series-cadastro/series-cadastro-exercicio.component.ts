@@ -4,8 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
 import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
-import { CadastroDeExercicioViewModel } from './series-cadastro.presentation-model';
-import { SeriesCadastroService } from './series-cadastro.service';
+import { CadastroDeExercicioViewModel } from './series-cadastro-@presentation.model';
+import { SeriesCadastroService } from './series-cadastro-@.service';
 
 @Component({
   selector: 'series-cadastro-exercicio',
@@ -34,7 +34,7 @@ export class SeriesCadastroExercicioComponent implements OnInit {
     private exerciciosService: ExerciciosService,
     private formBuilder: FormBuilder,
   ) {
-    this.exercicios$ = this.exerciciosService.obtemExerciciosObservaveisParaAdministracao(); // TODO: Exibição.
+    this.exercicios$ = this.exerciciosService.obtemExerciciosParaAdministracao(); // TODO: Exibição.
   }
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { Balanca, IMedidaDeGordura, CONST_CLASSIFICACAO_INVALIDA } from '../monstros/medidas/medidas.domain-model';
+import { Balanca, IMedidaDeGordura, CONST_CLASSIFICACAO_INVALIDA } from '../monstros/medidas/medidas-@domain.model';
 // import { CONST_CLASSIFICACAO_INVALIDA } from './indicadores.model';
 
 @Component({

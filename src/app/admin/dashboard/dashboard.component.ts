@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MedidasService } from 'src/app/monstros/medidas/medidas.service';
+import { MedidasFirebaseService } from 'src/app/monstros/medidas/medidas-firecloud.service';
 import { SelectivePreloadingStrategyService } from 'src/app/selective-preloading-strategy.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private medidasService: MedidasService,
+    private medidasService: MedidasFirebaseService,
     preloadStrategy: SelectivePreloadingStrategyService
   ) {
     this.modules = preloadStrategy.preloadedModules;

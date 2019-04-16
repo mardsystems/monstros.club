@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
-import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro.presentation-model';
-import { SeriesCadastroService } from '../series-cadastro/series-cadastro.service';
-import { Serie, SerieDeExercicio } from './series.domain-model';
+import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro-@presentation.model';
+import { SeriesCadastroService } from '../series-cadastro/series-cadastro-@.service';
+import { Serie, SerieDeExercicio } from './series-@domain.model';
 
 @Component({
   selector: 'series-exercicios',

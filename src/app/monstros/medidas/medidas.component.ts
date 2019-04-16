@@ -4,14 +4,14 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-common.services';
+import { LogService } from 'src/app/app-@shared.services';
 import { MedidasCadastroComponent } from '../medidas-cadastro/medidas-cadastro.component';
-import { CadastroDeMedidaViewModel } from '../medidas-cadastro/medidas-cadastro.presentation-model';
-import { MedidasCadastroService } from '../medidas-cadastro/medidas-cadastro.service';
+import { CadastroDeMedidaViewModel } from '../medidas-cadastro/medidas-cadastro-@.presentation.model';
+import { MedidasCadastroService } from '../medidas-cadastro/medidas-cadastro-@.service';
 import { Monstro } from '../monstros.domain-model';
-import { MonstrosService } from '../monstros.service';
-import { Balanca, Medida, OmronHBF214 } from './medidas.domain-model';
-import { MedidasService } from './medidas.service';
+import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
+import { Balanca, Medida, OmronHBF214 } from './medidas-@domain.model';
+import { MedidasFirebaseService } from './medidas-firecloud.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -63,9 +63,9 @@ export class MedidasComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private repositorioDeMedidas: MedidasService,
+    private repositorioDeMedidas: MedidasFirebaseService,
     private cadastroDeMedidas: MedidasCadastroService,
-    private repositorioDeMonstros: MonstrosService,
+    private repositorioDeMonstros: MonstrosFirecloudRepository,
     private log: LogService,
     media: MediaMatcher
   ) {
@@ -91,7 +91,7 @@ export class MedidasComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.repositorioDeMedidas.obtemMedidasObservaveisParaExibicao(monstro);
+        return this.repositorioDeMedidas.obtemMedidasParaExibicao(monstro);
       }),
       shareReplay()
     );

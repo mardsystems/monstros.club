@@ -4,7 +4,7 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { Monstro } from '../../../monstros/monstros.domain-model';
-import { MonstrosService } from '../../../monstros/monstros.service';
+import { MonstrosFirecloudRepository } from '../../../monstros/monstros.firecloud-repository';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -29,14 +29,14 @@ export class ListagemComponent implements OnInit {
   desktopQuery: MediaQueryList;
 
   constructor(
-    private monstrosService: MonstrosService,
+    private monstrosService: MonstrosFirecloudRepository,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
 
   ngOnInit() {
-    this.monstros$ = this.monstrosService.obtemMonstrosObservaveisParaAdministracao();
+    this.monstros$ = this.monstrosService.obtemMonstrosParaAdministracao();
 
     this.monstros$.pipe(
       first(),

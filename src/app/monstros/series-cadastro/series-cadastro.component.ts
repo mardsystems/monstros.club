@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ICadastroDeSeries, CadastroDeSeries } from './series-cadastro.application-model';
-import { CadastroDeSerieViewModel } from './series-cadastro.presentation-model';
+import { ICadastroDeSeries, CadastroDeSeries } from './series-cadastro-@application.model';
+import { CadastroDeSerieViewModel } from './series-cadastro-@presentation.model';
 
 @Component({
   selector: 'series-cadastro',

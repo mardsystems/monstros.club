@@ -4,10 +4,10 @@ import { MatSort, MatTableDataSource, MatDialog, MatDialogConfig } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { Balanca, OmronHBF214 } from '../medidas/medidas.domain-model';
-import { PosicaoDeMedida } from './rankings.application-model';
-import { Ranking } from './rankings.domain-model';
-import { RankingsService } from './rankings.service';
+import { Balanca, OmronHBF214 } from '../medidas/medidas-@domain.model';
+import { PosicaoDeMedida } from './rankings-@application-model';
+import { Ranking } from './rankings-@domain.model';
+import { RankingsService } from './rankings-@firebase.service';
 import { FiltroComponent } from './filtro/filtro.component';
 
 const columnDefinitions = [
@@ -68,7 +68,7 @@ export class RankingsItemComponent implements OnInit {
       switchMap(ranking => {
         this.ranking = ranking;
 
-        return this.rankingsService.obtemPosicoesDeMedidasObservaveisParaExibicaoPorRanking(ranking);
+        return this.rankingsService.obtemPosicoesDeMedidasParaExibicaoPorRanking(ranking);
       }),
       shareReplay()
     );
