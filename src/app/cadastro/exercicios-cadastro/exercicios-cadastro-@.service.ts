@@ -1,20 +1,23 @@
-import { Injectable } from '@angular/core';
-import { first } from 'rxjs/operators';
-import { Exercicio } from '../exercicios/exercicios.domain-model';
-import { ExerciciosService } from '../exercicios/exercicios.service';
-import { SolicitacaoDeCadastroDeExercicio } from './exercicios-cadastro-@application.model';
+import { Inject } from '@angular/core';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/app-@transactions.model';
+import { Exercicio, RepositorioDeExercicios, REPOSITORIO_DE_EXERCICIOS } from '../exercicios/exercicios-@domain.model';
+import { CadastroDeExercicios, SolicitacaoDeCadastroDeExercicio } from './exercicios-cadastro-@application.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ExerciciosCadastroService {
+export class ExerciciosCadastroService implements CadastroDeExercicios {
   constructor(
-    private repositorioDeExercicios: ExerciciosService,
+    @Inject(UNIT_OF_WORK)
+    private unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_EXERCICIOS)
+    private repositorioDeExercicios: RepositorioDeExercicios,
   ) { }
 
-  cadastraExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
+  async cadastraExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
+    this.unitOfWork.beginTransaction();
+
+    try {
       const exercicioId = this.repositorioDeExercicios.createId();
+
+      //
 
       const exercicio = new Exercicio(
         exercicioId,
@@ -24,33 +27,67 @@ export class ExerciciosCadastroService {
         solicitacao.imagemURL,
       );
 
-      const result = this.repositorioDeExercicios.add(exercicio);
+      //
 
-      resolve(result);
-    });
+      await this.repositorioDeExercicios.add(exercicio);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
-  atualizaExercicio(exercicioId: string, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.repositorioDeExercicios.obtemExercicioObservavel(exercicioId).pipe(
-        first()
-      ).subscribe(exercicio => {
-        exercicio.ajustaCodigo(solicitacao.codigo);
+  async atualizaExercicio(exercicioId: string, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
+    this.unitOfWork.beginTransaction();
 
-        exercicio.corrigeNome(solicitacao.nome);
+    try {
+      const exercicio = await this.repositorioDeExercicios.obtemExercicio(exercicioId);
 
-        exercicio.corrigeMusculatura(solicitacao.musculatura);
+      //
 
-        exercicio.alteraImagemURL(solicitacao.imagemURL);
+      exercicio.ajustaCodigo(solicitacao.codigo);
 
-        const result = this.repositorioDeExercicios.update(exercicio);
+      exercicio.corrigeNome(solicitacao.nome);
 
-        resolve(result);
-      });
-    });
+      exercicio.corrigeMusculatura(solicitacao.musculatura);
+
+      exercicio.alteraImagemURL(solicitacao.imagemURL);
+
+      //
+
+      await this.repositorioDeExercicios.update(exercicio);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
   async excluiExercicio(exercicioId: string): Promise<void> {
-    return await this.repositorioDeExercicios.remove(exercicioId);
+    this.unitOfWork.beginTransaction();
+
+    try {
+      const exercicio = await this.repositorioDeExercicios.obtemExercicio(exercicioId);
+
+      //
+
+      await this.repositorioDeExercicios.remove(exercicio);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 }

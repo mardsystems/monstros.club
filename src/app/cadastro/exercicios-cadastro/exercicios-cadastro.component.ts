@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CadastroDeExercicioViewModel } from './exercicios-cadastro-@presentation.model';
-import { ExerciciosCadastroService } from './exercicios-cadastro-@.service';
+import { CADASTRO_DE_EXERCICIOS, CadastroDeExercicios } from './exercicios-cadastro-@application.model';
 
 @Component({
   selector: 'exercicios-cadastro',
@@ -22,7 +22,8 @@ export class ExerciciosCadastroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeExercicioViewModel,
     private dialogRef: MatDialogRef<ExerciciosCadastroComponent>,
-    private repositorioDeExercicios: ExerciciosCadastroService,
+    @Inject(CADASTRO_DE_EXERCICIOS)
+    private cadastroDeExercicios: CadastroDeExercicios,
     private formBuilder: FormBuilder,
   ) {
 
@@ -45,8 +46,8 @@ export class ExerciciosCadastroComponent implements OnInit {
 
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.repositorioDeExercicios.atualizaExercicio(this.model.id, this.model)
-        : this.repositorioDeExercicios.cadastraExercicio(this.model);
+        ? this.cadastroDeExercicios.atualizaExercicio(this.model.id, this.model)
+        : this.cadastroDeExercicios.cadastraExercicio(this.model);
 
     operation.then(() => {
       this.dialogRef.close();

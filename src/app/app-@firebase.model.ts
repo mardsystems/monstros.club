@@ -9,6 +9,14 @@ export class DbContext {
   ) {
 
   }
+}
+
+export class MonstrosDbContext extends DbContext {
+  constructor(
+    readonly firebase: AngularFirestore,
+  ) {
+    super(firebase);
+  }
 
   academiasPath(): string {
     return '/academias';
@@ -50,8 +58,8 @@ export class DbContext {
 export abstract class FirebaseService<TDocument extends AggregateDocument>
   implements Repository {
   constructor(
-    protected readonly db: DbContext,
-    protected readonly metaname: string,
+    readonly db: DbContext,
+    // protected readonly metaname: string,
   ) {
 
   }
@@ -62,16 +70,18 @@ export abstract class FirebaseService<TDocument extends AggregateDocument>
     return id;
   }
 
-  path(): string {
-    const path = `/${this.metaname}`;
+  abstract path(): string;
 
-    return path;
-  }
+  // path(): string {
+  //   const path = `/${this.metaname}`;
+
+  //   return path;
+  // }
 
   ref(id: string): DocumentReference {
     const path = this.path();
 
-    const collection = this.db.collection<TDocument>(path);
+    const collection = this.db.firebase.collection<TDocument>(path);
 
     const document = collection.doc<TDocument>(id);
 

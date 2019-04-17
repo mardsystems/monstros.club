@@ -1,13 +1,12 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ExerciciosCadastroComponent } from '../exercicios-cadastro/exercicios-cadastro.component';
+import { CadastroDeExercicios, CADASTRO_DE_EXERCICIOS } from '../exercicios-cadastro/exercicios-cadastro-@application.model';
 import { CadastroDeExercicioViewModel } from '../exercicios-cadastro/exercicios-cadastro-@presentation.model';
-import { ExerciciosCadastroService } from '../exercicios-cadastro/exercicios-cadastro-@.service';
-import { Exercicio } from './exercicios.domain-model';
-import { ExerciciosService } from './exercicios.service';
+import { ExerciciosCadastroComponent } from '../exercicios-cadastro/exercicios-cadastro.component';
+import { ConsultaDeExercicios, CONSULTA_DE_EXERCICIOS } from './exercicios-@application.model';
+import { Exercicio } from './exercicios-@domain.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },
@@ -35,16 +34,17 @@ export class ExerciciosComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private repositorioDeExercicios: ExerciciosService,
-    private cadastroDeExercicios: ExerciciosCadastroService,
+    @Inject(CONSULTA_DE_EXERCICIOS)
+    private consultaDeExercicios: ConsultaDeExercicios,
+    @Inject(CADASTRO_DE_EXERCICIOS)
+    private cadastroDeExercicios: CadastroDeExercicios,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
 
   ngOnInit() {
-    this.exercicios$ = this.repositorioDeExercicios.obtemExerciciosParaAdministracao();
+    this.exercicios$ = this.consultaDeExercicios.obtemExerciciosParaAdministracao();
 
     this.exercicios$.subscribe(exercicios => {
       this.dataSource = new MatTableDataSource(exercicios);

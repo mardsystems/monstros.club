@@ -8,6 +8,7 @@ import { AcademiasService } from '../academias/academias.service';
 import { Exercicio } from '../exercicios/exercicios.domain-model';
 import { ExerciciosService } from '../exercicios/exercicios.service';
 import { Aparelho, IRepositorioDeAparelhos } from './aparelhos-@domain.model';
+import { MonstrosDbContext } from 'src/app/app-@firebase.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AparelhosService implements IRepositorioDeAparelhos {
   PATH = '/aparelhos'; // TODO.
 
   constructor(
-    private db: AngularFirestore,
+    private db: MonstrosDbContext,
     private repositorioDeAcademias: AcademiasService,
     private repositorioDeExercicios: ExerciciosService,
   ) { }

@@ -69,11 +69,11 @@ export class AcademiasCadastroService implements CadastroDeAcademias {
     this.unitOfWork.beginTransaction();
 
     try {
-      const medida = await this.repositorioDeAcademias.obtemAcademia(academiaId);
+      const academia = await this.repositorioDeAcademias.obtemAcademia(academiaId);
 
       //
 
-      await this.repositorioDeAcademias.remove(medida);
+      await this.repositorioDeAcademias.remove(academia);
 
       //
 

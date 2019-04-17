@@ -1,3 +1,6 @@
+import { InjectionToken } from '@angular/core';
+import { Repository } from 'src/app/app-@domain.model';
+
 export class Exercicio {
   public constructor(
     private _id: string,  // ExercicioId
@@ -45,3 +48,15 @@ export enum Musculatura {
   Ombros = 'Ombros',
   AbdomenLombar = 'Abdômen/Lombar',
 }
+
+export interface RepositorioDeExercicios extends Repository {
+  obtemExercicio(id: string): Promise<Exercicio>;
+
+  add(exercicio: Exercicio): Promise<void>;
+
+  update(exercicio: Exercicio): Promise<void>;
+
+  remove(exercicio: Exercicio): Promise<void>;
+}
+
+export const REPOSITORIO_DE_EXERCICIOS = new InjectionToken<RepositorioDeExercicios>('REPOSITORIO_DE_EXERCICIOS');

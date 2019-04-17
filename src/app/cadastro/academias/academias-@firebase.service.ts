@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { DbContext, FirebaseService } from 'src/app/app-@firebase.model';
+import { FirebaseService, MonstrosDbContext } from 'src/app/app-@firebase.model';
 import { ConsultaDeAcademias } from './academias-@application.model';
 import { Academia, RepositorioDeAcademias } from './academias-@domain.model';
 
@@ -9,14 +9,18 @@ export class AcademiasFirebaseService
   implements RepositorioDeAcademias, ConsultaDeAcademias {
 
   constructor(
-    db: DbContext,
+    readonly db: MonstrosDbContext,
   ) {
-    super(db, 'academias');
+    super(db);
+  }
+
+  path(): string {
+    return this.db.academiasPath();
   }
 
   async add(academia: Academia): Promise<void> {
     try {
-      const path = this.db.academiasPath();
+      const path = this.path();
 
       const collection = this.db.firebase.collection<AcademiaDocument>(path);
 
@@ -32,7 +36,7 @@ export class AcademiasFirebaseService
 
   async update(academia: Academia): Promise<void> {
     try {
-      const path = this.db.academiasPath();
+      const path = this.path();
 
       const collection = this.db.firebase.collection<AcademiaDocument>(path);
 
@@ -58,7 +62,7 @@ export class AcademiasFirebaseService
 
   async remove(academia: Academia): Promise<void> {
     try {
-      const path = this.db.academiasPath();
+      const path = this.path();
 
       const collection = this.db.firebase.collection<AcademiaDocument>(path);
 
@@ -72,7 +76,7 @@ export class AcademiasFirebaseService
 
   async obtemAcademia(id: string): Promise<Academia> {
     try {
-      const path = this.db.academiasPath();
+      const path = this.path();
 
       const collection = this.db.firebase.collection<AcademiaDocument>(path);
 
@@ -102,7 +106,7 @@ export class AcademiasFirebaseService
   // Consultas.
 
   obtemAcademiasParaAdministracao(): Observable<Academia[]> {
-    const path = this.db.academiasPath();
+    const path = this.path();
 
     const collection = this.db.firebase.collection<AcademiaDocument>(path, reference => {
       return reference

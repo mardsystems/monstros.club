@@ -1,5 +1,15 @@
-import { Exercicio } from '../exercicios/exercicios.domain-model';
-import { Musculatura } from '../exercicios/exercicios.domain-model';
+import { InjectionToken } from '@angular/core';
+import { Exercicio, Musculatura } from '../exercicios/exercicios-@domain.model';
+
+export const CADASTRO_DE_EXERCICIOS = new InjectionToken<CadastroDeExercicios>('CADASTRO_DE_EXERCICIOS');
+
+export interface CadastroDeExercicios {
+  cadastraExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void>;
+
+  atualizaExercicio(exercicioId: string, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void>;
+
+  excluiExercicio(exercicioId: string): Promise<void>;
+}
 
 export class SolicitacaoDeCadastroDeExercicio {
   codigo: string;
