@@ -1,24 +1,27 @@
 import { Inject, Injectable } from '@angular/core';
-import { first } from 'rxjs/operators';
-import { LogService } from 'src/app/app-@shared.services';
-import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
-import { IRepositorioDeSeries, RepositorioDeSeries, Serie } from '../series/series-@domain.model';
-import { SeriesFirebaseService } from '../series/series-@firebase.service';
-import { ICadastroDeSeries, SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './series-cadastro-@application.model';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/app-@transactions.model';
+import { RepositorioDeExercicios, REPOSITORIO_DE_EXERCICIOS } from 'src/app/cadastro/exercicios/exercicios-@domain.model';
+import { RepositorioDeSeries, REPOSITORIO_DE_SERIES, Serie } from '../series/series-@domain.model';
+import { CadastroDeSeries, SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './series-cadastro-@application.model';
 
 @Injectable()
-export class SeriesCadastroService implements ICadastroDeSeries {
+export class SeriesCadastroService implements CadastroDeSeries {
   constructor(
-    @Inject(RepositorioDeSeries)
-    private repositorioDeSeries: IRepositorioDeSeries,
-    private seriesFirestoreService: SeriesFirebaseService,
-    private exerciciosService: ExerciciosService,
-    private log: LogService
+    @Inject(UNIT_OF_WORK)
+    protected readonly unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_SERIES)
+    protected readonly repositorioDeSeries: RepositorioDeSeries,
+    @Inject(REPOSITORIO_DE_EXERCICIOS)
+    protected readonly repositorioDeExercicios: RepositorioDeExercicios,
   ) { }
 
-  cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const serieId = this.seriesFirestoreService.createId();
+  async cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
+    this.unitOfWork.beginTransaction();
+
+    try {
+      const serieId = this.repositorioDeSeries.createId();
+
+      //
 
       const serie = new Serie(
         serieId,
@@ -28,95 +31,161 @@ export class SeriesCadastroService implements ICadastroDeSeries {
         solicitacao.data.toDate(),
       );
 
-      const result = this.repositorioDeSeries.add(solicitacao.monstroId, serie);
+      //
 
-      resolve(result);
-    });
+      await this.repositorioDeSeries.add(solicitacao.monstroId, serie);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
-  atualizaSerie(serieId: string, solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.seriesFirestoreService.obtemSerieObservavel(solicitacao.monstroId, serieId).pipe(first()).subscribe(serie => {
-        serie.corrigeNome(solicitacao.nome);
+  async atualizaSerie(serieId: string, solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
+    this.unitOfWork.beginTransaction();
 
-        serie.ajustaCor(solicitacao.cor);
+    try {
+      const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, serieId);
 
-        if (serie.ativa && !solicitacao.ativa) {
-          serie.desativa();
-        }
+      //
 
-        if (!serie.ativa && solicitacao.ativa) {
-          serie.reativa();
-        }
+      serie.corrigeNome(solicitacao.nome);
 
-        serie.corrigeData(solicitacao.data.toDate());
+      serie.ajustaCor(solicitacao.cor);
 
-        const result = this.repositorioDeSeries.update(solicitacao.monstroId, serie);
+      if (serie.ativa && !solicitacao.ativa) {
+        serie.desativa();
+      }
 
-        resolve(result);
-      });
-    });
+      if (!serie.ativa && solicitacao.ativa) {
+        serie.reativa();
+      }
+
+      serie.corrigeData(solicitacao.data.toDate());
+
+      //
+
+      await this.repositorioDeSeries.update(solicitacao.monstroId, serie);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
-  adicionaExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.seriesFirestoreService.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
-        first()
-      ).subscribe(serie => {
-        this.exerciciosService.obtemExercicioObservavel(solicitacao.exercicioId).pipe(
-          first()
-        ).subscribe(exercicio => {
-          serie.adicionaExercicio(exercicio, solicitacao.quantidade, solicitacao.repeticoes, solicitacao.carga, solicitacao.nota);
+  async adicionaExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
+    this.unitOfWork.beginTransaction();
 
-          const result = this.repositorioDeSeries.update(solicitacao.monstroId, serie);
+    try {
+      const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, solicitacao.serieId);
 
-          resolve(result);
-        });
-      });
-    });
+      const exercicio = await this.repositorioDeExercicios.obtemExercicio(solicitacao.exercicioId);
+
+      //
+
+      serie.adicionaExercicio(exercicio, solicitacao.quantidade, solicitacao.repeticoes, solicitacao.carga, solicitacao.nota);
+
+      //
+
+      await this.repositorioDeSeries.update(solicitacao.monstroId, serie);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
-  atualizaExercicio(serieDeExercicioId: number, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.seriesFirestoreService.obtemSerieObservavel(solicitacao.monstroId, solicitacao.serieId).pipe(
-        first()
-      ).subscribe(serie => {
-        const serieDeExercicio = serie.obtemSerieDeExercicio(serieDeExercicioId);
+  async atualizaExercicio(serieDeExercicioId: number, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
+    this.unitOfWork.beginTransaction();
 
-        serieDeExercicio.alteraSequencia(solicitacao.sequencia);
+    try {
+      const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, solicitacao.serieId);
 
-        // serieDeExercicio.acertaExercicio(solicitacao.exercicio);
+      const exercicio = await this.repositorioDeExercicios.obtemExercicio(solicitacao.exercicioId);
 
-        serieDeExercicio.corrigeQuantidade(solicitacao.quantidade);
+      //
 
-        serieDeExercicio.ajustaRepeticoes(solicitacao.repeticoes);
+      const serieDeExercicio = serie.obtemSerieDeExercicio(serieDeExercicioId);
 
-        serieDeExercicio.ajustaCarga(solicitacao.carga);
+      serieDeExercicio.alteraSequencia(solicitacao.sequencia);
 
-        serieDeExercicio.atualizaNota(solicitacao.nota);
+      serieDeExercicio.acertaExercicio(exercicio);
 
-        const result = this.repositorioDeSeries.update(solicitacao.monstroId, serie);
+      serieDeExercicio.corrigeQuantidade(solicitacao.quantidade);
 
-        resolve(result);
-      });
-    });
+      serieDeExercicio.ajustaRepeticoes(solicitacao.repeticoes);
+
+      serieDeExercicio.ajustaCarga(solicitacao.carga);
+
+      serieDeExercicio.atualizaNota(solicitacao.nota);
+
+      //
+
+      await this.repositorioDeSeries.update(solicitacao.monstroId, serie);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
-  removeExercicio(monstroId: string, serieId: string, serieDeExercicioId: number): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.seriesFirestoreService.obtemSerieObservavel(monstroId, serieId).pipe(
-        first()
-      ).subscribe(serie => {
-        serie.removeSerieDeExercicio(serieDeExercicioId);
+  async removeExercicio(monstroId: string, serieId: string, serieDeExercicioId: number): Promise<void> {
+    this.unitOfWork.beginTransaction();
 
-        const result = this.repositorioDeSeries.update(monstroId, serie);
+    try {
+      const serie = await this.repositorioDeSeries.obtemSerie(monstroId, serieId);
 
-        resolve(result);
-      });
-    });
+      //
+
+      serie.removeSerieDeExercicio(serieDeExercicioId);
+
+      //
+
+      await this.repositorioDeSeries.update(monstroId, serie);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
   async excluiSerie(monstroId: string, serieId: string): Promise<void> {
-    return await this.repositorioDeSeries.remove(monstroId, serieId);
+    this.unitOfWork.beginTransaction();
+
+    try {
+      const serie = await this.repositorioDeSeries.obtemSerie(monstroId, serieId);
+
+      //
+
+      await this.repositorioDeSeries.remove(monstroId, serie);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 }

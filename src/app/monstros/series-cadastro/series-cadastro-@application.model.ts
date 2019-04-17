@@ -2,14 +2,18 @@ import * as moment from 'moment';
 import { Serie, SerieDeExercicio } from '../series/series-@domain.model';
 import { InjectionToken } from '@angular/core';
 
-export const CadastroDeSeries = new InjectionToken<ICadastroDeSeries>('CadastroDeSeries');
+export const CADASTRO_DE_SERIES = new InjectionToken<CadastroDeSeries>('CADASTRO_DE_SERIES');
 
-export interface ICadastroDeSeries {
+export interface CadastroDeSeries {
   cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void>;
 
   atualizaSerie(serieId: string, solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void>;
 
   adicionaExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void>;
+
+  atualizaExercicio(serieDeExercicioId: number, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void>;
+
+  removeExercicio(monstroId: string, serieId: string, serieDeExercicioId: number): Promise<void>;
 
   excluiSerie(monstroId: string, serieId: string): Promise<void>;
 }

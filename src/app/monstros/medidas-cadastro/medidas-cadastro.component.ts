@@ -1,9 +1,9 @@
 import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialogRef, MatSelectChange, MAT_DIALOG_DATA } from '@angular/material';
-import { CalculoDeIdade } from 'src/app/app-@shared.services';
+import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/app-@domain.model';
 import { Balanca, BalancaComum, OmronHBF214, TipoDeBalanca } from '../medidas/medidas-@domain.model';
-import { CadastroDeMedidaViewModel } from './medidas-cadastro-@.presentation.model';
-import { MedidasCadastroService } from './medidas-cadastro-@.service';
+import { CadastroDeMedidas, CADASTRO_DE_MEDIDAS } from './medidas-cadastro-@application.model';
+import { CadastroDeMedidaViewModel } from './medidas-cadastro-@presentation.model';
 
 @Component({
   selector: 'medidas-cadastro',
@@ -18,7 +18,9 @@ export class MedidasCadastroComponent implements OnInit, OnChanges {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeMedidaViewModel,
     private dialogRef: MatDialogRef<MedidasCadastroComponent>,
-    private cadastroDeMedidas: MedidasCadastroService,
+    @Inject(CADASTRO_DE_MEDIDAS)
+    private cadastroDeMedidas: CadastroDeMedidas,
+    @Inject(CALCULO_DE_IDADE)
     private calculoDeIdade: CalculoDeIdade
   ) {
     this.balanca = new OmronHBF214();

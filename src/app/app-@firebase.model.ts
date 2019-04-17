@@ -30,6 +30,14 @@ export class MonstrosDbContext extends DbContext {
     return '/exercicios';
   }
 
+  monstrosPath(): string {
+    return '/monstros';
+  }
+
+  medidasPath(): string {
+    return '/medidas';
+  }
+
   // seriesPath(monstroId: string, serieId?: string): string {
   //   if (serieId) {
   //     return `/monstros/${monstroId}/series/${serieId}`;

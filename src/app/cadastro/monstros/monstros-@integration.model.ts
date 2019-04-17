@@ -2,15 +2,11 @@ import { Inject } from '@angular/core';
 import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-@shared.services';
-import { AuthService } from 'src/app/auth/auth.service';
+import { LogService } from 'src/app/app-@common.model';
 import {
-  CadastroDeMonstros,
-  CADASTRO_DE_MONSTROS,
-  SolicitacaoDeCadastroDeMonstro
-} from '../monstros-cadastro/monstro-cadastro-@application.model';
-import { Monstro, RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from './monstros.domain-model';
-import { AUTH, Auth } from 'src/app/auth/auth.model';
+  CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro
+} from '../monstros-cadastro/monstros-cadastro-@application.model';
+import { Monstro, RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from './monstros-@domain.model';
 
 export class AdaptadorParaUserInfo {
   monstroLogado$: Observable<Monstro>;

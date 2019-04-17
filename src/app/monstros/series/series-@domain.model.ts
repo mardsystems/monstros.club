@@ -1,6 +1,7 @@
-import * as _ from 'lodash';
-import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
 import { InjectionToken } from '@angular/core';
+import * as _ from 'lodash';
+import { Exercicio } from 'src/app/cadastro/exercicios/exercicios-@domain.model';
+import { Repository } from 'src/app/app-@domain.model';
 
 export class Serie {
   private _exercicios?: SerieDeExercicio[];
@@ -148,12 +149,14 @@ export class SerieDeExercicio {
   }
 }
 
-export const RepositorioDeSeries = new InjectionToken<IRepositorioDeSeries>('RepositorioDeSeries');
+export const REPOSITORIO_DE_SERIES = new InjectionToken<RepositorioDeSeries>('REPOSITORIO_DE_SERIES');
 
-export interface IRepositorioDeSeries {
+export interface RepositorioDeSeries extends Repository {
+  obtemSerie(monstroId: string, id: string): Promise<Serie>;
+
   add(monstroId: string, serie: Serie): Promise<void>;
 
   update(monstroId: string, serie: Serie): Promise<void>;
 
-  remove(monstroId: string, serieId: string): Promise<void>;
+  remove(monstroId: string, serie: Serie): Promise<void>;
 }

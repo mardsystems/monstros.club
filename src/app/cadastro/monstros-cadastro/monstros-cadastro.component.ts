@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { CalculoDeIdade, LogService } from '../../app-@shared.services';
-import { AuthService } from '../../auth/auth.service';
-import { MonstrosFirecloudRepository } from '../../monstros/monstros.firecloud-repository';
-import { SolicitacaoDeCadastroDeMonstro } from './monstro-cadastro-@application.model';
+import { SolicitacaoDeCadastroDeMonstro, CADASTRO_DE_MONSTROS, CadastroDeMonstros } from './monstros-cadastro-@application.model';
+import { AuthService } from 'src/app/auth/auth.service';
+import { CalculoDeIdade } from 'src/app/app-@domain.model';
+import { LogService } from 'src/app/app-@common.model';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from '../monstros/academias-@application.model';
 
 @Component({
   selector: 'monstros-cadastro',
@@ -22,7 +23,10 @@ export class CadastroComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public authService: AuthService,
-    private monstrosService: MonstrosFirecloudRepository,
+    @Inject(CADASTRO_DE_MONSTROS)
+    private cadastroDeMonstros: CadastroDeMonstros,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
     private calculoDeIdade: CalculoDeIdade,
     private log: LogService,
   ) { }
@@ -33,7 +37,7 @@ export class CadastroComponent implements OnInit {
       // tap((value) => this.log.debug('CadastroDeMonstrosComponent: paramMap1', value)),
       map(params => params.get('monstroId')),
       // tap((value) => this.log.debug('CadastroDeMonstrosComponent: paramMap2', value)),
-      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId).pipe(first())),
+      switchMap(monstroId => this.consultaDeMonstros.obtemMonstroObservavel(monstroId).pipe(first())),
       catchError((error) => {
         console.log(`Não foi possível montar o perfil do monstro.\nRazão:\n${error}`);
 
@@ -88,8 +92,8 @@ export class CadastroComponent implements OnInit {
   onSave(): void {
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.monstrosService.atualizaMonstro(this.model.id, this.model)
-        : this.monstrosService.cadastraMonstro(this.model);
+        ? this.cadastroDeMonstros.atualizaMonstro(this.model.id, this.model)
+        : this.cadastroDeMonstros.cadastraMonstro(this.model);
 
     operation.then(() => {
       // this.dialogRef.close();

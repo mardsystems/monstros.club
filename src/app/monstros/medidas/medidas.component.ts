@@ -1,17 +1,17 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-@shared.services';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/academias-@application.model';
+import { Monstro } from 'src/app/cadastro/monstros/monstros-@domain.model';
+import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/monstros-@integration.model';
+import { CadastroDeMedidas, CADASTRO_DE_MEDIDAS } from '../medidas-cadastro/medidas-cadastro-@application.model';
+import { CadastroDeMedidaViewModel } from '../medidas-cadastro/medidas-cadastro-@presentation.model';
 import { MedidasCadastroComponent } from '../medidas-cadastro/medidas-cadastro.component';
-import { CadastroDeMedidaViewModel } from '../medidas-cadastro/medidas-cadastro-@.presentation.model';
-import { MedidasCadastroService } from '../medidas-cadastro/medidas-cadastro-@.service';
-import { Monstro } from '../monstros.domain-model';
-import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
+import { ConsultaDeMedidas, CONSULTA_DE_MEDIDAS } from './medidas-@application.model';
 import { Balanca, Medida, OmronHBF214 } from './medidas-@domain.model';
-import { MedidasFirebaseService } from './medidas-firecloud.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -63,10 +63,13 @@ export class MedidasComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private repositorioDeMedidas: MedidasFirebaseService,
-    private cadastroDeMedidas: MedidasCadastroService,
-    private repositorioDeMonstros: MonstrosFirecloudRepository,
-    private log: LogService,
+    @Inject(CADASTRO_DE_MEDIDAS)
+    private cadastroDeMedidas: CadastroDeMedidas,
+    @Inject(CONSULTA_DE_MEDIDAS)
+    private consultaDeMedidas: ConsultaDeMedidas,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -78,7 +81,7 @@ export class MedidasComponent implements OnInit {
     const monstro$ = this.route.paramMap.pipe(
       // first(),
       map(params => params.get('monstroId')),
-      switchMap(monstroId => this.repositorioDeMonstros.obtemMonstroObservavel(monstroId)),
+      switchMap(monstroId => this.consultaDeMonstros.obtemMonstroObservavel(monstroId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar as medidas do monstro.\nRazão:\n${error}`);
 
@@ -91,7 +94,7 @@ export class MedidasComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.repositorioDeMedidas.obtemMedidasParaExibicao(monstro);
+        return this.consultaDeMedidas.obtemMedidasParaExibicao(monstro);
       }),
       shareReplay()
     );
@@ -147,13 +150,13 @@ export class MedidasComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.repositorioDeMonstros.ehVoceMesmo(monstro.id);
+        return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.repositorioDeMonstros.ehAdministrador();
+          return this.adaptadorParaUserInfo.ehAdministrador();
         }
       }),
       map(value => !value),

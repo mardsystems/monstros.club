@@ -1,3 +1,7 @@
+import { InjectionToken } from '@angular/core';
+
+export const CALCULO_DE_IDADE = new InjectionToken<CalculoDeIdade>('CALCULO_DE_IDADE');
+
 export interface CalculoDeIdade {
   calculaIdade(data: Date, dataFim?: Date): number;
 }

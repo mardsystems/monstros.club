@@ -7,9 +7,9 @@ describe('MedidasCadastroComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MedidasCadastroComponent ]
+      declarations: [MedidasCadastroComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

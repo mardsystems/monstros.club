@@ -7,7 +7,6 @@ import { CadastroComponent as CadastroDeMonstrosComponent } from '../cadastro/mo
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { MedidasCadastroComponent } from './medidas-cadastro/medidas-cadastro.component';
 import { MedidasComponent } from './medidas/medidas.component';
-import { MedidasFirebaseService } from './medidas/medidas-firecloud.service';
 import { MonstrosMaterialModule } from './monstros-material.module';
 import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
@@ -20,11 +19,10 @@ import { RankingsItemComponent } from './rankings/rankings-item.component';
 import { RankingsParticipantesComponent } from './rankings/rankings-participantes.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesCadastroExercicioComponent } from './series-cadastro/series-cadastro-exercicio.component';
-import { CadastroDeSeries } from './series-cadastro/series-cadastro-@application.model';
 import { SeriesCadastroComponent } from './series-cadastro/series-cadastro.component';
 import { SeriesCadastroService } from './series-cadastro/series-cadastro-@.service';
 import { SeriesExecucaoExercicioComponent } from './series-execucao/series-execucao-exercicio.component';
-import { ExecucaoDeSeries } from './series-execucao/series-execucao-@application.model';
+import { EXECUCAO_DE_SERIES } from './series-execucao/series-execucao-@application.model';
 import { SeriesExecucaoComponent } from './series-execucao/series-execucao.component';
 import { SeriesExecucaoService } from './series-execucao/series-execucao-@.service';
 import { ExecucoesItemComponent as ExecucoesDeSerieItemComponent } from './series/execucoes/execucoes-item.component';
@@ -34,8 +32,9 @@ import { SeriesExerciciosComponent } from './series/series-exercicios.component'
 import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
-import { RepositorioDeSeries } from './series/series-@domain.model';
+import { REPOSITORIO_DE_SERIES } from './series/series-@domain.model';
 import { SeriesFirebaseService } from './series/series-@firebase.service';
+import { MedidasFirebaseService } from './medidas/medidas-@firebase.service';
 
 @NgModule({
   declarations: [
@@ -85,9 +84,9 @@ import { SeriesFirebaseService } from './series/series-@firebase.service';
   ],
   providers: [
     MedidasFirebaseService,
-    { provide: RepositorioDeSeries, useClass: SeriesFirebaseService },
+    { provide: REPOSITORIO_DE_SERIES, useClass: SeriesFirebaseService },
     { provide: CadastroDeSeries, useClass: SeriesCadastroService },
-    { provide: ExecucaoDeSeries, useClass: SeriesExecucaoService }
+    { provide: EXECUCAO_DE_SERIES, useClass: SeriesExecucaoService }
   ]
 })
 export class MonstrosModule { }

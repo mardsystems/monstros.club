@@ -1,11 +1,10 @@
-import { Inject } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { LogService } from 'src/app/app-@common.model';
-import { FirebaseService } from 'src/app/app-@firebase.model';
-import { Monstro, RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from 'src/app/cadastro/monstros/monstros-@domain.model';
+import { FirebaseService, MonstrosDbContext } from 'src/app/app-@firebase.model';
+import { Monstro } from 'src/app/cadastro/monstros/monstros-@domain.model';
+import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/monstros-@firebase.service';
 import { ConsultaDeMedidas } from './medidas-@application.model';
 import { Medida, RepositorioDeMedidas, TipoDeBalanca } from './medidas-@domain.model';
 
@@ -14,12 +13,15 @@ export class MedidasFirebaseService
   implements RepositorioDeMedidas, ConsultaDeMedidas {
 
   constructor(
-    db: AngularFirestore,
-    @Inject(REPOSITORIO_DE_MONSTROS)
-    private readonly repositorioDeMonstros: RepositorioDeMonstros,
-    private readonly log: LogService
+    protected readonly db: MonstrosDbContext,
+    protected readonly monstrosFirebaseService: MonstrosFirebaseService,
+    protected readonly log: LogService
   ) {
-    super(db, 'medidas');
+    super(db);
+  }
+
+  path(): string {
+    return this.db.medidasPath();
   }
 
   async add(medida: Medida): Promise<void> {
@@ -39,17 +41,21 @@ export class MedidasFirebaseService
   }
 
   async update(medida: Medida): Promise<void> {
-    const path = this.path();
+    try {
+      const path = this.path();
 
-    const collection = this.db.firebase.collection<MedidaDocument>(path);
+      const collection = this.db.firebase.collection<MedidaDocument>(path);
 
-    const document = collection.doc<MedidaDocument>(medida.id);
+      const document = collection.doc<MedidaDocument>(medida.id);
 
-    const doc = this.mapTo(medida);
+      const doc = this.mapTo(medida);
 
-    const result = document.update(doc);
+      const result = document.update(doc);
 
-    return result;
+      return result;
+    } catch (e) {
+      throw e;
+    }
   }
 
   private mapTo(medida: Medida): MedidaDocument {
@@ -72,38 +78,46 @@ export class MedidasFirebaseService
   }
 
   async remove(medida: Medida): Promise<void> {
-    const path = this.path();
+    try {
+      const path = this.path();
 
-    const collection = this.db.firebase.collection<MedidaDocument>(path);
+      const collection = this.db.firebase.collection<MedidaDocument>(path);
 
-    const document = collection.doc<MedidaDocument>(medida.id);
+      const document = collection.doc<MedidaDocument>(medida.id);
 
-    const result = document.delete();
+      const result = document.delete();
 
-    return result;
+      return result;
+    } catch (e) {
+      throw e;
+    }
   }
 
   async obtemMedida(id: string): Promise<Medida> {
-    const path = this.path();
+    try {
+      const path = this.path();
 
-    const collection = this.db.firebase.collection<MedidaDocument>(path);
+      const collection = this.db.firebase.collection<MedidaDocument>(path);
 
-    const document = collection.doc<MedidaDocument>(id);
+      const document = collection.doc<MedidaDocument>(id);
 
-    const medida$ = document.valueChanges().pipe(
-      first(),
-      map(value => {
-        const monstro = null;
+      const medida$ = document.valueChanges().pipe(
+        first(),
+        map(value => {
+          const monstro = null;
 
-        return this.mapMedida(value, monstro);
-      })
-    );
+          return this.mapMedida(value, monstro);
+        })
+      );
 
-    return await medida$.toPromise();
+      return await medida$.toPromise();
+    } catch (e) {
+      throw e;
+    }
   }
 
   private mapMedida(value: MedidaDocument, monstro: Monstro): Medida {
-    const monstroId = value.monstroId.substring(this.repositorioDeMonstros.path().length, value.monstroId.length);
+    const monstroId = value.monstroId.substring(this.monstrosFirebaseService.path().length, value.monstroId.length);
 
     return new Medida(
       value.id,
@@ -175,9 +189,9 @@ export class MedidasFirebaseService
           .filter(value => value.monstroId !== 'monstros/OJUFB66yLBwIOE2hk8hs')
           .map((value) => {
 
-            const monstroId = value.monstroId.substring(this.repositorioDeMonstros.path().length, value.monstroId.length);
+            const monstroId = value.monstroId.substring(this.monstrosFirebaseService.path().length, value.monstroId.length);
 
-            const medidaComMonstro$ = this.repositorioDeMonstros.obtemMonstroObservavel(monstroId).pipe(
+            const medidaComMonstro$ = this.monstrosFirebaseService.obtemMonstroObservavel(monstroId).pipe(
               // first(),
               map(monstro => this.mapMedida(value, monstro))
             );
@@ -201,14 +215,14 @@ export class MedidasFirebaseService
   obtemUltimaMedidaObservavel(monstro: Monstro): Observable<Medida> {
     const path = this.path();
 
-    const collection1 = this.db.firebase.collection<MedidaDocument>(path, reference => {
+    const collection = this.db.firebase.collection<MedidaDocument>(path, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('data', 'desc')
         .limit(1);
     });
 
-    const medidas1$ = collection1.valueChanges().pipe(
+    const medidas$ = collection.valueChanges().pipe(
       // first(),
       map(values => {
         const medida = values[0];
@@ -219,13 +233,13 @@ export class MedidasFirebaseService
       })
     );
 
-    return medidas1$;
+    return medidas$;
   }
 
   obtemMenorMedidaDeGorduraObservavel(monstro: Monstro): Observable<Medida> {
     const path = this.path();
 
-    const collection2 = this.db.firebase.collection<MedidaDocument>(path, reference => {
+    const collection = this.db.firebase.collection<MedidaDocument>(path, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('gordura', 'asc')
@@ -233,7 +247,7 @@ export class MedidasFirebaseService
         .limit(1);
     });
 
-    const medidas2$ = collection2.valueChanges().pipe(
+    const medidas$ = collection.valueChanges().pipe(
       // first(),
       map(values => {
         const medida = values[0];
@@ -244,13 +258,13 @@ export class MedidasFirebaseService
       })
     );
 
-    return medidas2$;
+    return medidas$;
   }
 
   obtemMaiorMedidaDeMusculoObservavel(monstro: Monstro): Observable<Medida> {
     const path = this.path();
 
-    const collection3 = this.db.firebase.collection<MedidaDocument>(path, reference => {
+    const collection = this.db.firebase.collection<MedidaDocument>(path, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('musculo', 'desc')
@@ -258,7 +272,7 @@ export class MedidasFirebaseService
         .limit(1);
     });
 
-    const medidas3$ = collection3.valueChanges().pipe(
+    const medidas$ = collection.valueChanges().pipe(
       // first(),
       map(values => {
         const medida = values[0];
@@ -269,13 +283,13 @@ export class MedidasFirebaseService
       })
     );
 
-    return medidas3$;
+    return medidas$;
   }
 
   obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(monstro: Monstro): Observable<Medida> {
     const path = this.path();
 
-    const collection4 = this.db.firebase.collection<MedidaDocument>(path, reference => {
+    const collection = this.db.firebase.collection<MedidaDocument>(path, reference => {
       return reference
         .where('monstroId', '==', `monstros/${monstro.id}`)
         .orderBy('indiceDeMassaCorporal', 'asc')
@@ -283,7 +297,7 @@ export class MedidasFirebaseService
         .limit(1);
     });
 
-    const medidas4$ = collection4.valueChanges().pipe(
+    const medidas$ = collection.valueChanges().pipe(
       // first(),
       map(values => {
         const medida = values[0];
@@ -294,7 +308,7 @@ export class MedidasFirebaseService
       })
     );
 
-    return medidas4$;
+    return medidas$;
   }
 
   // Importação.

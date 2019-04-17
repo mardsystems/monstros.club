@@ -2,9 +2,9 @@ import { InjectionToken } from '@angular/core';
 import * as moment from 'moment';
 import { SerieDeExercicio } from '../series/series-@domain.model';
 
-export const ExecucaoDeSeries = new InjectionToken<IExecucaoDeSeries>('ExecucaoDeSeries');
+export const EXECUCAO_DE_SERIES = new InjectionToken<ExecucaoDeSeries>('EXECUCAO_DE_SERIES');
 
-export interface IExecucaoDeSeries {
+export interface ExecucaoDeSeries {
   iniciaExecucao(solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void>;
 
   // atualizaSerie(serieId: string, solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void>;

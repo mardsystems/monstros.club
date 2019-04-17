@@ -1,9 +1,8 @@
 import * as _ from 'lodash';
 import { Tempo } from 'src/app/app-@domain.model';
-import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
-import { Aparelho, IRepositorioDeAparelhos } from 'src/app/cadastro/aparelhos/aparelhos-@domain.model';
+import { Academia } from 'src/app/cadastro/academias/academias-@domain.model';
+import { Aparelho, RepositorioDeAparelhos } from 'src/app/cadastro/aparelhos/aparelhos-@domain.model';
 import { Serie, SerieDeExercicio } from '../series-@domain.model';
-import { first } from 'rxjs/operators';
 
 export class ExecucaoDeSerie {
   private _exercicios?: ExecucaoDeExercicio[];
@@ -48,17 +47,13 @@ export class ExecucaoDeSerie {
     this._numero = numero;
   }
 
-  public async prepara(repositorioDeAparelhos: IRepositorioDeAparelhos): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this._serie.exercicios.forEach(exercicio => {
-        repositorioDeAparelhos.localiza(exercicio.exercicio, this._feitaNa).pipe(first()).subscribe(aparelho => {
-          for (let i = 0; i < exercicio.quantidade; i++) {
-            this.adicionaExercicio(exercicio, aparelho);
-          }
+  public async prepara(repositorioDeAparelhos: RepositorioDeAparelhos): Promise<void> {
+    this._serie.exercicios.forEach(async (exercicio) => {
+      const aparelho = await repositorioDeAparelhos.localizaAparelho(exercicio.exercicio, this._feitaNa);
 
-          resolve();
-        });
-      });
+      for (let i = 0; i < exercicio.quantidade; i++) {
+        this.adicionaExercicio(exercicio, aparelho);
+      }
     });
   }
 
