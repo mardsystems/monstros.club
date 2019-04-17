@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ParticipacaoViewModel } from './rankings-participacao-@presentation.model';
-import { RankingsParticipacaoService } from './rankings-participacao-@.service';
+import { ParticipacaoViewModel } from './@rankings-participacao-presentation.model';
+import { RankingsParticipacaoService } from './@rankings-participacao.service';
 
 @Component({
   selector: 'rankings-participacao',

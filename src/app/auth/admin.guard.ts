@@ -11,7 +11,7 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
-import { AuthService } from './auth.service';
+import { AuthService } from './@auth.service';
 import { LogService } from '../app-@shared.services';
 import { MonstrosFirecloudRepository } from '../monstros/monstros.firecloud-repository';
 

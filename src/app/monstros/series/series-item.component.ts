@@ -6,13 +6,13 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
-import { CadastroDeExercicioViewModel } from '../series-cadastro/series-cadastro-@presentation.model';
-import { SeriesCadastroService } from '../series-cadastro/series-cadastro-@.service';
+import { CadastroDeExercicioViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
+import { SeriesCadastroService } from '../series-cadastro/@series-cadastro.service';
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { Serie, SerieDeExercicio } from './series-@domain.model';
-import { SeriesFirebaseService } from './series-@firebase.service';
+import { SeriesFirebaseService } from './@series-firebase.service';
 import { ExecucaoDeSerie } from './execucoes/execucoes-@domain.model';
-import { ExecucoesFirebaseService } from './execucoes/execucoes-@firebase.service';
+import { ExecucoesFirebaseService } from './execucoes/@execucoes-firebase.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'icone' },

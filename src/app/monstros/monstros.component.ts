@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LogService, StorageService } from '../app-@shared.services';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/@auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
 import { slideInAnimation } from './monstros-routing.animations';
 import { Monstro } from './monstros.domain-model';

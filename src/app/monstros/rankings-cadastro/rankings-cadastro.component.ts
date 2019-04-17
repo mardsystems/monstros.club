@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { RankingViewModel } from './rankings-cadastro-@presentation.model';
-import { RankingsCadastroService } from './rankings-cadastro-@.service';
+import { RankingViewModel } from './@rankings-cadastro-presentation.model';
+import { RankingsCadastroService } from './@rankings-cadastro.service';
 
 @Component({
   selector: 'rankings-cadastro',

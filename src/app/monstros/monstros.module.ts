@@ -20,11 +20,11 @@ import { RankingsParticipantesComponent } from './rankings/rankings-participante
 import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesCadastroExercicioComponent } from './series-cadastro/series-cadastro-exercicio.component';
 import { SeriesCadastroComponent } from './series-cadastro/series-cadastro.component';
-import { SeriesCadastroService } from './series-cadastro/series-cadastro-@.service';
+import { SeriesCadastroService } from './series-cadastro/@series-cadastro.service';
 import { SeriesExecucaoExercicioComponent } from './series-execucao/series-execucao-exercicio.component';
-import { EXECUCAO_DE_SERIES } from './series-execucao/series-execucao-@application.model';
+import { EXECUCAO_DE_SERIES } from './series-execucao/@series-execucao-application.model';
 import { SeriesExecucaoComponent } from './series-execucao/series-execucao.component';
-import { SeriesExecucaoService } from './series-execucao/series-execucao-@.service';
+import { SeriesExecucaoService } from './series-execucao/@series-execucao.service';
 import { ExecucoesItemComponent as ExecucoesDeSerieItemComponent } from './series/execucoes/execucoes-item.component';
 import { ExecucoesComponent as ExecucoesDeSerieComponent } from './series/execucoes/execucoes.component';
 import { SeriesExecucoesComponent } from './series/series-execucoes.component';
@@ -33,8 +33,8 @@ import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
 import { REPOSITORIO_DE_SERIES } from './series/series-@domain.model';
-import { SeriesFirebaseService } from './series/series-@firebase.service';
-import { MedidasFirebaseService } from './medidas/medidas-@firebase.service';
+import { SeriesFirebaseService } from './series/@series-firebase.service';
+import { MedidasFirebaseService } from './medidas/@medidas-firebase.service';
 
 @NgModule({
   declarations: [

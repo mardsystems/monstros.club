@@ -2,11 +2,11 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
-import { CadastroDeExercicios, CADASTRO_DE_EXERCICIOS } from '../exercicios-cadastro/exercicios-cadastro-@application.model';
-import { CadastroDeExercicioViewModel } from '../exercicios-cadastro/exercicios-cadastro-@presentation.model';
+import { CadastroDeExercicios, CADASTRO_DE_EXERCICIOS } from '../exercicios-cadastro/@exercicios-cadastro-application.model';
+import { CadastroDeExercicioViewModel } from '../exercicios-cadastro/@exercicios-cadastro-@presentation.model';
 import { ExerciciosCadastroComponent } from '../exercicios-cadastro/exercicios-cadastro.component';
-import { ConsultaDeExercicios, CONSULTA_DE_EXERCICIOS } from './exercicios-@application.model';
-import { Exercicio } from './exercicios-@domain.model';
+import { ConsultaDeExercicios, CONSULTA_DE_EXERCICIOS } from './@exercicios-application.model';
+import { Exercicio } from './@exercicios-domain.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },

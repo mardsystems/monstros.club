@@ -22,7 +22,7 @@ import { Monstro } from './monstros/monstros.domain-model';
 // import { MonstrosService } from './monstros/monstros.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SobreComponent } from './sobre/sobre.component';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './auth/@auth.service';
 import { TermosDeUsoComponent } from './termos-de-uso/termos-de-uso.component';
 import { PoliticaDePrivacidadeComponent } from './politica-de-privacidade/politica-de-privacidade.component';
 

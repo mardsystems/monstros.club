@@ -9,11 +9,11 @@ import { LogService } from 'src/app/app-@shared.services';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
-import { CadastroDeSerieViewModel } from '../series-cadastro/series-cadastro-@presentation.model';
+import { CadastroDeSerieViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
 import { Serie } from './series-@domain.model';
-import { SeriesFirebaseService } from './series-@firebase.service';
-import { SeriesCadastroService } from '../series-cadastro/series-cadastro-@.service';
-import { ExecucaoDeSerieViewModel } from '../series-execucao/series-execucao-@presentation.model';
+import { SeriesFirebaseService } from './@series-firebase.service';
+import { SeriesCadastroService } from '../series-cadastro/@series-cadastro.service';
+import { ExecucaoDeSerieViewModel } from '../series-execucao/@series-execucao-presentation.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },

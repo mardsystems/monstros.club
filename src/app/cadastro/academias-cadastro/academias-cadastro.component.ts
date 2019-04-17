@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { CadastroDeAcademias, CADASTRO_DE_ACADEMIAS } from './academias-cadastro-@application.model';
-import { CadastroDeAcademiaViewModel } from './academias-cadastro-@presentation.model';
+import { CadastroDeAcademias, CADASTRO_DE_ACADEMIAS } from './@academias-cadastro-application.model';
+import { CadastroDeAcademiaViewModel } from './@academias-cadastro-presentation.model';
 
 @Component({
   selector: 'academias-cadastro',

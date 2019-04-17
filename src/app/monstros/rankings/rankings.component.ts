@@ -9,9 +9,9 @@ import { Balanca, OmronHBF214 } from '../medidas/medidas-@domain.model';
 import { Monstro } from '../monstros.domain-model';
 import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { RankingsCadastroComponent } from '../rankings-cadastro/rankings-cadastro.component';
-import { RankingViewModel } from '../rankings-cadastro/rankings-cadastro-@presentation.model';
-import { Ranking } from './rankings-@domain.model';
-import { RankingsService } from './rankings-@firebase.service';
+import { RankingViewModel } from '../rankings-cadastro/@rankings-cadastro-presentation.model';
+import { Ranking } from './@rankings-domain.model';
+import { RankingsService } from './@rankings-firebase.service';
 
 const columnDefinitions = [
   { showMobile: false, def: 'proprietario' },

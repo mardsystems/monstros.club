@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './auth/@auth.service';
 import { Monstro } from './monstros/monstros.domain-model';
 import { MonstrosFirecloudRepository } from './monstros/monstros.firecloud-repository';
 import { SobreComponent } from './sobre/sobre.component';

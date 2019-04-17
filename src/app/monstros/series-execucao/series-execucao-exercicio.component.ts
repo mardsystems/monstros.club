@@ -4,8 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
 import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
-import { ExecucaoDeExercicioViewModel } from './series-execucao-@presentation.model';
-import { SeriesExecucaoService } from './series-execucao-@.service';
+import { ExecucaoDeExercicioViewModel } from './@series-execucao-presentation.model';
+import { SeriesExecucaoService } from './@series-execucao.service';
 
 @Component({
   selector: 'series-execucao-exercicio',

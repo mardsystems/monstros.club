@@ -2,7 +2,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Component } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../auth/@auth.service';
 import { Monstro } from '../../monstros/monstros.domain-model';
 import { MonstrosFirecloudRepository } from '../../monstros/monstros.firecloud-repository';
 import { LogService } from '../../app-@shared.services';

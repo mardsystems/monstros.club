@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { UnitOfWork, UNIT_OF_WORK } from 'src/app/app-@transactions.model';
-import { RepositorioDeAcademias, REPOSITORIO_DE_ACADEMIAS } from 'src/app/cadastro/academias/academias-@domain.model';
+import { RepositorioDeAcademias, REPOSITORIO_DE_ACADEMIAS } from 'src/app/cadastro/academias/@academias-domain.model';
 import { RepositorioDeAparelhos, REPOSITORIO_DE_APARELHOS } from 'src/app/cadastro/aparelhos/aparelhos-@domain.model';
 import { ExecucaoDeSerie } from '../series/execucoes/execucoes-@domain.model';
-import { ExecucoesFirebaseService } from '../series/execucoes/execucoes-@firebase.service';
+import { ExecucoesFirebaseService } from '../series/execucoes/@execucoes-firebase.service';
 import { RepositorioDeSeries, REPOSITORIO_DE_SERIES } from '../series/series-@domain.model';
 import { ExecucaoDeSeries, SolicitacaoDeExecucaoDeSerie } from './series-execucao-@application.model';
 

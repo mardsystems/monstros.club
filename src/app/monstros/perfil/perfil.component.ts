@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap } from 'src/app/monstros/perfil/node_modules/@
 import { of, EMPTY } from 'src/app/monstros/perfil/node_modules/rxjs';
 import { catchError, first, switchMap, tap, map, shareReplay } from 'src/app/monstros/perfil/node_modules/rxjs/operators';
 import { CalculoDeIdade, LogService } from '../../app-@shared.services';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../auth/@auth.service';
 import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { SolicitacaoDeCadastroDeMonstro } from './perfil.application-model';
 
