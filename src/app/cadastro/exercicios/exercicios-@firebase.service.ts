@@ -9,7 +9,7 @@ export class ExerciciosFirebaseService
   implements RepositorioDeExercicios, ConsultaDeExercicios {
 
   constructor(
-    readonly db: MonstrosDbContext,
+    protected readonly db: MonstrosDbContext,
   ) {
     super(db);
   }
@@ -105,6 +105,22 @@ export class ExerciciosFirebaseService
       value.musculatura as Musculatura,
       value.imagemURL,
     );
+  }
+
+  obtemExercicioObservavel(id: string): Observable<Exercicio> {
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<ExercicioDocument>(path);
+
+    const document = collection.doc<ExercicioDocument>(id);
+
+    const exercicio$ = document.valueChanges().pipe(
+      map(value => {
+        return this.mapExercicio(value);
+      })
+    );
+
+    return exercicio$;
   }
 
   // Consultas.

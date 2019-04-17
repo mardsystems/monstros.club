@@ -2,15 +2,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AparelhosExerciciosComponent } from './aparelhos-exercicios.component';
 
-describe('ExerciciosComponent', () => {
+describe('AparelhosExerciciosComponent', () => {
   let component: AparelhosExerciciosComponent;
   let fixture: ComponentFixture<AparelhosExerciciosComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AparelhosExerciciosComponent ]
+      declarations: [AparelhosExerciciosComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

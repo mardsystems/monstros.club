@@ -6,9 +6,9 @@ import { CadastroDeExercicios, SolicitacaoDeCadastroDeExercicio } from './exerci
 export class ExerciciosCadastroService implements CadastroDeExercicios {
   constructor(
     @Inject(UNIT_OF_WORK)
-    private unitOfWork: UnitOfWork,
+    protected readonly unitOfWork: UnitOfWork,
     @Inject(REPOSITORIO_DE_EXERCICIOS)
-    private repositorioDeExercicios: RepositorioDeExercicios,
+    protected readonly repositorioDeExercicios: RepositorioDeExercicios,
   ) { }
 
   async cadastraExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {

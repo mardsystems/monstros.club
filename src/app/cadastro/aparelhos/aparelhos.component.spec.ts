@@ -8,9 +8,9 @@ describe('AparelhosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AparelhosComponent ]
+      declarations: [AparelhosComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -12,8 +12,8 @@ export class CadastroDeAparelhoViewModel extends SolicitacaoDeCadastroDeAparelho
       isEdit: false,
       id: null,
       codigo: solicitacao.codigo,
-      academia: solicitacao.academia,
-      exercicios: solicitacao.exercicios,
+      academiaId: solicitacao.academiaId,
+      exerciciosIds: solicitacao.exerciciosIds,
       imagemURL: solicitacao.imagemURL,
     };
   }
@@ -25,8 +25,8 @@ export class CadastroDeAparelhoViewModel extends SolicitacaoDeCadastroDeAparelho
       isEdit: true,
       id: aparelho.id,
       codigo: solicitacao.codigo,
-      academia: solicitacao.academia,
-      exercicios: solicitacao.exercicios,
+      academiaId: solicitacao.academiaId,
+      exerciciosIds: solicitacao.exerciciosIds,
       imagemURL: solicitacao.imagemURL,
     };
   }

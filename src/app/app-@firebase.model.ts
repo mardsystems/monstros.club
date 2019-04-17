@@ -58,7 +58,7 @@ export class MonstrosDbContext extends DbContext {
 export abstract class FirebaseService<TDocument extends AggregateDocument>
   implements Repository {
   constructor(
-    readonly db: DbContext,
+    protected readonly db: DbContext,
     // protected readonly metaname: string,
   ) {
 

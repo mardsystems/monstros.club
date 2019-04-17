@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { AcademiasService } from 'src/app/cadastro/academias/academias.service';
-import { AparelhosService } from 'src/app/cadastro/aparelhos/aparelhos-@firebase.service';
+import { AparelhosFirebaseService } from 'src/app/cadastro/aparelhos/aparelhos-@firebase.service';
 import { ExecucaoDeSerie } from '../series/execucoes/execucoes-@domain.model';
 import { ExecucoesFirebaseService } from '../series/execucoes/execucoes-@firebase.service';
 import { SeriesFirebaseService } from '../series/series-@firebase.service';
@@ -14,7 +14,7 @@ export class SeriesExecucaoService
     private repositorioDeSeries: SeriesFirebaseService,
     private repositorioDeExecucoes: ExecucoesFirebaseService,
     private repositorioDeAcademias: AcademiasService,
-    private repositorioDeAparelhos: AparelhosService,
+    private repositorioDeAparelhos: AparelhosFirebaseService,
   ) { }
 
   iniciaExecucao(solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void> {

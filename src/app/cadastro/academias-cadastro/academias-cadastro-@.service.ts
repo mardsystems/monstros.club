@@ -6,9 +6,9 @@ import { CadastroDeAcademias, SolicitacaoDeCadastroDeAcademia } from './academia
 export class AcademiasCadastroService implements CadastroDeAcademias {
   constructor(
     @Inject(UNIT_OF_WORK)
-    private unitOfWork: UnitOfWork,
+    protected readonly unitOfWork: UnitOfWork,
     @Inject(REPOSITORIO_DE_ACADEMIAS)
-    private repositorioDeAcademias: RepositorioDeAcademias,
+    protected readonly repositorioDeAcademias: RepositorioDeAcademias,
   ) { }
 
   async cadastraAcademia(solicitacao: SolicitacaoDeCadastroDeAcademia): Promise<void> {

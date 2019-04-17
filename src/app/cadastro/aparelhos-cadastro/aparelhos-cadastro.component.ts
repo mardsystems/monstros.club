@@ -2,12 +2,12 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
-import { Academia } from '../academias/academias.domain-model';
-import { AcademiasService } from '../academias/academias.service';
-import { Exercicio } from '../exercicios/exercicios.domain-model';
-import { ExerciciosService } from '../exercicios/exercicios.service';
+import { ConsultaDeAcademias, CONSULTA_DE_ACADEMIAS } from '../academias/academias-@application.model';
+import { Academia } from '../academias/academias-@domain.model';
+import { ConsultaDeExercicios, CONSULTA_DE_EXERCICIOS } from '../exercicios/exercicios-@application.model';
+import { Exercicio } from '../exercicios/exercicios-@domain.model';
+import { CadastroDeAparelhos, CADASTRO_DE_APARELHOS } from './aparelhos-cadastro-@application.model';
 import { CadastroDeAparelhoViewModel } from './aparelhos-cadastro-@presentation.model';
-import { AparelhosCadastroService } from './aparelhos-cadastro-@.service';
 
 @Component({
   selector: 'aparelhos-cadastro',
@@ -23,8 +23,8 @@ export class AparelhosCadastroComponent implements OnInit {
 
   cadastroForm = this.formBuilder.group({
     codigo: [this.model.codigo],
-    academia: [this.model.academia],
-    exercicios: [this.model.exercicios],
+    academiaId: [this.model.academiaId],
+    exerciciosIds: [this.model.exerciciosIds],
     imagemURL: [this.model.imagemURL],
   });
 
@@ -32,14 +32,17 @@ export class AparelhosCadastroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeAparelhoViewModel,
     private dialogRef: MatDialogRef<AparelhosCadastroComponent>,
-    private cadastroDeAparelhos: AparelhosCadastroService,
-    private repositorioDeAcademias: AcademiasService,
-    private repositorioDeExercicios: ExerciciosService,
+    @Inject(CADASTRO_DE_APARELHOS)
+    private cadastroDeAparelhos: CadastroDeAparelhos,
+    @Inject(CONSULTA_DE_ACADEMIAS)
+    private consultaDeAcademias: ConsultaDeAcademias,
+    @Inject(CONSULTA_DE_EXERCICIOS)
+    private consultaDeExercicios: ConsultaDeExercicios,
     private formBuilder: FormBuilder,
   ) {
-    this.academias$ = this.repositorioDeAcademias.obtemAcademiasParaAdministracao(); // TODO: Exibição.
+    this.academias$ = this.consultaDeAcademias.obtemAcademiasParaAdministracao(); // TODO: Exibição.
 
-    this.exercicios$ = this.repositorioDeExercicios.obtemExerciciosParaAdministracao(); // TODO: Exibição.
+    this.exercicios$ = this.consultaDeExercicios.obtemExerciciosParaAdministracao(); // TODO: Exibição.
   }
 
   ngOnInit(): void {
@@ -51,9 +54,9 @@ export class AparelhosCadastroComponent implements OnInit {
   onSave(): void {
     this.model.codigo = this.cadastroForm.value.codigo;
 
-    this.model.academia = this.cadastroForm.value.academia;
+    this.model.academiaId = this.cadastroForm.value.academiaId;
 
-    this.model.exercicios = this.cadastroForm.value.exercicios;
+    this.model.exerciciosIds = this.cadastroForm.value.exerciciosIds;
 
     this.model.imagemURL = this.cadastroForm.value.imagemURL;
 

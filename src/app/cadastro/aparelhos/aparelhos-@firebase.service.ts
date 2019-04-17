@@ -1,67 +1,170 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { Academia } from '../academias/academias.domain-model';
-import { AcademiasService } from '../academias/academias.service';
-import { Exercicio } from '../exercicios/exercicios.domain-model';
-import { ExerciciosService } from '../exercicios/exercicios.service';
-import { Aparelho, IRepositorioDeAparelhos } from './aparelhos-@domain.model';
-import { MonstrosDbContext } from 'src/app/app-@firebase.model';
+import { first, map, switchMap } from 'rxjs/operators';
+import { FirebaseService, MonstrosDbContext } from 'src/app/app-@firebase.model';
+import { Academia } from '../academias/academias-@domain.model';
+import { AcademiasFirebaseService } from '../academias/academias-@firebase.service';
+import { Exercicio } from '../exercicios/exercicios-@domain.model';
+import { ExerciciosFirebaseService } from '../exercicios/exercicios-@firebase.service';
+import { ConsultaDeAparelhos } from './aparelhos-@application.model';
+import { Aparelho, RepositorioDeAparelhos } from './aparelhos-@domain.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AparelhosService implements IRepositorioDeAparelhos {
-  PATH = '/aparelhos'; // TODO.
+export class AparelhosFirebaseService
+  extends FirebaseService<AparelhoDocument>
+  implements RepositorioDeAparelhos, ConsultaDeAparelhos {
 
   constructor(
-    private db: MonstrosDbContext,
-    private repositorioDeAcademias: AcademiasService,
-    private repositorioDeExercicios: ExerciciosService,
-  ) { }
-
-  createId(): string {
-    const id = this.db.createId();
-
-    return id;
+    protected readonly db: MonstrosDbContext,
+    protected readonly academiasFirebaseService: AcademiasFirebaseService,
+    protected readonly exerciciosFirebaseService: ExerciciosFirebaseService,
+  ) {
+    super(db);
   }
 
-  ref(id: string): DocumentReference {
-    const collection = this.db.collection<AparelhoDocument>(this.PATH);
-
-    const document = collection.doc<AparelhoDocument>(id);
-
-    return document.ref;
+  path(): string {
+    return this.db.aparelhosPath();
   }
 
-  localiza(exercicio: Exercicio, academia: Academia): Observable<Aparelho> {
-    const academiaRef = this.repositorioDeAcademias.ref(academia.id);
+  async add(aparelho: Aparelho): Promise<void> {
+    try {
+      const path = this.path();
 
-    const exercicioRef = this.repositorioDeExercicios.ref(exercicio.id);
+      const collection = this.db.firebase.collection<AparelhoDocument>(path);
 
-    const collection = this.db.collection<AparelhoDocument>(this.PATH, reference => {
-      return reference
-        .where('academia', '==', academiaRef)
-        .where('exercicios', 'array-contains', exercicioRef)
-    });
+      const document = collection.doc<AparelhoDocument>(aparelho.id);
 
-    const aparelho$ = collection.valueChanges().pipe(
-      switchMap(values => {
-        return this.mapAparelhoObservavel(values[0]);
+      const doc = this.mapTo(aparelho);
 
-        // return values.map((value, index) => {
+      await document.set(doc);
+    } catch (e) {
+      throw e;
+    }
+  }
 
-        // });
-      })
+  async update(aparelho: Aparelho): Promise<void> {
+    try {
+      const path = this.path();
+
+      const collection = this.db.firebase.collection<AparelhoDocument>(path);
+
+      const document = collection.doc<AparelhoDocument>(aparelho.id);
+
+      const doc = this.mapTo(aparelho);
+
+      await document.update(doc);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  private mapTo(aparelho: Aparelho): AparelhoDocument {
+    const academiaRef = this.academiasFirebaseService.ref(aparelho.academia.id);
+
+    const doc: AparelhoDocument = {
+      id: aparelho.id,
+      codigo: aparelho.codigo,
+      academia: academiaRef,
+      exercicios: aparelho.exercicios.map(exercicio => {
+        const exercicioRef = this.exerciciosFirebaseService.ref(exercicio.id);
+
+        return exercicioRef;
+      }),
+      imagemURL: aparelho.imagemURL,
+    };
+
+    return doc;
+  }
+
+  async remove(aparelho: Aparelho): Promise<void> {
+    try {
+      const path = this.path();
+
+      const collection = this.db.firebase.collection<AparelhoDocument>(path);
+
+      const document = collection.doc<AparelhoDocument>(aparelho.id);
+
+      await document.delete();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async obtemAparelho(id: string): Promise<Aparelho> {
+    try {
+      const path = this.path();
+
+      const collection = this.db.firebase.collection<AparelhoDocument>(path);
+
+      const document = collection.doc<AparelhoDocument>(id);
+
+      const aparelho$ = document.valueChanges().pipe(
+        first(),
+        switchMap(value => this.mapAparelhoInner(value))
+      );
+
+      return await aparelho$.toPromise();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async localizaAparelho(exercicio: Exercicio, academia: Academia): Promise<Aparelho> {
+    try {
+      const path = this.path();
+
+      const academiaRef = this.academiasFirebaseService.ref(academia.id);
+
+      const exercicioRef = this.exerciciosFirebaseService.ref(exercicio.id);
+
+      const collection = this.db.firebase.collection<AparelhoDocument>(path, reference => {
+        return reference
+          .where('academia', '==', academiaRef)
+          .where('exercicios', 'array-contains', exercicioRef)
+      });
+
+      const aparelho$ = collection.valueChanges().pipe(
+        first(),
+        switchMap(values => {
+          return this.mapAparelhoInner(values[0]);
+
+          // return values.map((value, index) => {
+
+          // });
+        })
+      );
+
+      return await aparelho$.toPromise();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  private async mapAparelhoInner(value: AparelhoDocument): Promise<Aparelho> {
+    const academia = await this.academiasFirebaseService.obtemAcademia(value.academia.id);
+
+    const exercicios = await Promise.all(
+      value.exercicios.map(exercicioRef => this.exerciciosFirebaseService.obtemExercicio(exercicioRef.id))
     );
 
-    return aparelho$;
+    return this.mapAparelho(value, academia, exercicios);
   }
 
+  private mapAparelho(value: AparelhoDocument, academia: Academia, exercicios: Exercicio[]): Aparelho {
+    return new Aparelho(
+      value.id,
+      value.codigo,
+      academia,
+      exercicios,
+      value.imagemURL,
+    );
+  }
+
+  // Consultas.
+
   obtemAparelhosParaAdministracao(): Observable<Aparelho[]> {
-    const collection = this.db.collection<AparelhoDocument>(this.PATH, reference => {
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<AparelhoDocument>(path, reference => {
       return reference
         .orderBy('codigo', 'asc');
     });
@@ -81,20 +184,8 @@ export class AparelhosService implements IRepositorioDeAparelhos {
     );
   }
 
-  obtemAparelhoObservavel(id: string): Observable<Aparelho> {
-    const collection = this.db.collection<AparelhoDocument>(this.PATH);
-
-    const document = collection.doc<AparelhoDocument>(id);
-
-    const aparelho$ = document.valueChanges().pipe(
-      switchMap(value => this.mapAparelhoObservavel(value))
-    );
-
-    return aparelho$;
-  }
-
   private mapAparelhoObservavel(value: AparelhoDocument): Observable<Aparelho> {
-    return this.repositorioDeAcademias.obtemAcademiaObservavel(value.academia.id).pipe(
+    return this.academiasFirebaseService.obtemAcademiaObservavel(value.academia.id).pipe(
       switchMap(academia => {
         let exercicios$: Observable<Exercicio[]>;
 
@@ -102,7 +193,7 @@ export class AparelhosService implements IRepositorioDeAparelhos {
           exercicios$ = of([]);
         } else {
           exercicios$ = combineLatest(
-            value.exercicios.map(exercicioRef => this.repositorioDeExercicios.obtemExercicioObservavel(exercicioRef.id))
+            value.exercicios.map(exercicioRef => this.exerciciosFirebaseService.obtemExercicioObservavel(exercicioRef.id))
           );
         }
 
@@ -111,68 +202,6 @@ export class AparelhosService implements IRepositorioDeAparelhos {
         );
       })
     );
-  }
-
-  private mapAparelho(value: AparelhoDocument, academia: Academia, exercicios: Exercicio[]): Aparelho {
-    return new Aparelho(
-      value.id,
-      value.codigo,
-      academia,
-      exercicios,
-      value.imagemURL,
-    );
-  }
-
-  add(aparelho: Aparelho): Promise<void> {
-    const collection = this.db.collection<AparelhoDocument>(this.PATH);
-
-    const document = collection.doc<AparelhoDocument>(aparelho.id);
-
-    const doc = this.mapTo(aparelho);
-
-    const result = document.set(doc);
-
-    return result;
-  }
-
-  update(aparelho: Aparelho): Promise<void> {
-    const collection = this.db.collection<AparelhoDocument>(this.PATH);
-
-    const document = collection.doc<AparelhoDocument>(aparelho.id);
-
-    const doc = this.mapTo(aparelho);
-
-    const result = document.update(doc);
-
-    return result;
-  }
-
-  private mapTo(aparelho: Aparelho): AparelhoDocument {
-    const academiaRef = this.repositorioDeAcademias.ref(aparelho.academia.id);
-
-    const doc: AparelhoDocument = {
-      id: aparelho.id,
-      codigo: aparelho.codigo,
-      academia: academiaRef,
-      exercicios: aparelho.exercicios.map(exercicio => {
-        const exercicioRef = this.repositorioDeExercicios.ref(exercicio.id);
-
-        return exercicioRef;
-      }),
-      imagemURL: aparelho.imagemURL,
-    };
-
-    return doc;
-  }
-
-  remove(aparelhoId: string): Promise<void> {
-    const collection = this.db.collection<AparelhoDocument>(this.PATH);
-
-    const document = collection.doc<AparelhoDocument>(aparelhoId);
-
-    const result = document.delete();
-
-    return result;
   }
 }
 

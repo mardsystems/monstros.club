@@ -9,7 +9,7 @@ export class AcademiasFirebaseService
   implements RepositorioDeAcademias, ConsultaDeAcademias {
 
   constructor(
-    readonly db: MonstrosDbContext,
+    protected readonly db: MonstrosDbContext,
   ) {
     super(db);
   }
@@ -101,6 +101,22 @@ export class AcademiasFirebaseService
       value.nome,
       value.logoURL,
     );
+  }
+
+  obtemAcademiaObservavel(id: string): Observable<Academia> {
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<AcademiaDocument>(path);
+
+    const document = collection.doc<AcademiaDocument>(id);
+
+    const academia$ = document.valueChanges().pipe(
+      map(value => {
+        return this.mapAcademia(value);
+      })
+    );
+
+    return academia$;
   }
 
   // Consultas.

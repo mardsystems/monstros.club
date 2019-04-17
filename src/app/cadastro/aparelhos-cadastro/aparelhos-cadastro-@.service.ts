@@ -1,110 +1,111 @@
-import { Injectable } from '@angular/core';
-import { combineLatest, Observable, of } from 'rxjs';
-import { first } from 'rxjs/operators';
-import { AcademiasService } from '../academias/academias.service';
-import { Aparelho } from '../aparelhos/aparelhos-@domain.model';
-import { AparelhosService } from '../aparelhos/aparelhos-@firebase.service';
-import { Exercicio } from '../exercicios/exercicios.domain-model';
-import { ExerciciosService } from '../exercicios/exercicios.service';
-import { SolicitacaoDeCadastroDeAparelho } from './aparelhos-cadastro-@application.model';
+import { Inject } from '@angular/core';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/app-@transactions.model';
+import { RepositorioDeAcademias, REPOSITORIO_DE_ACADEMIAS } from '../academias/academias-@domain.model';
+import { Aparelho, RepositorioDeAparelhos, REPOSITORIO_DE_APARELHOS } from '../aparelhos/aparelhos-@domain.model';
+import { RepositorioDeExercicios, REPOSITORIO_DE_EXERCICIOS } from '../exercicios/exercicios-@domain.model';
+import { CadastroDeAparelhos, SolicitacaoDeCadastroDeAparelho } from './aparelhos-cadastro-@application.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AparelhosCadastroService {
+export class AparelhosCadastroService implements CadastroDeAparelhos {
   constructor(
-    private repositorioDeAparelhos: AparelhosService,
-    private repositorioDeAcademias: AcademiasService,
-    private repositorioDeExercicios: ExerciciosService,
+    @Inject(UNIT_OF_WORK)
+    protected readonly unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_APARELHOS)
+    protected readonly repositorioDeAparelhos: RepositorioDeAparelhos,
+    @Inject(REPOSITORIO_DE_ACADEMIAS)
+    protected readonly repositorioDeAcademias: RepositorioDeAcademias,
+    @Inject(REPOSITORIO_DE_EXERCICIOS)
+    protected readonly repositorioDeExercicios: RepositorioDeExercicios,
   ) { }
 
-  cadastraAparelho(solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.repositorioDeAcademias.obtemAcademiaObservavel(solicitacao.academia).pipe(
-        first()
-      ).subscribe(solicitacao_academia => {
-        let exercicios$: Observable<Exercicio[]>;
+  async cadastraAparelho(solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
+    this.unitOfWork.beginTransaction();
 
-        if (solicitacao.exercicios.length === 0) {
-          exercicios$ = of([]);
-        } else {
-          exercicios$ = combineLatest(
-            solicitacao.exercicios.map(exercicio =>
-              this.repositorioDeExercicios.obtemExercicioObservavel(exercicio).pipe(
-                first()
-              )
-            )
-          ).pipe(
-            first()
-          );
-        }
+    try {
+      const aparelhoId = this.repositorioDeAparelhos.createId();
 
-        exercicios$.pipe(
-          first()
-        ).subscribe(solicitacao_exercicios => {
-          const aparelhoId = this.repositorioDeAparelhos.createId();
+      const academia = await this.repositorioDeAcademias.obtemAcademia(solicitacao.academiaId);
 
-          const aparelho = new Aparelho(
-            aparelhoId,
-            solicitacao.codigo,
-            solicitacao_academia,
-            solicitacao_exercicios,
-            solicitacao.imagemURL,
-          );
+      const exercicios = await Promise.all(
+        solicitacao.exerciciosIds.map(exercicioId => this.repositorioDeExercicios.obtemExercicio(exercicioId))
+      );
 
-          const result = this.repositorioDeAparelhos.add(aparelho);
+      //
 
-          resolve(result);
-        });
-      });
-    });
+      const aparelho = new Aparelho(
+        aparelhoId,
+        solicitacao.codigo,
+        academia,
+        exercicios,
+        solicitacao.imagemURL,
+      );
+
+      //
+
+      await this.repositorioDeAparelhos.add(aparelho);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
-  atualizaAparelho(aparelhoId: string, solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.repositorioDeAcademias.obtemAcademiaObservavel(solicitacao.academia).pipe(
-        first()
-      ).subscribe(solicitacao_academia => {
-        let exercicios$: Observable<Exercicio[]>;
+  async atualizaAparelho(aparelhoId: string, solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
+    this.unitOfWork.beginTransaction();
 
-        if (solicitacao.exercicios.length === 0) {
-          exercicios$ = of([]);
-        } else {
-          exercicios$ = combineLatest(
-            solicitacao.exercicios.map(exercicio =>
-              this.repositorioDeExercicios.obtemExercicioObservavel(exercicio).pipe(
-                first()
-              )
-            )
-          ).pipe(
-            first()
-          );
-        }
+    try {
+      const aparelho = await this.repositorioDeAparelhos.obtemAparelho(aparelhoId);
 
-        exercicios$.pipe(
-          first()
-        ).subscribe(solicitacao_exercicios => {
-          this.repositorioDeAparelhos.obtemAparelhoObservavel(aparelhoId).pipe(
-            first()
-          ).subscribe(aparelho => {
-            aparelho.alteraCodigo(solicitacao.codigo);
+      const academia = await this.repositorioDeAcademias.obtemAcademia(solicitacao.academiaId);
 
-            aparelho.corrigeAcademia(solicitacao_academia);
+      const exercicios = await Promise.all(
+        solicitacao.exerciciosIds.map(exercicioId => this.repositorioDeExercicios.obtemExercicio(exercicioId))
+      );
 
-            aparelho.alteraExercicios(solicitacao_exercicios);
+      //
 
-            aparelho.alteraImagemURL(solicitacao.imagemURL);
+      aparelho.alteraCodigo(solicitacao.codigo);
 
-            const result = this.repositorioDeAparelhos.update(aparelho);
+      aparelho.corrigeAcademia(academia);
 
-            resolve(result);
-          });
-        });
-      });
-    });
+      aparelho.alteraExercicios(exercicios);
+
+      aparelho.alteraImagemURL(solicitacao.imagemURL);
+
+      //
+
+      await this.repositorioDeAparelhos.update(aparelho);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
   async excluiAparelho(aparelhoId: string): Promise<void> {
-    return await this.repositorioDeAparelhos.remove(aparelhoId);
+    this.unitOfWork.beginTransaction();
+
+    try {
+      const aparelho = await this.repositorioDeAparelhos.obtemAparelho(aparelhoId);
+
+      //
+
+      await this.repositorioDeAparelhos.remove(aparelho);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 }

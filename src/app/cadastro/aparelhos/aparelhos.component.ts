@@ -1,13 +1,12 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AparelhosCadastroComponent } from '../aparelhos-cadastro/aparelhos-cadastro.component';
+import { CadastroDeAparelhos, CADASTRO_DE_APARELHOS } from '../aparelhos-cadastro/aparelhos-cadastro-@application.model';
 import { CadastroDeAparelhoViewModel } from '../aparelhos-cadastro/aparelhos-cadastro-@presentation.model';
-import { AparelhosCadastroService } from '../aparelhos-cadastro/aparelhos-cadastro-@.service';
+import { AparelhosCadastroComponent } from '../aparelhos-cadastro/aparelhos-cadastro.component';
+import { ConsultaDeAparelhos, CONSULTA_DE_APARELHOS } from './aparelhos-@application.model';
 import { Aparelho } from './aparelhos-@domain.model';
-import { AparelhosService } from './aparelhos-@firebase.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },
@@ -35,16 +34,17 @@ export class AparelhosComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private repositorioDeAparelhos: AparelhosService,
-    private cadastroDeAparelhos: AparelhosCadastroService,
+    @Inject(CONSULTA_DE_APARELHOS)
+    private consultaDeAparelhos: ConsultaDeAparelhos,
+    @Inject(CADASTRO_DE_APARELHOS)
+    private cadastroDeAparelhos: CadastroDeAparelhos,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
   }
 
   ngOnInit() {
-    this.aparelhos$ = this.repositorioDeAparelhos.obtemAparelhosParaAdministracao();
+    this.aparelhos$ = this.consultaDeAparelhos.obtemAparelhosParaAdministracao();
 
     this.aparelhos$.subscribe(aparelhos => {
       this.dataSource = new MatTableDataSource(aparelhos);

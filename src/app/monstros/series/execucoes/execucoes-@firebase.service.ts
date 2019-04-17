@@ -5,7 +5,7 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { CONST_TIMESTAMP_FALSO, Tempo } from 'src/app/app-@domain.model';
 import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
-import { AparelhosService } from 'src/app/cadastro/aparelhos/aparelhos-@firebase.service';
+import { AparelhosFirebaseService } from 'src/app/cadastro/aparelhos/aparelhos-@firebase.service';
 import { Serie } from '../series-@domain.model';
 import { SeriesFirebaseService } from '../series-@firebase.service';
 import { ExecucaoDeExercicio, ExecucaoDeSerie } from './execucoes-@domain.model';
@@ -20,7 +20,7 @@ export class ExecucoesFirebaseService {
   constructor(
     private db: AngularFirestore,
     private repositorioDeSeries: SeriesFirebaseService,
-    private repositorioDeAparelhos: AparelhosService,
+    private repositorioDeAparelhos: AparelhosFirebaseService,
     private repositorioDeAcademias: AcademiasService,
   ) { }
 

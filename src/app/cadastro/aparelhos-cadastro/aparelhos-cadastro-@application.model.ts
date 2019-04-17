@@ -1,16 +1,27 @@
+import { InjectionToken } from '@angular/core';
 import { Aparelho } from '../aparelhos/aparelhos-@domain.model';
+
+export const CADASTRO_DE_APARELHOS = new InjectionToken<CadastroDeAparelhos>('CADASTRO_DE_APARELHOS');
+
+export interface CadastroDeAparelhos {
+  cadastraAparelho(solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void>;
+
+  atualizaAparelho(aparelhoId: string, solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void>;
+
+  excluiAparelho(aparelhoId: string): Promise<void>;
+}
 
 export class SolicitacaoDeCadastroDeAparelho {
   codigo: string;
-  academia: string;
-  exercicios: string[];
+  academiaId: string;
+  exerciciosIds: string[];
   imagemURL: string;
 
   static toAdd(): SolicitacaoDeCadastroDeAparelho {
     return {
       codigo: null,
-      academia: null,
-      exercicios: [],
+      academiaId: null,
+      exerciciosIds: [],
       imagemURL: null,
     };
   }
@@ -18,8 +29,8 @@ export class SolicitacaoDeCadastroDeAparelho {
   static toEdit(aparelho: Aparelho): SolicitacaoDeCadastroDeAparelho {
     return {
       codigo: aparelho.codigo,
-      academia: aparelho.academia.id,
-      exercicios: aparelho.exercicios.map(exercicio => exercicio.id),
+      academiaId: aparelho.academia.id,
+      exerciciosIds: aparelho.exercicios.map(exercicio => exercicio.id),
       imagemURL: aparelho.imagemURL,
     };
   }

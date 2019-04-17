@@ -1,6 +1,7 @@
-import { Academia } from '../academias/academias.domain-model';
-import { Exercicio } from '../exercicios/exercicios.domain-model';
-import { Observable } from 'rxjs';
+import { InjectionToken } from '@angular/core';
+import { Repository } from 'src/app/app-@domain.model';
+import { Academia } from '../academias/academias-@domain.model';
+import { Exercicio } from '../exercicios/exercicios-@domain.model';
 
 export class Aparelho {
   public constructor(
@@ -40,6 +41,16 @@ export class Aparelho {
   }
 }
 
-export interface IRepositorioDeAparelhos {
-  localiza(exercicio: Exercicio, academia: Academia): Observable<Aparelho>;
+export interface RepositorioDeAparelhos extends Repository {
+  localizaAparelho(exercicio: Exercicio, academia: Academia): Promise<Aparelho>;
+
+  obtemAparelho(id: string): Promise<Aparelho>;
+
+  add(aparelho: Aparelho): Promise<void>;
+
+  update(aparelho: Aparelho): Promise<void>;
+
+  remove(aparelho: Aparelho): Promise<void>;
 }
+
+export const REPOSITORIO_DE_APARELHOS = new InjectionToken<RepositorioDeAparelhos>('REPOSITORIO_DE_APARELHOS');
