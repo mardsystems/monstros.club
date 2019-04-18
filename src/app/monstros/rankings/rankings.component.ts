@@ -6,7 +6,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
-import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
 import { Balanca, OmronHBF214 } from '../medidas/@medidas-domain.model';
 import { RankingViewModel } from '../rankings-cadastro/@rankings-cadastro-presentation.model';
 import { RankingsCadastroComponent } from '../rankings-cadastro/rankings-cadastro.component';
@@ -47,7 +47,7 @@ export class RankingsComponent implements OnInit {
     private route: ActivatedRoute,
     private rankingsFirebaseService: RankingsFirebaseService,
     private monstrosFirebaseService: MonstrosFirebaseService,
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
+    private monstrosMembershipService: MonstrosMembershipService,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -86,13 +86,13 @@ export class RankingsComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
+        return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.adaptadorParaUserInfo.ehAdministrador();
+          return this.monstrosMembershipService.ehAdministrador();
         }
       }),
       map(value => !value),

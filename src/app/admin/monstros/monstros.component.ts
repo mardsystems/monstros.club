@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LogService } from 'src/app/@app-common.model';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
-import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
 import { AuthService } from '../../auth/@auth.service';
 
 @Component({
@@ -30,7 +30,7 @@ export class MonstrosComponent {
   activePath: string;
 
   constructor(
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
+    private monstrosMembershipService: MonstrosMembershipService,
     private authService: AuthService,
     private router: Router,
     private log: LogService,
@@ -40,7 +40,7 @@ export class MonstrosComponent {
 
     this.activePath = this.router.url;
 
-    this.monstroLogado$ = this.adaptadorParaUserInfo.monstroLogado$;
+    this.monstroLogado$ = this.monstrosMembershipService.monstroLogado$;
 
     this.monstroLogado$.pipe(
       tap((value) => this.log.debug('AdminComponent: constructor: monstroLogado: ', value))

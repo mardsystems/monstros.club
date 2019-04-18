@@ -15,7 +15,7 @@ import { MonstrosFirebaseService } from './@monstros-firebase.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AdaptadorParaUserInfo {
+export class MonstrosMembershipService {
   monstroLogado$: Observable<Monstro>;
 
   constructor(

@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Route, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { AdaptadorParaUserInfo } from '../cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from '../cadastro/monstros/@monstros-membership.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminGuard implements CanActivate, CanActivateChild, CanLoad {
   constructor(
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
+    private monstrosMembershipService: MonstrosMembershipService,
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -29,7 +29,7 @@ export class AdminGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   checkLogin(url: string): Observable<boolean> {
-    const ehAdministrador$ = this.adaptadorParaUserInfo.ehAdministrador().pipe(
+    const ehAdministrador$ = this.monstrosMembershipService.ehAdministrador().pipe(
       first(),
       // map((auth) => {
       //   if (auth) {

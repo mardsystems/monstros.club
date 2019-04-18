@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth/@auth.service';
 import { Monstro } from './cadastro/monstros/@monstros-domain.model';
-import { AdaptadorParaUserInfo } from './cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from './cadastro/monstros/@monstros-membership.service';
 import { SobreComponent } from './sobre/sobre.component';
 
 @Component({
@@ -21,11 +21,11 @@ export class AppComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private dialog: MatDialog,
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo
+    private monstrosMembershipService: MonstrosMembershipService
   ) {
-    this.ehAnonimo$ = this.adaptadorParaUserInfo.ehAnonimo();
+    this.ehAnonimo$ = this.monstrosMembershipService.ehAnonimo();
 
-    this.monstroLogado$ = this.adaptadorParaUserInfo.monstroLogado$;
+    this.monstroLogado$ = this.monstrosMembershipService.monstroLogado$;
   }
 
   ngOnInit() {

@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
-import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
 import { CadastroDeMedidas, CADASTRO_DE_MEDIDAS } from '../medidas-cadastro/@medidas-cadastro-application.model';
 import { CadastroDeMedidaViewModel } from '../medidas-cadastro/@medidas-cadastro-presentation.model';
 import { MedidasCadastroComponent } from '../medidas-cadastro/medidas-cadastro.component';
@@ -72,7 +72,7 @@ export class MedidasComponent implements OnInit {
     private consultaDeMedidas: MedidasFirebaseService, // ConsultaDeMedidas
     // @Inject(CONSULTA_DE_MONSTROS)
     private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
+    private monstrosMembershipService: MonstrosMembershipService,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -153,13 +153,13 @@ export class MedidasComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
+        return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.adaptadorParaUserInfo.ehAdministrador();
+          return this.monstrosMembershipService.ehAdministrador();
         }
       }),
       map(value => !value),

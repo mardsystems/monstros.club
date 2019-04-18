@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Monstro } from '../cadastro/monstros/@monstros-domain.model';
 import { MonstrosFirebaseService } from '../cadastro/monstros/@monstros-firebase.service';
-import { AdaptadorParaUserInfo } from '../cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from '../cadastro/monstros/@monstros-membership.service';
 
 @Component({
   selector: 'app-home',
@@ -17,13 +17,13 @@ export class HomeComponent implements OnInit {
   ehAdministrador$: Observable<boolean>;
 
   constructor(
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo
+    private monstrosMembershipService: MonstrosMembershipService
   ) {
-    this.ehAnonimo$ = this.adaptadorParaUserInfo.ehAnonimo();
+    this.ehAnonimo$ = this.monstrosMembershipService.ehAnonimo();
 
-    this.monstroLogado$ = this.adaptadorParaUserInfo.monstroLogado$;
+    this.monstroLogado$ = this.monstrosMembershipService.monstroLogado$;
 
-    this.ehAdministrador$ = this.adaptadorParaUserInfo.ehAdministrador();
+    this.ehAdministrador$ = this.monstrosMembershipService.ehAdministrador();
   }
 
   ngOnInit() {

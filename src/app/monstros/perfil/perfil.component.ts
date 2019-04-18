@@ -9,7 +9,7 @@ import {
   CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro
 } from 'src/app/cadastro/monstros-cadastro/@monstros-cadastro-application.model';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
-import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
 import { MonstrosCadastroService } from 'src/app/cadastro/monstros-cadastro/@monstros-cadastro.service';
 
@@ -32,7 +32,7 @@ export class PerfilComponent implements OnInit {
     private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
     // @Inject(CADASTRO_DE_MONSTROS)
     private cadastroDeMonstros: MonstrosCadastroService, // CadastroDeMonstros
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
+    private monstrosMembershipService: MonstrosMembershipService,
     private calculoDeIdade: CalculoDeIdade,
     private log: LogService,
   ) { }
@@ -70,14 +70,14 @@ export class PerfilComponent implements OnInit {
         if (!monstro) {
           return of(false);
         } else {
-          return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
+          return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
         }
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.adaptadorParaUserInfo.ehAdministrador();
+          return this.monstrosMembershipService.ehAdministrador();
         }
       })
     ).subscribe(value => {

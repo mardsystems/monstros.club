@@ -14,7 +14,7 @@ import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.comp
 import { Serie } from './@series-domain.model';
 import { SeriesFirebaseService } from './@series-firebase.service';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
-import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
 
 const columnDefinitions = [
@@ -50,7 +50,7 @@ export class SeriesComponent implements OnInit {
     private cadastroDeSeries: SeriesCadastroService,
     // @Inject(CONSULTA_DE_MONSTROS)
     private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
+    private monstrosMembershipService: MonstrosMembershipService,
     private snackBar: MatSnackBar,
     private log: LogService,
     media: MediaMatcher
@@ -98,13 +98,13 @@ export class SeriesComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
+        return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.adaptadorParaUserInfo.ehAdministrador();
+          return this.monstrosMembershipService.ehAdministrador();
         }
       }),
       map(value => !value),

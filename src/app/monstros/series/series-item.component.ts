@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
-import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
 import { CadastroDeExercicioViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
 import { SeriesCadastroService } from '../series-cadastro/@series-cadastro.service';
 import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
@@ -55,7 +55,7 @@ export class SeriesItemComponent implements OnInit {
     private repositorioDeExecucoes: ExecucoesFirebaseService,
     private cadastroDeSeries: SeriesCadastroService,
     private monstrosService: MonstrosFirebaseService,
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
+    private monstrosMembershipService: MonstrosMembershipService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
@@ -108,13 +108,13 @@ export class SeriesItemComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
+        return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.adaptadorParaUserInfo.ehAdministrador();
+          return this.monstrosMembershipService.ehAdministrador();
         }
       }),
       map(value => !value),

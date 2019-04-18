@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../auth/@auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
 import { slideInAnimation } from './monstros-routing.animations';
-import { AdaptadorParaUserInfo } from '../cadastro/monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from '../cadastro/monstros/@monstros-membership.service';
 import { Monstro } from '../cadastro/monstros/@monstros-domain.model';
 import { StorageService, LogService } from '../@app-common.model';
 
@@ -29,7 +29,7 @@ export class MonstrosComponent {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
+    private monstrosMembershipService: MonstrosMembershipService,
     private authService: AuthService,
     private storageService: StorageService,
     private log: LogService,
@@ -63,7 +63,7 @@ export class MonstrosComponent {
 
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
 
-    this.monstroLogado$ = this.adaptadorParaUserInfo.monstroLogado$;
+    this.monstroLogado$ = this.monstrosMembershipService.monstroLogado$;
 
     // this.monstroLogado$.pipe(
     //   // tap((value) => this.log.debug('MonstrosComponent: constructor: monstroLogado: ', value)),

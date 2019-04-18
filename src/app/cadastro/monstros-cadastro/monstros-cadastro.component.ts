@@ -5,7 +5,7 @@ import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
 import { AuthService } from 'src/app/auth/@auth.service';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from '../monstros/@monstros-application.model';
-import { AdaptadorParaUserInfo } from '../monstros/@monstros-integration.model';
+import { MonstrosMembershipService } from '../monstros/@monstros-membership.service';
 import { CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro } from './@monstros-cadastro-application.model';
 import { MonstrosCadastroService } from './@monstros-cadastro.service';
 import { MonstrosFirebaseService } from '../monstros/@monstros-firebase.service';
@@ -32,7 +32,7 @@ export class MonstrosCadastroComponent implements OnInit {
     private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
     // @Inject(CALCULO_DE_IDADE)
     private calculoDeIdade: ServicoDeCalculoDeIdade, // CalculoDeIdade
-    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
+    private monstrosMembershipService: MonstrosMembershipService,
   ) { }
 
   ngOnInit() {
@@ -68,14 +68,14 @@ export class MonstrosCadastroComponent implements OnInit {
         if (!monstro) {
           return of(false);
         } else {
-          return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
+          return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
         }
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.adaptadorParaUserInfo.ehAdministrador();
+          return this.monstrosMembershipService.ehAdministrador();
         }
       })
     ).subscribe(value => {
