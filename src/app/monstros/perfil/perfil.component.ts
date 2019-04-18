@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/@app-common.model';
+import { LogService, ServicoDeCalculoDeIdade } from 'src/app/@app-common.model';
 import { CalculoDeIdade } from 'src/app/@app-domain.model';
 import { AuthService } from 'src/app/auth/@auth.service';
 import {
@@ -33,7 +33,7 @@ export class PerfilComponent implements OnInit {
     // @Inject(CADASTRO_DE_MONSTROS)
     private cadastroDeMonstros: MonstrosCadastroService, // CadastroDeMonstros
     private monstrosMembershipService: MonstrosMembershipService,
-    private calculoDeIdade: CalculoDeIdade,
+    private calculoDeIdade: ServicoDeCalculoDeIdade, // CalculoDeIdade
     private log: LogService,
   ) { }
 
