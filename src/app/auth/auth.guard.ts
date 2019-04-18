@@ -1,18 +1,9 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  CanActivateChild,
-  CanLoad,
-  NavigationExtras,
-  Route,
-  Router,
-  RouterStateSnapshot
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, NavigationExtras, Route, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
+import { LogService } from '../@app-common.model';
 import { AuthService } from './@auth.service';
-import { LogService } from '../app-@shared.services';
 
 @Injectable({
   providedIn: 'root',

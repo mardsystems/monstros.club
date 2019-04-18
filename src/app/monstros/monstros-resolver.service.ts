@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, first, mergeMap } from 'rxjs/operators';
-import { Monstro } from './monstros.domain-model';
-import { MonstrosFirecloudRepository } from './monstros.firecloud-repository';
+import { Monstro } from '../cadastro/monstros/@monstros-domain.model';
+import { MonstrosFirebaseService } from '../cadastro/monstros/@monstros-firebase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MonstrosResolverService implements Resolve<Monstro> {
   constructor(
-    private monstrosService: MonstrosFirecloudRepository,
+    private monstrosService: MonstrosFirebaseService,
     private router: Router
   ) { }
 

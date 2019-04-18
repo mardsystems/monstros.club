@@ -4,7 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { auth, UserInfo } from 'firebase/app';
 import { Observable, of, Subject } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
-import { LogService } from '../app-@shared.services';
+import { LogService } from '../@app-common.model';
 
 @Injectable({
   providedIn: 'root',
@@ -120,7 +120,7 @@ export class AuthService {
 
   private async socialSignIn(provider): Promise<void> {
     try {
-      const userCredential = await this.angularFireAuth.auth.signInWithPopup(provider)
+      const userCredential = await this.angularFireAuth.auth.signInWithPopup(provider);
 
       this.log.debug('signInWithPopup: ', (userCredential !== null ? userCredential.user.uid : 'nulo') + '"');
 

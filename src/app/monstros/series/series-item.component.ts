@@ -4,14 +4,15 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
-import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
+import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
 import { CadastroDeExercicioViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
 import { SeriesCadastroService } from '../series-cadastro/@series-cadastro.service';
+import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
-import { Serie, SerieDeExercicio } from './series-@domain.model';
+import { Serie, SerieDeExercicio } from './@series-domain.model';
 import { SeriesFirebaseService } from './@series-firebase.service';
-import { ExecucaoDeSerie } from './execucoes/execucoes-@domain.model';
+import { ExecucaoDeSerie } from './execucoes/@execucoes-domain.model';
 import { ExecucoesFirebaseService } from './execucoes/@execucoes-firebase.service';
 
 const columnDefinitions = [
@@ -53,7 +54,8 @@ export class SeriesItemComponent implements OnInit {
     private repositorioDeSeries: SeriesFirebaseService,
     private repositorioDeExecucoes: ExecucoesFirebaseService,
     private cadastroDeSeries: SeriesCadastroService,
-    private monstrosService: MonstrosFirecloudRepository,
+    private monstrosService: MonstrosFirebaseService,
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
@@ -106,13 +108,13 @@ export class SeriesItemComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.monstrosService.ehVoceMesmo(monstro.id);
+        return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.monstrosService.ehAdministrador();
+          return this.adaptadorParaUserInfo.ehAdministrador();
         }
       }),
       map(value => !value),

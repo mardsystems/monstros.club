@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Monstro } from '../monstros/monstros.domain-model';
-import { MonstrosFirecloudRepository } from '../monstros/monstros.firecloud-repository';
+import { Monstro } from '../cadastro/monstros/@monstros-domain.model';
+import { MonstrosFirebaseService } from '../cadastro/monstros/@monstros-firebase.service';
+import { AdaptadorParaUserInfo } from '../cadastro/monstros/@monstros-integration.model';
 
 @Component({
   selector: 'app-home',
@@ -16,13 +17,13 @@ export class HomeComponent implements OnInit {
   ehAdministrador$: Observable<boolean>;
 
   constructor(
-    private monstrosService: MonstrosFirecloudRepository
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo
   ) {
-    this.ehAnonimo$ = this.monstrosService.ehAnonimo();
+    this.ehAnonimo$ = this.adaptadorParaUserInfo.ehAnonimo();
 
-    this.monstroLogado$ = this.monstrosService.monstroLogado$;
+    this.monstroLogado$ = this.adaptadorParaUserInfo.monstroLogado$;
 
-    this.ehAdministrador$ = this.monstrosService.ehAdministrador();
+    this.ehAdministrador$ = this.adaptadorParaUserInfo.ehAdministrador();
   }
 
   ngOnInit() {

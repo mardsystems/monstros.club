@@ -3,8 +3,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { Monstro } from '../../../monstros/monstros.domain-model';
-import { MonstrosFirecloudRepository } from '../../../monstros/monstros.firecloud-repository';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -29,7 +29,7 @@ export class ListagemComponent implements OnInit {
   desktopQuery: MediaQueryList;
 
   constructor(
-    private monstrosService: MonstrosFirecloudRepository,
+    private monstrosService: MonstrosFirebaseService,
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');

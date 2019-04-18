@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Exercicio } from '../cadastro/exercicios/exercicios.domain-model';
+import { Component, Input, OnInit } from '@angular/core';
+import { Exercicio } from '../cadastro/exercicios/@exercicios-domain.model';
 
 @Component({
   selector: 'botao-de-exercicio',

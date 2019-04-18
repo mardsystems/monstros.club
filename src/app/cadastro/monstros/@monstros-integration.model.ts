@@ -3,19 +3,22 @@ import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { LogService } from 'src/app/@app-common.model';
+import { AuthService } from 'src/app/auth/@auth.service';
 import {
   CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro
 } from '../monstros-cadastro/@monstros-cadastro-application.model';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from './@academias-application.model';
 import { Monstro, RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from './@monstros-domain.model';
 
 export class AdaptadorParaUserInfo {
   monstroLogado$: Observable<Monstro>;
 
   constructor(
-    @Inject(AUTH)
-    private auth: Auth,
+    private auth: AuthService,
     @Inject(CADASTRO_DE_MONSTROS)
     private cadastroDeMonstros: CadastroDeMonstros,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
     @Inject(REPOSITORIO_DE_MONSTROS)
     private repositorioDeMonstros: RepositorioDeMonstros,
     private log: LogService
@@ -25,7 +28,7 @@ export class AdaptadorParaUserInfo {
       tap((value) => this.log.debug('MonstrosService: constructor: user: ', value)),
       switchMap(user => {
         if (user) {
-          const monstro$ = this.repositorioDeMonstros.obtemMonstro(user.uid).pipe(
+          const monstro$ = this.consultaDeMonstros.obtemMonstroObservavel(user.uid).pipe(
             // first(), // TODO: Evita depedência cíclica com a atualização posterior do mostro.
             catchError((error, source$) => {
               const solicitacao: SolicitacaoDeCadastroDeMonstro = {
@@ -45,7 +48,7 @@ export class AdaptadorParaUserInfo {
 
               this.cadastroDeMonstros.cadastraMonstro(solicitacao);
 
-              const monstroCadastrado$ = this.obtemMonstroObservavel(user.uid).pipe(
+              const monstroCadastrado$ = this.consultaDeMonstros.obtemMonstroObservavel(user.uid).pipe(
                 // first(),
                 tap((value) => this.log.debug('MonstrosService: monstroCadastrado: ', value)),
                 catchError((error2, source2$) => {

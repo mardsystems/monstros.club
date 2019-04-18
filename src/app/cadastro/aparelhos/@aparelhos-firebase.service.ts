@@ -119,7 +119,7 @@ export class AparelhosFirebaseService
       const collection = this.db.firebase.collection<AparelhoDocument>(path, reference => {
         return reference
           .where('academia', '==', academiaRef)
-          .where('exercicios', 'array-contains', exercicioRef)
+          .where('exercicios', 'array-contains', exercicioRef);
       });
 
       const aparelho$ = collection.valueChanges().pipe(
@@ -160,6 +160,20 @@ export class AparelhosFirebaseService
   }
 
   // Consultas.
+
+  obtemAparelhoObservavel(id: string): Observable<Aparelho> {
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<AparelhoDocument>(path);
+
+    const document = collection.doc<AparelhoDocument>(id);
+
+    const aparelho$ = document.valueChanges().pipe(
+      switchMap(value => this.mapAparelhoInner(value))
+    );
+
+    return aparelho$;
+  }
 
   obtemAparelhosParaAdministracao(): Observable<Aparelho[]> {
     const path = this.path();

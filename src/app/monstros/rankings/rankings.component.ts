@@ -6,6 +6,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
 import { Balanca, OmronHBF214 } from '../medidas/@medidas-domain.model';
 import { RankingViewModel } from '../rankings-cadastro/@rankings-cadastro-presentation.model';
 import { RankingsCadastroComponent } from '../rankings-cadastro/rankings-cadastro.component';
@@ -46,6 +47,7 @@ export class RankingsComponent implements OnInit {
     private route: ActivatedRoute,
     private rankingsFirebaseService: RankingsFirebaseService,
     private monstrosFirebaseService: MonstrosFirebaseService,
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -84,13 +86,13 @@ export class RankingsComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.monstrosFirebaseService.ehVoceMesmo(monstro.id);
+        return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.monstrosFirebaseService.ehAdministrador();
+          return this.adaptadorParaUserInfo.ehAdministrador();
         }
       }),
       map(value => !value),

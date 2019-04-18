@@ -1,4 +1,4 @@
-import { Aparelho } from '../aparelhos/aparelhos-@domain.model';
+import { Aparelho } from '../aparelhos/@aparelhos-domain.model';
 import { SolicitacaoDeCadastroDeAparelho } from './@aparelhos-cadastro-application.model';
 
 export class CadastroDeAparelhoViewModel extends SolicitacaoDeCadastroDeAparelho {

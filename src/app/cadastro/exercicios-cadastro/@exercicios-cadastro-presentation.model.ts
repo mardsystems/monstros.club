@@ -1,4 +1,4 @@
-import { Exercicio } from '../exercicios/exercicios.domain-model';
+import { Exercicio } from '../exercicios/@exercicios-domain.model';
 import { SolicitacaoDeCadastroDeExercicio } from './@exercicios-cadastro-application.model';
 
 export class CadastroDeExercicioViewModel extends SolicitacaoDeCadastroDeExercicio {

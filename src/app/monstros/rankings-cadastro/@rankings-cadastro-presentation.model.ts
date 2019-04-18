@@ -1,4 +1,4 @@
-import { Monstro } from '../monstros.domain-model';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { Ranking } from '../rankings/@rankings-domain.model';
 import { SolicitacaoDeCadastroDeRanking } from './@rankings-cadastro-application.model';
 

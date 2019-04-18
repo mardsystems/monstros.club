@@ -3,8 +3,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { Balanca, Medida, OmronHBF214 } from '../../../monstros/medidas/medidas-@domain.model';
-import { MedidasFirebaseService } from '../../../monstros/medidas/medidas-firecloud.service';
+import { Medida, Balanca, OmronHBF214 } from 'src/app/monstros/medidas/@medidas-domain.model';
+import { MedidasFirebaseService } from 'src/app/monstros/medidas/@medidas-firebase.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },

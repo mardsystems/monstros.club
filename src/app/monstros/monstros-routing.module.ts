@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
-import * as monstros from '../cadastro/monstros-cadastro/monstros-cadastro.component';
+import { MonstrosCadastroComponent } from '../cadastro/monstros-cadastro/monstros-cadastro.component';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 import { MedidasComponent } from './medidas/medidas.component';
 import { MonstrosResolverService } from './monstros-resolver.service';
 import { MonstrosComponent } from './monstros.component';
 import { RankingsItemComponent } from './rankings/rankings-item.component';
 import { RankingsComponent } from './rankings/rankings.component';
+import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
-import { SeriesItemComponent } from './series/series-item.component';
 
 const monstrosRoutes: Routes = [
   // { path: 'heroes', redirectTo: '/superheroes' },
@@ -34,7 +34,7 @@ const monstrosRoutes: Routes = [
           { path: 'rankings', component: RankingsComponent, data: { animation: 'rankings' } },
           { path: 'rankings/:rankingId', component: RankingsItemComponent, data: { animation: 'ranking' } },
           { path: 'configuracoes', component: ConfiguracoesComponent, data: { animation: 'configuracoes' } },
-          { path: '', component: monstros.CadastroComponent, data: { animation: 'monstro' } }
+          { path: '', component: MonstrosCadastroComponent, data: { animation: 'monstro' } }
         ]
       }
     ]

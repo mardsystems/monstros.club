@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { first, tap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-@shared.services';
-import { TipoDeBalanca } from '../medidas/medidas-@domain.model';
-import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
+import { LogService } from 'src/app/@app-common.model';
+import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { TipoDeBalanca } from '../medidas/@medidas-domain.model';
 import { Ranking } from '../rankings/@rankings-domain.model';
 import { RankingsFirebaseService } from '../rankings/@rankings-firebase.service';
 import { ICadastroDeRanking, SolicitacaoDeCadastroDeRanking } from './@rankings-cadastro-application.model';
@@ -14,7 +14,7 @@ export class RankingsCadastroService
   implements ICadastroDeRanking {
 
   constructor(
-    private repositorioDeMonstros: MonstrosFirecloudRepository,
+    private repositorioDeMonstros: MonstrosFirebaseService,
     private repositorioDeRankings: RankingsFirebaseService,
     private log: LogService
   ) { }

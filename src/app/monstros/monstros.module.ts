@@ -18,6 +18,7 @@ import { PosicaoComponent } from './rankings/posicao/posicao.component';
 import { RankingsItemComponent } from './rankings/rankings-item.component';
 import { RankingsParticipantesComponent } from './rankings/rankings-participantes.component';
 import { RankingsComponent } from './rankings/rankings.component';
+import { CADASTRO_DE_SERIES } from './series-cadastro/@series-cadastro-application.model';
 import { SeriesCadastroService } from './series-cadastro/@series-cadastro.service';
 import { SeriesCadastroExercicioComponent } from './series-cadastro/series-cadastro-exercicio.component';
 import { SeriesCadastroComponent } from './series-cadastro/series-cadastro.component';
@@ -83,7 +84,7 @@ import { TreinosComponent } from './treinos/treinos.component';
   providers: [
     MedidasFirebaseService,
     { provide: REPOSITORIO_DE_SERIES, useClass: SeriesFirebaseService },
-    { provide: CadastroDeSeries, useClass: SeriesCadastroService },
+    { provide: CADASTRO_DE_SERIES, useClass: SeriesCadastroService },
     { provide: EXECUCAO_DE_SERIES, useClass: SeriesExecucaoService }
   ]
 })

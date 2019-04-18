@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MedidasFirebaseService } from 'src/app/monstros/medidas/medidas-firecloud.service';
+import { MedidasFirebaseService } from 'src/app/monstros/medidas/@medidas-firebase.service';
 import { SelectivePreloadingStrategyService } from 'src/app/selective-preloading-strategy.service';
 
 @Component({

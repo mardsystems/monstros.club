@@ -3,13 +3,13 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { CONST_TIMESTAMP_FALSO, Tempo } from 'src/app/@app-domain.model';
-import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
+import { CONST_TIMESTAMP_FALSO } from 'src/app/@app-domain.model';
+import { Academia } from 'src/app/cadastro/academias/@academias-domain.model';
+import { AcademiasFirebaseService } from 'src/app/cadastro/academias/@academias-firebase.service';
 import { AparelhosFirebaseService } from 'src/app/cadastro/aparelhos/@aparelhos-firebase.service';
-import { Serie } from '../series-@domain.model';
+import { Serie } from '../@series-domain.model';
 import { SeriesFirebaseService } from '../@series-firebase.service';
-import { ExecucaoDeExercicio, ExecucaoDeSerie } from './execucoes-@domain.model';
-import { AcademiasService } from 'src/app/cadastro/academias/academias.service';
+import { ExecucaoDeExercicio, ExecucaoDeSerie } from './@execucoes-domain.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class ExecucoesFirebaseService {
     private db: AngularFirestore,
     private repositorioDeSeries: SeriesFirebaseService,
     private repositorioDeAparelhos: AparelhosFirebaseService,
-    private repositorioDeAcademias: AcademiasService,
+    private repositorioDeAcademias: AcademiasFirebaseService,
   ) { }
 
   createId(): string {
@@ -31,7 +31,7 @@ export class ExecucoesFirebaseService {
   }
 
   path(monstroId: string, serieId: string): string {
-    const path = `${this.repositorioDeSeries.path(monstroId)}/${serieId}/${this.METANAME}`;
+    const path = `${this.repositorioDeSeries.path()}/${serieId}/${this.METANAME}`; // monstroId
 
     return path;
   }
@@ -139,7 +139,7 @@ export class ExecucoesFirebaseService {
   }
 
   private mapTo(monstroId: string, execucao: ExecucaoDeSerie): ExecucaoDeSerieDocument {
-    const serieRef = this.repositorioDeSeries.ref(monstroId, execucao.serie.id);
+    const serieRef = this.repositorioDeSeries.ref(execucao.serie.id); // monstroId
 
     const feitaNaAcademiaRef = this.repositorioDeAcademias.ref(execucao.feitaNa.id);
 
