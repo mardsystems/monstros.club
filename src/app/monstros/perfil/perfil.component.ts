@@ -30,7 +30,7 @@ export class PerfilComponent implements OnInit {
     public authService: AuthService,
     @Inject(CONSULTA_DE_MONSTROS)
     private consultaDeMonstros: ConsultaDeMonstros,
-    // private monstrosMembershipService: MonstrosMembershipService,
+    private monstrosMembershipService: MonstrosMembershipService,
     @Inject(CALCULO_DE_IDADE)
     private calculoDeIdade: CalculoDeIdade,
   ) { }
@@ -62,25 +62,25 @@ export class PerfilComponent implements OnInit {
       }
     });
 
-    // monstro$.pipe(
-    //   first(),
-    //   switchMap(monstro => {
-    //     if (!monstro) {
-    //       return of(false);
-    //     } else {
-    //       return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
-    //     }
-    //   }),
-    //   switchMap(value => {
-    //     if (value) {
-    //       return of(true);
-    //     } else {
-    //       return this.monstrosMembershipService.ehAdministrador();
-    //     }
-    //   })
-    // ).subscribe(value => {
-    //   this.disabledUpdate = !value;
-    // });
+    monstro$.pipe(
+      first(),
+      switchMap(monstro => {
+        if (!monstro) {
+          return of(false);
+        } else {
+          return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
+        }
+      }),
+      switchMap(value => {
+        if (value) {
+          return of(true);
+        } else {
+          return this.monstrosMembershipService.ehAdministrador();
+        }
+      })
+    ).subscribe(value => {
+      this.disabledUpdate = !value;
+    });
   }
 
   public get idade(): Number {
