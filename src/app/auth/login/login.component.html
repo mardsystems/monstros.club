@@ -3,8 +3,8 @@
   <p class="mat-subheading-1">{{message}}</p>
   <p class="mat-body">
     Entrar com a conta do&nbsp;
-    <button mat-raised-button color="accent" (click)="googleLogin()" *ngIf="!authService.authenticated">GOOGLE</button>
-    <button mat-raised-button color="accent" (click)="logout()" *ngIf="authService.authenticated">SAIR</button>
+    <button mat-raised-button color="accent" (click)="googleLogin()" *ngIf="!authService.authenticated()">GOOGLE</button>
+    <button mat-raised-button color="accent" (click)="logout()" *ngIf="authService.authenticated()">SAIR</button>
   </p>
 
   <!-- <mat-card class="login">
