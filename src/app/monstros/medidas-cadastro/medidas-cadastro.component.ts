@@ -4,6 +4,8 @@ import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
 import { Balanca, BalancaComum, OmronHBF214, TipoDeBalanca } from '../medidas/@medidas-domain.model';
 import { CadastroDeMedidas, CADASTRO_DE_MEDIDAS } from './@medidas-cadastro-application.model';
 import { CadastroDeMedidaViewModel } from './@medidas-cadastro-presentation.model';
+import { MedidasCadastroService } from './@medidas-cadastro.service';
+import { ServicoDeCalculoDeIdade } from 'src/app/@app-common.model';
 
 @Component({
   selector: 'medidas-cadastro',
@@ -18,10 +20,10 @@ export class MedidasCadastroComponent implements OnInit, OnChanges {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeMedidaViewModel,
     private dialogRef: MatDialogRef<MedidasCadastroComponent>,
-    @Inject(CADASTRO_DE_MEDIDAS)
-    private cadastroDeMedidas: CadastroDeMedidas,
-    @Inject(CALCULO_DE_IDADE)
-    private calculoDeIdade: CalculoDeIdade
+    // @Inject(CADASTRO_DE_MEDIDAS)
+    private cadastroDeMedidas: MedidasCadastroService, // CadastroDeMedidas
+    // @Inject(CALCULO_DE_IDADE)
+    private calculoDeIdade: ServicoDeCalculoDeIdade, // CalculoDeIdade
   ) {
     this.balanca = new OmronHBF214();
   }

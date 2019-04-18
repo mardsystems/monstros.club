@@ -10,6 +10,8 @@ import {
 } from 'src/app/cadastro/monstros-cadastro/@monstros-cadastro-application.model';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
+import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { MonstrosCadastroService } from 'src/app/cadastro/monstros-cadastro/@monstros-cadastro.service';
 
 @Component({
   selector: 'monstros-perfil',
@@ -26,10 +28,10 @@ export class PerfilComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public authService: AuthService,
-    @Inject(CONSULTA_DE_MONSTROS)
-    private consultaDeMonstros: ConsultaDeMonstros,
-    @Inject(CADASTRO_DE_MONSTROS)
-    private cadastroDeMonstros: CadastroDeMonstros,
+    // @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
+    // @Inject(CADASTRO_DE_MONSTROS)
+    private cadastroDeMonstros: MonstrosCadastroService, // CadastroDeMonstros
     private adaptadorParaUserInfo: AdaptadorParaUserInfo,
     private calculoDeIdade: CalculoDeIdade,
     private log: LogService,

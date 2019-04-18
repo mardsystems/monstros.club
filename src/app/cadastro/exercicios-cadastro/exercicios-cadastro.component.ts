@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CadastroDeExercicioViewModel } from './@exercicios-cadastro-presentation.model';
 import { CADASTRO_DE_EXERCICIOS, CadastroDeExercicios } from './@exercicios-cadastro-application.model';
+import { ExerciciosCadastroService } from './@exercicios-cadastro.service';
 
 @Component({
   selector: 'exercicios-cadastro',
@@ -22,8 +23,8 @@ export class ExerciciosCadastroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeExercicioViewModel,
     private dialogRef: MatDialogRef<ExerciciosCadastroComponent>,
-    @Inject(CADASTRO_DE_EXERCICIOS)
-    private cadastroDeExercicios: CadastroDeExercicios,
+    // @Inject(CADASTRO_DE_EXERCICIOS)
+    private cadastroDeExercicios: ExerciciosCadastroService, // CadastroDeExercicios
     private formBuilder: FormBuilder,
   ) {
 

@@ -34,7 +34,7 @@ const monstrosRoutes: Routes = [
           { path: 'rankings', component: RankingsComponent, data: { animation: 'rankings' } },
           { path: 'rankings/:rankingId', component: RankingsItemComponent, data: { animation: 'ranking' } },
           { path: 'configuracoes', component: ConfiguracoesComponent, data: { animation: 'configuracoes' } },
-          { path: '', component: MonstrosCadastroComponent, data: { animation: 'monstro' } }
+          // { path: '', component: MonstrosCadastroComponent, data: { animation: 'monstro' } }
         ]
       }
     ]

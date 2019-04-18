@@ -5,7 +5,8 @@ import { ExecucaoDeSerieViewModel } from './@series-execucao-presentation.model'
 import { Observable } from 'rxjs';
 import { SeriesExecucaoService } from './@series-execucao.service';
 import { Academia } from 'src/app/cadastro/academias/@academias-domain.model';
-import { ConsultaDeAcademias } from 'src/app/cadastro/academias/@academias-application.model';
+import { ConsultaDeAcademias, CONSULTA_DE_ACADEMIAS } from 'src/app/cadastro/academias/@academias-application.model';
+import { AcademiasFirebaseService } from 'src/app/cadastro/academias/@academias-firebase.service';
 
 @Component({
   selector: 'series-execucao',
@@ -27,7 +28,8 @@ export class SeriesExecucaoComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: ExecucaoDeSerieViewModel,
     private dialogRef: MatDialogRef<SeriesExecucaoComponent>,
-    private consultaDeAcademias: ConsultaDeAcademias,
+    // @Inject(CONSULTA_DE_ACADEMIAS)
+    private consultaDeAcademias: AcademiasFirebaseService, // ConsultaDeAcademias
     private execucaoDeSeries: SeriesExecucaoService,
     private formBuilder: FormBuilder,
   ) {

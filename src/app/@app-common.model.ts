@@ -142,9 +142,9 @@ export class PromptUpdateService {
   }
 }
 
-// @Injectable({
-//   providedIn: 'root'
-// })
+@Injectable({
+  providedIn: 'root'
+})
 export class ServicoDeCalculoDeIdade implements CalculoDeIdade {
   calculaIdade(data: Date, dataFim?: Date): number {
     if (!dataFim) {

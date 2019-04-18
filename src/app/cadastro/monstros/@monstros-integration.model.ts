@@ -1,4 +1,4 @@
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -9,18 +9,23 @@ import {
 } from '../monstros-cadastro/@monstros-cadastro-application.model';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from './@monstros-application.model';
 import { Monstro, RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from './@monstros-domain.model';
+import { MonstrosCadastroService } from '../monstros-cadastro/@monstros-cadastro.service';
+import { MonstrosFirebaseService } from './@monstros-firebase.service';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class AdaptadorParaUserInfo {
   monstroLogado$: Observable<Monstro>;
 
   constructor(
     private auth: AuthService,
-    @Inject(CADASTRO_DE_MONSTROS)
-    private cadastroDeMonstros: CadastroDeMonstros,
-    @Inject(CONSULTA_DE_MONSTROS)
-    private consultaDeMonstros: ConsultaDeMonstros,
-    @Inject(REPOSITORIO_DE_MONSTROS)
-    private repositorioDeMonstros: RepositorioDeMonstros,
+    // @Inject(CADASTRO_DE_MONSTROS)
+    private cadastroDeMonstros: MonstrosCadastroService, // CadastroDeMonstros
+    // @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
+    // @Inject(REPOSITORIO_DE_MONSTROS)
+    private repositorioDeMonstros: MonstrosFirebaseService, // RepositorioDeMonstros
     private log: LogService
   ) {
     this.monstroLogado$ = this.auth.user$.pipe(

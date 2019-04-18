@@ -7,6 +7,8 @@ import { CadastroDeAcademiaViewModel } from '../academias-cadastro/@academias-ca
 import { AcademiasCadastroComponent } from '../academias-cadastro/academias-cadastro.component';
 import { ConsultaDeAcademias, CONSULTA_DE_ACADEMIAS } from './@academias-application.model';
 import { Academia } from './@academias-domain.model';
+import { AcademiasFirebaseService } from './@academias-firebase.service';
+import { AcademiasCadastroService } from '../academias-cadastro/@academias-cadastro.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'logo' },
@@ -32,10 +34,10 @@ export class AcademiasComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    @Inject(CONSULTA_DE_ACADEMIAS)
-    private consultaDeAcademias: ConsultaDeAcademias,
-    @Inject(CADASTRO_DE_ACADEMIAS)
-    private cadastroDeAcademias: CadastroDeAcademias,
+    // @Inject(CONSULTA_DE_ACADEMIAS)
+    private consultaDeAcademias: AcademiasFirebaseService, // ConsultaDeAcademias
+    // @Inject(CADASTRO_DE_ACADEMIAS)
+    private cadastroDeAcademias: AcademiasCadastroService, // CadastroDeAcademias
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');

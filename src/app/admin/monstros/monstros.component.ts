@@ -5,9 +5,8 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LogService } from 'src/app/@app-common.model';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
-import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
-import { AuthService } from '../../auth/@auth.service';
 import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
+import { AuthService } from '../../auth/@auth.service';
 
 @Component({
   selector: 'admin-monstros',

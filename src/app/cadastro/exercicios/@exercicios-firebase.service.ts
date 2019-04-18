@@ -1,9 +1,13 @@
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
 import { ConsultaDeExercicios } from './@exercicios-application.model';
 import { Exercicio, Musculatura, RepositorioDeExercicios } from './@exercicios-domain.model';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class ExerciciosFirebaseService
   extends FirebaseService<ExercicioDocument>
   implements RepositorioDeExercicios, ConsultaDeExercicios {

@@ -8,6 +8,9 @@ import { ConsultaDeExercicios, CONSULTA_DE_EXERCICIOS } from '../exercicios/@exe
 import { Exercicio } from '../exercicios/@exercicios-domain.model';
 import { CadastroDeAparelhos, CADASTRO_DE_APARELHOS } from './@aparelhos-cadastro-application.model';
 import { CadastroDeAparelhoViewModel } from './@aparelhos-cadastro-presentation.model';
+import { AparelhosCadastroService } from './@aparelhos-cadastro.service';
+import { AcademiasFirebaseService } from '../academias/@academias-firebase.service';
+import { ExerciciosFirebaseService } from '../exercicios/@exercicios-firebase.service';
 
 @Component({
   selector: 'aparelhos-cadastro',
@@ -32,12 +35,12 @@ export class AparelhosCadastroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeAparelhoViewModel,
     private dialogRef: MatDialogRef<AparelhosCadastroComponent>,
-    @Inject(CADASTRO_DE_APARELHOS)
-    private cadastroDeAparelhos: CadastroDeAparelhos,
-    @Inject(CONSULTA_DE_ACADEMIAS)
-    private consultaDeAcademias: ConsultaDeAcademias,
-    @Inject(CONSULTA_DE_EXERCICIOS)
-    private consultaDeExercicios: ConsultaDeExercicios,
+    // @Inject(CADASTRO_DE_APARELHOS)
+    private cadastroDeAparelhos: AparelhosCadastroService, //CadastroDeAparelhos
+    // @Inject(CONSULTA_DE_ACADEMIAS)
+    private consultaDeAcademias: AcademiasFirebaseService, //ConsultaDeAcademias
+    // @Inject(CONSULTA_DE_EXERCICIOS)
+    private consultaDeExercicios: ExerciciosFirebaseService, //ConsultaDeExercicios
     private formBuilder: FormBuilder,
   ) {
     this.academias$ = this.consultaDeAcademias.obtemAcademiasParaAdministracao(); // TODO: Exibição.

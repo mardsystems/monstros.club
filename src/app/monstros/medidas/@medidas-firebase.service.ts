@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
@@ -8,6 +9,9 @@ import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-fir
 import { ConsultaDeMedidas } from './@medidas-application.model';
 import { Medida, RepositorioDeMedidas, TipoDeBalanca } from './@medidas-domain.model';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class MedidasFirebaseService
   extends FirebaseService<MedidaDocument>
   implements RepositorioDeMedidas, ConsultaDeMedidas {

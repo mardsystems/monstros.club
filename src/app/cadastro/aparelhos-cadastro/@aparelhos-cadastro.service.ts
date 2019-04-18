@@ -1,20 +1,27 @@
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
 import { RepositorioDeAcademias, REPOSITORIO_DE_ACADEMIAS } from '../academias/@academias-domain.model';
 import { Aparelho, RepositorioDeAparelhos, REPOSITORIO_DE_APARELHOS } from '../aparelhos/@aparelhos-domain.model';
 import { RepositorioDeExercicios, REPOSITORIO_DE_EXERCICIOS } from '../exercicios/@exercicios-domain.model';
 import { CadastroDeAparelhos, SolicitacaoDeCadastroDeAparelho } from './@aparelhos-cadastro-application.model';
+import { FirebaseTransactionManager } from 'src/app/@app-firebase.model';
+import { AparelhosFirebaseService } from '../aparelhos/@aparelhos-firebase.service';
+import { AcademiasFirebaseService } from '../academias/@academias-firebase.service';
+import { ExerciciosFirebaseService } from '../exercicios/@exercicios-firebase.service';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class AparelhosCadastroService implements CadastroDeAparelhos {
   constructor(
-    @Inject(UNIT_OF_WORK)
-    protected readonly unitOfWork: UnitOfWork,
-    @Inject(REPOSITORIO_DE_APARELHOS)
-    protected readonly repositorioDeAparelhos: RepositorioDeAparelhos,
-    @Inject(REPOSITORIO_DE_ACADEMIAS)
-    protected readonly repositorioDeAcademias: RepositorioDeAcademias,
-    @Inject(REPOSITORIO_DE_EXERCICIOS)
-    protected readonly repositorioDeExercicios: RepositorioDeExercicios,
+    // @Inject(UNIT_OF_WORK)
+    protected readonly unitOfWork: FirebaseTransactionManager, // UnitOfWork
+    // @Inject(REPOSITORIO_DE_APARELHOS)
+    protected readonly repositorioDeAparelhos: AparelhosFirebaseService, // RepositorioDeAparelhos
+    // @Inject(REPOSITORIO_DE_ACADEMIAS)
+    protected readonly repositorioDeAcademias: AcademiasFirebaseService, // RepositorioDeAcademias
+    // @Inject(REPOSITORIO_DE_EXERCICIOS)
+    protected readonly repositorioDeExercicios: ExerciciosFirebaseService, // RepositorioDeExercicios
   ) { }
 
   async cadastraAparelho(solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {

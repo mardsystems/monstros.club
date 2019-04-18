@@ -4,7 +4,7 @@ import * as firebase from 'firebase/app';
 import * as moment from 'moment';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap, tap } from 'rxjs/operators';
-import { LogService } from '../@app-common.model';
+import { LogService, ServicoDeCalculoDeIdade } from '../@app-common.model';
 import { CalculoDeIdade } from '../@app-domain.model';
 import { AuthService } from '../auth/@auth.service';
 import { SolicitacaoDeCadastroDeMonstro } from '../cadastro/monstros-cadastro/@monstros-cadastro-application.model';
@@ -21,7 +21,7 @@ export class MonstrosService {
   constructor(
     private db: AngularFirestore,
     private authService: AuthService,
-    private calculoDeIdade: CalculoDeIdade,
+    private calculoDeIdade: ServicoDeCalculoDeIdade, //CalculoDeIdade
     private log: LogService
   ) {
     this.monstroLogado$ = this.authService.user$.pipe(

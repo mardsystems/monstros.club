@@ -3,16 +3,21 @@ import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
 import { RepositorioDeExercicios, REPOSITORIO_DE_EXERCICIOS } from 'src/app/cadastro/exercicios/@exercicios-domain.model';
 import { RepositorioDeSeries, REPOSITORIO_DE_SERIES, Serie } from '../series/@series-domain.model';
 import { CadastroDeSeries, SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './@series-cadastro-application.model';
+import { FirebaseTransactionManager } from 'src/app/@app-firebase.model';
+import { SeriesFirebaseService } from '../series/@series-firebase.service';
+import { ExerciciosFirebaseService } from 'src/app/cadastro/exercicios/@exercicios-firebase.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SeriesCadastroService implements CadastroDeSeries {
   constructor(
-    @Inject(UNIT_OF_WORK)
-    protected readonly unitOfWork: UnitOfWork,
-    @Inject(REPOSITORIO_DE_SERIES)
-    protected readonly repositorioDeSeries: RepositorioDeSeries,
-    @Inject(REPOSITORIO_DE_EXERCICIOS)
-    protected readonly repositorioDeExercicios: RepositorioDeExercicios,
+    // @Inject(UNIT_OF_WORK)
+    protected readonly unitOfWork: FirebaseTransactionManager, // UnitOfWork
+    // @Inject(REPOSITORIO_DE_SERIES)
+    protected readonly repositorioDeSeries: SeriesFirebaseService, //RepositorioDeSeries
+    // @Inject(REPOSITORIO_DE_EXERCICIOS)
+    protected readonly repositorioDeExercicios: ExerciciosFirebaseService, //RepositorioDeExercicios
   ) { }
 
   async cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {

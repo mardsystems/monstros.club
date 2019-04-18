@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { ExecucaoDeExercicioViewModel } from './@series-execucao-presentation.model';
 import { SeriesExecucaoService } from './@series-execucao.service';
 import { Exercicio } from 'src/app/cadastro/exercicios/@exercicios-domain.model';
-import { ConsultaDeExercicios } from 'src/app/cadastro/exercicios/@exercicios-application.model';
+import { ConsultaDeExercicios, CONSULTA_DE_EXERCICIOS } from 'src/app/cadastro/exercicios/@exercicios-application.model';
+import { ExerciciosFirebaseService } from 'src/app/cadastro/exercicios/@exercicios-firebase.service';
 
 @Component({
   selector: 'series-execucao-exercicio',
@@ -31,7 +32,8 @@ export class SeriesExecucaoExercicioComponent implements OnInit {
     public model: ExecucaoDeExercicioViewModel,
     private dialogRef: MatDialogRef<SeriesExecucaoExercicioComponent>,
     private execucaoDeSeries: SeriesExecucaoService,
-    private consultaDeExercicios: ConsultaDeExercicios,
+    // @Inject(CONSULTA_DE_EXERCICIOS)
+    private consultaDeExercicios: ExerciciosFirebaseService, // ConsultaDeExercicios
     private formBuilder: FormBuilder,
   ) {
     this.exercicios$ = this.consultaDeExercicios.obtemExerciciosParaAdministracao(); // TODO: Exibição.

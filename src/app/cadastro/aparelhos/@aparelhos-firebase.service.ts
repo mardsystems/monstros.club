@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
@@ -9,6 +10,9 @@ import { ExerciciosFirebaseService } from '../exercicios/@exercicios-firebase.se
 import { ConsultaDeAparelhos } from './@aparelhos-application.model';
 import { Aparelho, RepositorioDeAparelhos } from './@aparelhos-domain.model';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class AparelhosFirebaseService
   extends FirebaseService<AparelhoDocument>
   implements RepositorioDeAparelhos, ConsultaDeAparelhos {

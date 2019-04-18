@@ -1,5 +1,5 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -13,8 +13,9 @@ import { ExecucaoDeSerieViewModel } from '../series-execucao/@series-execucao-pr
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { Serie } from './@series-domain.model';
 import { SeriesFirebaseService } from './@series-firebase.service';
-import { ConsultaDeMonstros } from 'src/app/cadastro/monstros/@monstros-application.model';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
+import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -47,7 +48,8 @@ export class SeriesComponent implements OnInit {
     private route: ActivatedRoute,
     private repositorioDeSeries: SeriesFirebaseService,
     private cadastroDeSeries: SeriesCadastroService,
-    private consultaDeMonstros: ConsultaDeMonstros,
+    // @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
     private adaptadorParaUserInfo: AdaptadorParaUserInfo,
     private snackBar: MatSnackBar,
     private log: LogService,

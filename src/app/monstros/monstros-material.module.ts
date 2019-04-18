@@ -27,6 +27,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 
 export const DD_MM_YYYY_Format: MatDateFormats = {
   parse: {
@@ -76,7 +77,8 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatSidenavModule,
     MatSlideToggleModule,
     MatToolbarModule,
-    MatTableModule
+    MatTableModule,
+    MatTabsModule,
   ],
   exports: [
     MatButtonModule,
@@ -100,7 +102,8 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatSidenavModule,
     MatSlideToggleModule,
     MatToolbarModule,
-    MatTableModule
+    MatTableModule,
+    MatTabsModule,
   ]
 })
 export class MonstrosMaterialModule { }

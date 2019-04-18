@@ -7,6 +7,8 @@ import { CadastroDeExercicioViewModel } from '../exercicios-cadastro/@exercicios
 import { ExerciciosCadastroComponent } from '../exercicios-cadastro/exercicios-cadastro.component';
 import { ConsultaDeExercicios, CONSULTA_DE_EXERCICIOS } from './@exercicios-application.model';
 import { Exercicio } from './@exercicios-domain.model';
+import { ExerciciosFirebaseService } from './@exercicios-firebase.service';
+import { ExerciciosCadastroService } from '../exercicios-cadastro/@exercicios-cadastro.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },
@@ -34,10 +36,10 @@ export class ExerciciosComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    @Inject(CONSULTA_DE_EXERCICIOS)
-    private consultaDeExercicios: ConsultaDeExercicios,
-    @Inject(CADASTRO_DE_EXERCICIOS)
-    private cadastroDeExercicios: CadastroDeExercicios,
+    // @Inject(CONSULTA_DE_EXERCICIOS)
+    private consultaDeExercicios: ExerciciosFirebaseService, //ConsultaDeExercicios
+    // @Inject(CADASTRO_DE_EXERCICIOS)
+    private cadastroDeExercicios: ExerciciosCadastroService, //CadastroDeExercicios
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');

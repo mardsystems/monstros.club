@@ -13,11 +13,14 @@ import {
   MatFormFieldModule,
   MatMenuModule,
   // MatNativeDateModule,
+  MatProgressBarModule,
   MatProgressSpinnerModule
 } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMomentDateModule, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
@@ -55,6 +58,7 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     CommonModule,
     MatButtonModule,
     MatCardModule,
+    MatChipsModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatDividerModule,
@@ -65,7 +69,9 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatListModule,
     MatMenuModule,
     MatMomentDateModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
     MatSelectModule,
     MatSortModule,
     MatSidenavModule,
@@ -77,6 +83,7 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
   exports: [
     MatButtonModule,
     MatCardModule,
+    MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -87,7 +94,9 @@ export const DD_MM_YYYY_Format: MatDateFormats = {
     MatLineModule,
     MatListModule,
     MatMenuModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
     MatSelectModule,
     MatSortModule,
     MatSidenavModule,

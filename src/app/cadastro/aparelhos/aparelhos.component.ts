@@ -7,6 +7,8 @@ import { CadastroDeAparelhoViewModel } from '../aparelhos-cadastro/@aparelhos-ca
 import { AparelhosCadastroComponent } from '../aparelhos-cadastro/aparelhos-cadastro.component';
 import { ConsultaDeAparelhos, CONSULTA_DE_APARELHOS } from './@aparelhos-application.model';
 import { Aparelho } from './@aparelhos-domain.model';
+import { AparelhosFirebaseService } from './@aparelhos-firebase.service';
+import { AparelhosCadastroService } from '../aparelhos-cadastro/@aparelhos-cadastro.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },
@@ -34,10 +36,10 @@ export class AparelhosComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    @Inject(CONSULTA_DE_APARELHOS)
-    private consultaDeAparelhos: ConsultaDeAparelhos,
-    @Inject(CADASTRO_DE_APARELHOS)
-    private cadastroDeAparelhos: CadastroDeAparelhos,
+    // @Inject(CONSULTA_DE_APARELHOS)
+    private consultaDeAparelhos: AparelhosFirebaseService, // ConsultaDeAparelhos
+    // @Inject(CADASTRO_DE_APARELHOS)
+    private cadastroDeAparelhos: AparelhosCadastroService, // CadastroDeAparelhos
     media: MediaMatcher
   ) {
     this.desktopQuery = media.matchMedia('(min-width: 600px)');

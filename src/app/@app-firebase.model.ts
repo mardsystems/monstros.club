@@ -11,7 +11,9 @@ export class DbContext {
   }
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MonstrosDbContext extends DbContext {
   constructor(
     readonly firebase: AngularFirestore,
@@ -102,6 +104,9 @@ export class AggregateDocument {
   id: string;
 }
 
+@Injectable({
+  providedIn: 'root'
+})
 export class FirebaseTransactionManager implements UnitOfWork {
   private level: number;
 
