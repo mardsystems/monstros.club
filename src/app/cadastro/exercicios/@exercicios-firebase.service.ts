@@ -5,9 +5,7 @@ import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model'
 import { ConsultaDeExercicios } from './@exercicios-application.model';
 import { Exercicio, Musculatura, RepositorioDeExercicios } from './@exercicios-domain.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ExerciciosFirebaseService
   extends FirebaseService<ExercicioDocument>
   implements RepositorioDeExercicios, ConsultaDeExercicios {

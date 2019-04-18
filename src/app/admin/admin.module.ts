@@ -10,6 +10,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ListagemComponent } from './monstros/listagem/listagem.component';
 import { MedidasComponent } from './monstros/medidas/medidas.component';
 import { MonstrosComponent } from './monstros/monstros.component';
+import { AcademiasFirebaseService } from '../cadastro/academias/@academias-firebase.service';
+import { MedidasFirebaseService } from '../monstros/medidas/@medidas-firebase.service';
+import { CONSULTA_DE_MEDIDAS } from '../monstros/medidas/@medidas-application.model';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,7 @@ import { MonstrosComponent } from './monstros/monstros.component';
   entryComponents: [
   ],
   providers: [
+    { provide: CONSULTA_DE_MEDIDAS, useClass: MedidasFirebaseService },
   ]
 })
 export class AdminModule { }

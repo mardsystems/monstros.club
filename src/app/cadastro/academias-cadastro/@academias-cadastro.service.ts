@@ -2,18 +2,14 @@ import { Inject, Injectable } from '@angular/core';
 import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
 import { Academia, RepositorioDeAcademias, REPOSITORIO_DE_ACADEMIAS } from '../academias/@academias-domain.model';
 import { CadastroDeAcademias, SolicitacaoDeCadastroDeAcademia } from './@academias-cadastro-application.model';
-import { AcademiasFirebaseService } from '../academias/@academias-firebase.service';
-import { FirebaseTransactionManager } from 'src/app/@app-firebase.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AcademiasCadastroService implements CadastroDeAcademias {
   constructor(
-    // @Inject(UNIT_OF_WORK)
-    protected readonly unitOfWork: FirebaseTransactionManager, // UnitOfWork
-    // @Inject(REPOSITORIO_DE_ACADEMIAS)
-    protected readonly repositorioDeAcademias: AcademiasFirebaseService, // RepositorioDeAcademias
+    @Inject(UNIT_OF_WORK)
+    protected readonly unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_ACADEMIAS)
+    protected readonly repositorioDeAcademias: RepositorioDeAcademias,
   ) { }
 
   async cadastraAcademia(solicitacao: SolicitacaoDeCadastroDeAcademia): Promise<void> {

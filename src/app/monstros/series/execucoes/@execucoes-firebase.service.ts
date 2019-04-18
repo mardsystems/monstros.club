@@ -11,9 +11,7 @@ import { Serie } from '../@series-domain.model';
 import { SeriesFirebaseService } from '../@series-firebase.service';
 import { ExecucaoDeExercicio, ExecucaoDeSerie } from './@execucoes-domain.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ExecucoesFirebaseService {
   private METANAME = 'execucoes';
 

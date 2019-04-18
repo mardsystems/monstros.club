@@ -6,18 +6,15 @@ import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
 import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
 import { ConsultaDeMonstros } from './@monstros-application.model';
 import { Genero, Monstro, RepositorioDeMonstros } from './@monstros-domain.model';
-import { ServicoDeCalculoDeIdade } from 'src/app/@app-common.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MonstrosFirebaseService
   extends FirebaseService<MonstroDocument>
   implements RepositorioDeMonstros, ConsultaDeMonstros {
   constructor(
     protected readonly db: MonstrosDbContext,
-    // @Inject(CALCULO_DE_IDADE)
-    protected readonly calculoDeIdade: ServicoDeCalculoDeIdade, // CalculoDeIdade
+    @Inject(CALCULO_DE_IDADE)
+    protected readonly calculoDeIdade: CalculoDeIdade,
   ) {
     super(db);
   }

@@ -3,7 +3,6 @@ import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CadastroDeAcademias, CADASTRO_DE_ACADEMIAS } from './@academias-cadastro-application.model';
 import { CadastroDeAcademiaViewModel } from './@academias-cadastro-presentation.model';
-import { AcademiasCadastroService } from './@academias-cadastro.service';
 
 @Component({
   selector: 'academias-cadastro',
@@ -21,8 +20,8 @@ export class AcademiasCadastroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeAcademiaViewModel,
     private dialogRef: MatDialogRef<AcademiasCadastroComponent>,
-    // @Inject(CADASTRO_DE_ACADEMIAS)
-    private cadastroDeAcademias: AcademiasCadastroService, // CadastroDeAcademias
+    @Inject(CADASTRO_DE_ACADEMIAS)
+    private cadastroDeAcademias: CadastroDeAcademias,
     private formBuilder: FormBuilder,
   ) {
 

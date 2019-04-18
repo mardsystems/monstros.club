@@ -2,11 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
-import { Exercicio } from 'src/app/cadastro/exercicios/@exercicios-domain.model';
-import { CadastroDeExercicioViewModel } from './@series-cadastro-presentation.model';
-import { SeriesCadastroService } from './@series-cadastro.service';
 import { ConsultaDeExercicios, CONSULTA_DE_EXERCICIOS } from 'src/app/cadastro/exercicios/@exercicios-application.model';
-import { ExerciciosFirebaseService } from 'src/app/cadastro/exercicios/@exercicios-firebase.service';
+import { Exercicio } from 'src/app/cadastro/exercicios/@exercicios-domain.model';
+import { CadastroDeSeries, CADASTRO_DE_SERIES } from './@series-cadastro-application.model';
+import { CadastroDeExercicioViewModel } from './@series-cadastro-presentation.model';
 
 @Component({
   selector: 'series-cadastro-exercicio',
@@ -31,9 +30,10 @@ export class SeriesCadastroExercicioComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeExercicioViewModel,
     private dialogRef: MatDialogRef<SeriesCadastroExercicioComponent>,
-    private cadastroDeSeries: SeriesCadastroService,
-    // @Inject(CONSULTA_DE_EXERCICIOS)
-    private consultaDeExercicios: ExerciciosFirebaseService, // ConsultaDeExercicios
+    @Inject(CADASTRO_DE_SERIES)
+    private cadastroDeSeries: CadastroDeSeries,
+    @Inject(CONSULTA_DE_EXERCICIOS)
+    private consultaDeExercicios: ConsultaDeExercicios,
     private formBuilder: FormBuilder,
   ) {
     this.exercicios$ = this.consultaDeExercicios.obtemExerciciosParaAdministracao(); // TODO: Exibição.

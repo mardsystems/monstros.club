@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { CadastroDeExercicios, CADASTRO_DE_EXERCICIOS } from './@exercicios-cadastro-application.model';
 import { CadastroDeExercicioViewModel } from './@exercicios-cadastro-presentation.model';
-import { CADASTRO_DE_EXERCICIOS, CadastroDeExercicios } from './@exercicios-cadastro-application.model';
-import { ExerciciosCadastroService } from './@exercicios-cadastro.service';
 
 @Component({
   selector: 'exercicios-cadastro',
@@ -23,8 +22,8 @@ export class ExerciciosCadastroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeExercicioViewModel,
     private dialogRef: MatDialogRef<ExerciciosCadastroComponent>,
-    // @Inject(CADASTRO_DE_EXERCICIOS)
-    private cadastroDeExercicios: ExerciciosCadastroService, // CadastroDeExercicios
+    @Inject(CADASTRO_DE_EXERCICIOS)
+    private cadastroDeExercicios: CadastroDeExercicios,
     private formBuilder: FormBuilder,
   ) {
 

@@ -1,10 +1,10 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { Medida, Balanca, OmronHBF214 } from 'src/app/monstros/medidas/@medidas-domain.model';
-import { MedidasFirebaseService } from 'src/app/monstros/medidas/@medidas-firebase.service';
+import { CONSULTA_DE_MEDIDAS, ConsultaDeMedidas } from 'src/app/monstros/medidas/@medidas-application.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -36,7 +36,8 @@ export class MedidasComponent implements OnInit {
   desktopQuery: MediaQueryList;
 
   constructor(
-    private medidasService: MedidasFirebaseService,
+    @Inject(CONSULTA_DE_MEDIDAS)
+    private consultaDeMedidas: ConsultaDeMedidas,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -45,7 +46,7 @@ export class MedidasComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.medidas$ = this.medidasService.obtemMedidasParaAdministracao();
+    this.medidas$ = this.consultaDeMedidas.obtemMedidasParaAdministracao();
 
     this.medidas$.pipe(
       first()

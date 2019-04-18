@@ -10,9 +10,7 @@ import { ExerciciosFirebaseService } from '../exercicios/@exercicios-firebase.se
 import { ConsultaDeAparelhos } from './@aparelhos-application.model';
 import { Aparelho, RepositorioDeAparelhos } from './@aparelhos-domain.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AparelhosFirebaseService
   extends FirebaseService<AparelhoDocument>
   implements RepositorioDeAparelhos, ConsultaDeAparelhos {

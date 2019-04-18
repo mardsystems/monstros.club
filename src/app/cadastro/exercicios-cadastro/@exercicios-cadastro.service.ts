@@ -2,18 +2,14 @@ import { Inject, Injectable } from '@angular/core';
 import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
 import { Exercicio, RepositorioDeExercicios, REPOSITORIO_DE_EXERCICIOS } from '../exercicios/@exercicios-domain.model';
 import { CadastroDeExercicios, SolicitacaoDeCadastroDeExercicio } from './@exercicios-cadastro-application.model';
-import { FirebaseTransactionManager } from 'src/app/@app-firebase.model';
-import { ExerciciosFirebaseService } from '../exercicios/@exercicios-firebase.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ExerciciosCadastroService implements CadastroDeExercicios {
   constructor(
-    // @Inject(UNIT_OF_WORK)
-    protected readonly unitOfWork: FirebaseTransactionManager, // UnitOfWork
-    // @Inject(REPOSITORIO_DE_EXERCICIOS)
-    protected readonly repositorioDeExercicios: ExerciciosFirebaseService, // RepositorioDeExercicios
+    @Inject(UNIT_OF_WORK)
+    protected readonly unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_EXERCICIOS)
+    protected readonly repositorioDeExercicios: RepositorioDeExercicios,
   ) { }
 
   async cadastraExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {

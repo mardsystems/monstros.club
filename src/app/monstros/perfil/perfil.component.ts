@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { LogService, ServicoDeCalculoDeIdade } from 'src/app/@app-common.model';
-import { CalculoDeIdade } from 'src/app/@app-domain.model';
+import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
 import { AuthService } from 'src/app/auth/@auth.service';
 import {
   CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro
@@ -28,13 +28,11 @@ export class PerfilComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public authService: AuthService,
-    // @Inject(CONSULTA_DE_MONSTROS)
-    private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
-    // @Inject(CADASTRO_DE_MONSTROS)
-    private cadastroDeMonstros: MonstrosCadastroService, // CadastroDeMonstros
-    private monstrosMembershipService: MonstrosMembershipService,
-    private calculoDeIdade: ServicoDeCalculoDeIdade, // CalculoDeIdade
-    private log: LogService,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
+    // private monstrosMembershipService: MonstrosMembershipService,
+    @Inject(CALCULO_DE_IDADE)
+    private calculoDeIdade: CalculoDeIdade,
   ) { }
 
   ngOnInit() {
@@ -64,25 +62,25 @@ export class PerfilComponent implements OnInit {
       }
     });
 
-    monstro$.pipe(
-      first(),
-      switchMap(monstro => {
-        if (!monstro) {
-          return of(false);
-        } else {
-          return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
-        }
-      }),
-      switchMap(value => {
-        if (value) {
-          return of(true);
-        } else {
-          return this.monstrosMembershipService.ehAdministrador();
-        }
-      })
-    ).subscribe(value => {
-      this.disabledUpdate = !value;
-    });
+    // monstro$.pipe(
+    //   first(),
+    //   switchMap(monstro => {
+    //     if (!monstro) {
+    //       return of(false);
+    //     } else {
+    //       return this.monstrosMembershipService.ehVoceMesmo(monstro.id);
+    //     }
+    //   }),
+    //   switchMap(value => {
+    //     if (value) {
+    //       return of(true);
+    //     } else {
+    //       return this.monstrosMembershipService.ehAdministrador();
+    //     }
+    //   })
+    // ).subscribe(value => {
+    //   this.disabledUpdate = !value;
+    // });
   }
 
   public get idade(): Number {
@@ -96,14 +94,14 @@ export class PerfilComponent implements OnInit {
   }
 
   onSave(): void {
-    const operation: Promise<void> =
-      (this.model.isEdit)
-        ? this.cadastroDeMonstros.atualizaMonstro(this.model.id, this.model)
-        : this.cadastroDeMonstros.cadastraMonstro(this.model);
+    // const operation: Promise<void> =
+    //   (this.model.isEdit)
+    //     ? this.cadastroDeMonstros.atualizaMonstro(this.model.id, this.model)
+    //     : this.cadastroDeMonstros.cadastraMonstro(this.model);
 
-    operation.then(() => {
-      // this.dialogRef.close();
-    });
+    // operation.then(() => {
+    //   // this.dialogRef.close();
+    // });
   }
 
   // logout() {

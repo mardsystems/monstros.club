@@ -7,9 +7,6 @@ import { AuthService } from 'src/app/auth/@auth.service';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from '../monstros/@monstros-application.model';
 import { MonstrosMembershipService } from '../monstros/@monstros-membership.service';
 import { CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro } from './@monstros-cadastro-application.model';
-import { MonstrosCadastroService } from './@monstros-cadastro.service';
-import { MonstrosFirebaseService } from '../monstros/@monstros-firebase.service';
-import { ServicoDeCalculoDeIdade } from 'src/app/@app-common.model';
 
 @Component({
   selector: 'monstros-cadastro',
@@ -26,12 +23,12 @@ export class MonstrosCadastroComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public authService: AuthService,
-    // @Inject(CADASTRO_DE_MONSTROS)
-    private cadastroDeMonstros: MonstrosCadastroService, // CadastroDeMonstros
-    // @Inject(CONSULTA_DE_MONSTROS)
-    private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
-    // @Inject(CALCULO_DE_IDADE)
-    private calculoDeIdade: ServicoDeCalculoDeIdade, // CalculoDeIdade
+    @Inject(CADASTRO_DE_MONSTROS)
+    private cadastroDeMonstros: CadastroDeMonstros,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
+    @Inject(CALCULO_DE_IDADE)
+    private calculoDeIdade: CalculoDeIdade,
     private monstrosMembershipService: MonstrosMembershipService,
   ) { }
 

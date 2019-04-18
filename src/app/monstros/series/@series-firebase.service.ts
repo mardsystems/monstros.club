@@ -9,9 +9,7 @@ import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
 import { RepositorioDeSeries, Serie, SerieDeExercicio } from './@series-domain.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SeriesFirebaseService
   extends FirebaseService<SerieDocument>
   implements RepositorioDeSeries {

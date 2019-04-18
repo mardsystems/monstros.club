@@ -12,11 +12,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
+import { FirebaseTransactionManager } from './@app-firebase.model';
+import { UNIT_OF_WORK } from './@app-transactions.model';
 import { AppMaterialModule } from './app-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
-import { Monstro } from './cadastro/monstros/@monstros-domain.model';
+import { CADASTRO_DE_MONSTROS } from './cadastro/monstros-cadastro/@monstros-cadastro-application.model';
+import { MonstrosCadastroService } from './cadastro/monstros-cadastro/@monstros-cadastro.service';
+import { Monstro, REPOSITORIO_DE_MONSTROS } from './cadastro/monstros/@monstros-domain.model';
 import { HomeComponent } from './home/home.component';
 // import { AuthService } from './auth/auth.service';
 // import { MonstrosService } from './monstros/monstros.service';
@@ -24,6 +28,11 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { PoliticaDePrivacidadeComponent } from './politica-de-privacidade/politica-de-privacidade.component';
 import { SobreComponent } from './sobre/sobre.component';
 import { TermosDeUsoComponent } from './termos-de-uso/termos-de-uso.component';
+import { MonstrosFirebaseService } from './cadastro/monstros/@monstros-firebase.service';
+import { CONSULTA_DE_MONSTROS } from './cadastro/monstros/@monstros-application.model';
+import { CALCULO_DE_IDADE } from './@app-domain.model';
+import { ServicoDeCalculoDeIdade } from './@app-common.model';
+import { MedidasFirebaseService } from './monstros/medidas/@medidas-firebase.service';
 
 registerLocaleData(localePt);
 
@@ -62,12 +71,18 @@ registerLocaleData(localePt);
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },
     { provide: FirestoreSettingsToken, useValue: {} },
+    { provide: CALCULO_DE_IDADE, useClass: ServicoDeCalculoDeIdade },
+    MonstrosFirebaseService,
+    { provide: REPOSITORIO_DE_MONSTROS, useClass: MonstrosFirebaseService },
+    { provide: CONSULTA_DE_MONSTROS, useClass: MonstrosFirebaseService },
+    { provide: CADASTRO_DE_MONSTROS, useClass: MonstrosCadastroService },
+    MedidasFirebaseService, // ?
+    // { provide: CADASTRO_DE_ACADEMIAS, useClass: AcademiasCadastroService },
     // AdaptadorParaUserInfo,
     // { provide: CADASTRO_DE_MONSTROS, useClass: MonstrosCadastroService },
-    // { provide: UNIT_OF_WORK, useClass: FirebaseTransactionManager },
+    { provide: UNIT_OF_WORK, useClass: FirebaseTransactionManager },
     // { provide: REPOSITORIO_DE_MONSTROS, useClass: MonstrosFirebaseService },
     // MonstrosDbContext,
-    // { provide: CALCULO_DE_IDADE, useClass: ServicoDeCalculoDeIdade },
     // { provide: CONSULTA_DE_MONSTROS, useClass: MonstrosFirebaseService },
 
   ],

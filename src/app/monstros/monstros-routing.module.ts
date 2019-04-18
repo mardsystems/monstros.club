@@ -11,6 +11,7 @@ import { RankingsComponent } from './rankings/rankings.component';
 import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 const monstrosRoutes: Routes = [
   // { path: 'heroes', redirectTo: '/superheroes' },
@@ -34,7 +35,7 @@ const monstrosRoutes: Routes = [
           { path: 'rankings', component: RankingsComponent, data: { animation: 'rankings' } },
           { path: 'rankings/:rankingId', component: RankingsItemComponent, data: { animation: 'ranking' } },
           { path: 'configuracoes', component: ConfiguracoesComponent, data: { animation: 'configuracoes' } },
-          // { path: '', component: MonstrosCadastroComponent, data: { animation: 'monstro' } }
+          { path: '', component: PerfilComponent, data: { animation: 'monstro' } }
         ]
       }
     ]

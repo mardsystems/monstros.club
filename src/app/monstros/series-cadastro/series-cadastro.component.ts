@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { CadastroDeSerieViewModel } from './@series-cadastro-presentation.model';
 import { CadastroDeSeries, CADASTRO_DE_SERIES } from './@series-cadastro-application.model';
-import { SeriesCadastroService } from './@series-cadastro.service';
+import { CadastroDeSerieViewModel } from './@series-cadastro-presentation.model';
 
 @Component({
   selector: 'series-cadastro',
@@ -24,8 +23,8 @@ export class SeriesCadastroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: CadastroDeSerieViewModel,
     private dialogRef: MatDialogRef<SeriesCadastroComponent>,
-    // @Inject(CADASTRO_DE_SERIES)
-    private cadastroDeSeries: SeriesCadastroService, // CadastroDeSeries
+    @Inject(CADASTRO_DE_SERIES)
+    private cadastroDeSeries: CadastroDeSeries,
     private formBuilder: FormBuilder,
   ) {
 

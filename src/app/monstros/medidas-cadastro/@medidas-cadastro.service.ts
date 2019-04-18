@@ -3,21 +3,16 @@ import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
 import { RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { Medida, RepositorioDeMedidas, REPOSITORIO_DE_MEDIDAS } from '../medidas/@medidas-domain.model';
 import { CadastroDeMedidas, SolicitacaoDeCadastroDeMedida } from './@medidas-cadastro-application.model';
-import { FirebaseTransactionManager } from 'src/app/@app-firebase.model';
-import { MedidasFirebaseService } from '../medidas/@medidas-firebase.service';
-import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MedidasCadastroService implements CadastroDeMedidas {
   constructor(
-    // @Inject(UNIT_OF_WORK)
-    private unitOfWork: FirebaseTransactionManager, // UnitOfWork
-    // @Inject(REPOSITORIO_DE_MEDIDAS)
-    private repositorioDeMedidas: MedidasFirebaseService, // RepositorioDeMedidas
-    // @Inject(REPOSITORIO_DE_MONSTROS)
-    private repositorioDeMonstros: MonstrosFirebaseService, // RepositorioDeMonstros
+    @Inject(UNIT_OF_WORK)
+    private unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_MEDIDAS)
+    private repositorioDeMedidas: RepositorioDeMedidas,
+    @Inject(REPOSITORIO_DE_MONSTROS)
+    private repositorioDeMonstros: RepositorioDeMonstros,
   ) {
 
   }

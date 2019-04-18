@@ -5,9 +5,7 @@ import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model'
 import { ConsultaDeAcademias } from './@academias-application.model';
 import { Academia, RepositorioDeAcademias } from './@academias-domain.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AcademiasFirebaseService
   extends FirebaseService<AcademiaDocument>
   implements RepositorioDeAcademias, ConsultaDeAcademias {

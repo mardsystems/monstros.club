@@ -12,9 +12,6 @@ import { CadastroDeMedidaViewModel } from '../medidas-cadastro/@medidas-cadastro
 import { MedidasCadastroComponent } from '../medidas-cadastro/medidas-cadastro.component';
 import { ConsultaDeMedidas, CONSULTA_DE_MEDIDAS } from './@medidas-application.model';
 import { Balanca, Medida, OmronHBF214 } from './@medidas-domain.model';
-import { MedidasCadastroService } from '../medidas-cadastro/@medidas-cadastro.service';
-import { MedidasFirebaseService } from './@medidas-firebase.service';
-import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -66,12 +63,12 @@ export class MedidasComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    // @Inject(CADASTRO_DE_MEDIDAS)
-    private cadastroDeMedidas: MedidasCadastroService, // CadastroDeMedidas
-    // @Inject(CONSULTA_DE_MEDIDAS)
-    private consultaDeMedidas: MedidasFirebaseService, // ConsultaDeMedidas
-    // @Inject(CONSULTA_DE_MONSTROS)
-    private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
+    @Inject(CADASTRO_DE_MEDIDAS)
+    private cadastroDeMedidas: CadastroDeMedidas,
+    @Inject(CONSULTA_DE_MEDIDAS)
+    private consultaDeMedidas: ConsultaDeMedidas,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
     private monstrosMembershipService: MonstrosMembershipService,
     media: MediaMatcher
   ) {

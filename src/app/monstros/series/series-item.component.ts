@@ -1,5 +1,5 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -14,6 +14,8 @@ import { Serie, SerieDeExercicio } from './@series-domain.model';
 import { SeriesFirebaseService } from './@series-firebase.service';
 import { ExecucaoDeSerie } from './execucoes/@execucoes-domain.model';
 import { ExecucoesFirebaseService } from './execucoes/@execucoes-firebase.service';
+import { CADASTRO_DE_SERIES, CadastroDeSeries } from '../series-cadastro/@series-cadastro-application.model';
+import { CONSULTA_DE_MONSTROS, ConsultaDeMonstros } from 'src/app/cadastro/monstros/@monstros-application.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'icone' },
@@ -51,10 +53,12 @@ export class SeriesItemComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private repositorioDeSeries: SeriesFirebaseService,
+    private consultaDeSeries: SeriesFirebaseService,
     private repositorioDeExecucoes: ExecucoesFirebaseService,
-    private cadastroDeSeries: SeriesCadastroService,
-    private monstrosService: MonstrosFirebaseService,
+    @Inject(CADASTRO_DE_SERIES)
+    private cadastroDeSeries: CadastroDeSeries,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
     private monstrosMembershipService: MonstrosMembershipService,
     media: MediaMatcher
   ) {
@@ -65,7 +69,7 @@ export class SeriesItemComponent implements OnInit {
     const monstro$ = this.route.paramMap.pipe(
       // first(),
       map(params => params.get('monstroId')),
-      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId)),
+      switchMap(monstroId => this.consultaDeMonstros.obtemMonstroObservavel(monstroId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar as séries do monstro.\nRazão:\n${error}`);
 
@@ -82,7 +86,7 @@ export class SeriesItemComponent implements OnInit {
 
         const serieId = params.get('serieId');
 
-        return this.repositorioDeSeries.obtemSerieObservavel(this.monstroId, serieId);
+        return this.consultaDeSeries.obtemSerieObservavel(this.monstroId, serieId);
       }),
       catchError((error, source$) => {
         console.log(`Não foi possível montar a série.\nRazão:\n${error}`);

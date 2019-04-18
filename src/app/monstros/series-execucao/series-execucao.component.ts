@@ -1,12 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ExecucaoDeSerieViewModel } from './@series-execucao-presentation.model';
 import { Observable } from 'rxjs';
-import { SeriesExecucaoService } from './@series-execucao.service';
-import { Academia } from 'src/app/cadastro/academias/@academias-domain.model';
 import { ConsultaDeAcademias, CONSULTA_DE_ACADEMIAS } from 'src/app/cadastro/academias/@academias-application.model';
-import { AcademiasFirebaseService } from 'src/app/cadastro/academias/@academias-firebase.service';
+import { Academia } from 'src/app/cadastro/academias/@academias-domain.model';
+import { ExecucaoDeSeries, EXECUCAO_DE_SERIES } from './@series-execucao-application.model';
+import { ExecucaoDeSerieViewModel } from './@series-execucao-presentation.model';
 
 @Component({
   selector: 'series-execucao',
@@ -28,9 +27,10 @@ export class SeriesExecucaoComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: ExecucaoDeSerieViewModel,
     private dialogRef: MatDialogRef<SeriesExecucaoComponent>,
-    // @Inject(CONSULTA_DE_ACADEMIAS)
-    private consultaDeAcademias: AcademiasFirebaseService, // ConsultaDeAcademias
-    private execucaoDeSeries: SeriesExecucaoService,
+    @Inject(CONSULTA_DE_ACADEMIAS)
+    private consultaDeAcademias: ConsultaDeAcademias,
+    @Inject(EXECUCAO_DE_SERIES)
+    private execucaoDeSeries: ExecucaoDeSeries,
     private formBuilder: FormBuilder,
   ) {
     this.academias$ = this.consultaDeAcademias.obtemAcademiasParaAdministracao();

@@ -3,21 +3,16 @@ import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
 import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
 import { Monstro, RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from '../monstros/@monstros-domain.model';
 import { CadastroDeMonstros, SolicitacaoDeCadastroDeMonstro } from './@monstros-cadastro-application.model';
-import { FirebaseTransactionManager } from 'src/app/@app-firebase.model';
-import { MonstrosFirebaseService } from '../monstros/@monstros-firebase.service';
-import { ServicoDeCalculoDeIdade } from 'src/app/@app-common.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MonstrosCadastroService implements CadastroDeMonstros {
   constructor(
-    // @Inject(UNIT_OF_WORK)
-    protected readonly unitOfWork: FirebaseTransactionManager, // UnitOfWork
-    // @Inject(REPOSITORIO_DE_MONSTROS)
-    protected readonly repositorioDeMonstros: MonstrosFirebaseService, // RepositorioDeMonstros
-    // @Inject(CALCULO_DE_IDADE)
-    protected readonly calculoDeIdade: ServicoDeCalculoDeIdade, // CalculoDeIdade
+    @Inject(UNIT_OF_WORK)
+    protected readonly unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_MONSTROS)
+    protected readonly repositorioDeMonstros: RepositorioDeMonstros,
+    @Inject(CALCULO_DE_IDADE)
+    protected readonly calculoDeIdade: CalculoDeIdade,
   ) {
 
   }

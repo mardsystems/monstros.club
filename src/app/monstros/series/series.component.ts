@@ -1,11 +1,13 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { LogService } from 'src/app/@app-common.model';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
 import { CadastroDeSerieViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
 import { SeriesCadastroService } from '../series-cadastro/@series-cadastro.service';
 import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
@@ -13,9 +15,7 @@ import { ExecucaoDeSerieViewModel } from '../series-execucao/@series-execucao-pr
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { Serie } from './@series-domain.model';
 import { SeriesFirebaseService } from './@series-firebase.service';
-import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
-import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
-import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { CADASTRO_DE_SERIES, CadastroDeSeries } from '../series-cadastro/@series-cadastro-application.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -46,10 +46,11 @@ export class SeriesComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private repositorioDeSeries: SeriesFirebaseService,
-    private cadastroDeSeries: SeriesCadastroService,
-    // @Inject(CONSULTA_DE_MONSTROS)
-    private consultaDeMonstros: MonstrosFirebaseService, // ConsultaDeMonstros
+    private consultaDeSeries: SeriesFirebaseService,
+    @Inject(CADASTRO_DE_SERIES)
+    private cadastroDeSeries: CadastroDeSeries,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
     private monstrosMembershipService: MonstrosMembershipService,
     private snackBar: MatSnackBar,
     private log: LogService,
@@ -75,7 +76,7 @@ export class SeriesComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.repositorioDeSeries.obtemSeriesParaExibicao(monstro);
+        return this.consultaDeSeries.obtemSeriesParaExibicao(monstro);
       }),
       catchError((error, source$) => {
         const message = error.message;

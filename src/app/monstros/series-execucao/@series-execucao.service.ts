@@ -6,27 +6,21 @@ import { RepositorioDeSeries, REPOSITORIO_DE_SERIES } from '../series/@series-do
 import { ExecucaoDeSerie } from '../series/execucoes/@execucoes-domain.model';
 import { ExecucoesFirebaseService } from '../series/execucoes/@execucoes-firebase.service';
 import { ExecucaoDeSeries, SolicitacaoDeExecucaoDeSerie } from './@series-execucao-application.model';
-import { FirebaseTransactionManager } from 'src/app/@app-firebase.model';
-import { AparelhosFirebaseService } from 'src/app/cadastro/aparelhos/@aparelhos-firebase.service';
-import { SeriesFirebaseService } from '../series/@series-firebase.service';
-import { AcademiasFirebaseService } from 'src/app/cadastro/academias/@academias-firebase.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SeriesExecucaoService
   implements ExecucaoDeSeries {
   constructor(
-    // @Inject(UNIT_OF_WORK)
-    protected readonly unitOfWork: FirebaseTransactionManager, //  UnitOfWork
-    // @Inject(REPOSITORIO_DE_SERIES)
-    protected readonly repositorioDeSeries: SeriesFirebaseService, // RepositorioDeSeries;
-    // @Inject(REPOSITORIO_DE_ACADEMIAS)
-    private repositorioDeAcademias: AcademiasFirebaseService,  // RepositorioDeAcademias
-    // @Inject(REPOSITORIO_DE_APARELHOS)
-    private repositorioDeAparelhos: AparelhosFirebaseService,  // RepositorioDeAparelhos
-    // @Inject(REPOSITORIO_DE_ACADEMIAS)
-    private repositorioDeExecucoes: ExecucoesFirebaseService, // ExecucoesFirebaseService
+    @Inject(UNIT_OF_WORK)
+    protected readonly unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_SERIES)
+    protected readonly repositorioDeSeries: RepositorioDeSeries,
+    @Inject(REPOSITORIO_DE_ACADEMIAS)
+    private repositorioDeAcademias: RepositorioDeAcademias,
+    @Inject(REPOSITORIO_DE_APARELHOS)
+    private repositorioDeAparelhos: RepositorioDeAparelhos,
+    @Inject(REPOSITORIO_DE_ACADEMIAS)
+    private repositorioDeExecucoes: ExecucoesFirebaseService,
   ) { }
 
   async iniciaExecucao(solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void> {

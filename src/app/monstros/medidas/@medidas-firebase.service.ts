@@ -9,9 +9,7 @@ import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-fir
 import { ConsultaDeMedidas } from './@medidas-application.model';
 import { Medida, RepositorioDeMedidas, TipoDeBalanca } from './@medidas-domain.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MedidasFirebaseService
   extends FirebaseService<MedidaDocument>
   implements RepositorioDeMedidas, ConsultaDeMedidas {

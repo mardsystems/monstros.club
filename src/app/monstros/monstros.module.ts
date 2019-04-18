@@ -4,11 +4,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AppCommonModule } from '../app-common.module';
 import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
+import { CADASTRO_DE_MEDIDAS } from './medidas-cadastro/@medidas-cadastro-application.model';
+import { MedidasCadastroService } from './medidas-cadastro/@medidas-cadastro.service';
 import { MedidasCadastroComponent } from './medidas-cadastro/medidas-cadastro.component';
+import { CONSULTA_DE_MEDIDAS } from './medidas/@medidas-application.model';
+import { REPOSITORIO_DE_MEDIDAS } from './medidas/@medidas-domain.model';
+import { MedidasFirebaseService } from './medidas/@medidas-firebase.service';
 import { MedidasComponent } from './medidas/medidas.component';
 import { MonstrosMaterialModule } from './monstros-material.module';
 import { MonstrosRoutingModule } from './monstros-routing.module';
 import { MonstrosComponent } from './monstros.component';
+import { PerfilComponent } from './perfil/perfil.component';
 import { RankingsCadastroComponent } from './rankings-cadastro/rankings-cadastro.component';
 import { RankingsParticipacaoComponent } from './rankings-participacao/rankings-participacao.component';
 import { AssiduidadeComponent } from './rankings/assiduidade/assiduidade.component';
@@ -28,10 +34,19 @@ import { SeriesExerciciosComponent } from './series/series-exercicios.component'
 import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
+import { REPOSITORIO_DE_SERIES } from './series/@series-domain.model';
+import { SeriesFirebaseService } from './series/@series-firebase.service';
+import { CADASTRO_DE_SERIES } from './series-cadastro/@series-cadastro-application.model';
+import { SeriesCadastroService } from './series-cadastro/@series-cadastro.service';
+import { EXECUCAO_DE_SERIES } from './series-execucao/@series-execucao-application.model';
+import { SeriesExecucaoService } from './series-execucao/@series-execucao.service';
+import { ExerciciosFirebaseService } from '../cadastro/exercicios/@exercicios-firebase.service';
+import { REPOSITORIO_DE_EXERCICIOS } from '../cadastro/exercicios/@exercicios-domain.model';
 
 @NgModule({
   declarations: [
     MonstrosComponent,
+    PerfilComponent,
     TreinosComponent,
     MedidasCadastroComponent,
     MedidasComponent,
@@ -75,15 +90,16 @@ import { TreinosComponent } from './treinos/treinos.component';
     SeriesExecucaoExercicioComponent,
   ],
   providers: [
-    // MonstrosFirebaseService,
-    // SeriesCadastroService,
-    // MedidasFirebaseService,
-    // // { provide: RepositorioDeMedidas, useClass: MedidasFirebaseService },
-    // // { provide: RepositorioDeMedidas, useClass: MedidasFirebaseService },
-    // { provide: REPOSITORIO_DE_SERIES, useClass: SeriesFirebaseService },
-    // { provide: MonstrosFirebaseService, useClass: MonstrosFirebaseService },
-    // { provide: CADASTRO_DE_SERIES, useClass: SeriesCadastroService },
-    // { provide: EXECUCAO_DE_SERIES, useClass: SeriesExecucaoService }
+    ExerciciosFirebaseService,
+    { provide: REPOSITORIO_DE_EXERCICIOS, useClass: ExerciciosFirebaseService },
+    // MedidasFirebaseService, // ?
+    { provide: REPOSITORIO_DE_MEDIDAS, useClass: MedidasFirebaseService },
+    { provide: CONSULTA_DE_MEDIDAS, useClass: MedidasFirebaseService },
+    { provide: CADASTRO_DE_MEDIDAS, useClass: MedidasCadastroService },
+    SeriesFirebaseService,
+    { provide: REPOSITORIO_DE_SERIES, useClass: SeriesFirebaseService },
+    { provide: CADASTRO_DE_SERIES, useClass: SeriesCadastroService },
+    { provide: EXECUCAO_DE_SERIES, useClass: SeriesExecucaoService }
   ]
 })
 export class MonstrosModule { }
