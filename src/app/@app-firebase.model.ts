@@ -1,5 +1,5 @@
+import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
-import * as firebase from 'firebase/app';
 import { Repository } from './@app-domain.model';
 import { UnitOfWork } from './@app-transactions.model';
 
@@ -11,6 +11,7 @@ export class DbContext {
   }
 }
 
+@Injectable()
 export class MonstrosDbContext extends DbContext {
   constructor(
     readonly firebase: AngularFirestore,
@@ -101,9 +102,7 @@ export class AggregateDocument {
   id: string;
 }
 
-export class FireclouldTransactionManager
-  implements UnitOfWork {
-
+export class FirebaseTransactionManager implements UnitOfWork {
   private level: number;
 
   constructor(
@@ -111,7 +110,7 @@ export class FireclouldTransactionManager
   ) { }
 
   async beginTransaction(): Promise<void> {
-    firebase.firestore();
+    // firebase.firestore();
 
     // firebase.firestore().runTransaction(t => {
     //   return t.set()

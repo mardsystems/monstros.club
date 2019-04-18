@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@academias-application.model';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
 import { CadastroDeMedidas, CADASTRO_DE_MEDIDAS } from '../medidas-cadastro/@medidas-cadastro-application.model';
@@ -111,7 +111,7 @@ export class MedidasComponent implements OnInit {
             return {
               name: medida.data,
               value: medida.peso
-            }
+            };
           })
         },
         // {
@@ -141,7 +141,7 @@ export class MedidasComponent implements OnInit {
             return {
               name: medida.data,
               value: medida.musculo
-            }
+            };
           })
         },
       ];

@@ -13,7 +13,7 @@ import { ExecucaoDeSerieViewModel } from '../series-execucao/@series-execucao-pr
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { Serie } from './@series-domain.model';
 import { SeriesFirebaseService } from './@series-firebase.service';
-import { ConsultaDeMonstros } from 'src/app/cadastro/monstros/@academias-application.model';
+import { ConsultaDeMonstros } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
 
 const columnDefinitions = [

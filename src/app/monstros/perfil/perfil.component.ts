@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/auth/@auth.service';
 import {
   CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro
 } from 'src/app/cadastro/monstros-cadastro/@monstros-cadastro-application.model';
-import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@academias-application.model';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
 
 @Component({

@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { CalculoDeIdade } from 'src/app/@app-domain.model';
+import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
 import { AuthService } from 'src/app/auth/@auth.service';
-import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from '../monstros/@academias-application.model';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from '../monstros/@monstros-application.model';
 import { AdaptadorParaUserInfo } from '../monstros/@monstros-integration.model';
 import { CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro } from './@monstros-cadastro-application.model';
 
@@ -27,6 +27,7 @@ export class MonstrosCadastroComponent implements OnInit {
     private cadastroDeMonstros: CadastroDeMonstros,
     @Inject(CONSULTA_DE_MONSTROS)
     private consultaDeMonstros: ConsultaDeMonstros,
+    @Inject(CALCULO_DE_IDADE)
     private calculoDeIdade: CalculoDeIdade,
     private adaptadorParaUserInfo: AdaptadorParaUserInfo,
   ) { }

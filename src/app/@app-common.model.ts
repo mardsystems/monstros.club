@@ -3,6 +3,7 @@ import { ApplicationRef, Injectable } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { concat, interval, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
+import { CalculoDeIdade } from './@app-domain.model';
 
 @Injectable({
   providedIn: 'root'
@@ -141,10 +142,10 @@ export class PromptUpdateService {
   }
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CalculoDeIdade implements CalculoDeIdade {
+// @Injectable({
+//   providedIn: 'root'
+// })
+export class ServicoDeCalculoDeIdade implements CalculoDeIdade {
   calculaIdade(data: Date, dataFim?: Date): number {
     if (!dataFim) {
       const now = new Date(Date.now());

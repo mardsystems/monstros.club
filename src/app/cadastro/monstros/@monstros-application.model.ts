@@ -2,6 +2,8 @@ import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Monstro } from './@monstros-domain.model';
 
+export const CONSULTA_DE_MONSTROS = new InjectionToken<ConsultaDeMonstros>('CONSULTA_DE_MONSTROS');
+
 export interface ConsultaDeMonstros {
   obtemMonstroObservavel(id: string): Observable<Monstro>;
 
@@ -9,5 +11,3 @@ export interface ConsultaDeMonstros {
 
   obtemMonstrosParaAdministracao(): Observable<Monstro[]>;
 }
-
-export const CONSULTA_DE_MONSTROS = new InjectionToken<ConsultaDeMonstros>('CONSULTA_DE_MONSTROS');
