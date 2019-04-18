@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { Aparelho } from '../aparelhos/aparelhos-@domain.model';
+import { Aparelho } from '../aparelhos/@aparelhos-domain.model';
 
 export const CADASTRO_DE_APARELHOS = new InjectionToken<CadastroDeAparelhos>('CADASTRO_DE_APARELHOS');
 

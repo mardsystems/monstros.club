@@ -1,13 +1,13 @@
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
-import { FirebaseService, MonstrosDbContext } from 'src/app/app-@firebase.model';
+import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
 import { Academia } from '../academias/@academias-domain.model';
 import { AcademiasFirebaseService } from '../academias/@academias-firebase.service';
 import { Exercicio } from '../exercicios/@exercicios-domain.model';
 import { ExerciciosFirebaseService } from '../exercicios/@exercicios-firebase.service';
-import { ConsultaDeAparelhos } from './aparelhos-@application.model';
-import { Aparelho, RepositorioDeAparelhos } from './aparelhos-@domain.model';
+import { ConsultaDeAparelhos } from './@aparelhos-application.model';
+import { Aparelho, RepositorioDeAparelhos } from './@aparelhos-domain.model';
 
 export class AparelhosFirebaseService
   extends FirebaseService<AparelhoDocument>

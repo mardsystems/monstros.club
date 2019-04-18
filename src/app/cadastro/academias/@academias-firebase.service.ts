@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { FirebaseService, MonstrosDbContext } from 'src/app/app-@firebase.model';
-import { ConsultaDeAcademias } from './academias-@application.model';
+import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
+import { ConsultaDeAcademias } from './@academias-application.model';
 import { Academia, RepositorioDeAcademias } from './@academias-domain.model';
 
 export class AcademiasFirebaseService

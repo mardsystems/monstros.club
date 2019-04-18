@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
-import { ConsultaDeAcademias, CONSULTA_DE_ACADEMIAS } from '../academias/academias-@application.model';
+import { ConsultaDeAcademias, CONSULTA_DE_ACADEMIAS } from '../academias/@academias-application.model';
 import { Academia } from '../academias/@academias-domain.model';
 import { ConsultaDeExercicios, CONSULTA_DE_EXERCICIOS } from '../exercicios/@exercicios-application.model';
 import { Exercicio } from '../exercicios/@exercicios-domain.model';

@@ -1,5 +1,5 @@
 import { Inject } from '@angular/core';
-import { UnitOfWork, UNIT_OF_WORK } from 'src/app/app-@transactions.model';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
 import { Academia, RepositorioDeAcademias, REPOSITORIO_DE_ACADEMIAS } from '../academias/@academias-domain.model';
 import { CadastroDeAcademias, SolicitacaoDeCadastroDeAcademia } from './@academias-cadastro-application.model';
 

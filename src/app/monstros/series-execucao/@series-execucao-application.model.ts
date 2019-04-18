@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import * as moment from 'moment';
-import { SerieDeExercicio } from '../series/series-@domain.model';
+import { SerieDeExercicio } from '../series/@series-domain.model';
 
 export const EXECUCAO_DE_SERIES = new InjectionToken<ExecucaoDeSeries>('EXECUCAO_DE_SERIES');
 

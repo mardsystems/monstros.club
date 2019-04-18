@@ -2,7 +2,7 @@ import { Inject } from '@angular/core';
 import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-@common.model';
+import { LogService } from 'src/app/@app-common.model';
 import {
   CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro
 } from '../monstros-cadastro/@monstros-cadastro-application.model';

@@ -1,13 +1,13 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { Balanca, OmronHBF214 } from '../medidas/medidas-@domain.model';
-import { PosicaoDeMedida } from './rankings-@application-model';
+import { Balanca, OmronHBF214 } from '../medidas/@medidas-domain.model';
+import { PosicaoDeMedida } from './@rankings-application.model';
 import { Ranking } from './@rankings-domain.model';
-import { RankingsService } from './@rankings-firebase.service';
+import { RankingsFirebaseService } from './@rankings-firebase.service';
 import { FiltroComponent } from './filtro/filtro.component';
 
 const columnDefinitions = [
@@ -43,7 +43,7 @@ export class RankingsItemComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private rankingsService: RankingsService,
+    private rankingsService: RankingsFirebaseService,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();

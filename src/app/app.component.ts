@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth/@auth.service';
-import { Monstro } from './monstros/monstros.domain-model';
-import { MonstrosFirecloudRepository } from './monstros/monstros.firecloud-repository';
+import { Monstro } from './cadastro/monstros/@monstros-domain.model';
+import { AdaptadorParaUserInfo } from './cadastro/monstros/@monstros-integration.model';
 import { SobreComponent } from './sobre/sobre.component';
-import { RouterOutlet } from '@angular/router';
-import { slideInAnimation } from './app-routing.animations';
 
 @Component({
   selector: 'app-root',
@@ -22,11 +21,11 @@ export class AppComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private dialog: MatDialog,
-    private monstrosService: MonstrosFirecloudRepository
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo
   ) {
-    this.ehAnonimo$ = this.monstrosService.ehAnonimo();
+    this.ehAnonimo$ = this.adaptadorParaUserInfo.ehAnonimo();
 
-    this.monstroLogado$ = this.monstrosService.monstroLogado$;
+    this.monstroLogado$ = this.adaptadorParaUserInfo.monstroLogado$;
   }
 
   ngOnInit() {

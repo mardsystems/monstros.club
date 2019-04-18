@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
-import { RankingsService } from '../rankings/@rankings-firebase.service';
+import { RankingsFirebaseService } from '../rankings/@rankings-firebase.service';
 import { IParticipacaoDeRanking, SolicitacaoDeParticipacaoDeRanking } from './rankings-cadastro.application-model';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class RankingsParticipacaoService
 
   constructor(
     private repositorioDeMonstros: MonstrosFirecloudRepository,
-    private repositorioDeRankings: RankingsService,
+    private repositorioDeRankings: RankingsFirebaseService,
   ) { }
 
   convidaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void> {

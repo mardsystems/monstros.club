@@ -1,7 +1,7 @@
 import { Inject } from '@angular/core';
-import { UnitOfWork, UNIT_OF_WORK } from 'src/app/app-@transactions.model';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
 import { RepositorioDeAcademias, REPOSITORIO_DE_ACADEMIAS } from '../academias/@academias-domain.model';
-import { Aparelho, RepositorioDeAparelhos, REPOSITORIO_DE_APARELHOS } from '../aparelhos/aparelhos-@domain.model';
+import { Aparelho, RepositorioDeAparelhos, REPOSITORIO_DE_APARELHOS } from '../aparelhos/@aparelhos-domain.model';
 import { RepositorioDeExercicios, REPOSITORIO_DE_EXERCICIOS } from '../exercicios/@exercicios-domain.model';
 import { CadastroDeAparelhos, SolicitacaoDeCadastroDeAparelho } from './@aparelhos-cadastro-application.model';
 

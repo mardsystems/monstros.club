@@ -2,10 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
-import { Exercicio } from 'src/app/cadastro/exercicios/exercicios.domain-model';
-import { ExerciciosService } from 'src/app/cadastro/exercicios/exercicios.service';
+import { Exercicio } from 'src/app/cadastro/exercicios/@exercicios-domain.model';
 import { CadastroDeExercicioViewModel } from './@series-cadastro-presentation.model';
 import { SeriesCadastroService } from './@series-cadastro.service';
+import { ConsultaDeExercicios } from 'src/app/cadastro/exercicios/@exercicios-application.model';
 
 @Component({
   selector: 'series-cadastro-exercicio',
@@ -31,10 +31,10 @@ export class SeriesCadastroExercicioComponent implements OnInit {
     public model: CadastroDeExercicioViewModel,
     private dialogRef: MatDialogRef<SeriesCadastroExercicioComponent>,
     private cadastroDeSeries: SeriesCadastroService,
-    private exerciciosService: ExerciciosService,
+    private consultaDeExercicios: ConsultaDeExercicios,
     private formBuilder: FormBuilder,
   ) {
-    this.exercicios$ = this.exerciciosService.obtemExerciciosParaAdministracao(); // TODO: Exibição.
+    this.exercicios$ = this.consultaDeExercicios.obtemExerciciosParaAdministracao(); // TODO: Exibição.
   }
 
   ngOnInit(): void {

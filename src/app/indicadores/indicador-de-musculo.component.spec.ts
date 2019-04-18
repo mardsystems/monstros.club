@@ -8,9 +8,9 @@ describe('IndicadorDeMusculoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IndicadorDeMusculoComponent ]
+      declarations: [IndicadorDeMusculoComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

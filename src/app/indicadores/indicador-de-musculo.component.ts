@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
-import { Balanca, IMedidaDeMusculo, CONST_CLASSIFICACAO_INVALIDA } from '../monstros/medidas/medidas-@domain.model';
+import { Balanca, CONST_CLASSIFICACAO_INVALIDA, IMedidaDeMusculo } from '../monstros/medidas/@medidas-domain.model';
 // import { CONST_CLASSIFICACAO_INVALIDA } from './indicadores.model';
 
 @Component({

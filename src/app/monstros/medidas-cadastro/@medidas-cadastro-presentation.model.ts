@@ -1,11 +1,7 @@
-import { Monstro } from 'src/app/cadastro/monstros/monstros.domain-model';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import {
-  IMedidaDeGordura,
-  IMedidaDeGorduraVisceral,
-  IMedidaDeIndiceDeMassaCorporal,
-  IMedidaDeMusculo,
-  Medida
-} from '../medidas/medidas-@domain.model';
+  IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeIndiceDeMassaCorporal, IMedidaDeMusculo, Medida
+} from '../medidas/@medidas-domain.model';
 import { SolicitacaoDeCadastroDeMedida } from './@medidas-cadastro-application.model';
 
 export class CadastroDeMedidaViewModel extends SolicitacaoDeCadastroDeMedida

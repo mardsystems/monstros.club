@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { CadastroDeAcademias, CADASTRO_DE_ACADEMIAS } from '../academias-cadastro/@academias-cadastro-application.model';
 import { CadastroDeAcademiaViewModel } from '../academias-cadastro/@academias-cadastro-presentation.model';
 import { AcademiasCadastroComponent } from '../academias-cadastro/academias-cadastro.component';
-import { ConsultaDeAcademias, CONSULTA_DE_ACADEMIAS } from './academias-@application.model';
+import { ConsultaDeAcademias, CONSULTA_DE_ACADEMIAS } from './@academias-application.model';
 import { Academia } from './@academias-domain.model';
 
 const columnDefinitions = [

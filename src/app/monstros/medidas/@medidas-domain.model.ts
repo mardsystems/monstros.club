@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { Repository } from 'src/app/app-@domain.model';
+import { Repository } from 'src/app/@app-domain.model';
 import { Genero, Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 
 export class Medida

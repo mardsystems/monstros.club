@@ -4,14 +4,13 @@ import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-@shared.services';
-import { Balanca, OmronHBF214 } from '../medidas/medidas-@domain.model';
-import { Monstro } from '../monstros.domain-model';
-import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
-import { RankingsCadastroComponent } from '../rankings-cadastro/rankings-cadastro.component';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { Balanca, OmronHBF214 } from '../medidas/@medidas-domain.model';
 import { RankingViewModel } from '../rankings-cadastro/@rankings-cadastro-presentation.model';
+import { RankingsCadastroComponent } from '../rankings-cadastro/rankings-cadastro.component';
 import { Ranking } from './@rankings-domain.model';
-import { RankingsService } from './@rankings-firebase.service';
+import { RankingsFirebaseService } from './@rankings-firebase.service';
 
 const columnDefinitions = [
   { showMobile: false, def: 'proprietario' },
@@ -45,9 +44,8 @@ export class RankingsComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private rankingsService: RankingsService,
-    private monstrosService: MonstrosFirecloudRepository,
-    private log: LogService,
+    private rankingsFirebaseService: RankingsFirebaseService,
+    private monstrosFirebaseService: MonstrosFirebaseService,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -59,7 +57,7 @@ export class RankingsComponent implements OnInit {
     const monstro$ = this.route.paramMap.pipe(
       // first(),
       map(params => params.get('monstroId')),
-      switchMap((monstroId) => this.monstrosService.obtemMonstroObservavel(monstroId).pipe(first())),
+      switchMap((monstroId) => this.monstrosFirebaseService.obtemMonstroObservavel(monstroId).pipe(first())),
       catchError((error, source$) => {
         console.log(`Não foi possível montar os rankings do monstro.\nRazão:\n${error}`);
 
@@ -72,7 +70,7 @@ export class RankingsComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.rankingsService.obtemRankingsParaExibicao(monstro);
+        return this.rankingsFirebaseService.obtemRankingsParaExibicao(monstro);
       }),
       shareReplay()
     );
@@ -86,13 +84,13 @@ export class RankingsComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.monstrosService.ehVoceMesmo(monstro.id);
+        return this.monstrosFirebaseService.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.monstrosService.ehAdministrador();
+          return this.monstrosFirebaseService.ehAdministrador();
         }
       }),
       map(value => !value),
@@ -131,6 +129,6 @@ export class RankingsComponent implements OnInit {
   }
 
   onDelete(ranking: Ranking): void {
-    this.rankingsService.remove(ranking.id);
+    this.rankingsFirebaseService.remove(ranking.id);
   }
 }

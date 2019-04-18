@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
 import { CadastroDeExercicioViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
+import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
 import { SeriesExecucaoService } from '../series-execucao/@series-execucao.service';
-import { Serie, SerieDeExercicio } from './series-@domain.model';
+import { Serie, SerieDeExercicio } from './@series-domain.model';
 
 @Component({
   selector: 'series-execucoes-widget',

@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Aparelho } from './aparelhos-@domain.model';
+import { Aparelho } from './@aparelhos-domain.model';
 
 export interface ConsultaDeAparelhos {
   obtemAparelhosParaAdministracao(): Observable<Aparelho[]>;

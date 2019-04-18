@@ -4,26 +4,26 @@ import * as firebase from 'firebase/app';
 import * as _ from 'lodash';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap, tap } from 'rxjs/operators';
-import { CONST_TIMESTAMP_FALSO } from 'src/app/app-@domain.model';
-import { LogService } from 'src/app/app-@shared.services';
-import { TipoDeBalanca } from '../medidas/medidas-@domain.model';
-import { MedidasFirebaseService } from '../medidas/medidas-firecloud.service';
-import { Monstro } from '../monstros.domain-model';
-import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
-import { PosicaoDeMedida } from './rankings-@application-model';
-import { Participacao, Ranking } from './rankings-@domain.model';
+import { LogService } from 'src/app/@app-common.model';
+import { CONST_TIMESTAMP_FALSO } from 'src/app/@app-domain.model';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { TipoDeBalanca } from '../medidas/@medidas-domain.model';
+import { MedidasFirebaseService } from '../medidas/@medidas-firebase.service';
+import { PosicaoDeMedida } from './@rankings-application.model';
+import { Participacao, Ranking } from './@rankings-domain.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RankingsService {
+export class RankingsFirebaseService {
   private METANAME = 'rankings';
   private METANAME_PARTICIPACOES = 'participacoes';
 
   constructor(
     private db: AngularFirestore,
-    private repositorioDeMonstros: MonstrosFirecloudRepository,
-    private repositorioDeMedidas: MedidasFirebaseService,
+    private monstrosFirebaseService: MonstrosFirebaseService,
+    private medidasFirebaseService: MedidasFirebaseService,
     private log: LogService
   ) { }
 
@@ -91,7 +91,7 @@ export class RankingsService {
   obtemRankingsParaExibicaoPorProprietario(proprietario: Monstro): Observable<Ranking[]> {
     this.log.debug('obtemRankingsParaExibicaoPorProprietario');
 
-    const monstroRef = this.repositorioDeMonstros.ref(proprietario.id);
+    const monstroRef = this.monstrosFirebaseService.ref(proprietario.id);
 
     const path = this.path();
 
@@ -141,7 +141,7 @@ export class RankingsService {
 
   private mapParticipacoes(value: RankingDocument): Observable<Participacao[]> {
     const participacoes$Array = value.participantes.map(participacaoValue => {
-      const monstro$ = this.repositorioDeMonstros.obtemMonstroObservavel(participacaoValue.participanteId.id).pipe(
+      const monstro$ = this.monstrosFirebaseService.obtemMonstroObservavel(participacaoValue.participanteId.id).pipe(
         // first(),
         // tap((value2) => this.log.debug('mapParticipacoes', value2)),
         map(monstro => {
@@ -230,7 +230,7 @@ export class RankingsService {
       // first(),
       tap((value) => this.log.debug('obtemRankingObservavel: valueChanges: ')),
       switchMap(value => {
-        const rankingComProprietario$ = this.repositorioDeMonstros.obtemMonstroObservavel(value.monstroRef.id).pipe(
+        const rankingComProprietario$ = this.monstrosFirebaseService.obtemMonstroObservavel(value.monstroRef.id).pipe(
           // first(),
           switchMap(monstro => this.mapRankingObservavel(monstro, value)),
           catchError((error, source$) => {
@@ -267,20 +267,20 @@ export class RankingsService {
     const participantes = ranking.participantes.map(participacao => participacao.participante);
 
     const melhoresMedidasPorParticipante$Array = participantes.map(participante => {
-      const ultimaMedida$ = this.repositorioDeMedidas.obtemUltimaMedidaObservavel(participante).pipe(
+      const ultimaMedida$ = this.medidasFirebaseService.obtemUltimaMedidaObservavel(participante).pipe(
         map(ultimaMedida => PosicaoDeMedida.fromMedida(ultimaMedida, true))
       );
 
-      const menorMedidaDeGordura$ = this.repositorioDeMedidas.obtemMenorMedidaDeGorduraObservavel(participante).pipe(
+      const menorMedidaDeGordura$ = this.medidasFirebaseService.obtemMenorMedidaDeGorduraObservavel(participante).pipe(
         map(menorMedidaDeGordura => PosicaoDeMedida.fromMedida(menorMedidaDeGordura, false, true))
       );
 
-      const maiorMedidaDeMusculo$ = this.repositorioDeMedidas.obtemMaiorMedidaDeMusculoObservavel(participante).pipe(
+      const maiorMedidaDeMusculo$ = this.medidasFirebaseService.obtemMaiorMedidaDeMusculoObservavel(participante).pipe(
         map(maiorMedidaDeMusculo => PosicaoDeMedida.fromMedida(maiorMedidaDeMusculo, false, false, true))
       );
 
       const menorMedidaDeIndiceDeMassaCorporal$ =
-        this.repositorioDeMedidas.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(participante).pipe(
+        this.medidasFirebaseService.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(participante).pipe(
           map(menorMedidaDeIndiceDeMassaCorporal => {
             return PosicaoDeMedida.fromMedida(menorMedidaDeIndiceDeMassaCorporal, false, false, false, true);
           })
@@ -395,13 +395,15 @@ export class RankingsService {
     const participantes = ranking.participantes.map(participacao => participacao.participante);
 
     const melhoresMedidasPorParticipante$Array = participantes.map(participante => {
-      const ultimaMedida$ = this.repositorioDeMedidas.obtemUltimaMedidaObservavel(participante);
+      const ultimaMedida$ = this.medidasFirebaseService.obtemUltimaMedidaObservavel(participante);
 
-      const menorMedidaDeGordura$ = this.repositorioDeMedidas.obtemMenorMedidaDeGorduraObservavel(participante);
+      const menorMedidaDeGordura$ = this.medidasFirebaseService.obtemMenorMedidaDeGorduraObservavel(participante);
 
-      const maiorMedidaDeMusculo$ = this.repositorioDeMedidas.obtemMaiorMedidaDeMusculoObservavel(participante);
+      const maiorMedidaDeMusculo$ = this.medidasFirebaseService.obtemMaiorMedidaDeMusculoObservavel(participante);
 
-      const menorMedidaDeIndiceDeMassaCorporal$ = this.repositorioDeMedidas.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(participante);
+      const menorMedidaDeIndiceDeMassaCorporal$ = this.medidasFirebaseService.obtemMenorMedidaDeIndiceDeMassaCorporalObservavel(
+        participante
+      );
 
       //
 
@@ -549,7 +551,7 @@ export class RankingsService {
   }
 
   private mapTo(ranking: Ranking): RankingDocument {
-    const monstroRef = this.repositorioDeMonstros.ref(ranking.proprietarioId);
+    const monstroRef = this.monstrosFirebaseService.ref(ranking.proprietarioId);
 
     const doc: RankingDocument = {
       id: ranking.id,
@@ -560,7 +562,7 @@ export class RankingsService {
       dataDeCriacao: firebase.firestore.Timestamp.fromDate(ranking.dataDeCriacao),
       feitoCom: ranking.feitoCom,
       participantes: ranking.participantes.map(participacao => {
-        const participanteRef = this.repositorioDeMonstros.ref(participacao.participante.id);
+        const participanteRef = this.monstrosFirebaseService.ref(participacao.participante.id);
 
         const participacaoDocument: ParticipacaoDocument = {
           participanteId: participanteRef,
@@ -602,7 +604,7 @@ export class RankingsService {
   // Rankings - Participações.
 
   obtemRankingParticipacoes(participante: Monstro): Observable<RankingParticipacaoDocument[]> {
-    const monstroRef = this.repositorioDeMonstros.ref(participante.id);
+    const monstroRef = this.monstrosFirebaseService.ref(participante.id);
 
     const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
 
@@ -625,7 +627,7 @@ export class RankingsService {
       const participanteResults = ranking.participantes.map(participacao => {
         const rankingParticipacaoId = this.db.createId();
 
-        const participanteRef = this.repositorioDeMonstros.ref(participacao.participante.id);
+        const participanteRef = this.monstrosFirebaseService.ref(participacao.participante.id);
 
         // const ehProprietario = (participacao.participante === ranking.proprietario);
 
@@ -668,7 +670,7 @@ export class RankingsService {
         const participantesAindaNaoCadastradosResult = participantesAindaNaoCadastrados.map(participanteAindaNaoCadastrado => {
           const rankingParticipacaoId = this.db.createId();
 
-          const participanteRef = this.repositorioDeMonstros.ref(participanteAindaNaoCadastrado.participante.id);
+          const participanteRef = this.monstrosFirebaseService.ref(participanteAindaNaoCadastrado.participante.id);
 
           // const ehProprietario = (participanteAindaNaoCadastrado.participante === ranking.proprietario);
 
@@ -750,7 +752,7 @@ export class RankingsService {
 
   excluiRankingsParticicacoesPorParticipante(participanteId: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const monstroRef = this.repositorioDeMonstros.ref(participanteId);
+      const monstroRef = this.monstrosFirebaseService.ref(participanteId);
 
       const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
 

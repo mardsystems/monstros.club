@@ -1,6 +1,6 @@
-import * as moment from 'moment';
-import { Serie, SerieDeExercicio } from '../series/series-@domain.model';
 import { InjectionToken } from '@angular/core';
+import * as moment from 'moment';
+import { Serie, SerieDeExercicio } from '../series/@series-domain.model';
 
 export const CADASTRO_DE_SERIES = new InjectionToken<CadastroDeSeries>('CADASTRO_DE_SERIES');
 

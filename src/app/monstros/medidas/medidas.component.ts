@@ -6,12 +6,12 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@academias-application.model';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
-import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-@integration.model';
+import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
 import { CadastroDeMedidas, CADASTRO_DE_MEDIDAS } from '../medidas-cadastro/@medidas-cadastro-application.model';
 import { CadastroDeMedidaViewModel } from '../medidas-cadastro/@medidas-cadastro-presentation.model';
 import { MedidasCadastroComponent } from '../medidas-cadastro/medidas-cadastro.component';
 import { ConsultaDeMedidas, CONSULTA_DE_MEDIDAS } from './@medidas-application.model';
-import { Balanca, Medida, OmronHBF214 } from './medidas-@domain.model';
+import { Balanca, Medida, OmronHBF214 } from './@medidas-domain.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },

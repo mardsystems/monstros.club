@@ -8,9 +8,9 @@ describe('IndicadorDeGorduraComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IndicadorDeGorduraComponent ]
+      declarations: [IndicadorDeGorduraComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

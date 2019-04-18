@@ -8,7 +8,7 @@ import { MedidasComponent } from '../medidas/medidas.component';
 import { CadastroComponent } from '../../cadastro/cadastro.component';
 import { AdminMaterialModule } from '../../admin-material.module';
 import { AdminRoutingModule } from '../../admin-routing.module';
-import { AppCommonModule } from 'src/app/app-@common.module';
+import { AppCommonModule } from 'src/app/app-common.module';
 import { AngularFirestore, FirestoreSettingsToken, AngularFirestoreModule } from '@angular/fire/firestore';
 import { LOCALE_ID } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';

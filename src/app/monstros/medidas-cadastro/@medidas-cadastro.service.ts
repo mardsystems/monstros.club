@@ -1,7 +1,7 @@
 import { Inject } from '@angular/core';
-import { UnitOfWork, UNIT_OF_WORK } from 'src/app/app-@transactions.model';
-import { RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from 'src/app/cadastro/monstros/monstros.domain-model';
-import { Medida, RepositorioDeMedidas, REPOSITORIO_DE_MEDIDAS } from '../medidas/medidas-@domain.model';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
+import { RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { Medida, RepositorioDeMedidas, REPOSITORIO_DE_MEDIDAS } from '../medidas/@medidas-domain.model';
 import { CadastroDeMedidas, SolicitacaoDeCadastroDeMedida } from './@medidas-cadastro-application.model';
 
 export class MedidasCadastroService implements CadastroDeMedidas {

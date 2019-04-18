@@ -1,12 +1,12 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from '../auth/@auth.service';
-import { Monstro } from '../monstros/monstros.domain-model';
-import { MonstrosFirecloudRepository } from '../monstros/monstros.firecloud-repository';
-import { LogService } from '../app-@shared.services';
 import { tap } from 'rxjs/operators';
+import { LogService } from '../@app-common.model';
+import { AuthService } from '../auth/@auth.service';
+import { Monstro } from './monstros/@monstros-domain.model';
+import { AdaptadorParaUserInfo } from './monstros/@monstros-integration.model';
 
 @Component({
   selector: 'app-cadastro',
@@ -30,7 +30,7 @@ export class CadastroComponent {
   activePath: string;
 
   constructor(
-    private monstrosService: MonstrosFirecloudRepository,
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
     private authService: AuthService,
     private router: Router,
     private log: LogService,
@@ -40,7 +40,7 @@ export class CadastroComponent {
 
     this.activePath = this.router.url;
 
-    this.monstroLogado$ = this.monstrosService.monstroLogado$;
+    this.monstroLogado$ = this.adaptadorParaUserInfo.monstroLogado$;
 
     this.monstroLogado$.pipe(
       tap((value) => this.log.debug('AdminComponent: constructor: monstroLogado: ', value))

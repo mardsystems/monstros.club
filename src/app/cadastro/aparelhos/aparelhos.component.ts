@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 import { CadastroDeAparelhos, CADASTRO_DE_APARELHOS } from '../aparelhos-cadastro/@aparelhos-cadastro-application.model';
 import { CadastroDeAparelhoViewModel } from '../aparelhos-cadastro/@aparelhos-cadastro-presentation.model';
 import { AparelhosCadastroComponent } from '../aparelhos-cadastro/aparelhos-cadastro.component';
-import { ConsultaDeAparelhos, CONSULTA_DE_APARELHOS } from './aparelhos-@application.model';
-import { Aparelho } from './aparelhos-@domain.model';
+import { ConsultaDeAparelhos, CONSULTA_DE_APARELHOS } from './@aparelhos-application.model';
+import { Aparelho } from './@aparelhos-domain.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'imagem' },

@@ -1,5 +1,5 @@
-import { Monstro } from '../monstros.domain-model';
-import { Serie, SerieDeExercicio } from '../series/series-@domain.model';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { Serie, SerieDeExercicio } from '../series/@series-domain.model';
 import { SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './@series-cadastro-application.model';
 
 export class CadastroDeSerieViewModel extends SolicitacaoDeCadastroDeSerie {

@@ -8,9 +8,9 @@ describe('IndicadorDeIndiceDeMassaCorporalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IndicadorDeIndiceDeMassaCorporalComponent ]
+      declarations: [IndicadorDeIndiceDeMassaCorporalComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

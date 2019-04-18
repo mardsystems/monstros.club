@@ -1,7 +1,7 @@
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { Repository } from './app-@domain.model';
-import { UnitOfWork } from './app-@transactions.model';
+import { Repository } from './@app-domain.model';
+import { UnitOfWork } from './@app-transactions.model';
 
 export class DbContext {
   constructor(

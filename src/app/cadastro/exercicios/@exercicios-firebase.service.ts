@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { FirebaseService, MonstrosDbContext } from 'src/app/app-@firebase.model';
+import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
 import { ConsultaDeExercicios } from './@exercicios-application.model';
 import { Exercicio, Musculatura, RepositorioDeExercicios } from './@exercicios-domain.model';
 

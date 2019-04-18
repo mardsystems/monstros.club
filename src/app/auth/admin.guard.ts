@@ -1,28 +1,15 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  CanActivateChild,
-  CanLoad,
-  NavigationExtras,
-  Route,
-  Router,
-  RouterStateSnapshot
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Route, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
-import { AuthService } from './@auth.service';
-import { LogService } from '../app-@shared.services';
-import { MonstrosFirecloudRepository } from '../monstros/monstros.firecloud-repository';
+import { first } from 'rxjs/operators';
+import { AdaptadorParaUserInfo } from '../cadastro/monstros/@monstros-integration.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminGuard implements CanActivate, CanActivateChild, CanLoad {
   constructor(
-    private monstrosService: MonstrosFirecloudRepository,
-    private router: Router,
-    private log: LogService
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -42,7 +29,7 @@ export class AdminGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   checkLogin(url: string): Observable<boolean> {
-    const ehAdministrador$ = this.monstrosService.ehAdministrador().pipe(
+    const ehAdministrador$ = this.adaptadorParaUserInfo.ehAdministrador().pipe(
       first(),
       // map((auth) => {
       //   if (auth) {

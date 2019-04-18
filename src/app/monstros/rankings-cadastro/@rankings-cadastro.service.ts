@@ -4,7 +4,7 @@ import { LogService } from 'src/app/app-@shared.services';
 import { TipoDeBalanca } from '../medidas/medidas-@domain.model';
 import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
 import { Ranking } from '../rankings/@rankings-domain.model';
-import { RankingsService } from '../rankings/@rankings-firebase.service';
+import { RankingsFirebaseService } from '../rankings/@rankings-firebase.service';
 import { ICadastroDeRanking, SolicitacaoDeCadastroDeRanking } from './@rankings-cadastro-application.model';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class RankingsCadastroService
 
   constructor(
     private repositorioDeMonstros: MonstrosFirecloudRepository,
-    private repositorioDeRankings: RankingsService,
+    private repositorioDeRankings: RankingsFirebaseService,
     private log: LogService
   ) { }
 

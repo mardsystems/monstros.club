@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { CadastroDeExercicioViewModel } from './@exercicios-cadastro-@presentation.model';
+import { CadastroDeExercicioViewModel } from './@exercicios-cadastro-presentation.model';
 import { CADASTRO_DE_EXERCICIOS, CadastroDeExercicios } from './@exercicios-cadastro-application.model';
 
 @Component({

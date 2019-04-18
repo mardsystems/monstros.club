@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import * as moment from 'moment';
-import { Medida, TipoDeBalanca } from '../medidas/medidas-@domain.model';
+import { Medida, TipoDeBalanca } from '../medidas/@medidas-domain.model';
 
 export const CADASTRO_DE_MEDIDAS = new InjectionToken<CadastroDeMedidas>('CADASTRO_DE_MEDIDAS');
 

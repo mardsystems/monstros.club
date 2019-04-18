@@ -3,7 +3,7 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { CONST_TIMESTAMP_FALSO, Tempo } from 'src/app/app-@domain.model';
+import { CONST_TIMESTAMP_FALSO, Tempo } from 'src/app/@app-domain.model';
 import { Academia } from 'src/app/cadastro/academias/academias.domain-model';
 import { AparelhosFirebaseService } from 'src/app/cadastro/aparelhos/@aparelhos-firebase.service';
 import { Serie } from '../series-@domain.model';

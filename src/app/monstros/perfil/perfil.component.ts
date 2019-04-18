@@ -1,18 +1,22 @@
-import { Component, OnInit } from 'src/app/monstros/perfil/node_modules/@angular/core';
-import { ActivatedRoute, ParamMap } from 'src/app/monstros/perfil/node_modules/@angular/router';
-import { of, EMPTY } from 'src/app/monstros/perfil/node_modules/rxjs';
-import { catchError, first, switchMap, tap, map, shareReplay } from 'src/app/monstros/perfil/node_modules/rxjs/operators';
-import { CalculoDeIdade, LogService } from '../../app-@shared.services';
-import { AuthService } from '../../auth/@auth.service';
-import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
-import { SolicitacaoDeCadastroDeMonstro } from './perfil.application-model';
+import { Component, Inject, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { EMPTY, of } from 'rxjs';
+import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { LogService } from 'src/app/@app-common.model';
+import { CalculoDeIdade } from 'src/app/@app-domain.model';
+import { AuthService } from 'src/app/auth/@auth.service';
+import {
+  CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro
+} from 'src/app/cadastro/monstros-cadastro/@monstros-cadastro-application.model';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@academias-application.model';
+import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
 
 @Component({
-  selector: 'monstros-cadastro',
-  templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss']
+  selector: 'monstros-perfil',
+  templateUrl: './perfil.component.html',
+  styleUrls: ['./perfil.component.scss']
 })
-export class CadastroComponent implements OnInit {
+export class PerfilComponent implements OnInit {
   loading = true;
   disabledUpdate: boolean;
   public model: SolicitacaoDeCadastroDeMonstro = {
@@ -22,7 +26,11 @@ export class CadastroComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public authService: AuthService,
-    private monstrosService: MonstrosFirecloudRepository,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
+    @Inject(CADASTRO_DE_MONSTROS)
+    private cadastroDeMonstros: CadastroDeMonstros,
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
     private calculoDeIdade: CalculoDeIdade,
     private log: LogService,
   ) { }
@@ -33,7 +41,7 @@ export class CadastroComponent implements OnInit {
       // tap((value) => this.log.debug('CadastroDeMonstrosComponent: paramMap1', value)),
       map(params => params.get('monstroId')),
       // tap((value) => this.log.debug('CadastroDeMonstrosComponent: paramMap2', value)),
-      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId).pipe(first())),
+      switchMap(monstroId => this.consultaDeMonstros.obtemMonstroObservavel(monstroId).pipe(first())),
       catchError((error) => {
         console.log(`Não foi possível montar o perfil do monstro.\nRazão:\n${error}`);
 
@@ -60,14 +68,14 @@ export class CadastroComponent implements OnInit {
         if (!monstro) {
           return of(false);
         } else {
-          return this.monstrosService.ehVoceMesmo(monstro.id);
+          return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
         }
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.monstrosService.ehAdministrador();
+          return this.adaptadorParaUserInfo.ehAdministrador();
         }
       })
     ).subscribe(value => {
@@ -88,8 +96,8 @@ export class CadastroComponent implements OnInit {
   onSave(): void {
     const operation: Promise<void> =
       (this.model.isEdit)
-        ? this.monstrosService.atualizaMonstro(this.model.id, this.model)
-        : this.monstrosService.cadastraMonstro(this.model);
+        ? this.cadastroDeMonstros.atualizaMonstro(this.model.id, this.model)
+        : this.cadastroDeMonstros.cadastraMonstro(this.model);
 
     operation.then(() => {
       // this.dialogRef.close();

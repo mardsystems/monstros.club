@@ -3,7 +3,6 @@ import { ApplicationRef, Injectable } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { concat, interval, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { CalculoDeIdade } from './app-@domain.model';
 
 @Injectable({
   providedIn: 'root'

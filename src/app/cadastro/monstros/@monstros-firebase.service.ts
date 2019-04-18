@@ -2,8 +2,8 @@ import { Inject } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable } from 'rxjs';
 import { first, map, shareReplay } from 'rxjs/operators';
-import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/app-@domain.model';
-import { FirebaseService, MonstrosDbContext } from 'src/app/app-@firebase.model';
+import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
+import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
 import { ConsultaDeMonstros } from './@academias-application.model';
 import { Genero, Monstro, RepositorioDeMonstros } from './@monstros-domain.model';
 

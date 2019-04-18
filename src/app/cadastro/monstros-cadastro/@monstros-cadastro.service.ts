@@ -1,6 +1,6 @@
 import { Inject } from '@angular/core';
-import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/app-@domain.model';
-import { UnitOfWork, UNIT_OF_WORK } from 'src/app/app-@transactions.model';
+import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
 import { Monstro, RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from '../monstros/@monstros-domain.model';
 import { CadastroDeMonstros, SolicitacaoDeCadastroDeMonstro } from './@monstros-cadastro-application.model';
 

@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
-import { LogService, StorageService } from '../app-@shared.services';
 import { AuthService } from '../auth/@auth.service';
 import { SobreComponent } from '../sobre/sobre.component';
 import { slideInAnimation } from './monstros-routing.animations';
-import { Monstro } from './monstros.domain-model';
-import { MonstrosFirecloudRepository } from './monstros.firecloud-repository';
+import { AdaptadorParaUserInfo } from '../cadastro/monstros/@monstros-integration.model';
+import { Monstro } from '../cadastro/monstros/@monstros-domain.model';
+import { StorageService, LogService } from '../@app-common.model';
 
 @Component({
   selector: 'app-monstros',
@@ -29,7 +29,7 @@ export class MonstrosComponent {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private monstrosService: MonstrosFirecloudRepository,
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
     private authService: AuthService,
     private storageService: StorageService,
     private log: LogService,
@@ -63,7 +63,7 @@ export class MonstrosComponent {
 
     this.desktopQuery = media.matchMedia('(min-width: 600px)');
 
-    this.monstroLogado$ = this.monstrosService.monstroLogado$;
+    this.monstroLogado$ = this.adaptadorParaUserInfo.monstroLogado$;
 
     // this.monstroLogado$.pipe(
     //   // tap((value) => this.log.debug('MonstrosComponent: constructor: monstroLogado: ', value)),

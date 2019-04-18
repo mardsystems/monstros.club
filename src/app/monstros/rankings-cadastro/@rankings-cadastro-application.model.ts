@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { TipoDeBalanca } from '../medidas/medidas-@domain.model';
+import { TipoDeBalanca } from '../medidas/@medidas-domain.model';
 import { Ranking } from '../rankings/@rankings-domain.model';
 
 export class SolicitacaoDeCadastroDeRanking {

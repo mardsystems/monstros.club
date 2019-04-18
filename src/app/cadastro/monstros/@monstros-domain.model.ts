@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { CalculoDeIdade, Repository } from 'src/app/app-@domain.model';
+import { CalculoDeIdade, Repository } from 'src/app/@app-domain.model';
 
 export class Monstro {
   public constructor(

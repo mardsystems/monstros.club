@@ -1,16 +1,11 @@
 import * as moment from 'moment';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import {
-  MedidaDeGordura,
-  MedidaDeGorduraVisceral,
-  MedidaDeIndiceDeMassaCorporal,
-  MedidaDeMusculo,
-  Medida,
-  TipoDeBalanca
-} from '../medidas/medidas-@domain.model';
-import { Monstro } from '../monstros.domain-model';
+  IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeIndiceDeMassaCorporal, IMedidaDeMusculo, Medida, TipoDeBalanca
+} from '../medidas/@medidas-domain.model';
 
 export class PosicaoDeMedida
-  implements MedidaDeGordura, MedidaDeGorduraVisceral, MedidaDeMusculo, MedidaDeIndiceDeMassaCorporal {
+  implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {
   medidaId: string;
   monstroId: string;
   monstro: Monstro;

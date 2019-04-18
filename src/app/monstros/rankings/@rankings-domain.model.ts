@@ -1,6 +1,6 @@
-import { TipoDeBalanca } from '../medidas/medidas-@domain.model';
-import { Monstro } from '../monstros.domain-model';
 import * as _ from 'lodash';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { TipoDeBalanca } from '../medidas/@medidas-domain.model';
 
 export class Ranking {
   private _participantes: Participacao[];

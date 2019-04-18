@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppCommonModule } from '../app-@common.module';
+import { AppCommonModule } from '../app-common.module';
 import { AcademiasCadastroComponent } from './academias-cadastro/academias-cadastro.component';
 import { AcademiasComponent } from './academias/academias.component';
 import { AparelhosCadastroComponent } from './aparelhos-cadastro/aparelhos-cadastro.component';
@@ -12,6 +12,7 @@ import { CadastroRoutingModule } from './cadastro-routing.module';
 import { CadastroComponent } from './cadastro.component';
 import { ExerciciosCadastroComponent } from './exercicios-cadastro/exercicios-cadastro.component';
 import { ExerciciosComponent } from './exercicios/exercicios.component';
+import { MonstrosCadastroComponent } from './monstros-cadastro/monstros-cadastro.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ExerciciosComponent } from './exercicios/exercicios.component';
     AparelhosComponent,
     AparelhosCadastroComponent,
     AparelhosExerciciosComponent,
+    MonstrosCadastroComponent,
   ],
   imports: [
     CommonModule,
@@ -35,6 +37,7 @@ import { ExerciciosComponent } from './exercicios/exercicios.component';
     AcademiasCadastroComponent,
     ExerciciosCadastroComponent,
     AparelhosCadastroComponent,
+    MonstrosCadastroComponent,
   ],
 })
 export class CadastroModule { }

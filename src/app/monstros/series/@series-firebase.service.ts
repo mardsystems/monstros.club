@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { CONST_TIMESTAMP_FALSO } from 'src/app/app-@domain.model';
-import { FirebaseService, MonstrosDbContext } from 'src/app/app-@firebase.model';
+import { CONST_TIMESTAMP_FALSO } from 'src/app/@app-domain.model';
+import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
 import { ExerciciosFirebaseService } from 'src/app/cadastro/exercicios/@exercicios-firebase.service';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
-import { RepositorioDeSeries, Serie, SerieDeExercicio } from './series-@domain.model';
+import { RepositorioDeSeries, Serie, SerieDeExercicio } from './@series-domain.model';
 
 @Injectable()
 export class SeriesFirebaseService
@@ -34,7 +34,7 @@ export class SeriesFirebaseService
 
   async add(monstroId: string, serie: Serie): Promise<void> {
     try {
-      const path = this.path(); //monstroId
+      const path = this.path(); // monstroId
 
       const collection = this.db.firebase.collection<SerieDocument>(path);
 
@@ -50,7 +50,7 @@ export class SeriesFirebaseService
 
   async update(monstroId: string, serie: Serie): Promise<void> {
     try {
-      const path = this.path(); //monstroId
+      const path = this.path(); // monstroId
 
       const collection = this.db.firebase.collection<SerieDocument>(path);
 
@@ -93,7 +93,7 @@ export class SeriesFirebaseService
 
   async remove(monstroId: string, serie: Serie): Promise<void> {
     try {
-      const path = this.path(); //monstroId
+      const path = this.path(); // monstroId
 
       const collection = this.db.firebase.collection<SerieDocument>(path);
 
@@ -107,7 +107,7 @@ export class SeriesFirebaseService
 
   async obtemSerie(monstroId: string, id: string): Promise<Serie> {
     try {
-      const path = this.path(); //monstroId
+      const path = this.path(); // monstroId
 
       const collection = this.db.firebase.collection<SerieDocument>(path);
 
@@ -161,7 +161,7 @@ export class SeriesFirebaseService
   // Consultas.
 
   obtemSerieObservavel(monstroId: string, id: string): Observable<Serie> {
-    const path = this.path(); //monstroId
+    const path = this.path(); // monstroId
 
     const collection = this.db.firebase.collection<SerieDocument>(path);
 
@@ -175,7 +175,7 @@ export class SeriesFirebaseService
   }
 
   obtemSeriesParaExibicao(monstro: Monstro): Observable<Serie[]> {
-    const path = this.path(); //monstro.id
+    const path = this.path(); // monstro.id
 
     const collection = this.db.firebase.collection<SerieDocument>(path, reference => {
       return reference
@@ -235,7 +235,7 @@ export class SeriesFirebaseService
   //
 
   obtemSeriesParaExibicao_(monstro: Monstro): Observable<Serie[]> {
-    const path = this.path(); //monstro.id
+    const path = this.path(); // monstro.id
 
     const collection = this.db.firebase.collection<SerieDocument>(path, reference => {
       return reference
@@ -302,7 +302,7 @@ export class SeriesFirebaseService
   }
 
   obtemSerieObservavel_(monstroId: string, id: string): Observable<Serie> {
-    const path = this.path(); //monstroId
+    const path = this.path(); // monstroId
 
     const collection = this.db.firebase.collection<SerieDocument>(path);
 
@@ -322,7 +322,7 @@ export class SeriesFirebaseService
   importaSeries() {
     const idAntigo = 'monstros/FCmLKJPLf4ejTazweTCP';
 
-    const collection = this.db.firebase.collection<SerieDocument>(this.path(''), reference =>
+    const collection = this.db.firebase.collection<SerieDocument>(this.path(), reference =>
       reference
         .where('monstroId', '==', idAntigo)
         .orderBy('data', 'desc')

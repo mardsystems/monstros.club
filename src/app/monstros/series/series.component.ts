@@ -1,19 +1,20 @@
-import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/app-@shared.services';
-import { Monstro } from '../monstros.domain-model';
-import { MonstrosFirecloudRepository } from '../monstros.firecloud-repository';
-import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
+import { LogService } from 'src/app/@app-common.model';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { CadastroDeSerieViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
-import { Serie } from './series-@domain.model';
-import { SeriesFirebaseService } from './@series-firebase.service';
 import { SeriesCadastroService } from '../series-cadastro/@series-cadastro.service';
+import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
 import { ExecucaoDeSerieViewModel } from '../series-execucao/@series-execucao-presentation.model';
+import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
+import { Serie } from './@series-domain.model';
+import { SeriesFirebaseService } from './@series-firebase.service';
+import { ConsultaDeMonstros } from 'src/app/cadastro/monstros/@academias-application.model';
+import { AdaptadorParaUserInfo } from 'src/app/cadastro/monstros/@monstros-integration.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -46,7 +47,8 @@ export class SeriesComponent implements OnInit {
     private route: ActivatedRoute,
     private repositorioDeSeries: SeriesFirebaseService,
     private cadastroDeSeries: SeriesCadastroService,
-    private monstrosService: MonstrosFirecloudRepository,
+    private consultaDeMonstros: ConsultaDeMonstros,
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
     private snackBar: MatSnackBar,
     private log: LogService,
     media: MediaMatcher
@@ -58,7 +60,7 @@ export class SeriesComponent implements OnInit {
     const monstro$ = this.route.paramMap.pipe(
       // first(),
       map(params => params.get('monstroId')),
-      switchMap(monstroId => this.monstrosService.obtemMonstroObservavel(monstroId)),
+      switchMap(monstroId => this.consultaDeMonstros.obtemMonstroObservavel(monstroId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar as séries do monstro.\nRazão:\n${error}`);
 
@@ -94,13 +96,13 @@ export class SeriesComponent implements OnInit {
     this.disabledWrite$ = monstro$.pipe(
       // first(),
       switchMap(monstro => {
-        return this.monstrosService.ehVoceMesmo(monstro.id);
+        return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.monstrosService.ehAdministrador();
+          return this.adaptadorParaUserInfo.ehAdministrador();
         }
       }),
       map(value => !value),

@@ -1,19 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { SolicitacaoDeCadastroDeMonstro, CADASTRO_DE_MONSTROS, CadastroDeMonstros } from './@monstros-cadastro-application.model';
+import { CalculoDeIdade } from 'src/app/@app-domain.model';
 import { AuthService } from 'src/app/auth/@auth.service';
-import { CalculoDeIdade } from 'src/app/app-@domain.model';
-import { LogService } from 'src/app/app-@common.model';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from '../monstros/@academias-application.model';
+import { AdaptadorParaUserInfo } from '../monstros/@monstros-integration.model';
+import { CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro } from './@monstros-cadastro-application.model';
 
 @Component({
   selector: 'monstros-cadastro',
-  templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss']
+  templateUrl: './monstros-cadastro.component.html',
+  styleUrls: ['./monstros-cadastro.component.scss']
 })
-export class CadastroComponent implements OnInit {
+export class MonstrosCadastroComponent implements OnInit {
   loading = true;
   disabledUpdate: boolean;
   public model: SolicitacaoDeCadastroDeMonstro = {
@@ -28,7 +28,7 @@ export class CadastroComponent implements OnInit {
     @Inject(CONSULTA_DE_MONSTROS)
     private consultaDeMonstros: ConsultaDeMonstros,
     private calculoDeIdade: CalculoDeIdade,
-    private log: LogService,
+    private adaptadorParaUserInfo: AdaptadorParaUserInfo,
   ) { }
 
   ngOnInit() {
@@ -64,14 +64,14 @@ export class CadastroComponent implements OnInit {
         if (!monstro) {
           return of(false);
         } else {
-          return this.monstrosService.ehVoceMesmo(monstro.id);
+          return this.adaptadorParaUserInfo.ehVoceMesmo(monstro.id);
         }
       }),
       switchMap(value => {
         if (value) {
           return of(true);
         } else {
-          return this.monstrosService.ehAdministrador();
+          return this.adaptadorParaUserInfo.ehAdministrador();
         }
       })
     ).subscribe(value => {
