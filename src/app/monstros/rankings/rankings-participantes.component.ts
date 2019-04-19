@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { RankingsParticipacaoComponent } from '../rankings-participacao/rankings-participacao.component';
+import { ParticipacaoDeRankings, PARTICIPACAO_DE_RANKINGS } from '../rankings-participacao/@rankings-participacao-application.model';
 import { ParticipacaoViewModel } from '../rankings-participacao/@rankings-participacao-presentation.model';
-import { RankingsParticipacaoService } from '../rankings-participacao/@rankings-participacao.service';
+import { RankingsParticipacaoComponent } from '../rankings-participacao/rankings-participacao.component';
 import { Participacao, Ranking } from './@rankings-domain.model';
 
 @Component({
@@ -17,7 +17,8 @@ export class RankingsParticipantesComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private participacaoDeRankings: RankingsParticipacaoService
+    @Inject(PARTICIPACAO_DE_RANKINGS)
+    private participacaoDeRankings: ParticipacaoDeRankings
   ) { }
 
   ngOnInit() {

@@ -16,7 +16,7 @@ export class SeriesCadastroService implements CadastroDeSeries {
   ) { }
 
   async cadastraSerie(solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const serieId = this.repositorioDeSeries.createId();
@@ -46,7 +46,7 @@ export class SeriesCadastroService implements CadastroDeSeries {
   }
 
   async atualizaSerie(serieId: string, solicitacao: SolicitacaoDeCadastroDeSerie): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, serieId);
@@ -82,7 +82,7 @@ export class SeriesCadastroService implements CadastroDeSeries {
   }
 
   async adicionaExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, solicitacao.serieId);
@@ -108,7 +108,7 @@ export class SeriesCadastroService implements CadastroDeSeries {
   }
 
   async atualizaExercicio(serieDeExercicioId: number, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, solicitacao.serieId);
@@ -146,7 +146,7 @@ export class SeriesCadastroService implements CadastroDeSeries {
   }
 
   async removeExercicio(monstroId: string, serieId: string, serieDeExercicioId: number): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const serie = await this.repositorioDeSeries.obtemSerie(monstroId, serieId);
@@ -170,7 +170,7 @@ export class SeriesCadastroService implements CadastroDeSeries {
   }
 
   async excluiSerie(monstroId: string, serieId: string): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const serie = await this.repositorioDeSeries.obtemSerie(monstroId, serieId);

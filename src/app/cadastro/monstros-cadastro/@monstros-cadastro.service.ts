@@ -18,7 +18,7 @@ export class MonstrosCadastroService implements CadastroDeMonstros {
   }
 
   async cadastraMonstro(solicitacao: SolicitacaoDeCadastroDeMonstro): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       // const monstroId = this.repositorioDeMonstros.createId();
@@ -55,7 +55,7 @@ export class MonstrosCadastroService implements CadastroDeMonstros {
   }
 
   async atualizaMonstro(monstroId: string, solicitacao: SolicitacaoDeCadastroDeMonstro): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const monstro = await this.repositorioDeMonstros.obtemMonstro(monstroId);
@@ -98,7 +98,7 @@ export class MonstrosCadastroService implements CadastroDeMonstros {
 
 
   async excluiMonstro(monstroId: string): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const monstro = await this.repositorioDeMonstros.obtemMonstro(monstroId);

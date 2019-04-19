@@ -13,7 +13,7 @@ export class ExerciciosCadastroService implements CadastroDeExercicios {
   ) { }
 
   async cadastraExercicio(solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const exercicioId = this.repositorioDeExercicios.createId();
@@ -43,7 +43,7 @@ export class ExerciciosCadastroService implements CadastroDeExercicios {
   }
 
   async atualizaExercicio(exercicioId: string, solicitacao: SolicitacaoDeCadastroDeExercicio): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const exercicio = await this.repositorioDeExercicios.obtemExercicio(exercicioId);
@@ -73,7 +73,7 @@ export class ExerciciosCadastroService implements CadastroDeExercicios {
   }
 
   async excluiExercicio(exercicioId: string): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const exercicio = await this.repositorioDeExercicios.obtemExercicio(exercicioId);

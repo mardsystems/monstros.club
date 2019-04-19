@@ -13,7 +13,7 @@ export class AcademiasCadastroService implements CadastroDeAcademias {
   ) { }
 
   async cadastraAcademia(solicitacao: SolicitacaoDeCadastroDeAcademia): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const academiaId = this.repositorioDeAcademias.createId();
@@ -41,7 +41,7 @@ export class AcademiasCadastroService implements CadastroDeAcademias {
   }
 
   async atualizaAcademia(academiaId: string, solicitacao: SolicitacaoDeCadastroDeAcademia): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const academia = await this.repositorioDeAcademias.obtemAcademia(academiaId);
@@ -67,7 +67,7 @@ export class AcademiasCadastroService implements CadastroDeAcademias {
   }
 
   async excluiAcademia(academiaId: string): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const academia = await this.repositorioDeAcademias.obtemAcademia(academiaId);

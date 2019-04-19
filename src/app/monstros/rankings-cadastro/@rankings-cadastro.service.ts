@@ -1,62 +1,96 @@
-import { Injectable } from '@angular/core';
-import { first, tap } from 'rxjs/operators';
-import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
-import { LogService } from 'src/app/common/common.service';
+import { Inject, Injectable } from '@angular/core';
+import { RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/common/transactions.model';
 import { TipoDeBalanca } from '../medidas/@medidas-domain.model';
-import { Ranking } from '../rankings/@rankings-domain.model';
-import { RankingsFirebaseService } from '../rankings/@rankings-firebase.service';
-import { ICadastroDeRanking, SolicitacaoDeCadastroDeRanking } from './@rankings-cadastro-application.model';
+import { Ranking, RepositorioDeRankings, REPOSITORIO_DE_RANKINGS } from '../rankings/@rankings-domain.model';
+import { CadastroDeRankings, SolicitacaoDeCadastroDeRanking } from './@rankings-cadastro-application.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class RankingsCadastroService
-  implements ICadastroDeRanking {
-
+@Injectable()
+export class RankingsCadastroService implements CadastroDeRankings {
   constructor(
-    private repositorioDeMonstros: MonstrosFirebaseService,
-    private repositorioDeRankings: RankingsFirebaseService,
-    private log: LogService
+    @Inject(UNIT_OF_WORK)
+    private unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_RANKINGS)
+    private repositorioDeRankings: RepositorioDeRankings,
+    @Inject(REPOSITORIO_DE_MONSTROS)
+    private repositorioDeMonstros: RepositorioDeMonstros,
   ) { }
 
-  cadastraRanking(solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.repositorioDeMonstros.obtemMonstroObservavel(solicitacao.proprietarioId).pipe(
-        first(),
-        tap((value) => this.log.debug('cadastraRanking: value: ', value)),
-      ).subscribe(monstro => {
-        const rankingId = this.repositorioDeRankings.createId();
+  async cadastraRanking(solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
+    await this.unitOfWork.beginTransaction();
 
-        const ranking = new Ranking(
-          rankingId,
-          solicitacao.nome,
-          monstro,
-          solicitacao.proprietarioId,
-          solicitacao.feitoCom as TipoDeBalanca
-        );
+    try {
+      const rankingId = this.repositorioDeRankings.createId();
 
-        const result = this.repositorioDeRankings.add(ranking);
+      const proprietario = await this.repositorioDeMonstros.obtemMonstro(solicitacao.proprietarioId);
 
-        return resolve(result);
-      });
-    });
+      //
+
+      const ranking = new Ranking(
+        rankingId,
+        solicitacao.nome,
+        proprietario,
+        solicitacao.proprietarioId,
+        solicitacao.feitoCom as TipoDeBalanca
+      );
+
+
+      //
+
+      await this.repositorioDeRankings.add(ranking);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
-  atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.repositorioDeRankings.obtemRankingObservavel(rankingId).pipe(
-        first()
-      ).subscribe(ranking => {
-        ranking.defineNome(solicitacao.nome);
+  async atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void> {
+    await this.unitOfWork.beginTransaction();
 
-        const result = this.repositorioDeRankings.update(ranking);
+    try {
+      const ranking = await this.repositorioDeRankings.obtemRanking(rankingId);
 
-        resolve(result);
-      });
-    });
+      //
+
+      ranking.defineNome(solicitacao.nome);
+
+
+      //
+
+      await this.repositorioDeRankings.update(ranking);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
   async excluiRanking(rankingId: string): Promise<void> {
-    return await this.repositorioDeRankings.remove(rankingId);
+    await this.unitOfWork.beginTransaction();
+
+    try {
+      const ranking = await this.repositorioDeRankings.obtemRanking(rankingId);
+
+      //
+
+      await this.repositorioDeRankings.remove(ranking);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 }

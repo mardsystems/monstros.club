@@ -41,6 +41,8 @@ export class Aparelho {
   }
 }
 
+export const REPOSITORIO_DE_APARELHOS = new InjectionToken<RepositorioDeAparelhos>('REPOSITORIO_DE_APARELHOS');
+
 export interface RepositorioDeAparelhos extends Repository {
   localizaAparelho(exercicio: Exercicio, academia: Academia): Promise<Aparelho>;
 
@@ -52,5 +54,3 @@ export interface RepositorioDeAparelhos extends Repository {
 
   remove(aparelho: Aparelho): Promise<void>;
 }
-
-export const REPOSITORIO_DE_APARELHOS = new InjectionToken<RepositorioDeAparelhos>('REPOSITORIO_DE_APARELHOS');

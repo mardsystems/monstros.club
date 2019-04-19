@@ -1,5 +1,7 @@
+import { InjectionToken } from '@angular/core';
 import * as _ from 'lodash';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { Repository } from 'src/app/common/domain.model';
 import { TipoDeBalanca } from '../medidas/@medidas-domain.model';
 
 export class Ranking {
@@ -91,4 +93,16 @@ export class Participacao {
   public defineComoAdministrador(ehAdministrador: boolean) {
     this._ehAdministrador = ehAdministrador;
   }
+}
+
+export const REPOSITORIO_DE_RANKINGS = new InjectionToken<RepositorioDeRankings>('REPOSITORIO_DE_RANKINGS');
+
+export interface RepositorioDeRankings extends Repository {
+  obtemRanking(id: string): Promise<Ranking>;
+
+  add(medida: Ranking): Promise<void>;
+
+  update(medida: Ranking): Promise<void>;
+
+  remove(medida: Ranking): Promise<void>;
 }

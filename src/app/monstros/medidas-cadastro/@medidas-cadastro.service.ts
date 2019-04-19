@@ -18,7 +18,7 @@ export class MedidasCadastroService implements CadastroDeMedidas {
   }
 
   async cadastraMedida(solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const medidaId = this.repositorioDeMedidas.createId();
@@ -57,7 +57,7 @@ export class MedidasCadastroService implements CadastroDeMedidas {
   }
 
   async atualizaMedida(medidaId: string, solicitacao: SolicitacaoDeCadastroDeMedida): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const medida = await this.repositorioDeMedidas.obtemMedida(medidaId);
@@ -97,7 +97,7 @@ export class MedidasCadastroService implements CadastroDeMedidas {
   }
 
   async excluiMedida(medidaId: string): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const medida = await this.repositorioDeMedidas.obtemMedida(medidaId);

@@ -11,13 +11,13 @@ import { CONST_TIMESTAMP_FALSO } from 'src/app/common/domain.model';
 import { FirebaseService } from 'src/app/common/firebase.service';
 import { Serie } from '../@series-domain.model';
 import { SeriesFirebaseService } from '../@series-firebase.service';
-import { ConsultaDeExecucoesDeSerie } from './@execucoes-application.model';
-import { ExecucaoDeExercicio, ExecucaoDeSerie, RepositorioDeExecucoesDeSerie } from './@execucoes-domain.model';
+import { ConsultaDeExecucoesDeSeries } from './@execucoes-application.model';
+import { ExecucaoDeExercicio, ExecucaoDeSerie, RepositorioDeExecucoesDeSeries } from './@execucoes-domain.model';
 
 @Injectable()
 export class ExecucoesFirebaseService
   extends FirebaseService<ExecucaoDeSerieDocument>
-  implements RepositorioDeExecucoesDeSerie, ConsultaDeExecucoesDeSerie {
+  implements RepositorioDeExecucoesDeSeries, ConsultaDeExecucoesDeSeries {
 
   constructor(
     protected readonly db: MonstrosDbContext,

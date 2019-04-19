@@ -1,5 +1,5 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -12,6 +12,9 @@ import { RankingViewModel } from '../rankings-cadastro/@rankings-cadastro-presen
 import { RankingsCadastroComponent } from '../rankings-cadastro/rankings-cadastro.component';
 import { Ranking } from './@rankings-domain.model';
 import { RankingsFirebaseService } from './@rankings-firebase.service';
+import { CONSULTA_DE_RANKINGS, ConsultaDeRankings } from './@rankings-application.model';
+import { CONSULTA_DE_MONSTROS, ConsultaDeMonstros } from 'src/app/cadastro/monstros/@monstros-application.model';
+import { CADASTRO_DE_RANKINGS, CadastroDeRankings } from '../rankings-cadastro/@rankings-cadastro-application.model';
 
 const columnDefinitions = [
   { showMobile: false, def: 'proprietario' },
@@ -45,8 +48,12 @@ export class RankingsComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private rankingsFirebaseService: RankingsFirebaseService,
-    private monstrosFirebaseService: MonstrosFirebaseService,
+    @Inject(CONSULTA_DE_RANKINGS)
+    private consultaDeRankings: ConsultaDeRankings,
+    @Inject(CONSULTA_DE_MONSTROS)
+    private consultaDeMonstros: ConsultaDeMonstros,
+    @Inject(CADASTRO_DE_RANKINGS)
+    private cadastroDeRankings: CadastroDeRankings,
     private monstrosMembershipService: MonstrosMembershipService,
     media: MediaMatcher
   ) {
@@ -59,7 +66,7 @@ export class RankingsComponent implements OnInit {
     const monstro$ = this.route.paramMap.pipe(
       // first(),
       map(params => params.get('monstroId')),
-      switchMap((monstroId) => this.monstrosFirebaseService.obtemMonstroObservavel(monstroId).pipe(first())),
+      switchMap((monstroId) => this.consultaDeMonstros.obtemMonstroObservavel(monstroId).pipe(first())),
       catchError((error, source$) => {
         console.log(`Não foi possível montar os rankings do monstro.\nRazão:\n${error}`);
 
@@ -72,7 +79,7 @@ export class RankingsComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.rankingsFirebaseService.obtemRankingsParaExibicao(monstro);
+        return this.consultaDeRankings.obtemRankingsParaExibicao(monstro);
       }),
       shareReplay()
     );
@@ -131,6 +138,6 @@ export class RankingsComponent implements OnInit {
   }
 
   onDelete(ranking: Ranking): void {
-    this.rankingsFirebaseService.remove(ranking.id);
+    this.cadastroDeRankings.excluiRanking(ranking.id);
   }
 }

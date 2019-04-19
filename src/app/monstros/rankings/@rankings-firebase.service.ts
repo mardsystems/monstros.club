@@ -1,52 +1,243 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
+import { DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import * as _ from 'lodash';
 import { combineLatest, Observable, of } from 'rxjs';
-import { catchError, first, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { catchError, first, map, shareReplay, switchMap, tap, mergeMap } from 'rxjs/operators';
+import { MonstrosDbContext } from 'src/app/@app-firebase.service';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
 import { LogService } from 'src/app/common/common.service';
 import { CONST_TIMESTAMP_FALSO } from 'src/app/common/domain.model';
+import { FirebaseService } from 'src/app/common/firebase.service';
 import { TipoDeBalanca } from '../medidas/@medidas-domain.model';
 import { MedidasFirebaseService } from '../medidas/@medidas-firebase.service';
-import { PosicaoDeMedida } from './@rankings-application.model';
-import { Participacao, Ranking } from './@rankings-domain.model';
+import { ConsultaDeRankings, PosicaoDeMedida } from './@rankings-application.model';
+import { Participacao, Ranking, RepositorioDeRankings } from './@rankings-domain.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class RankingsFirebaseService {
-  private METANAME = 'rankings';
+@Injectable()
+export class RankingsFirebaseService
+  extends FirebaseService<RankingDocument>
+  implements RepositorioDeRankings, ConsultaDeRankings {
+
   private METANAME_PARTICIPACOES = 'participacoes';
 
   constructor(
-    private db: AngularFirestore,
-    private monstrosFirebaseService: MonstrosFirebaseService,
-    private medidasFirebaseService: MedidasFirebaseService,
-    private log: LogService
-  ) { }
-
-  createId(): string {
-    const id = this.db.createId();
-
-    return id;
+    protected readonly db: MonstrosDbContext,
+    protected readonly monstrosFirebaseService: MonstrosFirebaseService,
+    protected readonly medidasFirebaseService: MedidasFirebaseService,
+    protected readonly log: LogService
+  ) {
+    super(db);
   }
 
   path(): string {
-    const path = `/${this.METANAME}`;
-
-    return path;
+    return this.db.rankingsPath();
   }
 
   ref(id: string): DocumentReference {
     const path = this.path();
 
-    const collection = this.db.collection<RankingDocument>(path);
+    const collection = this.db.firebase.collection<RankingDocument>(path);
 
     const document = collection.doc<RankingDocument>(id);
 
     return document.ref;
+  }
+
+  async add(ranking: Ranking): Promise<void> {
+    try {
+      const path = this.path();
+
+      const collection = this.db.firebase.collection<RankingDocument>(path);
+
+      const document = collection.doc<RankingDocument>(ranking.id);
+
+      const doc = this.mapTo(ranking);
+
+      const result = document.set(doc);
+
+      //
+
+      const addRankingsParticipacoesResult = this.addRankingsParticipacoes(ranking);
+
+      const allResult = Promise.all([result, addRankingsParticipacoesResult]).then((results) => {
+        this.log.debug('add: ' + results);
+        // return new Promisse<void>((resolve, reject)=>{
+        //   return
+        // })
+      });
+
+      return allResult;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async update(ranking: Ranking): Promise<void> {
+    try {
+      const path = this.path();
+
+      const collection = this.db.firebase.collection<RankingDocument>(path);
+
+      const document = collection.doc<RankingDocument>(ranking.id);
+
+      const doc = this.mapTo(ranking);
+
+      const result = document.update(doc);
+
+      //
+
+      const updateRankingsParticipacoesResult = this.updateRankingsParticipacoes(ranking);
+
+      const allResult = Promise.all([result, updateRankingsParticipacoesResult]).then((results) => {
+        this.log.debug('update: ' + results);
+      });
+
+      return allResult;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  private mapTo(ranking: Ranking): RankingDocument {
+    const monstroRef = this.monstrosFirebaseService.ref(ranking.proprietarioId);
+
+    const doc: RankingDocument = {
+      id: ranking.id,
+      nome: ranking.nome,
+      // monstroId: `monstros/${ranking.monstro.id}`,
+      // monstroId: `monstros/${ranking.proprietarioId}`,
+      monstroRef: monstroRef,
+      dataDeCriacao: firebase.firestore.Timestamp.fromDate(ranking.dataDeCriacao),
+      feitoCom: ranking.feitoCom,
+      participantes: ranking.participantes.map(participacao => {
+        const participanteRef = this.monstrosFirebaseService.ref(participacao.participante.id);
+
+        const participacaoDocument: ParticipacaoDocument = {
+          participanteId: participanteRef,
+          desde: firebase.firestore.Timestamp.fromDate(participacao.desde),
+          ehAdministrador: participacao.ehAdministrador
+        };
+
+        return participacaoDocument;
+      })
+    };
+
+    return doc;
+  }
+
+  async remove(ranking: Ranking): Promise<void> {
+    try {
+      const path = this.path();
+
+      const collection = this.db.firebase.collection<RankingDocument>(path);
+
+      const document = collection.doc<RankingDocument>(ranking.id);
+
+      //
+
+      const excluiRankingsParticicacoesResult = this.excluiRankingsParticicacoesPorRanking(ranking.id);
+
+      //
+
+      const result = document.delete();
+
+      //
+
+      const allResult = Promise.all([result, excluiRankingsParticicacoesResult]).then((results) => {
+        this.log.debug('excluiRanking: ' + results);
+      });
+
+      return allResult;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async obtemRanking(id: string): Promise<Ranking> {
+    try {
+      const path = this.path();
+
+      const collection = this.db.firebase.collection<RankingDocument>(path);
+
+      const document = collection.doc<RankingDocument>(id);
+
+      const ranking$ = document.valueChanges().pipe(
+        first(),
+        mergeMap(async (value) => {
+          const proprietario = await this.monstrosFirebaseService.obtemMonstro(value.monstroRef.id);
+
+          const participantes = await Promise.all(value.participantes.map(async (participacaoValue) => {
+            const participante = await this.monstrosFirebaseService.obtemMonstro(participacaoValue.participanteId.id);
+
+            const participacao = new Participacao(
+              participante,
+              participacaoValue.desde.toDate(),
+              participacaoValue.ehAdministrador
+            );
+
+            return participacao;
+          }));
+
+          const ranking = await this.mapRanking(value, proprietario, participantes);
+
+          return ranking;
+        }),
+      );
+
+      return await ranking$.toPromise();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  private mapRanking(value: RankingDocument, proprietario: Monstro, participantes: Participacao[]): Ranking {
+    const monstroId = value.monstroRef.id;
+
+    return new Ranking(
+      value.id,
+      value.nome,
+      proprietario,
+      monstroId,
+      value.feitoCom as TipoDeBalanca,
+      CONST_TIMESTAMP_FALSO,
+      value.dataDeCriacao.toDate(),
+      participantes
+    );
+  }
+
+  // Consultas.
+
+  obtemRankingObservavel(id: string): Observable<Ranking> {
+    this.log.debug('obtemRankingObservavel');
+
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<RankingDocument>(path);
+
+    const document = collection.doc<RankingDocument>(id);
+
+    const ranking$ = document.valueChanges().pipe(
+      // first(),
+      tap((value) => this.log.debug('obtemRankingObservavel: valueChanges: ')),
+      switchMap(value => {
+        const rankingComProprietario$ = this.monstrosFirebaseService.obtemMonstroObservavel(value.monstroRef.id).pipe(
+          // first(),
+          switchMap(monstro => this.mapRankingObservavel(monstro, value)),
+          catchError((error, source$) => {
+            this.log.debug('obtemRankingObservavel: error: ', error);
+
+            return source$;
+          })
+        );
+
+        return rankingComProprietario$;
+      }),
+      shareReplay()
+    );
+
+    return ranking$;
   }
 
   obtemRankingsParaExibicao(monstro: Monstro): Observable<Ranking[]> {
@@ -88,14 +279,14 @@ export class RankingsFirebaseService {
     return rankings$;
   }
 
-  obtemRankingsParaExibicaoPorProprietario(proprietario: Monstro): Observable<Ranking[]> {
+  private obtemRankingsParaExibicaoPorProprietario(proprietario: Monstro): Observable<Ranking[]> {
     this.log.debug('obtemRankingsParaExibicaoPorProprietario');
 
     const monstroRef = this.monstrosFirebaseService.ref(proprietario.id);
 
     const path = this.path();
 
-    const collection = this.db.collection<RankingDocument>(path, reference => {
+    const collection = this.db.firebase.collection<RankingDocument>(path, reference => {
       return reference
         .where('monstroRef', '==', monstroRef);
       // .orderBy('data', 'desc');
@@ -164,7 +355,7 @@ export class RankingsFirebaseService {
     return participacoes$;
   }
 
-  obtemRankingsPorParticipante(participante: Monstro): Observable<Ranking[]> {
+  private obtemRankingsPorParticipante(participante: Monstro): Observable<Ranking[]> {
     this.log.debug('obtemRankingsPorParticipante');
 
     const rankingsPorParticipante$ = this.obtemRankingParticipacoes(participante).pipe(
@@ -215,52 +406,6 @@ export class RankingsFirebaseService {
     // // return merge(rankings$, new Observable<Ranking[]>(() => [])); // TODO: Problema quando não tem rankings.
 
     // return rankings$;
-  }
-
-  obtemRankingObservavel(id: string): Observable<Ranking> {
-    this.log.debug('obtemRankingObservavel');
-
-    const path = this.path();
-
-    const collection = this.db.collection<RankingDocument>(path);
-
-    const document = collection.doc<RankingDocument>(id);
-
-    const ranking$ = document.valueChanges().pipe(
-      // first(),
-      tap((value) => this.log.debug('obtemRankingObservavel: valueChanges: ')),
-      switchMap(value => {
-        const rankingComProprietario$ = this.monstrosFirebaseService.obtemMonstroObservavel(value.monstroRef.id).pipe(
-          // first(),
-          switchMap(monstro => this.mapRankingObservavel(monstro, value)),
-          catchError((error, source$) => {
-            this.log.debug('obtemRankingObservavel: error: ', error);
-
-            return source$;
-          })
-        );
-
-        return rankingComProprietario$;
-      }),
-      shareReplay()
-    );
-
-    return ranking$;
-  }
-
-  private mapRanking(value: RankingDocument, proprietario: Monstro, participantes: Participacao[]): Ranking {
-    const monstroId = value.monstroRef.id;
-
-    return new Ranking(
-      value.id,
-      value.nome,
-      proprietario,
-      monstroId,
-      value.feitoCom as TipoDeBalanca,
-      CONST_TIMESTAMP_FALSO,
-      value.dataDeCriacao.toDate(),
-      participantes
-    );
   }
 
   obtemPosicoesDeMedidasParaExibicaoPorRanking(ranking: Ranking): Observable<PosicaoDeMedida[]> {
@@ -389,7 +534,7 @@ export class RankingsFirebaseService {
     return medidasPorMonstrosUnificado$;
   }
 
-  obtemPosicoesDeMedidasParaExibicaoPorRankingGeral(ranking: Ranking): Observable<PosicaoDeMedida[]> {
+  private obtemPosicoesDeMedidasParaExibicaoPorRankingGeral(ranking: Ranking): Observable<PosicaoDeMedida[]> {
     // let mergeCount = 0;
 
     const participantes = ranking.participantes.map(participacao => participacao.participante);
@@ -481,12 +626,14 @@ export class RankingsFirebaseService {
     return medidasPorMonstrosUnificado$;
   }
 
+  // Importação.
+
   importaRankings() {
     const idAntigo = 'monstros/FCmLKJPLf4ejTazweTCP';
 
     const path = this.path();
 
-    const collection = this.db.collection<RankingDocument>(path, reference =>
+    const collection = this.db.firebase.collection<RankingDocument>(path, reference =>
       reference
         .where('monstroId', '==', idAntigo)
       // .orderBy('data', 'desc')
@@ -503,112 +650,14 @@ export class RankingsFirebaseService {
     });
   }
 
-  add(ranking: Ranking): Promise<void> {
-    const path = this.path();
-
-    const collection = this.db.collection<RankingDocument>(path);
-
-    const document = collection.doc<RankingDocument>(ranking.id);
-
-    const doc = this.mapTo(ranking);
-
-    const result = document.set(doc);
-
-    //
-
-    const addRankingsParticipacoesResult = this.addRankingsParticipacoes(ranking);
-
-    const allResult = Promise.all([result, addRankingsParticipacoesResult]).then((results) => {
-      this.log.debug('add: ' + results);
-      // return new Promisse<void>((resolve, reject)=>{
-      //   return
-      // })
-    });
-
-    return allResult;
-  }
-
-  update(ranking: Ranking): Promise<void> {
-    const path = this.path();
-
-    const collection = this.db.collection<RankingDocument>(path);
-
-    const document = collection.doc<RankingDocument>(ranking.id);
-
-    const doc = this.mapTo(ranking);
-
-    const result = document.update(doc);
-
-    //
-
-    const updateRankingsParticipacoesResult = this.updateRankingsParticipacoes(ranking);
-
-    const allResult = Promise.all([result, updateRankingsParticipacoesResult]).then((results) => {
-      this.log.debug('update: ' + results);
-    });
-
-    return allResult;
-  }
-
-  private mapTo(ranking: Ranking): RankingDocument {
-    const monstroRef = this.monstrosFirebaseService.ref(ranking.proprietarioId);
-
-    const doc: RankingDocument = {
-      id: ranking.id,
-      nome: ranking.nome,
-      // monstroId: `monstros/${ranking.monstro.id}`,
-      // monstroId: `monstros/${ranking.proprietarioId}`,
-      monstroRef: monstroRef,
-      dataDeCriacao: firebase.firestore.Timestamp.fromDate(ranking.dataDeCriacao),
-      feitoCom: ranking.feitoCom,
-      participantes: ranking.participantes.map(participacao => {
-        const participanteRef = this.monstrosFirebaseService.ref(participacao.participante.id);
-
-        const participacaoDocument: ParticipacaoDocument = {
-          participanteId: participanteRef,
-          desde: firebase.firestore.Timestamp.fromDate(participacao.desde),
-          ehAdministrador: participacao.ehAdministrador
-        };
-
-        return participacaoDocument;
-      })
-    };
-
-    return doc;
-  }
-
-  remove(rankingId: string): Promise<void> {
-    const path = this.path();
-
-    const collection = this.db.collection<RankingDocument>(path);
-
-    const document = collection.doc<RankingDocument>(rankingId);
-
-    //
-
-    const excluiRankingsParticicacoesResult = this.excluiRankingsParticicacoesPorRanking(rankingId);
-
-    //
-
-    const result = document.delete();
-
-    //
-
-    const allResult = Promise.all([result, excluiRankingsParticicacoesResult]).then((results) => {
-      this.log.debug('excluiRanking: ' + results);
-    });
-
-    return allResult;
-  }
-
   // Rankings - Participações.
 
-  obtemRankingParticipacoes(participante: Monstro): Observable<RankingParticipacaoDocument[]> {
+  private obtemRankingParticipacoes(participante: Monstro): Observable<RankingParticipacaoDocument[]> {
     const monstroRef = this.monstrosFirebaseService.ref(participante.id);
 
     const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
 
-    const collection = this.db.collection<RankingParticipacaoDocument>(path, reference => {
+    const collection = this.db.firebase.collection<RankingParticipacaoDocument>(path, reference => {
       return reference
         .where('participanteId', '==', monstroRef);
       // .where('ehProprietario', '==', false);
@@ -620,12 +669,12 @@ export class RankingsFirebaseService {
     return participacoes$;
   }
 
-  addRankingsParticipacoes(ranking: Ranking): Promise<void> {
+  private addRankingsParticipacoes(ranking: Ranking): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const rankingRef = this.ref(ranking.id);
 
       const participanteResults = ranking.participantes.map(participacao => {
-        const rankingParticipacaoId = this.db.createId();
+        const rankingParticipacaoId = this.db.firebase.createId();
 
         const participanteRef = this.monstrosFirebaseService.ref(participacao.participante.id);
 
@@ -657,7 +706,7 @@ export class RankingsFirebaseService {
 
       const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
 
-      const collection = this.db.collection<RankingParticipacaoDocument>(path, reference => {
+      const collection = this.db.firebase.collection<RankingParticipacaoDocument>(path, reference => {
         return reference
           .where('rankingId', '==', rankingRef);
       });
@@ -668,7 +717,7 @@ export class RankingsFirebaseService {
         const participantesAindaNaoCadastrados = _.differenceBy(ranking.participantes, values, 'participanteId');
 
         const participantesAindaNaoCadastradosResult = participantesAindaNaoCadastrados.map(participanteAindaNaoCadastrado => {
-          const rankingParticipacaoId = this.db.createId();
+          const rankingParticipacaoId = this.db.firebase.createId();
 
           const participanteRef = this.monstrosFirebaseService.ref(participanteAindaNaoCadastrado.participante.id);
 
@@ -707,10 +756,10 @@ export class RankingsFirebaseService {
     });
   }
 
-  addRankingParticipacao(rankingParticipacaoDoc: RankingParticipacaoDocument): Promise<void> {
+  private addRankingParticipacao(rankingParticipacaoDoc: RankingParticipacaoDocument): Promise<void> {
     const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
 
-    const collection = this.db.collection<RankingParticipacaoDocument>(path);
+    const collection = this.db.firebase.collection<RankingParticipacaoDocument>(path);
 
     const document = collection.doc<RankingParticipacaoDocument>(rankingParticipacaoDoc.id);
 
@@ -719,13 +768,13 @@ export class RankingsFirebaseService {
     return result;
   }
 
-  excluiRankingsParticicacoesPorRanking(rankingId: string): Promise<void> {
+  private excluiRankingsParticicacoesPorRanking(rankingId: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const rankingRef = this.ref(rankingId);
 
       const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
 
-      const collection = this.db.collection<RankingParticipacaoDocument>(path, reference => {
+      const collection = this.db.firebase.collection<RankingParticipacaoDocument>(path, reference => {
         return reference
           .where('rankingId', '==', rankingRef);
       });
@@ -750,13 +799,13 @@ export class RankingsFirebaseService {
     });
   }
 
-  excluiRankingsParticicacoesPorParticipante(participanteId: string): Promise<void> {
+  private excluiRankingsParticicacoesPorParticipante(participanteId: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const monstroRef = this.monstrosFirebaseService.ref(participanteId);
 
       const path = `${this.path()}-${this.METANAME_PARTICIPACOES}`;
 
-      const collection = this.db.collection<RankingParticipacaoDocument>(path, reference => {
+      const collection = this.db.firebase.collection<RankingParticipacaoDocument>(path, reference => {
         return reference
           .where('participanteId', '==', monstroRef);
       });

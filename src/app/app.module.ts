@@ -71,12 +71,16 @@ registerLocaleData(localePt);
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },
     { provide: FirestoreSettingsToken, useValue: {} },
+    //
     { provide: CALCULO_DE_IDADE, useClass: ServicoDeCalculoDeIdade },
+    //
     MonstrosFirebaseService,
     { provide: REPOSITORIO_DE_MONSTROS, useClass: MonstrosFirebaseService },
     { provide: CONSULTA_DE_MONSTROS, useClass: MonstrosFirebaseService },
     { provide: CADASTRO_DE_MONSTROS, useClass: MonstrosCadastroService },
+    //
     MedidasFirebaseService, // ?
+    //
     { provide: UNIT_OF_WORK, useClass: FirebaseTransactionManager },
   ],
   bootstrap: [AppComponent]

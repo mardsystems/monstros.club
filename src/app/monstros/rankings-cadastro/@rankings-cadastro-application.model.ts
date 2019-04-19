@@ -1,6 +1,17 @@
+import { InjectionToken } from '@angular/core';
 import * as moment from 'moment';
 import { TipoDeBalanca } from '../medidas/@medidas-domain.model';
 import { Ranking } from '../rankings/@rankings-domain.model';
+
+export const CADASTRO_DE_RANKINGS = new InjectionToken<CadastroDeRankings>('CADASTRO_DE_RANKINGS');
+
+export interface CadastroDeRankings {
+  cadastraRanking(solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void>;
+
+  atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void>;
+
+  excluiRanking(rankingId: string): Promise<void>;
+}
 
 export class SolicitacaoDeCadastroDeRanking {
   nome: string;
@@ -25,12 +36,4 @@ export class SolicitacaoDeCadastroDeRanking {
       feitoCom: ranking.feitoCom,
     };
   }
-}
-
-export interface ICadastroDeRanking {
-  cadastraRanking(solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void>;
-
-  atualizaRanking(rankingId: string, solicitacao: SolicitacaoDeCadastroDeRanking): Promise<void>;
-
-  excluiRanking(rankingId: string): Promise<void>;
 }

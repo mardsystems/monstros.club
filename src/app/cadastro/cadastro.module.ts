@@ -60,14 +60,17 @@ import { MonstrosMembershipService } from './monstros/@monstros-membership.servi
     { provide: REPOSITORIO_DE_ACADEMIAS, useClass: AcademiasFirebaseService },
     { provide: CONSULTA_DE_ACADEMIAS, useClass: AcademiasFirebaseService },
     { provide: CADASTRO_DE_ACADEMIAS, useClass: AcademiasCadastroService },
+    //
     ExerciciosFirebaseService,
     { provide: REPOSITORIO_DE_EXERCICIOS, useClass: ExerciciosFirebaseService },
     { provide: CONSULTA_DE_EXERCICIOS, useClass: ExerciciosFirebaseService },
     { provide: CADASTRO_DE_EXERCICIOS, useClass: ExerciciosCadastroService },
-    AparelhosFirebaseService,
+    //
+    // AparelhosFirebaseService, !
     { provide: REPOSITORIO_DE_APARELHOS, useClass: AparelhosFirebaseService },
     { provide: CONSULTA_DE_APARELHOS, useClass: AparelhosFirebaseService },
     { provide: CADASTRO_DE_APARELHOS, useClass: AparelhosCadastroService },
+    //
     MonstrosMembershipService,
     MonstrosFirebaseService,
   ],

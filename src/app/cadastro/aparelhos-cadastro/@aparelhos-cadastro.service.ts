@@ -19,7 +19,7 @@ export class AparelhosCadastroService implements CadastroDeAparelhos {
   ) { }
 
   async cadastraAparelho(solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const aparelhoId = this.repositorioDeAparelhos.createId();
@@ -55,7 +55,7 @@ export class AparelhosCadastroService implements CadastroDeAparelhos {
   }
 
   async atualizaAparelho(aparelhoId: string, solicitacao: SolicitacaoDeCadastroDeAparelho): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const aparelho = await this.repositorioDeAparelhos.obtemAparelho(aparelhoId);
@@ -91,7 +91,7 @@ export class AparelhosCadastroService implements CadastroDeAparelhos {
   }
 
   async excluiAparelho(aparelhoId: string): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const aparelho = await this.repositorioDeAparelhos.obtemAparelho(aparelhoId);

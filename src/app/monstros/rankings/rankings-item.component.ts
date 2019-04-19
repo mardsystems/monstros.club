@@ -1,13 +1,12 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { Balanca, OmronHBF214 } from '../medidas/@medidas-domain.model';
-import { PosicaoDeMedida } from './@rankings-application.model';
+import { ConsultaDeRankings, CONSULTA_DE_RANKINGS, PosicaoDeMedida } from './@rankings-application.model';
 import { Ranking } from './@rankings-domain.model';
-import { RankingsFirebaseService } from './@rankings-firebase.service';
 import { FiltroComponent } from './filtro/filtro.component';
 
 const columnDefinitions = [
@@ -43,7 +42,8 @@ export class RankingsItemComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private rankingsService: RankingsFirebaseService,
+    @Inject(CONSULTA_DE_RANKINGS)
+    private consultaDeRankings: ConsultaDeRankings,
     media: MediaMatcher
   ) {
     this.balanca = new OmronHBF214();
@@ -55,7 +55,7 @@ export class RankingsItemComponent implements OnInit {
     const ranking$ = this.route.paramMap.pipe(
       // first(),
       map(params => params.get('rankingId')),
-      switchMap(rankingId => this.rankingsService.obtemRankingObservavel(rankingId)),
+      switchMap(rankingId => this.consultaDeRankings.obtemRankingObservavel(rankingId)),
       catchError((error, source$) => {
         console.log(`Não foi possível montar o ranking.\nRazão:\n${error}`);
 
@@ -68,7 +68,7 @@ export class RankingsItemComponent implements OnInit {
       switchMap(ranking => {
         this.ranking = ranking;
 
-        return this.rankingsService.obtemPosicoesDeMedidasParaExibicaoPorRanking(ranking);
+        return this.consultaDeRankings.obtemPosicoesDeMedidasParaExibicaoPorRanking(ranking);
       }),
       shareReplay()
     );

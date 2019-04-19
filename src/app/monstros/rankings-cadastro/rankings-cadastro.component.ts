@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { CadastroDeRankings, CADASTRO_DE_RANKINGS } from './@rankings-cadastro-application.model';
 import { RankingViewModel } from './@rankings-cadastro-presentation.model';
-import { RankingsCadastroService } from './@rankings-cadastro.service';
 
 @Component({
   selector: 'rankings-cadastro',
@@ -15,7 +15,8 @@ export class RankingsCadastroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: RankingViewModel,
     private dialogRef: MatDialogRef<RankingsCadastroComponent>,
-    private cadastroDeRankings: RankingsCadastroService
+    @Inject(CADASTRO_DE_RANKINGS)
+    private cadastroDeRankings: CadastroDeRankings
   ) { }
 
   ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { ParticipacaoDeRankings, PARTICIPACAO_DE_RANKINGS } from './@rankings-participacao-application.model';
 import { ParticipacaoViewModel } from './@rankings-participacao-presentation.model';
-import { RankingsParticipacaoService } from './@rankings-participacao.service';
 
 @Component({
   selector: 'rankings-participacao',
@@ -15,7 +15,8 @@ export class RankingsParticipacaoComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public model: ParticipacaoViewModel,
     private dialogRef: MatDialogRef<RankingsParticipacaoComponent>,
-    private participacaoDeRankings: RankingsParticipacaoService
+    @Inject(PARTICIPACAO_DE_RANKINGS)
+    private participacaoDeRankings: ParticipacaoDeRankings
   ) { }
 
   ngOnInit(): void {

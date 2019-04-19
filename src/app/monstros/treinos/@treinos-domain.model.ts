@@ -1,4 +1,5 @@
-import { Tempo } from 'src/app/common/domain.model';
+import { InjectionToken } from '@angular/core';
+import { Repository, Tempo } from 'src/app/common/domain.model';
 
 export class Modalidade {
   id: string;
@@ -32,4 +33,16 @@ export class ExecucaoDeTreino {
   diferencaExecutada(): number {
     return this.duracao.total - this.referencia.duracao.total;
   }
+}
+
+export const REPOSITORIO_DE_TREINOS = new InjectionToken<RepositorioDeTreinos>('REPOSITORIO_DE_TREINOS');
+
+export interface RepositorioDeTreinos extends Repository {
+  obtemTreino(id: string): Promise<Treino>;
+
+  add(medida: Treino): Promise<void>;
+
+  update(medida: Treino): Promise<void>;
+
+  remove(medida: Treino): Promise<void>;
 }

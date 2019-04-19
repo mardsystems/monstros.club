@@ -1,3 +1,12 @@
+import { InjectionToken } from '@angular/core';
+
+export const PARTICIPACAO_DE_RANKINGS = new InjectionToken<ParticipacaoDeRankings>('PARTICIPACAO_DE_RANKINGS');
+
+export interface ParticipacaoDeRankings {
+  convidaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void>;
+
+  removeParticipante(rankingId: string, participanteId: string): Promise<void>;
+}
 
 export class SolicitacaoDeParticipacaoDeRanking {
   rankingId: string;
@@ -11,8 +20,4 @@ export class SolicitacaoDeParticipacaoDeRanking {
       ehAdministrador: false,
     };
   }
-}
-
-export interface ParticipacaoDeRanking {
-  convidaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void>;
 }

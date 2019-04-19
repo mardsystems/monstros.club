@@ -1,8 +1,21 @@
+import { InjectionToken } from '@angular/core';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import {
   IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeIndiceDeMassaCorporal, IMedidaDeMusculo, Medida, TipoDeBalanca
 } from '../medidas/@medidas-domain.model';
+import { Ranking } from './@rankings-domain.model';
+
+export const CONSULTA_DE_RANKINGS = new InjectionToken<ConsultaDeRankings>('CONSULTA_DE_RANKINGS');
+
+export interface ConsultaDeRankings {
+  obtemRankingObservavel(id: string): Observable<Ranking>;
+
+  obtemRankingsParaExibicao(monstro: Monstro): Observable<Ranking[]>;
+
+  obtemPosicoesDeMedidasParaExibicaoPorRanking(ranking: Ranking): Observable<PosicaoDeMedida[]>;
+}
 
 export class PosicaoDeMedida
   implements IMedidaDeGordura, IMedidaDeGorduraVisceral, IMedidaDeMusculo, IMedidaDeIndiceDeMassaCorporal {

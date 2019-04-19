@@ -49,6 +49,8 @@ export enum Musculatura {
   AbdomenLombar = 'Abdômen/Lombar',
 }
 
+export const REPOSITORIO_DE_EXERCICIOS = new InjectionToken<RepositorioDeExercicios>('REPOSITORIO_DE_EXERCICIOS');
+
 export interface RepositorioDeExercicios extends Repository {
   obtemExercicio(id: string): Promise<Exercicio>;
 
@@ -58,5 +60,3 @@ export interface RepositorioDeExercicios extends Repository {
 
   remove(exercicio: Exercicio): Promise<void>;
 }
-
-export const REPOSITORIO_DE_EXERCICIOS = new InjectionToken<RepositorioDeExercicios>('REPOSITORIO_DE_EXERCICIOS');

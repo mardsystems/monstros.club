@@ -25,6 +25,8 @@ export class Academia {
   }
 }
 
+export const REPOSITORIO_DE_ACADEMIAS = new InjectionToken<RepositorioDeAcademias>('REPOSITORIO_DE_ACADEMIAS');
+
 export interface RepositorioDeAcademias extends Repository {
   obtemAcademia(id: string): Promise<Academia>;
 
@@ -34,5 +36,3 @@ export interface RepositorioDeAcademias extends Repository {
 
   remove(academia: Academia): Promise<void>;
 }
-
-export const REPOSITORIO_DE_ACADEMIAS = new InjectionToken<RepositorioDeAcademias>('REPOSITORIO_DE_ACADEMIAS');

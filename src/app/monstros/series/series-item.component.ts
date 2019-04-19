@@ -12,7 +12,7 @@ import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cada
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { ConsultaDeSeries, CONSULTA_DE_SERIES } from './@series-application.model';
 import { Serie, SerieDeExercicio } from './@series-domain.model';
-import { ConsultaDeExecucoesDeSerie, CONSULTA_DE_EXECUCOES_DE_SERIE } from './execucoes/@execucoes-application.model';
+import { ConsultaDeExecucoesDeSeries, CONSULTA_DE_EXECUCOES_DE_SERIES } from './execucoes/@execucoes-application.model';
 import { ExecucaoDeSerie } from './execucoes/@execucoes-domain.model';
 
 const columnDefinitions = [
@@ -53,8 +53,8 @@ export class SeriesItemComponent implements OnInit {
     private route: ActivatedRoute,
     @Inject(CONSULTA_DE_SERIES)
     private consultaDeSeries: ConsultaDeSeries,
-    @Inject(CONSULTA_DE_EXECUCOES_DE_SERIE)
-    private consultaDeExecucoesDeSerie: ConsultaDeExecucoesDeSerie,
+    @Inject(CONSULTA_DE_EXECUCOES_DE_SERIES)
+    private consultaDeExecucoesDeSerie: ConsultaDeExecucoesDeSeries,
     @Inject(CADASTRO_DE_SERIES)
     private cadastroDeSeries: CadastroDeSeries,
     @Inject(CONSULTA_DE_MONSTROS)

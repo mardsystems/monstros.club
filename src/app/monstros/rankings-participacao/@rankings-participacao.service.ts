@@ -1,95 +1,75 @@
-import { Injectable } from '@angular/core';
-import { first } from 'rxjs/operators';
-import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
-import { RankingsFirebaseService } from '../rankings/@rankings-firebase.service';
-import { ParticipacaoDeRanking, SolicitacaoDeParticipacaoDeRanking } from './@rankings-participacao-application.model';
+import { Inject, Injectable } from '@angular/core';
+import { RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-domain.model';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/common/transactions.model';
+import { RepositorioDeRankings, REPOSITORIO_DE_RANKINGS } from '../rankings/@rankings-domain.model';
+import { ParticipacaoDeRankings, SolicitacaoDeParticipacaoDeRanking } from './@rankings-participacao-application.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class RankingsParticipacaoService
-  implements ParticipacaoDeRanking {
-
+@Injectable()
+export class RankingsParticipacaoService implements ParticipacaoDeRankings {
   constructor(
-    private repositorioDeMonstros: MonstrosFirebaseService,
-    private repositorioDeRankings: RankingsFirebaseService,
+    @Inject(UNIT_OF_WORK)
+    private unitOfWork: UnitOfWork,
+    @Inject(REPOSITORIO_DE_RANKINGS)
+    private repositorioDeRankings: RepositorioDeRankings,
+    @Inject(REPOSITORIO_DE_MONSTROS)
+    private repositorioDeMonstros: RepositorioDeMonstros,
   ) { }
 
-  convidaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      // this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).pipe(
-      //   first(),
-      //   map(monstro => {
-      //     this.obtemRankingObservavel(solicitacao.rankingId).subscribe(ranking => {
-      //       const participante = monstro; // solicitacao.participanteId;
+  async convidaParticipante(solicitacao: SolicitacaoDeParticipacaoDeRanking): Promise<void> {
+    await this.unitOfWork.beginTransaction();
 
-      //       const agora = new Date(Date.now());
+    try {
+      const ranking = await this.repositorioDeRankings.obtemRanking(solicitacao.rankingId);
 
-      //       ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
+      const monstro = await this.repositorioDeMonstros.obtemMonstro(solicitacao.participanteId);
 
-      //       const result = this.update(ranking);
+      //
 
-      //       resolve(result);
-      //     });
-      //   })
-      // );
+      const participante = monstro; // solicitacao.participanteId;
 
-      this.repositorioDeRankings.obtemRankingObservavel(solicitacao.rankingId).pipe(
-        first()
-      ).subscribe(ranking => {
-        this.repositorioDeMonstros.obtemMonstroObservavel(solicitacao.participanteId).pipe(
-          first()
-        ).subscribe(monstro => {
-          const participante = monstro; // solicitacao.participanteId;
+      const agora = new Date(Date.now());
 
-          const agora = new Date(Date.now());
+      ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
 
-          ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
+      //
 
-          const result = this.repositorioDeRankings.update(ranking);
+      await this.repositorioDeRankings.update(ranking);
 
-          resolve(result);
-        });
-      });
-    });
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 
-  removeParticipante(rankingId: string, participanteId: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      // this.monstrosService.obtemMonstroObservavel(solicitacao.participanteId).pipe(
-      //   first(),
-      //   map(monstro => {
-      //     this.obtemRankingObservavel(solicitacao.rankingId).subscribe(ranking => {
-      //       const participante = monstro; // solicitacao.participanteId;
+  async removeParticipante(rankingId: string, participanteId: string): Promise<void> {
+    await this.unitOfWork.beginTransaction();
 
-      //       const agora = new Date(Date.now());
+    try {
+      const ranking = await this.repositorioDeRankings.obtemRanking(rankingId);
 
-      //       ranking.adicionaParticipante(participante, agora, solicitacao.ehAdministrador);
+      const monstro = await this.repositorioDeMonstros.obtemMonstro(participanteId);
 
-      //       const result = this.update(ranking);
+      //
 
-      //       resolve(result);
-      //     });
-      //   })
-      // );
+      const participante = monstro; // solicitacao.participanteId;
 
-      this.repositorioDeRankings.obtemRankingObservavel(rankingId).pipe(
-        first()
-      ).subscribe(ranking => {
-        this.repositorioDeMonstros.obtemMonstroObservavel(participanteId).pipe(
-          first()
-        ).subscribe(monstro => {
-          const participante = monstro; // solicitacao.participanteId;
+      ranking.removeParticipante(participante.id);
 
-          const agora = new Date(Date.now());
+      //
 
-          ranking.removeParticipante(participante.id);
+      await this.repositorioDeRankings.update(ranking);
 
-          const result = this.repositorioDeRankings.update(ranking);
+      //
 
-          resolve(result);
-        });
-      });
-    });
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 }

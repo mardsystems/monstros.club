@@ -23,7 +23,7 @@ export class SeriesExecucaoService implements ExecucaoDeSeries {
   ) { }
 
   async iniciaExecucao(solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void> {
-    this.unitOfWork.beginTransaction();
+    await this.unitOfWork.beginTransaction();
 
     try {
       const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, solicitacao.serieId); // solicitacao.monstroId,
