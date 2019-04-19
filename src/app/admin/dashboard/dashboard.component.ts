@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MedidasFirebaseService } from 'src/app/monstros/medidas/@medidas-firebase.service';
-import { SelectivePreloadingStrategyService } from 'src/app/selective-preloading-strategy.service';
+import { SelectivePreloadingStrategyService } from 'src/app/common/selective-preloading-strategy.service';
 
 @Component({
   selector: 'admin-dashboard',

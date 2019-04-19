@@ -4,11 +4,11 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/@auth.service';
+import { Monstro } from '../cadastro/monstros/@monstros-domain.model';
+import { MonstrosMembershipService } from '../cadastro/monstros/@monstros-membership.service';
+import { LogService, StorageService } from '../common/common.service';
 import { SobreComponent } from '../sobre/sobre.component';
 import { slideInAnimation } from './monstros-routing.animations';
-import { MonstrosMembershipService } from '../cadastro/monstros/@monstros-membership.service';
-import { Monstro } from '../cadastro/monstros/@monstros-domain.model';
-import { StorageService, LogService } from '../@app-common.model';
 
 @Component({
   selector: 'app-monstros',

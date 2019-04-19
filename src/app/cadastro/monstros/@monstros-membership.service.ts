@@ -2,13 +2,13 @@ import { Inject, Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
-import { LogService } from 'src/app/@app-common.model';
 import { AuthService } from 'src/app/auth/@auth.service';
 import {
   CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro
 } from '../monstros-cadastro/@monstros-cadastro-application.model';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from './@monstros-application.model';
 import { Monstro, RepositorioDeMonstros, REPOSITORIO_DE_MONSTROS } from './@monstros-domain.model';
+import { LogService } from 'src/app/common/common.service';
 
 @Injectable({
   providedIn: 'root'

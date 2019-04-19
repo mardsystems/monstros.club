@@ -1,19 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ListagemComponent } from './listagem.component';
-import { AdminComponent } from '../../admin.component';
-import { DashboardComponent } from '../../dashboard/dashboard.component';
-import { MonstrosComponent } from '../monstros.component';
-import { MedidasComponent } from '../medidas/medidas.component';
-import { CadastroComponent } from '../../cadastro/cadastro.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { Router, RouterModule } from '@angular/router';
+import { AppCommonModule } from 'src/app/common/common.module';
+import { environment } from 'src/environments/environment';
 import { AdminMaterialModule } from '../../admin-material.module';
 import { AdminRoutingModule } from '../../admin-routing.module';
-import { AppCommonModule } from 'src/app/app-common.module';
-import { AngularFirestore, FirestoreSettingsToken, AngularFirestoreModule } from '@angular/fire/firestore';
-import { LOCALE_ID } from '@angular/core';
-import { AngularFireModule } from '@angular/fire';
-import { environment } from 'src/environments/environment';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { ListagemComponent } from './listagem.component';
 
 // let activatedRoute: ActivatedRouteStub;
 

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
+import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/common/domain.model';
 import { AuthService } from 'src/app/auth/@auth.service';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from '../monstros/@monstros-application.model';
 import { MonstrosMembershipService } from '../monstros/@monstros-membership.service';

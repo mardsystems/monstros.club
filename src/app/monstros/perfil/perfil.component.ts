@@ -2,16 +2,11 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { LogService, ServicoDeCalculoDeIdade } from 'src/app/@app-common.model';
-import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/@app-domain.model';
 import { AuthService } from 'src/app/auth/@auth.service';
-import {
-  CadastroDeMonstros, CADASTRO_DE_MONSTROS, SolicitacaoDeCadastroDeMonstro
-} from 'src/app/cadastro/monstros-cadastro/@monstros-cadastro-application.model';
+import { SolicitacaoDeCadastroDeMonstro } from 'src/app/cadastro/monstros-cadastro/@monstros-cadastro-application.model';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
-import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
-import { MonstrosCadastroService } from 'src/app/cadastro/monstros-cadastro/@monstros-cadastro.service';
+import { CalculoDeIdade, CALCULO_DE_IDADE } from 'src/app/common/domain.model';
 
 @Component({
   selector: 'monstros-perfil',

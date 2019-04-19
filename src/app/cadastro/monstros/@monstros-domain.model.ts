@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { CalculoDeIdade, Repository } from 'src/app/@app-domain.model';
+import { CalculoDeIdade, Genero, Repository } from 'src/app/common/domain.model';
 
 export class Monstro {
   public constructor(
@@ -86,11 +86,6 @@ export class Monstro {
 
     return idade;
   }
-}
-
-export enum Genero {
-  Masculino = 'Masculino',
-  Feminino = 'Feminino'
 }
 
 export const REPOSITORIO_DE_MONSTROS = new InjectionToken<RepositorioDeMonstros>('REPOSITORIO_DE_MONSTROS');

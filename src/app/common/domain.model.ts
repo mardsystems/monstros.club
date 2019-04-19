@@ -12,6 +12,11 @@ export class Tempo {
   total: number;
 }
 
+export enum Genero {
+  Masculino = 'Masculino',
+  Feminino = 'Feminino'
+}
+
 export const CONST_TIMESTAMP_FALSO = 1;
 
 export interface Repository {

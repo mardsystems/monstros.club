@@ -4,7 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { auth, UserInfo } from 'firebase/app';
 import { Observable, of, Subject } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
-import { LogService } from '../@app-common.model';
+import { LogService } from '../common/common.service';
 
 @Injectable({
   providedIn: 'root',

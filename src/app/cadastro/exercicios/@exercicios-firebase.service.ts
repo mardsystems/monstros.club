@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
+import { MonstrosDbContext } from 'src/app/@app-firebase.service';
+import { FirebaseService } from 'src/app/common/firebase.service';
 import { ConsultaDeExercicios } from './@exercicios-application.model';
 import { Exercicio, Musculatura, RepositorioDeExercicios } from './@exercicios-domain.model';
 

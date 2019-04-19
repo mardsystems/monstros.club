@@ -1,6 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import * as moment from 'moment';
-import { Genero, Monstro } from '../monstros/@monstros-domain.model';
+import { Genero } from 'src/app/common/domain.model';
+import { Monstro } from '../monstros/@monstros-domain.model';
 
 export const CADASTRO_DE_MONSTROS = new InjectionToken<CadastroDeMonstros>('CADASTRO_DE_MONSTROS');
 

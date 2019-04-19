@@ -1,53 +1,102 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { CONST_TIMESTAMP_FALSO } from 'src/app/@app-domain.model';
+import { MonstrosDbContext } from 'src/app/@app-firebase.service';
 import { Academia } from 'src/app/cadastro/academias/@academias-domain.model';
 import { AcademiasFirebaseService } from 'src/app/cadastro/academias/@academias-firebase.service';
 import { AparelhosFirebaseService } from 'src/app/cadastro/aparelhos/@aparelhos-firebase.service';
+import { CONST_TIMESTAMP_FALSO } from 'src/app/common/domain.model';
+import { FirebaseService } from 'src/app/common/firebase.service';
 import { Serie } from '../@series-domain.model';
 import { SeriesFirebaseService } from '../@series-firebase.service';
-import { ExecucaoDeExercicio, ExecucaoDeSerie } from './@execucoes-domain.model';
+import { ConsultaDeExecucoesDeSerie } from './@execucoes-application.model';
+import { ExecucaoDeExercicio, ExecucaoDeSerie, RepositorioDeExecucoesDeSerie } from './@execucoes-domain.model';
 
 @Injectable()
-export class ExecucoesFirebaseService {
-  private METANAME = 'execucoes';
+export class ExecucoesFirebaseService
+  extends FirebaseService<ExecucaoDeSerieDocument>
+  implements RepositorioDeExecucoesDeSerie, ConsultaDeExecucoesDeSerie {
 
   constructor(
-    private db: AngularFirestore,
-    private repositorioDeSeries: SeriesFirebaseService,
-    private repositorioDeAparelhos: AparelhosFirebaseService,
-    private repositorioDeAcademias: AcademiasFirebaseService,
-  ) { }
-
-  createId(): string {
-    const id = this.db.createId();
-
-    return id;
+    protected readonly db: MonstrosDbContext,
+    protected readonly seriesFirebaseService: SeriesFirebaseService,
+    protected readonly aparelhosFirebaseService: AparelhosFirebaseService,
+    protected readonly academiasFirebaseService: AcademiasFirebaseService,
+  ) {
+    super(db);
   }
 
-  path(monstroId: string, serieId: string): string {
-    const path = `${this.repositorioDeSeries.path()}/${serieId}/${this.METANAME}`; // monstroId
-
-    return path;
+  path(): string {
+    return this.db.medidasPath();
   }
 
-  ref(monstroId: string, serieId: string, id: string): DocumentReference {
-    const path = `${this.path(monstroId, serieId)}/${id}`;
+  // path(monstroId: string, serieId: string): string {
+  //   const path = `${this.seriesFirebaseService.path()}/${serieId}/${this.METANAME}`; // monstroId
 
-    const collection = this.db.collection<ExecucaoDeSerieDocument>(path);
+  //   return path;
+  // }
 
-    const document = collection.doc<ExecucaoDeSerieDocument>(id);
+  async add(monstroId: string, serie: Serie, execucao: ExecucaoDeSerie): Promise<void> {
+    try {
+      const path = this.path(); // monstroId, execucao.serie.id
 
-    return document.ref;
+      const collection = this.db.firebase.collection<ExecucaoDeSerieDocument>(path);
+
+      const document = collection.doc<ExecucaoDeSerieDocument>(execucao.id);
+
+      const doc = this.mapTo(monstroId, execucao);
+
+      await document.set(doc);
+    } catch (e) {
+      throw e;
+    }
   }
+
+  private mapTo(monstroId: string, execucao: ExecucaoDeSerie): ExecucaoDeSerieDocument {
+    const serieRef = this.seriesFirebaseService.ref(execucao.serie.id); // monstroId
+
+    const feitaNaAcademiaRef = this.academiasFirebaseService.ref(execucao.feitaNa.id);
+
+    const doc: ExecucaoDeSerieDocument = {
+      id: execucao.id,
+      serieRef: serieRef,
+      dia: firebase.firestore.Timestamp.fromDate(execucao.dia),
+      numero: execucao.numero,
+      feitaNa: feitaNaAcademiaRef,
+      exercicios: execucao.exercicios.map(execucaoDeSerieDeExercicio => {
+        const referenciaId = execucaoDeSerieDeExercicio.referencia.id;
+
+        const feitaComAparelhoRef = this.aparelhosFirebaseService.ref(execucaoDeSerieDeExercicio.feitoCom.id);
+
+        const serieDeExercicioDocument: ExecucaoDeExercicioDocument = {
+          id: execucaoDeSerieDeExercicio.id,
+          sequencia: execucaoDeSerieDeExercicio.sequencia,
+          referenciaId: referenciaId,
+          repeticoes: execucaoDeSerieDeExercicio.repeticoes,
+          carga: execucaoDeSerieDeExercicio.carga,
+          nota: execucaoDeSerieDeExercicio.nota,
+          feitoCom: feitaComAparelhoRef,
+          duracao: null,
+        };
+
+        return serieDeExercicioDocument;
+      })
+    };
+
+    return doc;
+  }
+
+  obtemExecucaoDeSerie(monstroId: string, id: string): Promise<ExecucaoDeSerie> {
+    throw new Error('Method not implemented.');
+  }
+
+  // Consultas.
 
   obtemExecucoesDeSerieParaExibicao(monstroId: string, serie: Serie): Observable<ExecucaoDeSerie[]> {
-    const path = this.path(monstroId, serie.id);
+    const path = this.path(); // monstroId, serie.id
 
-    const collection = this.db.collection<ExecucaoDeSerieDocument>(path, reference => {
+    const collection = this.db.firebase.collection<ExecucaoDeSerieDocument>(path, reference => {
       return reference
         .orderBy('nome', 'asc');
     });
@@ -75,7 +124,7 @@ export class ExecucoesFirebaseService {
     } else {
       exercicios$ = combineLatest(
         value.exercicios.map(execucaoDeExercicioValue => {
-          const exercicio$ = this.repositorioDeAparelhos.obtemAparelhoObservavel(execucaoDeExercicioValue.feitoCom.id).pipe(
+          const exercicio$ = this.aparelhosFirebaseService.obtemAparelhoObservavel(execucaoDeExercicioValue.feitoCom.id).pipe(
             map(aparelho => {
               const referencia = serie.obtemSerieDeExercicio(execucaoDeExercicioValue.id);
 
@@ -120,54 +169,6 @@ export class ExecucoesFirebaseService {
       CONST_TIMESTAMP_FALSO,
       exercicios
     );
-  }
-
-  add(monstroId: string, serie: Serie, execucao: ExecucaoDeSerie): Promise<void> {
-    const path = this.path(monstroId, serie.id);
-
-    const collection = this.db.collection<ExecucaoDeSerieDocument>(path);
-
-    const document = collection.doc<ExecucaoDeSerieDocument>(execucao.id);
-
-    const doc = this.mapTo(monstroId, execucao);
-
-    const result = document.set(doc);
-
-    return result;
-  }
-
-  private mapTo(monstroId: string, execucao: ExecucaoDeSerie): ExecucaoDeSerieDocument {
-    const serieRef = this.repositorioDeSeries.ref(execucao.serie.id); // monstroId
-
-    const feitaNaAcademiaRef = this.repositorioDeAcademias.ref(execucao.feitaNa.id);
-
-    const doc: ExecucaoDeSerieDocument = {
-      id: execucao.id,
-      serieRef: serieRef,
-      dia: firebase.firestore.Timestamp.fromDate(execucao.dia),
-      numero: execucao.numero,
-      feitaNa: feitaNaAcademiaRef,
-      exercicios: execucao.exercicios.map(execucaoDeSerieDeExercicio => {
-        const referenciaId = execucaoDeSerieDeExercicio.referencia.id;
-
-        const feitaComAparelhoRef = this.repositorioDeAparelhos.ref(execucaoDeSerieDeExercicio.feitoCom.id);
-
-        const serieDeExercicioDocument: ExecucaoDeExercicioDocument = {
-          id: execucaoDeSerieDeExercicio.id,
-          sequencia: execucaoDeSerieDeExercicio.sequencia,
-          referenciaId: referenciaId,
-          repeticoes: execucaoDeSerieDeExercicio.repeticoes,
-          carga: execucaoDeSerieDeExercicio.carga,
-          nota: execucaoDeSerieDeExercicio.nota,
-          feitoCom: feitaComAparelhoRef,
-          duracao: null,
-        };
-
-        return serieDeExercicioDocument;
-      })
-    };
-
-    return doc;
   }
 }
 

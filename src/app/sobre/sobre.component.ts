@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { Observable } from 'rxjs';
-import { AtualizacaoAtivada, AtualizacaoDisponivel, CheckForUpdateService, LogUpdateService } from '../@app-common.model';
+import { AtualizacaoAtivada, AtualizacaoDisponivel, CheckForUpdateService, LogUpdateService } from '../common/common.service';
 
 @Component({
   selector: 'app-sobre',

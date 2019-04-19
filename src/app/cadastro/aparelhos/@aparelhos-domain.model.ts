@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { Repository } from 'src/app/@app-domain.model';
+import { Repository } from 'src/app/common/domain.model';
 import { Academia } from '../academias/@academias-domain.model';
 import { Exercicio } from '../exercicios/@exercicios-domain.model';
 

@@ -1,21 +1,19 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
+import { CadastroDeSeries, CADASTRO_DE_SERIES } from '../series-cadastro/@series-cadastro-application.model';
 import { CadastroDeExercicioViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
-import { SeriesCadastroService } from '../series-cadastro/@series-cadastro.service';
 import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
+import { ConsultaDeSeries, CONSULTA_DE_SERIES } from './@series-application.model';
 import { Serie, SerieDeExercicio } from './@series-domain.model';
-import { SeriesFirebaseService } from './@series-firebase.service';
+import { ConsultaDeExecucoesDeSerie, CONSULTA_DE_EXECUCOES_DE_SERIE } from './execucoes/@execucoes-application.model';
 import { ExecucaoDeSerie } from './execucoes/@execucoes-domain.model';
-import { ExecucoesFirebaseService } from './execucoes/@execucoes-firebase.service';
-import { CADASTRO_DE_SERIES, CadastroDeSeries } from '../series-cadastro/@series-cadastro-application.model';
-import { CONSULTA_DE_MONSTROS, ConsultaDeMonstros } from 'src/app/cadastro/monstros/@monstros-application.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'icone' },
@@ -53,8 +51,10 @@ export class SeriesItemComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private consultaDeSeries: SeriesFirebaseService,
-    private repositorioDeExecucoes: ExecucoesFirebaseService,
+    @Inject(CONSULTA_DE_SERIES)
+    private consultaDeSeries: ConsultaDeSeries,
+    @Inject(CONSULTA_DE_EXECUCOES_DE_SERIE)
+    private consultaDeExecucoesDeSerie: ConsultaDeExecucoesDeSerie,
     @Inject(CADASTRO_DE_SERIES)
     private cadastroDeSeries: CadastroDeSeries,
     @Inject(CONSULTA_DE_MONSTROS)
@@ -104,7 +104,7 @@ export class SeriesItemComponent implements OnInit {
 
         this.exerciciosDataSource.sort = this.sort;
 
-        return this.repositorioDeExecucoes.obtemExecucoesDeSerieParaExibicao(this.monstroId, serie);
+        return this.consultaDeExecucoesDeSerie.obtemExecucoesDeSerieParaExibicao(this.monstroId, serie);
       }),
       shareReplay()
     );

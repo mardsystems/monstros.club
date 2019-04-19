@@ -1,8 +1,9 @@
 import * as _ from 'lodash';
-import { Tempo } from 'src/app/@app-domain.model';
+import { Tempo, Repository } from 'src/app/common/domain.model';
 import { Academia } from 'src/app/cadastro/academias/@academias-domain.model';
 import { Aparelho, RepositorioDeAparelhos } from 'src/app/cadastro/aparelhos/@aparelhos-domain.model';
 import { Serie, SerieDeExercicio } from '../@series-domain.model';
+import { InjectionToken } from '@angular/core';
 
 export class ExecucaoDeSerie {
   private _exercicios?: ExecucaoDeExercicio[];
@@ -152,4 +153,16 @@ export class ExecucaoDeExercicio {
 
     this._duracao.fim = agora;
   }
+}
+
+export const REPOSITORIO_DE_EXECUCOES_DE_SERIE = new InjectionToken<RepositorioDeExecucoesDeSerie>('REPOSITORIO_DE_EXECUCOES_DE_SERIE');
+
+export interface RepositorioDeExecucoesDeSerie extends Repository {
+  obtemExecucaoDeSerie(monstroId: string, id: string): Promise<ExecucaoDeSerie>;
+
+  add(monstroId: string, serie: Serie, execucao: ExecucaoDeSerie): Promise<void>;
+
+  // update(monstroId: string, execucaoDeSerie: ExecucaoDeSerie): Promise<void>;
+
+  // remove(monstroId: string, execucaoDeSerie: ExecucaoDeSerie): Promise<void>;
 }

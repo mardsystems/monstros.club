@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { first, tap } from 'rxjs/operators';
-import { LogService } from 'src/app/@app-common.model';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { LogService } from 'src/app/common/common.service';
 import { TipoDeBalanca } from '../medidas/@medidas-domain.model';
 import { Ranking } from '../rankings/@rankings-domain.model';
 import { RankingsFirebaseService } from '../rankings/@rankings-firebase.service';

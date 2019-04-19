@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/@app-common.model';
-import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
+import { MonstrosDbContext } from 'src/app/@app-firebase.service';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { LogService } from 'src/app/common/common.service';
+import { FirebaseService } from 'src/app/common/firebase.service';
 import { ConsultaDeMedidas } from './@medidas-application.model';
 import { Medida, RepositorioDeMedidas, TipoDeBalanca } from './@medidas-domain.model';
 

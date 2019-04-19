@@ -3,10 +3,10 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LogService } from 'src/app/@app-common.model';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
 import { AuthService } from '../../auth/@auth.service';
+import { LogService } from 'src/app/common/common.service';
 
 @Component({
   selector: 'admin-monstros',

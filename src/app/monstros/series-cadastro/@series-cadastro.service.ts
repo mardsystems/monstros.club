@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { UnitOfWork, UNIT_OF_WORK } from 'src/app/@app-transactions.model';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/common/transactions.model';
 import { RepositorioDeExercicios, REPOSITORIO_DE_EXERCICIOS } from 'src/app/cadastro/exercicios/@exercicios-domain.model';
 import { RepositorioDeSeries, REPOSITORIO_DE_SERIES, Serie } from '../series/@series-domain.model';
 import { CadastroDeSeries, SolicitacaoDeCadastroDeExercicio, SolicitacaoDeCadastroDeSerie } from './@series-cadastro-application.model';

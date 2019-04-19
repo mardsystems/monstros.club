@@ -2,17 +2,19 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
-import { CONST_TIMESTAMP_FALSO } from 'src/app/@app-domain.model';
-import { FirebaseService, MonstrosDbContext } from 'src/app/@app-firebase.model';
+import { MonstrosDbContext } from 'src/app/@app-firebase.service';
 import { ExerciciosFirebaseService } from 'src/app/cadastro/exercicios/@exercicios-firebase.service';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { MonstrosFirebaseService } from 'src/app/cadastro/monstros/@monstros-firebase.service';
+import { CONST_TIMESTAMP_FALSO } from 'src/app/common/domain.model';
+import { FirebaseService } from 'src/app/common/firebase.service';
+import { ConsultaDeSeries } from './@series-application.model';
 import { RepositorioDeSeries, Serie, SerieDeExercicio } from './@series-domain.model';
 
 @Injectable()
 export class SeriesFirebaseService
   extends FirebaseService<SerieDocument>
-  implements RepositorioDeSeries {
+  implements RepositorioDeSeries, ConsultaDeSeries {
 
   constructor(
     protected readonly db: MonstrosDbContext,

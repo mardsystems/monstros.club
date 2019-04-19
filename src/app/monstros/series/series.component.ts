@@ -4,18 +4,18 @@ import { MatDialog, MatDialogConfig, MatSnackBar, MatSort, MatTableDataSource } 
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { LogService } from 'src/app/@app-common.model';
 import { ConsultaDeMonstros, CONSULTA_DE_MONSTROS } from 'src/app/cadastro/monstros/@monstros-application.model';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { MonstrosMembershipService } from 'src/app/cadastro/monstros/@monstros-membership.service';
+import { LogService } from 'src/app/common/common.service';
+import { CadastroDeSeries, CADASTRO_DE_SERIES } from '../series-cadastro/@series-cadastro-application.model';
 import { CadastroDeSerieViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
-import { SeriesCadastroService } from '../series-cadastro/@series-cadastro.service';
 import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
 import { ExecucaoDeSerieViewModel } from '../series-execucao/@series-execucao-presentation.model';
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { Serie } from './@series-domain.model';
 import { SeriesFirebaseService } from './@series-firebase.service';
-import { CADASTRO_DE_SERIES, CadastroDeSeries } from '../series-cadastro/@series-cadastro-application.model';
+import { CONSULTA_DE_SERIES, ConsultaDeSeries } from './@series-application.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -46,7 +46,8 @@ export class SeriesComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private consultaDeSeries: SeriesFirebaseService,
+    @Inject(CONSULTA_DE_SERIES)
+    private consultaDeSeries: ConsultaDeSeries,
     @Inject(CADASTRO_DE_SERIES)
     private cadastroDeSeries: CadastroDeSeries,
     @Inject(CONSULTA_DE_MONSTROS)

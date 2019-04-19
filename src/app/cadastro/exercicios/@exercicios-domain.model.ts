@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { Repository } from 'src/app/@app-domain.model';
+import { Repository } from 'src/app/common/domain.model';
 
 export class Exercicio {
   public constructor(

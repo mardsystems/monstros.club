@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import * as _ from 'lodash';
 import { Exercicio } from 'src/app/cadastro/exercicios/@exercicios-domain.model';
-import { Repository } from 'src/app/@app-domain.model';
+import { Repository } from 'src/app/common/domain.model';
 
 export class Serie {
   private _exercicios?: SerieDeExercicio[];

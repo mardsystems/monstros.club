@@ -1,4 +1,4 @@
-import { Tempo } from 'src/app/@app-domain.model';
+import { Tempo } from 'src/app/common/domain.model';
 
 export class Modalidade {
   id: string;
