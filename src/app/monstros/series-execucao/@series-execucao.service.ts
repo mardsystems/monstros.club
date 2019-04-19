@@ -3,8 +3,9 @@ import { RepositorioDeAcademias, REPOSITORIO_DE_ACADEMIAS } from 'src/app/cadast
 import { RepositorioDeAparelhos, REPOSITORIO_DE_APARELHOS } from 'src/app/cadastro/aparelhos/@aparelhos-domain.model';
 import { UnitOfWork, UNIT_OF_WORK } from 'src/app/common/transactions.model';
 import { RepositorioDeSeries, REPOSITORIO_DE_SERIES } from '../series/@series-domain.model';
-import { ExecucaoDeSerie } from '../series/execucoes/@execucoes-domain.model';
-import { ExecucoesFirebaseService } from '../series/execucoes/@execucoes-firebase.service';
+import {
+  ExecucaoDeSerie, RepositorioDeExecucoesDeSeries, REPOSITORIO_DE_EXECUCOES_DE_SERIES
+} from '../series/execucoes/@execucoes-domain.model';
 import { ExecucaoDeSeries, SolicitacaoDeExecucaoDeSerie } from './@series-execucao-application.model';
 
 @Injectable()
@@ -18,19 +19,19 @@ export class SeriesExecucaoService implements ExecucaoDeSeries {
     private repositorioDeAcademias: RepositorioDeAcademias,
     @Inject(REPOSITORIO_DE_APARELHOS)
     private repositorioDeAparelhos: RepositorioDeAparelhos,
-    @Inject(REPOSITORIO_DE_ACADEMIAS)
-    private repositorioDeExecucoes: ExecucoesFirebaseService,
+    @Inject(REPOSITORIO_DE_EXECUCOES_DE_SERIES)
+    private repositorioDeExecucoesDeSeries: RepositorioDeExecucoesDeSeries,
   ) { }
 
   async iniciaExecucao(solicitacao: SolicitacaoDeExecucaoDeSerie): Promise<void> {
     await this.unitOfWork.beginTransaction();
 
     try {
-      const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, solicitacao.serieId); // solicitacao.monstroId,
+      const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, solicitacao.serieId);
 
       const academia = await this.repositorioDeAcademias.obtemAcademia(solicitacao.feitaNaId);
 
-      const execucaoId = this.repositorioDeExecucoes.createId();
+      const execucaoId = this.repositorioDeExecucoesDeSeries.createId();
 
       //
 
@@ -46,7 +47,7 @@ export class SeriesExecucaoService implements ExecucaoDeSeries {
 
       //
 
-      await this.repositorioDeExecucoes.add(solicitacao.monstroId, serie, execucao);
+      await this.repositorioDeExecucoesDeSeries.add(solicitacao.monstroId, serie, execucao);
 
       //
 

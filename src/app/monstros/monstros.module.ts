@@ -50,6 +50,7 @@ import { CONSULTA_DE_SERIES } from './series/@series-application.model';
 import { REPOSITORIO_DE_SERIES } from './series/@series-domain.model';
 import { SeriesFirebaseService } from './series/@series-firebase.service';
 import { CONSULTA_DE_EXECUCOES_DE_SERIES } from './series/execucoes/@execucoes-application.model';
+import { REPOSITORIO_DE_EXECUCOES_DE_SERIES } from './series/execucoes/@execucoes-domain.model';
 import { ExecucoesFirebaseService } from './series/execucoes/@execucoes-firebase.service';
 import { ExecucoesItemComponent as ExecucoesDeSerieItemComponent } from './series/execucoes/execucoes-item.component';
 import { ExecucoesComponent as ExecucoesDeSerieComponent } from './series/execucoes/execucoes.component';
@@ -136,6 +137,7 @@ import { TreinosComponent } from './treinos/treinos.component';
     { provide: CONSULTA_DE_SERIES, useClass: SeriesFirebaseService },
     { provide: CADASTRO_DE_SERIES, useClass: SeriesCadastroService },
     //
+    { provide: REPOSITORIO_DE_EXECUCOES_DE_SERIES, useClass: ExecucoesFirebaseService },
     { provide: CONSULTA_DE_EXECUCOES_DE_SERIES, useClass: ExecucoesFirebaseService },
     { provide: EXECUCAO_DE_SERIES, useClass: SeriesExecucaoService }
   ]

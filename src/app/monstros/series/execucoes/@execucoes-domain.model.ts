@@ -49,13 +49,13 @@ export class ExecucaoDeSerie {
   }
 
   public async prepara(repositorioDeAparelhos: RepositorioDeAparelhos): Promise<void> {
-    this._serie.exercicios.forEach(async (exercicio) => {
+    await Promise.all(this._serie.exercicios.map(async (exercicio) => {
       const aparelho = await repositorioDeAparelhos.localizaAparelho(exercicio.exercicio, this._feitaNa);
 
       for (let i = 0; i < exercicio.quantidade; i++) {
         this.adicionaExercicio(exercicio, aparelho);
       }
-    });
+    }));
   }
 
   public adicionaExercicio(referencia: SerieDeExercicio, feitoCom: Aparelho) {

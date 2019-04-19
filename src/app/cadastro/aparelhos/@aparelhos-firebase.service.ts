@@ -157,7 +157,7 @@ export class AparelhosFirebaseService
     const academia = await this.academiasFirebaseService.obtemAcademia(value.academia.id);
 
     const exercicios = await Promise.all(
-      value.exercicios.map(exercicioRef => this.exerciciosFirebaseService.obtemExercicio(exercicioRef.id))
+      value.exercicios.map(async (exercicioRef) => await this.exerciciosFirebaseService.obtemExercicio(exercicioRef.id))
     );
 
     return this.mapAparelho(value, academia, exercicios);
