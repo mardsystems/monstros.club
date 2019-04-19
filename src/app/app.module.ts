@@ -77,14 +77,7 @@ registerLocaleData(localePt);
     { provide: CONSULTA_DE_MONSTROS, useClass: MonstrosFirebaseService },
     { provide: CADASTRO_DE_MONSTROS, useClass: MonstrosCadastroService },
     MedidasFirebaseService, // ?
-    // { provide: CADASTRO_DE_ACADEMIAS, useClass: AcademiasCadastroService },
-    // AdaptadorParaUserInfo,
-    // { provide: CADASTRO_DE_MONSTROS, useClass: MonstrosCadastroService },
     { provide: UNIT_OF_WORK, useClass: FirebaseTransactionManager },
-    // { provide: REPOSITORIO_DE_MONSTROS, useClass: MonstrosFirebaseService },
-    // MonstrosDbContext,
-    // { provide: CONSULTA_DE_MONSTROS, useClass: MonstrosFirebaseService },
-
   ],
   bootstrap: [AppComponent]
 })

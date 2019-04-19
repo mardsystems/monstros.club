@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
@@ -26,6 +27,16 @@ export class AparelhosFirebaseService
 
   path(): string {
     return this.db.aparelhosPath();
+  }
+
+  ref(id: string): DocumentReference {
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<AparelhoDocument>(path);
+
+    const document = collection.doc<AparelhoDocument>(id);
+
+    return document.ref;
   }
 
   async add(aparelho: Aparelho): Promise<void> {

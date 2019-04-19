@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
+import { MonstrosDbContext } from 'src/app/@app-firebase.service';
+import { FirebaseService } from 'src/app/common/firebase.service';
 import { ConsultaDeAcademias } from './@academias-application.model';
 import { Academia, RepositorioDeAcademias } from './@academias-domain.model';
-import { FirebaseService } from 'src/app/common/firebase.service';
-import { MonstrosDbContext } from 'src/app/@app-firebase.service';
 
 @Injectable()
 export class AcademiasFirebaseService
@@ -19,6 +20,16 @@ export class AcademiasFirebaseService
 
   path(): string {
     return this.db.academiasPath();
+  }
+
+  ref(id: string): DocumentReference {
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<AcademiaDocument>(path);
+
+    const document = collection.doc<AcademiaDocument>(id);
+
+    return document.ref;
   }
 
   async add(academia: Academia): Promise<void> {

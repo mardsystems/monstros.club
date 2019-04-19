@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
+import { CadastroDeSeries, CADASTRO_DE_SERIES } from '../series-cadastro/@series-cadastro-application.model';
 import { CadastroDeExercicioViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
-import { SeriesCadastroService } from '../series-cadastro/@series-cadastro.service';
 import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
 import { Serie, SerieDeExercicio } from './@series-domain.model';
 
@@ -19,7 +19,8 @@ export class SeriesExerciciosComponent {
 
   constructor(
     private dialog: MatDialog,
-    private cadastroDeSeries: SeriesCadastroService
+    @Inject(CADASTRO_DE_SERIES)
+    private cadastroDeSeries: CadastroDeSeries,
   ) { }
 
   onAdd(): void {

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
@@ -27,19 +28,23 @@ export class ExecucoesFirebaseService
     super(db);
   }
 
-  path(): string {
-    return this.db.medidasPath();
+  path(monstroId: string, serieId: string): string {
+    return this.db.execucoesDeSeriePath(monstroId, serieId);
   }
 
-  // path(monstroId: string, serieId: string): string {
-  //   const path = `${this.seriesFirebaseService.path()}/${serieId}/${this.METANAME}`; // monstroId
+  ref(monstroId: string, serieId: string, id: string): DocumentReference {
+    const path = this.path(monstroId, serieId);
 
-  //   return path;
-  // }
+    const collection = this.db.firebase.collection<ExecucaoDeSerieDocument>(path);
+
+    const document = collection.doc<ExecucaoDeSerieDocument>(id);
+
+    return document.ref;
+  }
 
   async add(monstroId: string, serie: Serie, execucao: ExecucaoDeSerie): Promise<void> {
     try {
-      const path = this.path(); // monstroId, execucao.serie.id
+      const path = this.path(monstroId, execucao.serie.id);
 
       const collection = this.db.firebase.collection<ExecucaoDeSerieDocument>(path);
 
@@ -54,7 +59,7 @@ export class ExecucoesFirebaseService
   }
 
   private mapTo(monstroId: string, execucao: ExecucaoDeSerie): ExecucaoDeSerieDocument {
-    const serieRef = this.seriesFirebaseService.ref(execucao.serie.id); // monstroId
+    const serieRef = this.seriesFirebaseService.ref(monstroId, execucao.serie.id);
 
     const feitaNaAcademiaRef = this.academiasFirebaseService.ref(execucao.feitaNa.id);
 
@@ -94,7 +99,7 @@ export class ExecucoesFirebaseService
   // Consultas.
 
   obtemExecucoesDeSerieParaExibicao(monstroId: string, serie: Serie): Observable<ExecucaoDeSerie[]> {
-    const path = this.path(); // monstroId, serie.id
+    const path = this.path(monstroId, serie.id);
 
     const collection = this.db.firebase.collection<ExecucaoDeSerieDocument>(path, reference => {
       return reference

@@ -18,7 +18,7 @@ export abstract class FirebaseService<TDocument extends FirebaseDocument>
     return id;
   }
 
-  abstract path(): string;
+  // abstract path(): string;
 
   // path(): string {
   //   const path = `/${this.metaname}`;
@@ -26,15 +26,15 @@ export abstract class FirebaseService<TDocument extends FirebaseDocument>
   //   return path;
   // }
 
-  ref(id: string): DocumentReference {
-    const path = this.path();
+  // ref(id: string): DocumentReference {
+  //   const path = this.path();
 
-    const collection = this.db.firebase.collection<TDocument>(path);
+  //   const collection = this.db.firebase.collection<TDocument>(path);
 
-    const document = collection.doc<TDocument>(id);
+  //   const document = collection.doc<TDocument>(id);
 
-    return document.ref;
-  }
+  //   return document.ref;
+  // }
 }
 
 export abstract class FirebaseDocument {

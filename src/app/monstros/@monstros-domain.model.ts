@@ -1,5 +1,4 @@
-import { InjectionToken } from '@angular/core';
-import { CalculoDeIdade, Genero, Repository } from 'src/app/common/domain.model';
+import { CalculoDeIdade, Genero } from 'src/app/common/domain.model';
 
 export class Monstro {
   public constructor(
@@ -32,16 +31,4 @@ export class Monstro {
 
     return idade;
   }
-}
-
-export const REPOSITORIO_DE_MONSTROS = new InjectionToken<RepositorioDeMonstros>('REPOSITORIO_DE_MONSTROS');
-
-export interface RepositorioDeMonstros extends Repository {
-  obtemMonstro(id: string): Promise<Monstro>;
-
-  add(monstro: Monstro): Promise<void>;
-
-  update(monstro: Monstro): Promise<void>;
-
-  remove(monstro: Monstro): Promise<void>;
 }

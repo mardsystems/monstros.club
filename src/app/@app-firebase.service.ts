@@ -24,12 +24,24 @@ export class MonstrosDbContext extends DbContext {
     return '/exercicios';
   }
 
+  medidasPath(): string {
+    return '/medidas';
+  }
+
+  rankingsPath(): string {
+    return '/rankings';
+  }
+
   monstrosPath(): string {
     return '/monstros';
   }
 
-  medidasPath(): string {
-    return '/medidas';
+  seriesPath(monstroId: string): string {
+    return `/monstros/${monstroId}/series`;
+  }
+
+  execucoesDeSeriePath(monstroId: string, serieId: string): string {
+    return `/monstros/${monstroId}/series/${serieId}/execucoes`;
   }
 
   // seriesPath(monstroId: string, serieId?: string): string {
@@ -40,19 +52,19 @@ export class MonstrosDbContext extends DbContext {
   //   }
   // }
 
-  seriesPath(monstroId: string, serieId?: string, execucaoId?: string): string {
-    if (execucaoId) {
-      if (serieId) {
-        return `/monstros/${monstroId}/series/${serieId}/execucoes/${execucaoId}`;
-      } else {
-        return `/monstros/${monstroId}/series`;
-      }
-    } else {
-      if (serieId) {
-        return `/monstros/${monstroId}/series/${serieId}`;
-      } else {
-        return `/monstros/${monstroId}/series`;
-      }
-    }
-  }
+  // seriesPath(monstroId: string, serieId?: string, execucaoId?: string): string {
+  //   if (execucaoId) {
+  //     if (serieId) {
+  //       return `/monstros/${monstroId}/series/${serieId}/execucoes/${execucaoId}`;
+  //     } else {
+  //       return `/monstros/${monstroId}/series`;
+  //     }
+  //   } else {
+  //     if (serieId) {
+  //       return `/monstros/${monstroId}/series/${serieId}`;
+  //     } else {
+  //       return `/monstros/${monstroId}/series`;
+  //     }
+  //   }
+  // }
 }

@@ -13,9 +13,8 @@ import { CadastroDeSerieViewModel } from '../series-cadastro/@series-cadastro-pr
 import { SeriesCadastroComponent } from '../series-cadastro/series-cadastro.component';
 import { ExecucaoDeSerieViewModel } from '../series-execucao/@series-execucao-presentation.model';
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
+import { ConsultaDeSeries, CONSULTA_DE_SERIES } from './@series-application.model';
 import { Serie } from './@series-domain.model';
-import { SeriesFirebaseService } from './@series-firebase.service';
-import { CONSULTA_DE_SERIES, ConsultaDeSeries } from './@series-application.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -68,7 +67,7 @@ export class SeriesComponent implements OnInit {
       catchError((error, source$) => {
         console.log(`Não foi possível montar as séries do monstro.\nRazão:\n${error}`);
 
-        return source$;
+        return EMPTY; // source$;
       }),
       shareReplay()
     );
@@ -77,7 +76,7 @@ export class SeriesComponent implements OnInit {
       switchMap(monstro => {
         this.monstro = monstro;
 
-        return this.consultaDeSeries.obtemSeriesParaExibicao(monstro);
+        return this.consultaDeSeries.obtemSeriesParaExibicao(monstro.id);
       }),
       catchError((error, source$) => {
         const message = error.message;

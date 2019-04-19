@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable } from 'rxjs';
 import { first, map, shareReplay } from 'rxjs/operators';
@@ -22,6 +23,16 @@ export class MonstrosFirebaseService
 
   path(): string {
     return this.db.monstrosPath();
+  }
+
+  ref(id: string): DocumentReference {
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<MonstroDocument>(path);
+
+    const document = collection.doc<MonstroDocument>(id);
+
+    return document.ref;
   }
 
   async add(monstro: Monstro): Promise<void> {

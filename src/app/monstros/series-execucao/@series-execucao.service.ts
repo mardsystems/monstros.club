@@ -1,15 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
-import { UnitOfWork, UNIT_OF_WORK } from 'src/app/common/transactions.model';
 import { RepositorioDeAcademias, REPOSITORIO_DE_ACADEMIAS } from 'src/app/cadastro/academias/@academias-domain.model';
 import { RepositorioDeAparelhos, REPOSITORIO_DE_APARELHOS } from 'src/app/cadastro/aparelhos/@aparelhos-domain.model';
+import { UnitOfWork, UNIT_OF_WORK } from 'src/app/common/transactions.model';
 import { RepositorioDeSeries, REPOSITORIO_DE_SERIES } from '../series/@series-domain.model';
 import { ExecucaoDeSerie } from '../series/execucoes/@execucoes-domain.model';
 import { ExecucoesFirebaseService } from '../series/execucoes/@execucoes-firebase.service';
 import { ExecucaoDeSeries, SolicitacaoDeExecucaoDeSerie } from './@series-execucao-application.model';
 
 @Injectable()
-export class SeriesExecucaoService
-  implements ExecucaoDeSeries {
+export class SeriesExecucaoService implements ExecucaoDeSeries {
   constructor(
     @Inject(UNIT_OF_WORK)
     protected readonly unitOfWork: UnitOfWork,
@@ -27,7 +26,7 @@ export class SeriesExecucaoService
     this.unitOfWork.beginTransaction();
 
     try {
-      const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, solicitacao.serieId);
+      const serie = await this.repositorioDeSeries.obtemSerie(solicitacao.monstroId, solicitacao.serieId); // solicitacao.monstroId,
 
       const academia = await this.repositorioDeAcademias.obtemAcademia(solicitacao.feitaNaId);
 

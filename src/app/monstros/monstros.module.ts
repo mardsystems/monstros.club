@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { CONSULTA_DE_EXERCICIOS } from '../cadastro/exercicios/@exercicios-application.model';
 import { REPOSITORIO_DE_EXERCICIOS } from '../cadastro/exercicios/@exercicios-domain.model';
 import { ExerciciosFirebaseService } from '../cadastro/exercicios/@exercicios-firebase.service';
 import { AppCommonModule } from '../common/common.module';
@@ -33,6 +34,7 @@ import { EXECUCAO_DE_SERIES } from './series-execucao/@series-execucao-applicati
 import { SeriesExecucaoService } from './series-execucao/@series-execucao.service';
 import { SeriesExecucaoExercicioComponent } from './series-execucao/series-execucao-exercicio.component';
 import { SeriesExecucaoComponent } from './series-execucao/series-execucao.component';
+import { CONSULTA_DE_SERIES } from './series/@series-application.model';
 import { REPOSITORIO_DE_SERIES } from './series/@series-domain.model';
 import { SeriesFirebaseService } from './series/@series-firebase.service';
 import { ExecucoesItemComponent as ExecucoesDeSerieItemComponent } from './series/execucoes/execucoes-item.component';
@@ -42,7 +44,6 @@ import { SeriesExerciciosComponent } from './series/series-exercicios.component'
 import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
-import { CONSULTA_DE_SERIES } from './series/@series-application.model';
 
 @NgModule({
   declarations: [
@@ -93,10 +94,15 @@ import { CONSULTA_DE_SERIES } from './series/@series-application.model';
   providers: [
     ExerciciosFirebaseService,
     { provide: REPOSITORIO_DE_EXERCICIOS, useClass: ExerciciosFirebaseService },
+    { provide: CONSULTA_DE_EXERCICIOS, useClass: ExerciciosFirebaseService },
     // MedidasFirebaseService, // ?
     { provide: REPOSITORIO_DE_MEDIDAS, useClass: MedidasFirebaseService },
     { provide: CONSULTA_DE_MEDIDAS, useClass: MedidasFirebaseService },
     { provide: CADASTRO_DE_MEDIDAS, useClass: MedidasCadastroService },
+    // seriesFirebaseServiceProvider,
+    // SeriesFirebaseServiceProvider,
+    // { provide: REPOSITORIO_DE_SERIES, useClass: SeriesFirebaseServiceProvider },
+    // { provide: CONSULTA_DE_SERIES, useClass: SeriesFirebaseServiceProvider },
     SeriesFirebaseService,
     { provide: REPOSITORIO_DE_SERIES, useClass: SeriesFirebaseService },
     { provide: CONSULTA_DE_SERIES, useClass: SeriesFirebaseService },

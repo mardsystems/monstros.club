@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
@@ -25,6 +26,16 @@ export class MedidasFirebaseService
 
   path(): string {
     return this.db.medidasPath();
+  }
+
+  ref(id: string): DocumentReference {
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<MedidaDocument>(path);
+
+    const document = collection.doc<MedidaDocument>(id);
+
+    return document.ref;
   }
 
   async add(medida: Medida): Promise<void> {

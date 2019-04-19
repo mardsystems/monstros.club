@@ -19,7 +19,7 @@ export class SeriesExecucoesComponent {
 
   constructor(
     private dialog: MatDialog,
-    private execucaoDeSeries: SeriesExecucaoService
+    // private execucaoDeSeries: SeriesExecucaoService
   ) { }
 
   onAdd(): void {

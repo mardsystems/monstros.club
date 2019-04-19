@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { MonstrosDbContext } from 'src/app/@app-firebase.service';
@@ -19,6 +20,16 @@ export class ExerciciosFirebaseService
 
   path(): string {
     return this.db.exerciciosPath();
+  }
+
+  ref(id: string): DocumentReference {
+    const path = this.path();
+
+    const collection = this.db.firebase.collection<ExercicioDocument>(path);
+
+    const document = collection.doc<ExercicioDocument>(id);
+
+    return document.ref;
   }
 
   async add(exercicio: Exercicio): Promise<void> {
