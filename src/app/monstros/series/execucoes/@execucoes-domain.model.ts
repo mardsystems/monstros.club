@@ -158,13 +158,13 @@ export class ExecucaoDeExercicio {
 export const REPOSITORIO_DE_EXECUCOES_DE_SERIES = new InjectionToken<RepositorioDeExecucoesDeSeries>('REPOSITORIO_DE_EXECUCOES_DE_SERIES');
 
 export interface RepositorioDeExecucoesDeSeries extends Repository {
-  obtemExecucaoDeSerie(monstroId: string, id: string): Promise<ExecucaoDeSerie>;
+  obtemExecucaoDeSerie(monstroId: string, serieId: string, id: string): Promise<ExecucaoDeSerie>;
 
-  obtemNumero(monstroId: string, serie: Serie, data: Date): Promise<number>;
+  obtemNumero(monstroId: string, serieId: string, data: Date): Promise<number>;
 
-  add(monstroId: string, serie: Serie, execucao: ExecucaoDeSerie): Promise<void>;
+  add(monstroId: string, serieId: string, execucao: ExecucaoDeSerie): Promise<void>;
 
-  // update(monstroId: string, execucaoDeSerie: ExecucaoDeSerie): Promise<void>;
+  // update(monstroId: string, serieId: string, execucaoDeSerie: ExecucaoDeSerie): Promise<void>;
 
-  // remove(monstroId: string, execucaoDeSerie: ExecucaoDeSerie): Promise<void>;
+  remove(monstroId: string, serieId: string, execucaoDeSerie: ExecucaoDeSerie): Promise<void>;
 }

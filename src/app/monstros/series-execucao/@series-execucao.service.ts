@@ -47,7 +47,7 @@ export class SeriesExecucaoService implements ExecucaoDeSeries {
 
       //
 
-      await this.repositorioDeExecucoesDeSeries.add(solicitacao.monstroId, serie, execucao);
+      await this.repositorioDeExecucoesDeSeries.add(solicitacao.monstroId, solicitacao.serieId, execucao);
 
       //
 
@@ -59,7 +59,23 @@ export class SeriesExecucaoService implements ExecucaoDeSeries {
     }
   }
 
-  apagaExecucao(monstroId: string, serieId: string, execucaoId: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async apagaExecucao(monstroId: string, serieId: string, execucaoId: string): Promise<void> {
+    await this.unitOfWork.beginTransaction();
+
+    try {
+      const execucao = await this.repositorioDeExecucoesDeSeries.obtemExecucaoDeSerie(monstroId, serieId, execucaoId);
+
+      //
+
+      await this.repositorioDeExecucoesDeSeries.remove(monstroId, serieId, execucao);
+
+      //
+
+      await this.unitOfWork.commit();
+    } catch (e) {
+      await this.unitOfWork.rollback();
+
+      throw e;
+    }
   }
 }

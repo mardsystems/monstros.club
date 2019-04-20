@@ -36,7 +36,7 @@ export class SeriesExecucoesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.execucoes$ = this.consultaDeExecucoesDeSeries.obtemExecucoesDeSerieParaExibicao(this.monstro.id, this.serie);
+    this.execucoes$ = this.consultaDeExecucoesDeSeries.obtemExecucoesDeSerieParaExibicao(this.monstro.id, this.serie.id);
   }
 
   async onAdd(): Promise<void> {

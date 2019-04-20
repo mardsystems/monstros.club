@@ -6,5 +6,5 @@ import { ExecucaoDeSerie } from './@execucoes-domain.model';
 export const CONSULTA_DE_EXECUCOES_DE_SERIES = new InjectionToken<ConsultaDeExecucoesDeSeries>('CONSULTA_DE_EXECUCOES_DE_SERIES');
 
 export interface ConsultaDeExecucoesDeSeries {
-  obtemExecucoesDeSerieParaExibicao(monstroId: string, serie: Serie): Observable<ExecucaoDeSerie[]>;
+  obtemExecucoesDeSerieParaExibicao(monstroId: string, serieId: string): Observable<ExecucaoDeSerie[]>;
 }

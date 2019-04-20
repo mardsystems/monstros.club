@@ -41,9 +41,9 @@ export class ExecucoesFirebaseService
     return document.ref;
   }
 
-  async add(monstroId: string, serie: Serie, execucao: ExecucaoDeSerie): Promise<void> {
+  async add(monstroId: string, serieId: string, execucao: ExecucaoDeSerie): Promise<void> {
     try {
-      const path = this.path(monstroId, execucao.serie.id);
+      const path = this.path(monstroId, serieId);
 
       const collection = this.db.firebase.collection<ExecucaoDeSerieDocument>(path);
 
@@ -91,12 +91,16 @@ export class ExecucoesFirebaseService
     return doc;
   }
 
-  obtemExecucaoDeSerie(monstroId: string, id: string): Promise<ExecucaoDeSerie> {
+  remove(monstroId: string, serieId: string, execucaoDeSerie: ExecucaoDeSerie): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  async obtemNumero(monstroId: string, serie: Serie, data: Date): Promise<number> {
-    const execucoes = this.obtemExecucoesDeSerieParaExibicao(monstroId, serie).pipe(
+  obtemExecucaoDeSerie(monstroId: string, serieId: string, id: string): Promise<ExecucaoDeSerie> {
+    throw new Error('Method not implemented.');
+  }
+
+  async obtemNumero(monstroId: string, serieId: string, data: Date): Promise<number> {
+    const execucoes = this.obtemExecucoesDeSerieParaExibicao(monstroId, serieId).pipe(
       first(),
       map(e => e.length)
     );
@@ -106,8 +110,8 @@ export class ExecucoesFirebaseService
 
   // Consultas.
 
-  obtemExecucoesDeSerieParaExibicao(monstroId: string, serie: Serie): Observable<ExecucaoDeSerie[]> {
-    const path = this.path(monstroId, serie.id);
+  obtemExecucoesDeSerieParaExibicao(monstroId: string, serieId: string): Observable<ExecucaoDeSerie[]> {
+    const path = this.path(monstroId, serieId);
 
     const collection = this.db.firebase.collection<ExecucaoDeSerieDocument>(path, reference => {
       return reference
@@ -121,7 +125,7 @@ export class ExecucoesFirebaseService
         if (values.length === 0) {
           series$ = of([]);
         } else {
-          series$ = combineLatest(values.map(value => this.mapExecucaoDeSerieObservavel(value, serie)));
+          series$ = combineLatest(values.map(value => this.mapExecucaoDeSerieObservavel(value))); // , serieId
         }
 
         return series$;
@@ -129,8 +133,12 @@ export class ExecucoesFirebaseService
     );
   }
 
-  private mapExecucaoDeSerieObservavel(value: ExecucaoDeSerieDocument, serie: Serie): Observable<ExecucaoDeSerie> {
+  private mapExecucaoDeSerieObservavel(value: ExecucaoDeSerieDocument): Observable<ExecucaoDeSerie> { // , serieId: string
     let exercicios$: Observable<ExecucaoDeExercicio[]>;
+
+    const serie: Serie = null; // TODO.
+
+    const feitaNa: Academia = null; // TODO.
 
     if (value.exercicios.length === 0) {
       exercicios$ = of([]);
@@ -163,7 +171,7 @@ export class ExecucoesFirebaseService
     }
 
     return exercicios$.pipe(
-      map(exercicios => this.mapExecucaoDeSerie(value, serie, null, exercicios))
+      map(exercicios => this.mapExecucaoDeSerie(value, serie, feitaNa, exercicios))
     );
   }
 

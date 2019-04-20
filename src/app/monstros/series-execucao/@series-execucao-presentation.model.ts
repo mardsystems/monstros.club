@@ -18,7 +18,7 @@ export class ExecucaoDeSerieViewModel extends SolicitacaoDeExecucaoDeSerie {
   ): Promise<ExecucaoDeSerieViewModel> {
     const agora = new Date(Date.now());
 
-    const numero = await repositorioDeExecucoesDeSeries.obtemNumero(monstro.id, serie, agora);
+    const numero = await repositorioDeExecucoesDeSeries.obtemNumero(monstro.id, serie.id, agora);
 
     const solicitacao = await SolicitacaoDeExecucaoDeSerie.create(monstro.id, serie.id, numero + 1);
 

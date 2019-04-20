@@ -106,7 +106,7 @@ export class SeriesItemComponent implements OnInit {
 
         this.exerciciosDataSource.sort = this.sort;
 
-        return this.consultaDeExecucoesDeSerie.obtemExecucoesDeSerieParaExibicao(this.monstroId, serie);
+        return this.consultaDeExecucoesDeSerie.obtemExecucoesDeSerieParaExibicao(this.monstroId, serie.id);
       }),
       shareReplay()
     );
