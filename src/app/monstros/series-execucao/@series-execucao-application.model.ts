@@ -1,6 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import * as moment from 'moment';
 import { SerieDeExercicio } from '../series/@series-domain.model';
+import { RepositorioDeExecucoesDeSeries } from '../series/execucoes/@execucoes-domain.model';
 
 export const EXECUCAO_DE_SERIES = new InjectionToken<ExecucaoDeSeries>('EXECUCAO_DE_SERIES');
 
@@ -11,7 +12,7 @@ export interface ExecucaoDeSeries {
 
   // adicionaExercicio(solicitacao: SolicitacaoDeExecucaoDeExercicio): Promise<void>;
 
-  // excluiSerie(serieId: string): Promise<void>;
+  apagaExecucao(monstroId: string, serieId: string, execucaoId: string): Promise<void>;
 }
 
 export class SolicitacaoDeExecucaoDeSerie {
@@ -21,12 +22,21 @@ export class SolicitacaoDeExecucaoDeSerie {
   numero: number;
   feitaNaId: string;
 
-  static create(monstroId: string, serieId: string): SolicitacaoDeExecucaoDeSerie {
+  static async create(
+    monstroId: string,
+    serieId: string,
+    numero: number,
+    // repositorioDeExecucoesDeSeries: RepositorioDeExecucoesDeSeries
+  ): Promise<SolicitacaoDeExecucaoDeSerie> {
+    const agora = new Date(Date.now());
+
+    // const numero = await repositorioDeExecucoesDeSeries.obtemNumero(monstroId, serieId, agora);
+
     return {
       monstroId: monstroId,
       serieId: serieId,
-      dia: moment(new Date(Date.now())),
-      numero: null,
+      dia: moment(agora),
+      numero: numero,
       feitaNaId: null,
     };
   }

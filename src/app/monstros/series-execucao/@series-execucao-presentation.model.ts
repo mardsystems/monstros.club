@@ -2,6 +2,7 @@ import { Academia } from 'src/app/cadastro/academias/@academias-domain.model';
 import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { Serie, SerieDeExercicio } from '../series/@series-domain.model';
 import { SolicitacaoDeExecucaoDeExercicio, SolicitacaoDeExecucaoDeSerie } from './@series-execucao-application.model';
+import { RepositorioDeExecucoesDeSeries } from '../series/execucoes/@execucoes-domain.model';
 
 export class ExecucaoDeSerieViewModel extends SolicitacaoDeExecucaoDeSerie {
   isEdit: boolean;
@@ -10,8 +11,16 @@ export class ExecucaoDeSerieViewModel extends SolicitacaoDeExecucaoDeSerie {
   serie: Serie;
   feitaNa: Academia;
 
-  static toViewModel(monstro: Monstro, serie: Serie): ExecucaoDeSerieViewModel {
-    const solicitacao = SolicitacaoDeExecucaoDeSerie.create(monstro.id, serie.id);
+  static async toViewModel(
+    monstro: Monstro,
+    serie: Serie,
+    repositorioDeExecucoesDeSeries: RepositorioDeExecucoesDeSeries
+  ): Promise<ExecucaoDeSerieViewModel> {
+    const agora = new Date(Date.now());
+
+    const numero = await repositorioDeExecucoesDeSeries.obtemNumero(monstro.id, serie, agora);
+
+    const solicitacao = await SolicitacaoDeExecucaoDeSerie.create(monstro.id, serie.id, numero + 1);
 
     return {
       isEdit: false,

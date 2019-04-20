@@ -15,6 +15,7 @@ import { ExecucaoDeSerieViewModel } from '../series-execucao/@series-execucao-pr
 import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.component';
 import { ConsultaDeSeries, CONSULTA_DE_SERIES } from './@series-application.model';
 import { Serie } from './@series-domain.model';
+import { REPOSITORIO_DE_EXECUCOES_DE_SERIES, RepositorioDeExecucoesDeSeries } from './execucoes/@execucoes-domain.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'foto' },
@@ -51,6 +52,8 @@ export class SeriesComponent implements OnInit {
     private cadastroDeSeries: CadastroDeSeries,
     @Inject(CONSULTA_DE_MONSTROS)
     private consultaDeMonstros: ConsultaDeMonstros,
+    @Inject(REPOSITORIO_DE_EXECUCOES_DE_SERIES)
+    private repositorioDeExecucoesDeSeries: RepositorioDeExecucoesDeSeries,
     private monstrosMembershipService: MonstrosMembershipService,
     private snackBar: MatSnackBar,
     private log: LogService,
@@ -127,8 +130,8 @@ export class SeriesComponent implements OnInit {
     return displayedColumns;
   }
 
-  onPlay(serie: Serie): void {
-    const model = ExecucaoDeSerieViewModel.toViewModel(this.monstro, serie);
+  async onPlay(serie: Serie): Promise<void> {
+    const model = await ExecucaoDeSerieViewModel.toViewModel(this.monstro, serie, this.repositorioDeExecucoesDeSeries);
 
     const config: MatDialogConfig<ExecucaoDeSerieViewModel> = { data: model };
 

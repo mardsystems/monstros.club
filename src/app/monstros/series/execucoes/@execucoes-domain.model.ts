@@ -160,6 +160,8 @@ export const REPOSITORIO_DE_EXECUCOES_DE_SERIES = new InjectionToken<Repositorio
 export interface RepositorioDeExecucoesDeSeries extends Repository {
   obtemExecucaoDeSerie(monstroId: string, id: string): Promise<ExecucaoDeSerie>;
 
+  obtemNumero(monstroId: string, serie: Serie, data: Date): Promise<number>;
+
   add(monstroId: string, serie: Serie, execucao: ExecucaoDeSerie): Promise<void>;
 
   // update(monstroId: string, execucaoDeSerie: ExecucaoDeSerie): Promise<void>;

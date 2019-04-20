@@ -1,44 +1,61 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { CadastroDeExercicioViewModel } from '../series-cadastro/@series-cadastro-presentation.model';
+import { Observable } from 'rxjs';
+import { Monstro } from 'src/app/cadastro/monstros/@monstros-domain.model';
 import { SeriesCadastroExercicioComponent } from '../series-cadastro/series-cadastro-exercicio.component';
-import { SeriesExecucaoService } from '../series-execucao/@series-execucao.service';
-import { Serie, SerieDeExercicio } from './@series-domain.model';
+import { ExecucaoDeSeries, EXECUCAO_DE_SERIES } from '../series-execucao/@series-execucao-application.model';
+import { ExecucaoDeSerieViewModel } from '../series-execucao/@series-execucao-presentation.model';
+import { Serie } from './@series-domain.model';
+import { ConsultaDeExecucoesDeSeries, CONSULTA_DE_EXECUCOES_DE_SERIES } from './execucoes/@execucoes-application.model';
+import { ExecucaoDeSerie, RepositorioDeExecucoesDeSeries, REPOSITORIO_DE_EXECUCOES_DE_SERIES } from './execucoes/@execucoes-domain.model';
 
 @Component({
   selector: 'series-execucoes-widget',
   templateUrl: './series-execucoes.component.html',
   styleUrls: ['./series-execucoes.component.scss']
 })
-export class SeriesExecucoesComponent {
-  @Input() monstroId: string;
+export class SeriesExecucoesComponent implements OnInit {
+  @Input() monstro: Monstro;
 
   @Input() serie: Serie;
 
   @Input() disabledWrite: boolean;
 
+  execucoes$: Observable<ExecucaoDeSerie[]>;
+
   constructor(
     private dialog: MatDialog,
-    // private execucaoDeSeries: SeriesExecucaoService
-  ) { }
+    @Inject(CONSULTA_DE_EXECUCOES_DE_SERIES)
+    private consultaDeExecucoesDeSeries: ConsultaDeExecucoesDeSeries,
+    @Inject(REPOSITORIO_DE_EXECUCOES_DE_SERIES)
+    private repositorioDeExecucoesDeSeries: RepositorioDeExecucoesDeSeries,
+    @Inject(EXECUCAO_DE_SERIES)
+    private execucaoDeSeries: ExecucaoDeSeries,
+  ) {
 
-  onAdd(): void {
-    const model = CadastroDeExercicioViewModel.toAddViewModel(this.monstroId, this.serie);
+  }
 
-    const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
+  ngOnInit() {
+    this.execucoes$ = this.consultaDeExecucoesDeSeries.obtemExecucoesDeSerieParaExibicao(this.monstro.id, this.serie);
+  }
+
+  async onAdd(): Promise<void> {
+    const model = await ExecucaoDeSerieViewModel.toViewModel(null, this.serie, this.repositorioDeExecucoesDeSeries);
+
+    const config: MatDialogConfig<ExecucaoDeSerieViewModel> = { data: model };
 
     this.dialog.open(SeriesCadastroExercicioComponent, config);
   }
 
-  onEdit(serieDeExercicio: SerieDeExercicio): void {
-    const model = CadastroDeExercicioViewModel.toEditViewModel(this.monstroId, this.serie, serieDeExercicio);
+  onEdit(execucaoDeSerie: ExecucaoDeSerie): void {
+    // const model = ExecucaoDeSerieViewModel.toEditViewModel(this.monstroId, this.serie, execucaoDeSerie);
 
-    const config: MatDialogConfig<CadastroDeExercicioViewModel> = { data: model };
+    // const config: MatDialogConfig<ExecucaoDeSerieViewModel> = { data: model };
 
-    this.dialog.open(SeriesCadastroExercicioComponent, config);
+    // this.dialog.open(SeriesCadastroExercicioComponent, config);
   }
 
-  onDelete(serieDeExercicio: SerieDeExercicio): void {
-    // this.execucaoDeSeries.removeExercicio(this.monstroId, this.serie.id, serieDeExercicio.id);
+  onDelete(execucaoDeSerie: ExecucaoDeSerie): void {
+    this.execucaoDeSeries.apagaExecucao(this.monstro.id, this.serie.id, execucaoDeSerie.id);
   }
 }

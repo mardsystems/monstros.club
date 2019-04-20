@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DocumentReference } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, first } from 'rxjs/operators';
 import { MonstrosDbContext } from 'src/app/@app-firebase.service';
 import { Academia } from 'src/app/cadastro/academias/@academias-domain.model';
 import { AcademiasFirebaseService } from 'src/app/cadastro/academias/@academias-firebase.service';
@@ -18,7 +18,6 @@ import { ExecucaoDeExercicio, ExecucaoDeSerie, RepositorioDeExecucoesDeSeries } 
 export class ExecucoesFirebaseService
   extends FirebaseService<ExecucaoDeSerieDocument>
   implements RepositorioDeExecucoesDeSeries, ConsultaDeExecucoesDeSeries {
-
   constructor(
     protected readonly db: MonstrosDbContext,
     protected readonly seriesFirebaseService: SeriesFirebaseService,
@@ -96,6 +95,15 @@ export class ExecucoesFirebaseService
     throw new Error('Method not implemented.');
   }
 
+  async obtemNumero(monstroId: string, serie: Serie, data: Date): Promise<number> {
+    const execucoes = this.obtemExecucoesDeSerieParaExibicao(monstroId, serie).pipe(
+      first(),
+      map(e => e.length)
+    );
+
+    return await execucoes.toPromise();
+  }
+
   // Consultas.
 
   obtemExecucoesDeSerieParaExibicao(monstroId: string, serie: Serie): Observable<ExecucaoDeSerie[]> {
@@ -103,7 +111,7 @@ export class ExecucoesFirebaseService
 
     const collection = this.db.firebase.collection<ExecucaoDeSerieDocument>(path, reference => {
       return reference
-        .orderBy('nome', 'asc');
+        .orderBy('numero', 'asc');
     });
 
     return collection.valueChanges().pipe(

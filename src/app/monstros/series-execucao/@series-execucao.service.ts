@@ -58,4 +58,8 @@ export class SeriesExecucaoService implements ExecucaoDeSeries {
       throw e;
     }
   }
+
+  apagaExecucao(monstroId: string, serieId: string, execucaoId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 }

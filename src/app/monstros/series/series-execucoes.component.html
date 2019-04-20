@@ -1,22 +1,22 @@
-<botao-de-exercicio *ngFor="let serieDeExercicio of serie.exercicios" [exercicio]="serieDeExercicio.exercicio" [cor]="serie.cor"
-  [matMenuTriggerFor]="serieDeExercicioMenu" [matMenuTriggerData]="{serieDeExercicio2: serieDeExercicio}">
-</botao-de-exercicio>
+<botao-de-execucao-de-serie *ngFor="let execucao of execucoes$ | async" [execucao]="execucao" [cor]="serie.cor"
+  [matMenuTriggerFor]="execucaoDeSerieMenu" [matMenuTriggerData]="{execucaoDeSerie2: execucaoDeSerie}">
+</botao-de-execucao-de-serie>
 
 <button mat-icon-button (click)="onAdd()">
-  <mat-icon>add</mat-icon>
+  <mat-icon>play_arrow</mat-icon>
 </button>
 
-<mat-menu #serieDeExercicioMenu="matMenu" overlapTrigger="false">
-  <ng-template matMenuContent let-serieDeExercicio="serieDeExercicio2">
-    <!-- <button mat-menu-item routerLink="../../admin/cadastro/exercicios/{{serieDeExercicio.exercicio.id}}">
+<mat-menu #execucaoDeSerieMenu="matMenu" overlapTrigger="false">
+  <ng-template matMenuContent let-execucaoDeSerie="execucaoDeSerie2">
+    <!-- <button mat-menu-item routerLink="../../admin/cadastro/exercicios/{{execucaoDeSerie.exercicio.id}}">
       <mat-icon>info</mat-icon>
       <span>Visualizar Exercício</span>
     </button> -->
-    <button mat-menu-item (click)="onEdit(serieDeExercicio)" [disabled]="disabledWrite">
+    <button mat-menu-item (click)="onEdit(execucaoDeSerie)" [disabled]="disabledWrite">
       <mat-icon>edit</mat-icon>
       <span>Editar Série de Exercício</span>
     </button>
-    <button mat-menu-item (click)="onDelete(serieDeExercicio)" [disabled]="disabledWrite">
+    <button mat-menu-item (click)="onDelete(execucaoDeSerie)" [disabled]="disabledWrite">
       <mat-icon>delete</mat-icon>
       <span>Remover Série de Exercício</span>
     </button>
