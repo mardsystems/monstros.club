@@ -125,7 +125,7 @@ export class ExecucoesFirebaseService
         if (values.length === 0) {
           series$ = of([]);
         } else {
-          series$ = combineLatest(values.map(value => this.mapExecucaoDeSerieObservavel(value))); // , serieId
+          series$ = combineLatest(values.map(value => this.mapExecucaoDeSerieObservavel(monstroId, serieId, value)));
         }
 
         return series$;
@@ -133,45 +133,51 @@ export class ExecucoesFirebaseService
     );
   }
 
-  private mapExecucaoDeSerieObservavel(value: ExecucaoDeSerieDocument): Observable<ExecucaoDeSerie> { // , serieId: string
-    let exercicios$: Observable<ExecucaoDeExercicio[]>;
+  private mapExecucaoDeSerieObservavel(monstroId: string, serieId: string, value: ExecucaoDeSerieDocument): Observable<ExecucaoDeSerie> {
+    return this.seriesFirebaseService.obtemSerieObservavel(monstroId, serieId).pipe(
+      switchMap(serie => {
+        const academiaRef = value.feitaNa;
 
-    const serie: Serie = null; // TODO.
+        return this.academiasFirebaseService.obtemAcademiaObservavel(academiaRef.id).pipe(
+          switchMap(feitaNa => {
+            let exercicios$: Observable<ExecucaoDeExercicio[]>;
 
-    const feitaNa: Academia = null; // TODO.
+            if (value.exercicios.length === 0) {
+              exercicios$ = of([]);
+            } else {
+              exercicios$ = combineLatest(
+                value.exercicios.map(execucaoDeExercicioValue => {
+                  const exercicio$ = this.aparelhosFirebaseService.obtemAparelhoObservavel(execucaoDeExercicioValue.feitoCom.id).pipe(
+                    map(aparelho => {
+                      const referencia = serie.obtemSerieDeExercicio(execucaoDeExercicioValue.id);
 
-    if (value.exercicios.length === 0) {
-      exercicios$ = of([]);
-    } else {
-      exercicios$ = combineLatest(
-        value.exercicios.map(execucaoDeExercicioValue => {
-          const exercicio$ = this.aparelhosFirebaseService.obtemAparelhoObservavel(execucaoDeExercicioValue.feitoCom.id).pipe(
-            map(aparelho => {
-              const referencia = serie.obtemSerieDeExercicio(execucaoDeExercicioValue.id);
+                      const execucaoDeExercicio = new ExecucaoDeExercicio(
+                        execucaoDeExercicioValue.id,
+                        execucaoDeExercicioValue.sequencia,
+                        referencia,
+                        execucaoDeExercicioValue.repeticoes,
+                        execucaoDeExercicioValue.carga,
+                        execucaoDeExercicioValue.nota,
+                        aparelho,
+                        null
+                      );
 
-              const execucaoDeExercicio = new ExecucaoDeExercicio(
-                execucaoDeExercicioValue.id,
-                execucaoDeExercicioValue.sequencia,
-                referencia,
-                execucaoDeExercicioValue.repeticoes,
-                execucaoDeExercicioValue.carga,
-                execucaoDeExercicioValue.nota,
-                aparelho,
-                null
+                      return execucaoDeExercicio;
+                    }),
+                    shareReplay()
+                  );
+
+                  return exercicio$;
+                })
               );
+            }
 
-              return execucaoDeExercicio;
-            }),
-            shareReplay()
-          );
-
-          return exercicio$;
-        })
-      );
-    }
-
-    return exercicios$.pipe(
-      map(exercicios => this.mapExecucaoDeSerie(value, serie, feitaNa, exercicios))
+            return exercicios$.pipe(
+              map(exercicios => this.mapExecucaoDeSerie(value, serie, feitaNa, exercicios))
+            );
+          })
+        );
+      })
     );
   }
 

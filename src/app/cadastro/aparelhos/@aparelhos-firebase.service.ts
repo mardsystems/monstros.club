@@ -139,7 +139,11 @@ export class AparelhosFirebaseService
       const aparelho$ = collection.valueChanges().pipe(
         first(),
         switchMap(values => {
-          return this.mapAparelhoInner(values[0]);
+          if (values.length === 0) {
+            throw new Error(`Aparelho não encontrado para o exercício ${exercicio.nome}.`);
+          } else {
+            return this.mapAparelhoInner(values[0]);
+          }
 
           // return values.map((value, index) => {
 

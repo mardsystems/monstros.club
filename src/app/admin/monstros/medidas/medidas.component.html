@@ -1,5 +1,7 @@
 <mat-spinner class="spinner" diameter="50" strokeWidth="3" *ngIf="loading"></mat-spinner>
 
+<!-- <pre class="mat-body"> {{ (medidas$ | async) | json }} </pre> -->
+
 <div class="container" *ngIf="!loading">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 center">
     <ng-container matColumnDef="foto">
