@@ -12,6 +12,7 @@ import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesComponent } from './series/series.component';
 import { TreinosComponent } from './treinos/treinos.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { ExecucoesItemComponent } from './series/execucoes/execucoes-item.component';
 
 const monstrosRoutes: Routes = [
   // { path: 'heroes', redirectTo: '/superheroes' },
@@ -30,6 +31,7 @@ const monstrosRoutes: Routes = [
         children: [
           { path: 'series', component: SeriesComponent, data: { animation: 'series' } },
           { path: 'series/:serieId', component: SeriesItemComponent, data: { animation: 'serie' } },
+          { path: 'series/:serieId/:execucaoId', component: ExecucoesItemComponent, data: { animation: 'execucao' } },
           { path: 'treinos', component: TreinosComponent, data: { animation: 'treinos' } },
           { path: 'medidas', component: MedidasComponent, data: { animation: 'medidas' } },
           { path: 'rankings', component: RankingsComponent, data: { animation: 'rankings' } },

@@ -54,7 +54,8 @@ import { REPOSITORIO_DE_EXECUCOES_DE_SERIES } from './series/execucoes/@execucoe
 import { ExecucoesFirebaseService } from './series/execucoes/@execucoes-firebase.service';
 import { ExecucoesItemComponent as ExecucoesDeSerieItemComponent } from './series/execucoes/execucoes-item.component';
 import { ExecucoesComponent as ExecucoesDeSerieComponent } from './series/execucoes/execucoes.component';
-import { SeriesExecucoesComponent } from './series/series-execucoes.component';
+import { ExecucoesExerciciosComponent } from './series/execucoes/execucoes-exercicios.component';
+import { SeriesExecucoesWidgetComponent } from './series/series-execucoes-widget.component';
 import { SeriesExerciciosComponent } from './series/series-exercicios.component';
 import { SeriesItemComponent } from './series/series-item.component';
 import { SeriesComponent } from './series/series.component';
@@ -83,9 +84,10 @@ import { TreinosComponent } from './treinos/treinos.component';
     SeriesComponent,
     SeriesItemComponent,
     SeriesExerciciosComponent,
-    SeriesExecucoesComponent,
+    SeriesExecucoesWidgetComponent,
     SeriesExecucaoComponent,
     SeriesExecucaoExercicioComponent,
+    ExecucoesExerciciosComponent,
   ],
   imports: [
     CommonModule,

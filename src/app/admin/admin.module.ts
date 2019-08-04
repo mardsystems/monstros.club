@@ -7,20 +7,20 @@ import { MedidasFirebaseService } from '../monstros/medidas/@medidas-firebase.se
 import { AdminMaterialModule } from './admin-material.module';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
-import { CadastroComponent } from './cadastro/cadastro.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ListagemComponent } from './monstros/listagem/listagem.component';
-import { MedidasComponent } from './monstros/medidas/medidas.component';
-import { MonstrosComponent } from './monstros/monstros.component';
+import { AdminCadastroComponent } from './cadastro/admin-cadastro.component';
+import { AdminDashboardComponent } from './dashboard/admin-dashboard.component';
+import { AdminMonstrosComponent } from './monstros/admin-monstros.component';
+import { AdminMonstrosListagemComponent } from './monstros/listagem/admin-monstros-listagem.component';
+import { AdminMonstrosMedidasComponent } from './monstros/medidas/admin-monstros-medidas.component';
 
 @NgModule({
   declarations: [
     AdminComponent,
-    DashboardComponent,
-    MonstrosComponent,
-    ListagemComponent,
-    MedidasComponent,
-    CadastroComponent,
+    AdminDashboardComponent,
+    AdminMonstrosComponent,
+    AdminMonstrosListagemComponent,
+    AdminMonstrosMedidasComponent,
+    AdminCadastroComponent,
   ],
   imports: [
     CommonModule,

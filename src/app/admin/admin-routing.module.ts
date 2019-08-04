@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard } from '../auth/admin.guard';
 import { AdminComponent } from './admin.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ListagemComponent } from './monstros/listagem/listagem.component';
-import { MedidasComponent } from './monstros/medidas/medidas.component';
-import { MonstrosComponent } from './monstros/monstros.component';
+import { AdminDashboardComponent } from './dashboard/admin-dashboard.component';
+import { AdminMonstrosComponent } from './monstros/admin-monstros.component';
+import { AdminMonstrosListagemComponent } from './monstros/listagem/admin-monstros-listagem.component';
+import { AdminMonstrosMedidasComponent } from './monstros/medidas/admin-monstros-medidas.component';
 
 const adminRoutes: Routes = [
   {
@@ -17,13 +17,13 @@ const adminRoutes: Routes = [
         path: '',
         canActivateChild: [AdminGuard],
         children: [
-          { path: 'dashboard', component: DashboardComponent },
+          { path: 'dashboard', component: AdminDashboardComponent },
           {
             path: 'monstros',
-            component: MonstrosComponent,
+            component: AdminMonstrosComponent,
             children: [
-              { path: 'listagem', component: ListagemComponent },
-              { path: 'medidas', component: MedidasComponent },
+              { path: 'listagem', component: AdminMonstrosListagemComponent },
+              { path: 'medidas', component: AdminMonstrosMedidasComponent },
             ]
           },
           {

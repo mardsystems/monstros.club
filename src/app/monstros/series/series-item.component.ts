@@ -13,7 +13,7 @@ import { SeriesExecucaoComponent } from '../series-execucao/series-execucao.comp
 import { ConsultaDeSeries, CONSULTA_DE_SERIES } from './@series-application.model';
 import { Serie, SerieDeExercicio } from './@series-domain.model';
 import { ConsultaDeExecucoesDeSeries, CONSULTA_DE_EXECUCOES_DE_SERIES } from './execucoes/@execucoes-application.model';
-import { ExecucaoDeSerie, REPOSITORIO_DE_EXECUCOES_DE_SERIES, RepositorioDeExecucoesDeSeries } from './execucoes/@execucoes-domain.model';
+import { ExecucaoDeSerie } from './execucoes/@execucoes-domain.model';
 
 const columnDefinitions = [
   { showMobile: true, def: 'icone' },
@@ -55,8 +55,6 @@ export class SeriesItemComponent implements OnInit {
     private consultaDeSeries: ConsultaDeSeries,
     @Inject(CONSULTA_DE_EXECUCOES_DE_SERIES)
     private consultaDeExecucoesDeSerie: ConsultaDeExecucoesDeSeries,
-    @Inject(REPOSITORIO_DE_EXECUCOES_DE_SERIES)
-    private repositorioDeExecucoesDeSeries: RepositorioDeExecucoesDeSeries,
     @Inject(CADASTRO_DE_SERIES)
     private cadastroDeSeries: CadastroDeSeries,
     @Inject(CONSULTA_DE_MONSTROS)

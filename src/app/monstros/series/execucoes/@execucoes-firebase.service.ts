@@ -133,6 +133,20 @@ export class ExecucoesFirebaseService
     );
   }
 
+  obtemExecucaoDeSerieParaExibicao(monstroId: string, serieId: string, id: string): Observable<ExecucaoDeSerie> {
+    const path = this.path(monstroId, serieId);
+
+    const collection = this.db.firebase.collection<ExecucaoDeSerieDocument>(path);
+
+    const document = collection.doc<ExecucaoDeSerieDocument>(id);
+
+    const execucaoDeSerie$ = document.valueChanges().pipe(
+      switchMap(value => this.mapExecucaoDeSerieObservavel(monstroId, serieId, value))
+    );
+
+    return execucaoDeSerie$;
+  }
+
   private mapExecucaoDeSerieObservavel(monstroId: string, serieId: string, value: ExecucaoDeSerieDocument): Observable<ExecucaoDeSerie> {
     return this.seriesFirebaseService.obtemSerieObservavel(monstroId, serieId).pipe(
       switchMap(serie => {
@@ -149,7 +163,7 @@ export class ExecucoesFirebaseService
                 value.exercicios.map(execucaoDeExercicioValue => {
                   const exercicio$ = this.aparelhosFirebaseService.obtemAparelhoObservavel(execucaoDeExercicioValue.feitoCom.id).pipe(
                     map(aparelho => {
-                      const referencia = serie.obtemSerieDeExercicio(execucaoDeExercicioValue.id);
+                      const referencia = serie.obtemSerieDeExercicio(execucaoDeExercicioValue.referenciaId);
 
                       const execucaoDeExercicio = new ExecucaoDeExercicio(
                         execucaoDeExercicioValue.id,

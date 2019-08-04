@@ -7,4 +7,6 @@ export const CONSULTA_DE_EXECUCOES_DE_SERIES = new InjectionToken<ConsultaDeExec
 
 export interface ConsultaDeExecucoesDeSeries {
   obtemExecucoesDeSerieParaExibicao(monstroId: string, serieId: string): Observable<ExecucaoDeSerie[]>;
+
+  obtemExecucaoDeSerieParaExibicao(monstroId: string, serieId: string, id: string): Observable<ExecucaoDeSerie>;
 }

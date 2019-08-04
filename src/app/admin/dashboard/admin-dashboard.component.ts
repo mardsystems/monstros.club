@@ -7,10 +7,10 @@ import { SelectivePreloadingStrategyService } from 'src/app/common/selective-pre
 
 @Component({
   selector: 'admin-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  templateUrl: './admin-dashboard.component.html',
+  styleUrls: ['./admin-dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class AdminDashboardComponent implements OnInit {
   sessionId: Observable<string>;
   token: Observable<string>;
   modules: string[];

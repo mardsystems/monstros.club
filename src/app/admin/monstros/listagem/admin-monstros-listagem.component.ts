@@ -16,10 +16,10 @@ const columnDefinitions = [
 ];
 @Component({
   selector: 'admin-monstros-listagem',
-  templateUrl: './listagem.component.html',
-  styleUrls: ['./listagem.component.scss']
+  templateUrl: './admin-monstros-listagem.component.html',
+  styleUrls: ['./admin-monstros-listagem.component.scss']
 })
-export class ListagemComponent implements OnInit {
+export class AdminMonstrosListagemComponent implements OnInit {
   loading = true;
   monstros$: Observable<Monstro[]>;
 

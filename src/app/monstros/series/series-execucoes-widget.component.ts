@@ -11,10 +11,10 @@ import { ExecucaoDeSerie, RepositorioDeExecucoesDeSeries, REPOSITORIO_DE_EXECUCO
 
 @Component({
   selector: 'series-execucoes-widget',
-  templateUrl: './series-execucoes.component.html',
-  styleUrls: ['./series-execucoes.component.scss']
+  templateUrl: './series-execucoes-widget.component.html',
+  styleUrls: ['./series-execucoes-widget.component.scss']
 })
-export class SeriesExecucoesComponent implements OnInit {
+export class SeriesExecucoesWidgetComponent implements OnInit {
   @Input() monstro: Monstro;
 
   @Input() serie: Serie;

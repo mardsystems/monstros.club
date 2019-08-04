@@ -10,10 +10,10 @@ import { LogService } from 'src/app/common/common.service';
 
 @Component({
   selector: 'admin-monstros',
-  templateUrl: './monstros.component.html',
-  styleUrls: ['./monstros.component.scss']
+  templateUrl: './admin-monstros.component.html',
+  styleUrls: ['./admin-monstros.component.scss']
 })
-export class MonstrosComponent {
+export class AdminMonstrosComponent {
   monstroLogado$: Observable<Monstro>;
   monstroEstaLogado = false;
 

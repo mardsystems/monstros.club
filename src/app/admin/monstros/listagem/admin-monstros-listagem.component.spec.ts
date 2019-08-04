@@ -6,13 +6,13 @@ import { AppCommonModule } from 'src/app/common/common.module';
 import { environment } from 'src/environments/environment';
 import { AdminMaterialModule } from '../../admin-material.module';
 import { AdminRoutingModule } from '../../admin-routing.module';
-import { ListagemComponent } from './listagem.component';
+import { AdminMonstrosListagemComponent } from './admin-monstros-listagem.component';
 
 // let activatedRoute: ActivatedRouteStub;
 
-describe('ListagemComponent', () => {
-  let component: ListagemComponent;
-  let fixture: ComponentFixture<ListagemComponent>;
+describe('AdminMonstrosListagemComponent', () => {
+  let component: AdminMonstrosListagemComponent;
+  let fixture: ComponentFixture<AdminMonstrosListagemComponent>;
 
   beforeEach(async(() => {
     const routerSpy = createRouterSpy();
@@ -37,7 +37,7 @@ describe('ListagemComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ListagemComponent);
+    fixture = TestBed.createComponent(AdminMonstrosListagemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

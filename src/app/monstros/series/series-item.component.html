@@ -2,6 +2,7 @@
   <span>Série</span>
   &nbsp;
   <span>A</span>
+  <!-- <span>{{serie.nome}}</span> -->
   <span class="app-fill-remaining-space"></span>
   <button mat-icon-button (click)="onAddExercicio()">
     <mat-icon>add</mat-icon>
@@ -75,6 +76,8 @@
     [ngClass]="{good: row.ultimaMedidaEstaEvoluindo, normal: !row.ehUltimaMedida, bad: row.ultimaMedidaEstaFicandoPraTraz}">
   </tr>
 </table>
+
+<execucoes [serie]="serie"></execucoes>
 
 <mat-menu #serieDeExercicioMenu="matMenu" overlapTrigger="false">
   <ng-template matMenuContent let-serieDeExercicio="serieDeExercicioAtualizadaOuExcluida">

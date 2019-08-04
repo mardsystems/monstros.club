@@ -20,10 +20,10 @@ const columnDefinitions = [
 
 @Component({
   selector: 'admin-monstros-medidas',
-  templateUrl: './medidas.component.html',
-  styleUrls: ['./medidas.component.scss']
+  templateUrl: './admin-monstros-medidas.component.html',
+  styleUrls: ['./admin-monstros-medidas.component.scss']
 })
-export class MedidasComponent implements OnInit {
+export class AdminMonstrosMedidasComponent implements OnInit {
   medidas$: Observable<Medida[]>;
   balanca: Balanca;
   loading = true;

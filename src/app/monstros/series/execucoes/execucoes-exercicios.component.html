@@ -1,0 +1,24 @@
+<botao-de-exercicio *ngFor="let execucaoDeExercicio of execucao.exercicios" [exercicio]="execucaoDeExercicio.referencia.exercicio" [cor]="execucao.serie.cor"
+  [matMenuTriggerFor]="execucaoDeExercicioMenu" [matMenuTriggerData]="{execucaoDeExercicio2: execucaoDeExercicio}">
+</botao-de-exercicio>
+
+<button mat-icon-button (click)="onAdd()">
+  <mat-icon>add</mat-icon>
+</button>
+
+<mat-menu #execucaoDeExercicioMenu="matMenu" overlapTrigger="false">
+  <ng-template matMenuContent let-execucaoDeExercicio="execucaoDeExercicio2">
+    <!-- <button mat-menu-item routerLink="../../admin/cadastro/exercicios/{{execucaoDeExercicio.exercicio.id}}">
+      <mat-icon>info</mat-icon>
+      <span>Visualizar Exercício</span>
+    </button> -->
+    <button mat-menu-item (click)="onEdit(execucaoDeExercicio)" [disabled]="disabledWrite">
+      <mat-icon>edit</mat-icon>
+      <span>Editar Exercício da Execução</span>
+    </button>
+    <button mat-menu-item (click)="onDelete(execucaoDeExercicio)" [disabled]="disabledWrite">
+      <mat-icon>delete</mat-icon>
+      <span>Remover Exercício da Execução</span>
+    </button>
+  </ng-template>
+</mat-menu>
